@@ -1,0 +1,30 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>QuickLesson</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+  <header class="header">
+    <div class="header-title">
+      <a href="{% url 'home' %}">QuickLesson</a>
+    </div>
+    <nav class="header-nav">
+      {% if user.is_authenticated %}
+        <span>Hi, {{ user.username }}</span>
+        <a href="{% url 'create_request' %}">5分レッスン</a>
+        <a href="{% url 'tutor_dashboard' %}">講師画面</a>
+        <a href="{% url 'logout' %}">ログアウト</a>
+      {% else %}
+        <a href="{% url 'login' %}">ログイン</a>
+      {% endif %}
+    </nav>
+  </header>
+
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

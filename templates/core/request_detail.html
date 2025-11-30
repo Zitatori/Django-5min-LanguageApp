@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title">マッチング結果</h2>
+      {% if request_obj.status == "matched" %}
+        <span class="badge badge-green">マッチ済み</span>
+      {% elif request_obj.status == "waiting" %}
+        <span class="badge badge-gray">マッチング中</span>
+      {% else %}
+        <span class="badge badge-gray">キャンセル</span>
+      {% endif %}
+    </div>
+
+    <p class="card-subtitle">
+      希望言語: {{ request_obj.language.name }}
+    </p>
+
+    {% if match %}
+      <!-- ここはマッチ完了後の表示 -->
+      <div class="mt-16">
+        <p><strong>講師:</strong> {{ match.tutor.user.username }}</p>
+        <p><strong>開始:</strong> {{ match.started_at }}</p>
+        <p><strong>終了:</strong> {{ match.end_at }}</p>
+        <p><strong>ルームURL:</strong>
+          <a href="{{ match.meeting_url }}" target="_blank">
+            レッスンルームに入る
+          </a>
+        </p>
+        <p><strong>料金(仮):</strong> {{ match.price }}</p>
+      </div>
+
+      <div class="mt-16">
+        <button class="btn btn-outline" onclick="window.location.href='{% url 'home' %}'">
+          ホームに戻る
+        </button>
+      </div>
+
+    {% elif request_obj.status == "waiting" %}
+      <!-- ここが「マッチング中」画面 -->
+      <div class="spinner-wrapper">
+        <div class="spinner"></div>
+        <p>講師をマッチング中です…</p>
+        <p class="text-muted">オンライン中の講師が見つかり次第、この画面が自動で更新されます。</p>
+      </div>
+
+      <div class="center mt-16">
+        <button class="btn btn-outline" onclick="window.location.href='{% url 'home' %}'">
+          キャンセルしてホームに戻る
+        </button>
+      </div>
+
+      <!-- 数秒おきにページを自動リロードして、マッチングを再トライ -->
+      <script>
+        setTimeout(function () {
+          window.location.reload();
+        }, 4000);  // 4秒ごとにリロード
+      </script>
+
+    {% else %}
+      <!-- cancelled とか他ステータスの場合 -->
+      <div class="mt-16">
+        <p>このリクエストは有効ではありません。</p>
+      </div>
+      <div class="mt-16">
+        <button class="btn btn-outline" onclick="window.location.href='{% url 'home' %}'">
+          ホームに戻る
+        </button>
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}

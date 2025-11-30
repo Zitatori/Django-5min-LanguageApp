@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <h2 class="card-title">5分オンラインレッスン</h2>
+        <p class="card-subtitle">
+          今すぐ誰かと話したい人のための、超ライトな会話プラットフォーム。
+        </p>
+      </div>
+    </div>
+
+    {% if user.is_authenticated %}
+      <p>言語を選んで「5分レッスン」を始められます。</p>
+      <button class="btn" onclick="window.location.href='{% url 'create_request' %}'">
+        今すぐ5分レッスンする
+      </button>
+    {% else %}
+      <p>レッスンを始めるにはログインが必要です。</p>
+      <button class="btn" onclick="window.location.href='{% url 'login' %}'">
+        ログインする
+      </button>
+    {% endif %}
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">どう動くの？</h3>
+    </div>
+    <ul class="list">
+      <li>1. 講師は「オンライン」に切り替えて待機</li>
+      <li>2. 生徒は言語を選んで「今すぐ5分レッスン」を押す</li>
+      <li>3. システムが対応できる講師をランダムでマッチング</li>
+      <li>4. ミーティングURLに入って5分会話</li>
+    </ul>
+  </div>
+{% endblock %}

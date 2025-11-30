@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title">講師候補 5分面接</h2>
+      <span class="badge badge-yellow">Interview</span>
+    </div>
+
+    <p class="card-subtitle">
+      講師として登録したい人向けの5分面接です。話したい・対応できる言語を選んでください。
+      オンライン中で「面接可能（can_interview=True）」なアドミン講師がマッチングされます。
+    </p>
+
+    <form method="post" class="mt-16">
+      {% csrf_token %}
+      <label>
+        面接で使う言語
+        <select name="language_id">
+          {% for lang in languages %}
+            <option value="{{ lang.id }}">{{ lang.name }}</option>
+          {% endfor %}
+        </select>
+      </label>
+
+      <div class="mt-16">
+        <button type="submit" class="btn">5分面接をリクエストする</button>
+        <button type="button" class="btn btn-outline"
+                onclick="window.location.href='{% url 'home' %}'">
+          キャンセル
+        </button>
+      </div>
+    </form>
+  </div>
+{% endblock %}
