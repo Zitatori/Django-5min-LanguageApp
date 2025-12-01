@@ -8,4 +8,6 @@ urlpatterns = [
     path("tutor/dashboard/", views.tutor_dashboard, name="tutor_dashboard"),
     path("interview/request/", views.create_interview_request, name="create_interview_request"),
 
+    # レッスンルーム
+    path("lesson/room/<int:match_id>/", views.lesson_room, name="lesson_room"),
 ]

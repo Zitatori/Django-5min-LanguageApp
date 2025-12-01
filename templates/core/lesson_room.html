@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <h2 class="card-title">5分レッスンルーム</h2>
+        <p class="card-subtitle">
+          まだビデオ通話は実装前。まずはタイマーと画面レイアウトのテスト中。
+        </p>
+      </div>
+      <span class="badge badge-yellow">Test</span>
+    </div>
+
+    <!-- タイマー -->
+    <div class="center mt-16">
+      <div class="timer-circle">
+        <span id="timer-display"></span>
+      </div>
+      <div class="timer-label">残り時間</div>
+    </div>
+
+        <!-- 黒いダミー画面 → 自分のカメラ映像にする -->
+    <div class="mt-16">
+      <video id="localVideo"
+             class="video-placeholder"
+             autoplay
+             playsinline
+             muted>
+        ブラウザが video タグをサポートしていません。
+      </video>
+    </div>
+
+    <!-- セッション情報 -->
+    <div class="mt-16">
+      <p><strong>生徒:</strong> {{ match.request.student.user.username }}</p>
+      <p><strong>講師:</strong> {{ match.tutor.user.username }}</p>
+      <p><strong>言語:</strong> {{ match.request.language.name }}</p>
+    </div>
+
+        <div class="mt-16">
+      <button id="leave-btn" class="btn btn-secondary">
+        レッスンを終了する
+      </button>
+    </div>
+
+    <!-- ★ここ追加：カメラ／マイクのON/OFFボタン -->
+    <div class="mt-16">
+      <button id="toggle-camera" class="btn btn-outline">
+        カメラOFF
+      </button>
+      <button id="toggle-mic" class="btn btn-outline">
+        マイクOFF
+      </button>
+    </div>
+
+
+      <script>
+    (function () {
+      let remaining = {{ remaining_seconds|default:300 }};
+      const display = document.getElementById("timer-display");
+      const leaveBtn = document.getElementById("leave-btn");
+
+      function format(sec) {
+        const m = Math.floor(sec / 60);
+        const s = sec % 60;
+        return m.toString() + ":" + s.toString().padStart(2, "0");
+      }
+
+      function update() {
+        display.textContent = format(remaining);
+        if (remaining <= 0) {
+          endLesson("timeup");
+        } else {
+          remaining -= 1;
+          setTimeout(update, 1000);
+        }
+      }
+
+      function endLesson(reason) {
+        console.log("lesson ended:", reason);
+        alert("5分レッスンを終了します（理由: " + reason + "）。おつかれさま！");
+        window.location.href = "{% url 'home' %}";
+      }
+
+      leaveBtn.addEventListener("click", function () {
+        endLesson("manual");
+      });
+
+      update();
+    })();
+
+    // ====== 自分のカメラ＋カメラ／マイクON/OFF ======
+    (function () {
+      const videoEl = document.getElementById("localVideo");
+      const camBtn = document.getElementById("toggle-camera");
+      const micBtn = document.getElementById("toggle-mic");
+
+      let localStream = null;
+      let cameraOn = true;
+      let micOn = true;
+
+      async function startCamera() {
+        try {
+          localStream = await navigator.mediaDevices.getUserMedia({
+            video: true,
+            audio: true,
+          });
+          videoEl.srcObject = localStream;
+        } catch (err) {
+          console.error("カメラ・マイク取得エラー:", err);
+          videoEl.textContent =
+            "カメラ・マイクにアクセスできませんでした。ブラウザの設定を確認してください。";
+        }
+      }
+
+      function toggleCamera() {
+        if (!localStream) return;
+        localStream.getVideoTracks().forEach((track) => {
+          track.enabled = !track.enabled;
+          cameraOn = track.enabled;
+        });
+        camBtn.textContent = cameraOn ? "カメラOFF" : "カメラON";
+      }
+
+      function toggleMic() {
+        if (!localStream) return;
+        localStream.getAudioTracks().forEach((track) => {
+          track.enabled = !track.enabled;
+          micOn = track.enabled;
+        });
+        micBtn.textContent = micOn ? "マイクOFF" : "マイクON";
+      }
+
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        startCamera();
+      } else {
+        videoEl.textContent =
+          "このブラウザは getUserMedia に対応していません。";
+      }
+
+      camBtn.addEventListener("click", toggleCamera);
+      micBtn.addEventListener("click", toggleMic);
+    })();
+  </script>
+
+
+{% endblock %}

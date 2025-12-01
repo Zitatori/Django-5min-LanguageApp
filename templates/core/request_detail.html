@@ -2,7 +2,12 @@
 {% block content %}
   <div class="card">
     <div class="card-header">
-      <h2 class="card-title">マッチング結果</h2>
+      <div>
+        <h2 class="card-title">マッチング結果</h2>
+        <p class="card-subtitle">
+          5分レッスンの準備ができました。
+        </p>
+      </div>
       {% if request_obj.status == "matched" %}
         <span class="badge badge-green">マッチ済み</span>
       {% elif request_obj.status == "waiting" %}
@@ -17,48 +22,37 @@
     </p>
 
     {% if match %}
-      <!-- ここはマッチ完了後の表示 -->
       <div class="mt-16">
         <p><strong>講師:</strong> {{ match.tutor.user.username }}</p>
-        <p><strong>開始:</strong> {{ match.started_at }}</p>
-        <p><strong>終了:</strong> {{ match.end_at }}</p>
-        <p><strong>ルームURL:</strong>
-          <a href="{{ match.meeting_url }}" target="_blank">
-            レッスンルームに入る
-          </a>
-        </p>
-        <p><strong>料金(仮):</strong> {{ match.price }}</p>
       </div>
 
       <div class="mt-16">
+        <button class="btn" onclick="window.location.href='{% url 'lesson_room' match.id %}'">
+          レッスンルームに入る
+        </button>
         <button class="btn btn-outline" onclick="window.location.href='{% url 'home' %}'">
           ホームに戻る
         </button>
       </div>
 
     {% elif request_obj.status == "waiting" %}
-      <!-- ここが「マッチング中」画面 -->
+      <!-- ここは今の「スピナー＋マッチング中」のままでOK -->
       <div class="spinner-wrapper">
         <div class="spinner"></div>
         <p>講師をマッチング中です…</p>
         <p class="text-muted">オンライン中の講師が見つかり次第、この画面が自動で更新されます。</p>
       </div>
-
       <div class="center mt-16">
         <button class="btn btn-outline" onclick="window.location.href='{% url 'home' %}'">
           キャンセルしてホームに戻る
         </button>
       </div>
-
-      <!-- 数秒おきにページを自動リロードして、マッチングを再トライ -->
       <script>
         setTimeout(function () {
           window.location.reload();
-        }, 4000);  // 4秒ごとにリロード
+        }, 2000);
       </script>
-
     {% else %}
-      <!-- cancelled とか他ステータスの場合 -->
       <div class="mt-16">
         <p>このリクエストは有効ではありません。</p>
       </div>
