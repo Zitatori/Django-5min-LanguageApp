@@ -4,6 +4,9 @@
 
 QuickLesson は、  
 **「生徒 ↔ 承認済み講師の 5分オンラインレッスン」** に特化した Django プロジェクト。
+実行：python manage.py runserver
+
+
 
 目的ははっきりしていて：
 
