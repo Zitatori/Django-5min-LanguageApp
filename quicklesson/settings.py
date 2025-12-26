@@ -1,4 +1,5 @@
 from pathlib import Path
+from django.utils.translation import gettext_lazy as _
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -21,6 +22,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -77,6 +79,18 @@ TIME_ZONE = "Europe/Zurich"
 
 USE_I18N = True
 USE_TZ = True
+
+LANGUAGES = [
+    ("ja", _("Japanese")),
+    ("en", _("English")),
+    ("es", _("Spanish")),
+    ("fr", _("French")),
+]
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+LOCALE_PATHS = [
+    BASE_DIR / "locale",
+]
 
 STATIC_URL = "static/"
 

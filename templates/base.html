@@ -1,10 +1,22 @@
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
   <title>QuickLesson</title>
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <form action="{% url 'set_language' %}" method="post" style="display:inline;">
+  {% csrf_token %}
+  <select name="language" onchange="this.form.submit()">
+    <option value="ja" {% if request.LANGUAGE_CODE == "ja" %}selected{% endif %}>日本語</option>
+    <option value="en" {% if request.LANGUAGE_CODE == "en" %}selected{% endif %}>English</option>
+    <option value="es" {% if request.LANGUAGE_CODE == "es" %}selected{% endif %}>Español</option>
+    <option value="fr" {% if request.LANGUAGE_CODE == "fr" %}selected{% endif %}>Français</option>
+  </select>
+  <input type="hidden" name="next" value="{{ request.path }}">
+</form>
+
 </head>
 <body>
   <header class="header">

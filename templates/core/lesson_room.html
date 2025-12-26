@@ -1,11 +1,13 @@
 {% extends "base.html" %}
+{% load i18n %}
+
 {% block content %}
   <div class="card">
     <div class="card-header">
       <div>
-        <h2 class="card-title">5分レッスンルーム</h2>
+        <h2 class="card-title">{% trans "5-minute lesson room" %}</h2>
         <p class="card-subtitle">
-          まだビデオ通話は実装前。まずはタイマーと画面レイアウトのテスト中。
+          {% trans "First, we only set up your camera and a placeholder for the remote video to design the layout." %}
         </p>
       </div>
       <span class="badge badge-yellow">Test</span>
@@ -16,132 +18,130 @@
       <div class="timer-circle">
         <span id="timer-display"></span>
       </div>
-      <div class="timer-label">残り時間</div>
+      <div class="timer-label">{% trans "Remaining time" %}</div>
     </div>
 
-        <!-- 黒いダミー画面 → 自分のカメラ映像にする -->
+    <!-- 黒いダミー画面 → 自分のカメラ映像にする -->
     <div class="mt-16">
       <video id="localVideo"
              class="video-placeholder"
              autoplay
              playsinline
              muted>
-        ブラウザが video タグをサポートしていません。
+        {% trans "Your browser does not support the video tag." %}
       </video>
     </div>
 
     <!-- セッション情報 -->
     <div class="mt-16">
-      <p><strong>生徒:</strong> {{ match.request.student.user.username }}</p>
-      <p><strong>講師:</strong> {{ match.tutor.user.username }}</p>
-      <p><strong>言語:</strong> {{ match.request.language.name }}</p>
+      <p><strong>{% trans "Student" %}:</strong> {{ match.request.student.user.username }}</p>
+      <p><strong>{% trans "Tutor" %}:</strong> {{ match.tutor.user.username }}</p>
+      <p><strong>{% trans "Language" %}:</strong> {{ match.request.language.name }}</p>
     </div>
 
-        <div class="mt-16">
+    <div class="mt-16">
       <button id="leave-btn" class="btn btn-secondary">
-        レッスンを終了する
+        {% trans "End lesson" %}
       </button>
     </div>
 
-    <!-- ★ここ追加：カメラ／マイクのON/OFFボタン -->
+    <!-- カメラ／マイクのON/OFFボタン -->
     <div class="mt-16">
       <button id="toggle-camera" class="btn btn-outline">
-        カメラOFF
+        {% trans "Camera OFF" %}
       </button>
       <button id="toggle-mic" class="btn btn-outline">
-        マイクOFF
+        {% trans "Mic OFF" %}
       </button>
     </div>
 
+    <script>
+      // ====== タイマー ======
+      (function () {
+        let remaining = {{ remaining_seconds|default:300 }};
+        const display = document.getElementById("timer-display");
+        const leaveBtn = document.getElementById("leave-btn");
 
-      <script>
-    (function () {
-      let remaining = {{ remaining_seconds|default:300 }};
-      const display = document.getElementById("timer-display");
-      const leaveBtn = document.getElementById("leave-btn");
-
-      function format(sec) {
-        const m = Math.floor(sec / 60);
-        const s = sec % 60;
-        return m.toString() + ":" + s.toString().padStart(2, "0");
-      }
-
-      function update() {
-        display.textContent = format(remaining);
-        if (remaining <= 0) {
-          endLesson("timeup");
-        } else {
-          remaining -= 1;
-          setTimeout(update, 1000);
+        function format(sec) {
+          const m = Math.floor(sec / 60);
+          const s = sec % 60;
+          return m.toString() + ":" + s.toString().padStart(2, "0");
         }
-      }
 
-      function endLesson(reason) {
-        console.log("lesson ended:", reason);
-        alert("5分レッスンを終了します（理由: " + reason + "）。おつかれさま！");
-        window.location.href = "{% url 'home' %}";
-      }
+        function update() {
+          display.textContent = format(remaining);
+          if (remaining <= 0) {
+            endLesson("timeup");
+          } else {
+            remaining -= 1;
+            setTimeout(update, 1000);
+          }
+        }
 
-      leaveBtn.addEventListener("click", function () {
-        endLesson("manual");
-      });
+        function endLesson(reason) {
+          console.log("lesson ended:", reason);
+          alert("{% trans 'The 5-minute lesson will end.' %} ({% trans 'Reason' %}: " + reason + ")");
+          window.location.href = "{% url 'home' %}";
+        }
 
-      update();
-    })();
+        leaveBtn.addEventListener("click", function () {
+          endLesson("manual");
+        });
 
-    // ====== 自分のカメラ＋カメラ／マイクON/OFF ======
-    (function () {
-      const videoEl = document.getElementById("localVideo");
-      const camBtn = document.getElementById("toggle-camera");
-      const micBtn = document.getElementById("toggle-mic");
+        update();
+      })();
 
-      let localStream = null;
-      let cameraOn = true;
-      let micOn = true;
+      // ====== 自分のカメラ＋カメラ／マイクON/OFF ======
+      (function () {
+        const videoEl = document.getElementById("localVideo");
+        const camBtn = document.getElementById("toggle-camera");
+        const micBtn = document.getElementById("toggle-mic");
 
-      async function startCamera() {
-        try {
-          localStream = await navigator.mediaDevices.getUserMedia({
-            video: true,
-            audio: true,
+        let localStream = null;
+        let cameraOn = true;
+        let micOn = true;
+
+        async function startCamera() {
+          try {
+            localStream = await navigator.mediaDevices.getUserMedia({
+              video: true,
+              audio: true,
+            });
+            videoEl.srcObject = localStream;
+          } catch (err) {
+            console.error("camera/mic error:", err);
+            // videoタグの中身に文字を出したい場合は <div> 等が必要なので、ここではalertにしています
+            alert("{% trans 'Could not access camera/microphone. Please check your browser settings.' %}");
+          }
+        }
+
+        function toggleCamera() {
+          if (!localStream) return;
+          localStream.getVideoTracks().forEach((track) => {
+            track.enabled = !track.enabled;
+            cameraOn = track.enabled;
           });
-          videoEl.srcObject = localStream;
-        } catch (err) {
-          console.error("カメラ・マイク取得エラー:", err);
-          videoEl.textContent =
-            "カメラ・マイクにアクセスできませんでした。ブラウザの設定を確認してください。";
+          camBtn.textContent = cameraOn ? "{% trans 'Camera OFF' %}" : "{% trans 'Camera ON' %}";
         }
-      }
 
-      function toggleCamera() {
-        if (!localStream) return;
-        localStream.getVideoTracks().forEach((track) => {
-          track.enabled = !track.enabled;
-          cameraOn = track.enabled;
-        });
-        camBtn.textContent = cameraOn ? "カメラOFF" : "カメラON";
-      }
+        function toggleMic() {
+          if (!localStream) return;
+          localStream.getAudioTracks().forEach((track) => {
+            track.enabled = !track.enabled;
+            micOn = track.enabled;
+          });
+          micBtn.textContent = micOn ? "{% trans 'Mic OFF' %}" : "{% trans 'Mic ON' %}";
+        }
 
-      function toggleMic() {
-        if (!localStream) return;
-        localStream.getAudioTracks().forEach((track) => {
-          track.enabled = !track.enabled;
-          micOn = track.enabled;
-        });
-        micBtn.textContent = micOn ? "マイクOFF" : "マイクON";
-      }
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+          startCamera();
+        } else {
+          alert("{% trans 'This browser does not support getUserMedia.' %}");
+        }
 
-      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-        startCamera();
-      } else {
-        videoEl.textContent =
-          "このブラウザは getUserMedia に対応していません。";
-      }
-
-      camBtn.addEventListener("click", toggleCamera);
-      micBtn.addEventListener("click", toggleMic);
-    })();
-  </script>
-
-
+        camBtn.addEventListener("click", toggleCamera);
+        micBtn.addEventListener("click", toggleMic);
+      })();
+    </script>
+  </div>
 {% endblock %}

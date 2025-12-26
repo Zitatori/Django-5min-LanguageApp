@@ -1,0 +1,36 @@
+{% load i18n %}
+
+<div class="card">
+  <div class="card-header">
+    <h3 class="card-title">{% trans "Recent lessons" %}</h3>
+  </div>
+
+  <ul class="list">
+    {% for m in matches %}
+      <li style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px;">
+        <div>
+          <div><strong>{{ m.started_at }}</strong> <span class="text-muted">〜 {{ m.end_at }}</span></div>
+          <div class="text-muted" style="margin-top:4px;">
+            {% trans "Student" %}: {{ m.student_name }}
+          </div>
+        </div>
+        <span class="badge badge-gray">{{ m.request.language.name }}</span>
+      </li>
+    {% empty %}
+      {% for d in dummy_matches %}
+        <li style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px; opacity:.85;">
+          <div>
+            <div><strong>{{ d.started_at }}</strong> <span class="text-muted">〜 {{ d.end_at }}</span></div>
+            <div class="text-muted" style="margin-top:4px;">
+              {% trans "Student" %}: {{ d.student_name }}
+              <span class="text-muted">({% trans "sample" %})</span>
+            </div>
+          </div>
+          <span class="badge badge-gray">{{ d.language }}</span>
+        </li>
+      {% empty %}
+        <li class="text-muted">{% trans "No lessons yet." %}</li>
+      {% endfor %}
+    {% endfor %}
+  </ul>
+</div>
