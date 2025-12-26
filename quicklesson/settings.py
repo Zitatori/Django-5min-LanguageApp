@@ -1,14 +1,36 @@
 from pathlib import Path
 from django.utils.translation import gettext_lazy as _
+import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = "django-insecure-change-me"
+# ========= Security / Env =========
+# Renderなど本番では必ず環境変数で上書きする
+SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-change-me")
+DEBUG = os.getenv("DEBUG", "1") == "1"
 
-DEBUG = True
+# Render が自動で用意するホスト名（ある場合）
+RENDER_EXTERNAL_HOSTNAME = os.getenv("RENDER_EXTERNAL_HOSTNAME")
 
-ALLOWED_HOSTS: list[str] = []
+# 環境変数から ALLOWED_HOSTS を読む（カンマ区切り）
+# 例: ALLOWED_HOSTS="example.onrender.com,localhost,127.0.0.1"
+ALLOWED_HOSTS = [h.strip() for h in os.getenv("ALLOWED_HOSTS", "").split(",") if h.strip()]
 
+# Renderのホスト名を必ず許可（envが空でも動くように）
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+
+# 念のため：あなたのRender URL（固定で許可）
+ALLOWED_HOSTS.append("django-5min-languageapp.onrender.com")
+
+# CSRF（本番でフォームPOSTするときに必要）
+# 例: CSRF_TRUSTED_ORIGINS="https://example.onrender.com"
+CSRF_TRUSTED_ORIGINS = [o.strip() for o in os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",") if o.strip()]
+if not CSRF_TRUSTED_ORIGINS:
+    CSRF_TRUSTED_ORIGINS = ["https://django-5min-languageapp.onrender.com"]
+
+
+# ========= Apps =========
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -19,8 +41,10 @@ INSTALLED_APPS = [
     "core",
 ]
 
+# ========= Middleware =========
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # static配信用
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -32,6 +56,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "quicklesson.urls"
 
+# ========= Templates =========
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -51,6 +76,7 @@ TEMPLATES = [
 WSGI_APPLICATION = "quicklesson.wsgi.application"
 ASGI_APPLICATION = "quicklesson.asgi.application"
 
+# ========= Database =========
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -58,25 +84,17 @@ DATABASES = {
     }
 }
 
+# ========= Password validation =========
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
-    },
+    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
+    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
+    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
+    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
+# ========= i18n =========
 LANGUAGE_CODE = "ja"
-
 TIME_ZONE = "Europe/Zurich"
-
 USE_I18N = True
 USE_TZ = True
 
@@ -86,25 +104,22 @@ LANGUAGES = [
     ("es", _("Spanish")),
     ("fr", _("French")),
 ]
-BASE_DIR = Path(__file__).resolve().parent.parent
 
 LOCALE_PATHS = [
     BASE_DIR / "locale",
 ]
 
+# ========= Static files =========
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_DIRS = [BASE_DIR / "static"]
 
-DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+# WhiteNoise: 余裕があれば圧縮＆キャッシュ強化（任意）
+# STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
+# ========= Auth redirects =========
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "home"
 LOGOUT_REDIRECT_URL = "home"
 
-STATIC_URL = "static/"
-
-# これを追加
-STATICFILES_DIRS = [BASE_DIR / "static"]
-
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
