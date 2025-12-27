@@ -2,35 +2,39 @@
 
 <div class="card">
   <div class="card-header">
-    <h3 class="card-title">{% trans "Recent lessons" %}</h3>
+    <h3 class="card-title">Recent History</h3>
   </div>
 
   <ul class="list">
     {% for m in matches %}
       <li style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px;">
         <div>
-          <div><strong>{{ m.started_at }}</strong> <span class="text-muted">〜 {{ m.end_at }}</span></div>
+          <div><strong>{{ m.started_at|date:"Y-m-d" }}</strong></div>
           <div class="text-muted" style="margin-top:4px;">
-            {% trans "Student" %}: {{ m.student_name }}
+            参加者：{{ m.student_name|default:"非表示" }}
           </div>
         </div>
         <span class="badge badge-gray">{{ m.request.language.name }}</span>
       </li>
+
     {% empty %}
+
       {% for d in dummy_matches %}
         <li style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px; opacity:.85;">
           <div>
-            <div><strong>{{ d.started_at }}</strong> <span class="text-muted">〜 {{ d.end_at }}</span></div>
+            <div><strong>{{ d.started_at|date:"Y-m-d" }}</strong></div>
             <div class="text-muted" style="margin-top:4px;">
-              {% trans "Student" %}: {{ d.student_name }}
-              <span class="text-muted">({% trans "sample" %})</span>
+              Guest：{{ d.partner }}
+              <span class="text-muted"></span>
             </div>
           </div>
           <span class="badge badge-gray">{{ d.language }}</span>
         </li>
+
       {% empty %}
-        <li class="text-muted">{% trans "No lessons yet." %}</li>
+        <li class="text-muted">まだ履歴はありません。</li>
       {% endfor %}
+
     {% endfor %}
   </ul>
 </div>
