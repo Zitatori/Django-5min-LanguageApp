@@ -1,5 +1,9 @@
 # QuickLesson – 5分オンラインレッスン（開発中）
 
+**Deploy Link**
+https://django-5min-languageapp.onrender.com/
+
+
 **ステータス：** まだゴリゴリ開発中。本番運用レベルではない。
 
 QuickLesson は、  
