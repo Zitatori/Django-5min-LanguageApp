@@ -1,248 +1,186 @@
-# QuickLesson – 5分オンラインレッスン（開発中）
+QuickLesson — 5-Minute Online Language Lessons (WIP)
 
-**Deploy Link**
+Live demo (development):
 https://django-5min-languageapp.onrender.com/
 
+Status: 🚧 Heavy work in progress. Not production-ready.
 
-**ステータス：** まだゴリゴリ開発中。本番運用レベルではない。
+QuickLesson is a safety-first, minimal language conversation platform focused on
+5-minute, tutor-only online lessons.
 
-QuickLesson は、  
-**「生徒 ↔ 承認済み講師の 5分オンラインレッスン」** に特化した Django プロジェクト。
+The core idea is simple:
 
+Talk for 5 minutes. Learn. Stop. No dating, no endless chatting.
 
+Concept
 
-実行：python manage.py runserver
+QuickLesson is intentionally restrictive by design.
 
-**Name of Role
-相手役/参加者(日本語）
-Partner / Guest(English)
-Guía /Participante(Español)
-Guide /Participant(e) (Français)
+Only Student ↔ Approved Tutor matching
 
+Hard 5-minute time limit (forced end)
 
-目的ははっきりしていて：
+Tutors are reviewed & approved
 
-- 出会い目的・エロ目的・暇つぶしチャットを潰す  
-- 長時間だらだら話すのを防ぐ（**5分縛り**）  
-- **管理者がちゃんと監視・介入できる仕組み**を持つ
+Built to prevent dating / erotic / casual chat misuse
 
-という、安全寄りのミニマルな会話プラットフォームを作ること。
+Designed for future moderation and admin intervention
 
----
+Roles (UI labels)
+Language	Waiting side	Joining side
+Japanese	相手役	参加者
+English	Partner	Guest
+Spanish	Guía	Participante
+French	Guide	Participant
 
-## このプロジェクトでやりたいこと
+(Internal system roles remain student / tutor / admin.)
 
-ざっくりいうと：
+Tech Stack (MVP)
 
-- マッチングは **「生徒 ↔ 講師」だけ**（ユーザー同士のランダム通話はやらない）
-- レッスン時間は **1回5分まで（強制終了）**
-- 講師は **審査・承認制**
-- 将来的に：
-  - ブラウザ内で動くビデオ通話（WebRTC）
-  - 管理者がセッションに参加・監視・必要なら録画
-  - 通報・BAN・課金（クレジット制）
+Python / Django
 
-**「安全第一の言語プラットフォーム」**として設計していく。
+SQLite (dev only)
 
----
+Server-rendered templates + custom lightweight CSS
 
-## 現状できていること（MVPレベル）
+No frontend framework
 
-### 技術スタック
+Current Features (MVP)
+Models
 
-- Python / Django
-- SQLite（開発環境）
-- シンプルなテンプレート＋CSS（Tailwindっぽい雰囲気だけ自作）
+LessonLanguage — supported languages
 
-### モデル（`core/models.py`）
+StudentProfile — minimal student profile
 
-- `LessonLanguage`  
-  - 対応言語（例：English, Spanish, Japanese）
-- `StudentProfile`  
-  - Django `User` を拡張した「生徒プロフィール」
-- `TutorProfile`  
-  - Django `User` を拡張した「講師プロフィール」
-  - 対応言語（ManyToMany）
-  - `is_online`（オンライン待機フラグ）
-  - `can_interview`（講師面接の担当ができるか）
-  - `is_approved`（承認済み講師かどうか）※実装済みにする予定
-- `QuickLessonRequest`
-  - 生徒が「5分レッスンしたい」ときのリクエスト
-  - `student`, `language`, `status`（waiting / matched / cancelled）
-  - `purpose`（lesson / interview）※面接用にも使えるように
-- `QuickLessonMatch`
-  - 実際に誰と誰がマッチしたか
-  - `request`, `tutor`
-  - `started_at`, `end_at`（5分枠）
-  - `price`（将来の課金用）
-  - `room_id`（将来の WebRTC 用ルームID）
-  - `meeting_provider`（"webrtc" / "external" など切替想定）
+TutorProfile
 
-※ WebRTC自体はまだ「枠」の段階。中身はこれから。
+supported languages
 
----
+is_online
 
-## 今の画面フロー（MVP）
+can_interview
 
-### 生徒側
+(planned) is_approved
 
-1. ログイン
-2. `/request/` で言語を選んで「5分レッスン開始」
-3. バックエンドが：
-   - `is_online=True` ＋ `is_approved=True` の講師を検索
-   - 対応言語が一致する講師からランダムで1人選ぶ
-4. マッチできた場合：
-   - `QuickLessonMatch` 作成
-   - `request_detail` 画面で講師情報や「レッスンルームへ」ボタンを表示
-5. マッチできない場合：
-   - `status=waiting` のまま
-   - 「マッチング中…」の画面＋スピナー
-   - 数秒ごとに自動リロードして、講師がオンラインになったらマッチング
+QuickLessonRequest
 
-### 講師側
+lesson request (waiting / matched / cancelled)
 
-1. ログイン
-2. `/tutor/dashboard/` にアクセス
-3. 条件を満たすユーザー（roleが`tutor` or `admin` ＋ `TutorProfile.is_approved=True`）だけここに入れるようにする予定
-4. ダッシュボードでは：
-   - 自分のステータスを「オンライン／オフライン」に切り替え
-   - 最近担当したレッスン（マッチ）の一覧を確認
+purpose: lesson / interview
 
-### 管理者（現状）
-
-- Django Admin で：
-  - 言語を登録
-  - ユーザーを作成
-  - `StudentProfile` / `TutorProfile` を紐づけ
-  - 将来的には：
-    - `UserProfile` の `role`（student / tutor / admin）
-    - `TutorProfile.is_approved` を設定する運用にする
+QuickLessonMatch
 
----
+who matched with whom
 
-## これからやりたいこと（構想メモ）
-
-### 1. 生徒 ↔ 講師 only を完全に徹底
-
-- `UserProfile` を導入して `role` を管理：
-  - `student` / `tutor` / `admin`
-- マッチングロジック：
-  - 生徒 (`role=student`) → 承認済み講師（`role=tutor` ＋ `is_approved=True`）だけ
-  - 生徒 ↔ 生徒、講師 ↔ 講師などはシステム上作れない
-- `/request/` は `role=student` のユーザーしか叩けないようにする
-- `/tutor/dashboard/` は `role=tutor` or `role=admin` のみ
+started_at / end_at (5-minute slot)
 
-これだけでも、「出会い目的で複数アカウント作って遊ぶ」のはかなり面倒になる。
+price (for future credits)
 
----
+room metadata (future WebRTC)
 
-### 2. 本気の5分制限（時間コントロール）
+Current Flow
+Student
 
-- `QuickLessonMatch` の `started_at` / `end_at` をちゃんと使う
-- `/lesson/room/<match_id>/` で：
-  - 残り時間（秒）をサーバー側で計算してテンプレートに渡す
-  - JSでカウントダウン表示
-  - 0になったら：
-    - WebRTC接続を閉じる（将来）
-    - レッスン終了画面に自動遷移
-- WebSocket（シグナリング）側でも、サーバーが「このマッチはすでに終了」と判断したら、そのルームの接続メッセージを拒否する設計を目指す。
+Login
 
-**目的：**  
-どんなに粘っても **5分以上の通話は続けさせない**。
+Select a language
 
----
+Request a 5-minute lesson
 
-### 3. サイト内ビデオ通話（WebRTC）
+Backend searches for:
 
-やりたいこと：
+online
 
-- Zoomなどに飛ばさず、**サイト内で完結するビデオ通話**
-- 各マッチごとに `room_id` を発行
-- `/lesson/room/<match_id>/` で：
-  - ロール：生徒 / 講師 / 管理者
-  - ロールに応じたUI（録画ボタンや警告など）
-- 技術的には：
-  - `getUserMedia` でカメラ・マイク
-  - `RTCPeerConnection` で P2P
-  - Django Channels or 別のシグナリングサーバーで WebSocket を使って offer/answer/ICE を交換
+approved
 
-これは一番重いところなので、**段階的に進める予定**。  
-今は「ルーム画面 + 自分のカメラ表示 + タイマー」までを先に固める。
+language-compatible tutors
 
----
+If matched → lesson room
 
-### 4. 管理者による監視・録画
+If not → waiting screen with auto-retry
 
-- 管理者はどのレッスンにも「監視者」として入室できる
-  - `LessonParticipant` モデルで `role=admin` を持たせるイメージ
-- 管理者だけ見えるUI（想定）：
-  - 「録画開始 / 停止」ボタン
-  - 「このユーザーを通報／一時停止」ボタン
-- 録画は：
-  - ブラウザ側 `MediaRecorder` を使って録画
-  - 終了後に Django 側にアップロード
-  - `Recording` モデルで `match` に紐づけて保存
-- 利用規約で「違反行為の監視・証拠保全のために録画する場合がある」と明記する想定。
+Tutor
 
----
+Login
 
-### 5. 通報・BAN・モデレーション
+Open dashboard
 
-- レッスン後、またはレッスン中でもよいので「通報ボタン」を用意
-- `Report` モデル：
-  - `reported_user`
-  - `reported_by`
-  - `match`
-  - `reason`（性的な発言、暴言、差別、出会い目的、など）
-  - `comment`
-- 一定数の通報で：
-  - 自動的にアカウント一時停止
-  - 管理者レビュー後にBAN or 復帰
-- `UserProfile` に：
-  - `is_banned` フラグを持たせ、ログイン時やマッチング時にチェック
+Toggle online/offline
 
----
+Get matched automatically
 
-### 6. 課金・クレジット制（出会い目的の冷やかし対策）
+See recent lesson history (minimal)
 
-「無料でいくらでも5分通話できる」と、変な目的の人も混ざりやすいので：
+Admin (for now)
 
-- 生徒側にクレジット（ポイント）制を導入したい
-  - 例：1レッスン = 1クレジット
-  - Stripeなどでクレジット購入
-- クレジットがないと `QuickLessonRequest` を作れないようにする
-- あくまで **「本気で学習したい人だけが使う」雰囲気** に寄せたい
+Django Admin:
 
----
+create languages
 
-## このリポジトリの位置づけ
+manage users
 
-- 自分用の学習・ポートフォリオ・設計実験用
-- とりあえずモノを動かしながら：
-  - Djangoの実務寄りスキル
-  - WebRTCまわりの知識
-  - セキュリティ・モデレーション設計
-- を鍛えていく感じ。
+link profiles
 
-**最終イメージ：**
+Planned:
 
-> 「5分だけ、安全に、サクッと外国語を話せる場所。  
->  出会い目的は最初から設計で潰してある。」
+role management
 
-ここまで来れたら理想。
+tutor approval
 
----
+Roadmap (Short)
 
-Quick start
+Enforce strict Student ↔ Tutor only logic
 
-1.pip install -r requirements.txt
+Real 5-minute enforcement (server + client)
 
-2.python manage.py migrate
+In-browser WebRTC video
 
-3.python manage.py createsuperuser
+Admin monitoring & recording
 
-4.管理画面で LessonLanguage を追加
+Reports / bans / moderation
 
-5.ユーザー作成 → StudentProfile / TutorProfile を作成・紐付け
+Credit-based payments (anti-abuse)
 
-6.python manage.py runserver
+Philosophy
+
+This project intentionally trades flexibility for safety.
+
+No random user calls
+
+No long sessions
+
+No anonymity loopholes
+
+No “just chatting”
+
+If someone wants to misuse it, the system should make it annoying.
+
+Quick Start
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py createsuperuser
+python manage.py runserver
+
+
+Then in Django Admin:
+
+Create LessonLanguage
+
+Create users
+
+Attach StudentProfile / TutorProfile
+
+Purpose of This Repo
+
+Personal learning project
+
+Django backend design practice
+
+WebRTC experimentation
+
+Moderation & safety-oriented system design
+
+Target vision:
+
+A place where you can safely speak a foreign language for 5 minutes —
+and where dating misuse is blocked by design.
