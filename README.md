@@ -223,3 +223,17 @@ QuickLesson は、
 ここまで来れたら理想。
 
 ---
+
+Quick start
+
+1.pip install -r requirements.txt
+
+2.python manage.py migrate
+
+3.python manage.py createsuperuser
+
+4.管理画面で LessonLanguage を追加
+
+5.ユーザー作成 → StudentProfile / TutorProfile を作成・紐付け
+
+6.python manage.py runserver
