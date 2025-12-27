@@ -1,186 +1,124 @@
-QuickLesson — 5-Minute Online Language Lessons (WIP)
+# QuickLesson — 5-Minute Online Language Lessons (WIP)
 
-Live demo (development):
-https://django-5min-languageapp.onrender.com/
+**Live demo (development):** https://django-5min-languageapp.onrender.com/
 
-Status: 🚧 Heavy work in progress. Not production-ready.
+**Status:** 🚧 Heavy work in progress. Not production-ready.
 
-QuickLesson is a safety-first, minimal language conversation platform focused on
-5-minute, tutor-only online lessons.
+---
 
-The core idea is simple:
+## What is QuickLesson?
 
-Talk for 5 minutes. Learn. Stop. No dating, no endless chatting.
+QuickLesson is a **safety-first language conversation platform** focused on:
 
-Concept
+- **Student ↔ Approved Tutor only**
+- **Strict 5-minute lesson limit**
+- No dating / erotic / casual chat misuse
 
-QuickLesson is intentionally restrictive by design.
+> Talk for 5 minutes. Learn. The session ends.
 
-Only Student ↔ Approved Tutor matching
+---
 
-Hard 5-minute time limit (forced end)
+## Core Principles
 
-Tutors are reviewed & approved
+- ❌ No random user-to-user calls
+- ❌ No long or endless sessions
+- ✅ Short, focused language practice
+- ✅ Built for moderation from day one
 
-Built to prevent dating / erotic / casual chat misuse
+---
 
-Designed for future moderation and admin intervention
+## Roles (UI labels)
 
-Roles (UI labels)
-Language	Waiting side	Joining side
-Japanese	相手役	参加者
-English	Partner	Guest
-Spanish	Guía	Participante
-French	Guide	Participant
+Internal system roles remain `student / tutor / admin`.
 
-(Internal system roles remain student / tutor / admin.)
+| Language | Waiting side | Joining side |
+|---|---|---|
+| Japanese | 相手役 | 参加者 |
+| English | Partner | Guest |
+| Spanish | Guía | Participante |
+| French | Guide | Participant |
 
-Tech Stack (MVP)
+---
 
-Python / Django
+## Tech Stack (MVP)
 
-SQLite (dev only)
+- Python / Django
+- SQLite (dev only)
+- Server-rendered templates + lightweight custom CSS
 
-Server-rendered templates + custom lightweight CSS
+---
 
-No frontend framework
+## Current Features (MVP)
 
-Current Features (MVP)
-Models
+### Models
 
-LessonLanguage — supported languages
+- **LessonLanguage** — supported languages  
+- **StudentProfile** — minimal student profile  
+- **TutorProfile**
+  - supported languages (ManyToMany)
+  - `is_online`
+  - `can_interview`
+  - *(planned)* `is_approved`
+- **QuickLessonRequest**
+  - lesson request (`waiting / matched / cancelled`)
+  - `purpose`: `lesson / interview`
+- **QuickLessonMatch**
+  - who matched with whom
+  - `started_at / end_at` (5-minute slot)
+  - `price` (future credits)
+  - room metadata (future WebRTC)
 
-StudentProfile — minimal student profile
+---
 
-TutorProfile
+## Current Flow (MVP)
 
-supported languages
+### Student
 
-is_online
+1. Login
+2. Select a language
+3. Request a 5-minute lesson
+4. Backend searches for tutors that are:
+   - online
+   - approved
+   - compatible with the requested language
+5. If matched → lesson room
+6. If not → waiting screen with auto-retry
 
-can_interview
+### Tutor
 
-(planned) is_approved
+1. Login
+2. Open `/tutor/dashboard/`
+3. Toggle online/offline
+4. Get matched automatically
+5. View recent lesson history (minimal)
 
-QuickLessonRequest
+### Admin (current)
 
-lesson request (waiting / matched / cancelled)
+- Django Admin:
+  - manage languages
+  - create users
+  - link profiles
+- Planned:
+  - role management
+  - tutor approval workflow
 
-purpose: lesson / interview
+---
 
-QuickLessonMatch
+## Roadmap (short)
 
-who matched with whom
+- Enforce strict **Student ↔ Tutor only** logic everywhere
+- Real **5-minute enforcement** (server + client)
+- In-browser **WebRTC video**
+- Admin monitoring & recording
+- Reports / bans / moderation tools
+- Credit-based payments (anti-abuse)
 
-started_at / end_at (5-minute slot)
+---
 
-price (for future credits)
+## Quick Start
 
-room metadata (future WebRTC)
-
-Current Flow
-Student
-
-Login
-
-Select a language
-
-Request a 5-minute lesson
-
-Backend searches for:
-
-online
-
-approved
-
-language-compatible tutors
-
-If matched → lesson room
-
-If not → waiting screen with auto-retry
-
-Tutor
-
-Login
-
-Open dashboard
-
-Toggle online/offline
-
-Get matched automatically
-
-See recent lesson history (minimal)
-
-Admin (for now)
-
-Django Admin:
-
-create languages
-
-manage users
-
-link profiles
-
-Planned:
-
-role management
-
-tutor approval
-
-Roadmap (Short)
-
-Enforce strict Student ↔ Tutor only logic
-
-Real 5-minute enforcement (server + client)
-
-In-browser WebRTC video
-
-Admin monitoring & recording
-
-Reports / bans / moderation
-
-Credit-based payments (anti-abuse)
-
-Philosophy
-
-This project intentionally trades flexibility for safety.
-
-No random user calls
-
-No long sessions
-
-No anonymity loopholes
-
-No “just chatting”
-
-If someone wants to misuse it, the system should make it annoying.
-
-Quick Start
+```bash
 pip install -r requirements.txt
 python manage.py migrate
 python manage.py createsuperuser
 python manage.py runserver
-
-
-Then in Django Admin:
-
-Create LessonLanguage
-
-Create users
-
-Attach StudentProfile / TutorProfile
-
-Purpose of This Repo
-
-Personal learning project
-
-Django backend design practice
-
-WebRTC experimentation
-
-Moderation & safety-oriented system design
-
-Target vision:
-
-A place where you can safely speak a foreign language for 5 minutes —
-and where dating misuse is blocked by design.
