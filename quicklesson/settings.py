@@ -14,7 +14,12 @@ RENDER_EXTERNAL_HOSTNAME = os.getenv("RENDER_EXTERNAL_HOSTNAME")
 
 # 環境変数から ALLOWED_HOSTS を読む（カンマ区切り）
 # 例: ALLOWED_HOSTS="example.onrender.com,localhost,127.0.0.1"
-ALLOWED_HOSTS = [h.strip() for h in os.getenv("ALLOWED_HOSTS", "").split(",") if h.strip()]
+if DEBUG:
+    ALLOWED_HOSTS = ["localhost", "127.0.0.1", "[::1]"]
+else:
+    ALLOWED_HOSTS = ["django-5min-languageapp.onrender.com"]
+
+CSRF_TRUSTED_ORIGINS = ["https://django-5min-languageapp.onrender.com"]
 
 # Renderのホスト名を必ず許可（envが空でも動くように）
 if RENDER_EXTERNAL_HOSTNAME:
