@@ -2,18 +2,18 @@
 {% block content %}
   <div class="card">
     <div class="card-header">
-      <h2 class="card-title">今すぐ5分話す</h2>
+      <h2 class="card-title">Talk for 5 Minutes Now</h2>
       <span class="badge badge-yellow">Step 1</span>
     </div>
 
     <p class="card-subtitle">
-      話したい言語を選んでください。オンライン中の講師がいれば、ランダムでマッチングされます。
+      Select the language you want to practice. If any tutors are online, you will be randomly matched.
     </p>
 
     <form method="post" class="mt-16">
       {% csrf_token %}
       <label>
-        言語を選択
+        Select a language
         <select name="language_id">
           {% for lang in languages %}
             <option value="{{ lang.id }}">{{ lang.name }}</option>
@@ -22,10 +22,10 @@
       </label>
 
       <div class="mt-16">
-        <button type="submit" class="btn">5分レッスンを開始する</button>
+        <button type="submit" class="btn">Start a 5-Minute Lesson</button>
         <button type="button" class="btn btn-outline"
                 onclick="window.location.href='{% url 'home' %}'">
-          キャンセル
+          Cancel
         </button>
       </div>
     </form>

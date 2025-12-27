@@ -2,13 +2,13 @@
 {% block content %}
   <div class="card" style="max-width: 420px; margin: 40px auto;">
     <div class="card-header">
-      <h2 class="card-title">ログイン</h2>
+      <h2 class="card-title">login</h2>
     </div>
 
     <form method="post">
       {% csrf_token %}
       {{ form.as_p }}
-      <button type="submit" class="btn">ログイン</button>
+      <button type="submit" class="btn">login</button>
     </form>
   </div>
 {% endblock %}

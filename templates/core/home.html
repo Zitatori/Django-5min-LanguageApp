@@ -3,35 +3,35 @@
   <div class="card">
     <div class="card-header">
       <div>
-        <h2 class="card-title">5分オンラインレッスン</h2>
+        <h2 class="card-title">5-Minute Online Lessons</h2>
         <p class="card-subtitle">
-          今すぐ誰かと話したい人のための、超ライトな会話プラットフォーム。
+          A super-light conversation platform for people who want to talk with someone right now.
         </p>
       </div>
     </div>
 
     {% if user.is_authenticated %}
-      <p>言語を選んで「5分レッスン」を始められます。</p>
+      <p>Select a language and start a 5-minute lesson.</p>
       <button class="btn" onclick="window.location.href='{% url 'create_request' %}'">
-        今すぐ5分レッスンする
+        Start a 5-Minute Lesson Now
       </button>
     {% else %}
-      <p>レッスンを始めるにはログインが必要です。</p>
+      <p>You need to log in to start a lesson.</p>
       <button class="btn" onclick="window.location.href='{% url 'login' %}'">
-        ログインする
+        Log In
       </button>
     {% endif %}
   </div>
 
   <div class="card">
     <div class="card-header">
-      <h3 class="card-title">どう動くの？</h3>
+      <h3 class="card-title">How does it work?</h3>
     </div>
     <ul class="list">
-      <li>1. 講師は「オンライン」に切り替えて待機</li>
-      <li>2. 生徒は言語を選んで「今すぐ5分レッスン」を押す</li>
-      <li>3. システムが対応できる講師をランダムでマッチング</li>
-      <li>4. ミーティングURLに入って5分会話</li>
+      <li>1. Teachers switch their status to “Online” and wait.</li>
+      <li>2. Students choose a language and click “Start a 5-minute lesson now”.</li>
+      <li>3. The system randomly matches an available teacher.</li>
+      <li>4. Join the meeting URL and talk for 5 minutes.</li>
     </ul>
   </div>
 {% endblock %}

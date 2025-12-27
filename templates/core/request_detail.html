@@ -3,48 +3,50 @@
   <div class="card">
     <div class="card-header">
       <div>
-        <h2 class="card-title">マッチング結果</h2>
+        <h2 class="card-title">Matching Result</h2>
         <p class="card-subtitle">
-          5分レッスンの準備ができました。
+          Your 5-minute lesson is ready.
         </p>
       </div>
       {% if request_obj.status == "matched" %}
-        <span class="badge badge-green">マッチ済み</span>
+        <span class="badge badge-green">Matched</span>
       {% elif request_obj.status == "waiting" %}
-        <span class="badge badge-gray">マッチング中</span>
+        <span class="badge badge-gray">Matching</span>
       {% else %}
-        <span class="badge badge-gray">キャンセル</span>
+        <span class="badge badge-gray">Canceled</span>
       {% endif %}
     </div>
 
     <p class="card-subtitle">
-      希望言語: {{ request_obj.language.name }}
+      Selected language: {{ request_obj.language.name }}
     </p>
 
     {% if match %}
       <div class="mt-16">
-        <p><strong>講師:</strong> {{ match.tutor.user.username }}</p>
+        <p><strong>Tutor:</strong> {{ match.tutor.user.username }}</p>
       </div>
 
       <div class="mt-16">
         <button class="btn" onclick="window.location.href='{% url 'lesson_room' match.id %}'">
-          レッスンルームに入る
+          Enter Lesson Room
         </button>
         <button class="btn btn-outline" onclick="window.location.href='{% url 'home' %}'">
-          ホームに戻る
+          Back to Home
         </button>
       </div>
 
     {% elif request_obj.status == "waiting" %}
-      <!-- ここは今の「スピナー＋マッチング中」のままでOK -->
+      <!-- Spinner + matching in progress -->
       <div class="spinner-wrapper">
         <div class="spinner"></div>
-        <p>講師をマッチング中です…</p>
-        <p class="text-muted">オンライン中の講師が見つかり次第、この画面が自動で更新されます。</p>
+        <p>Matching you with a tutor…</p>
+        <p class="text-muted">
+          This page will automatically update as soon as an available tutor is found.
+        </p>
       </div>
       <div class="center mt-16">
         <button class="btn btn-outline" onclick="window.location.href='{% url 'home' %}'">
-          キャンセルしてホームに戻る
+          Cancel and return to Home
         </button>
       </div>
       <script>
@@ -54,11 +56,11 @@
       </script>
     {% else %}
       <div class="mt-16">
-        <p>このリクエストは有効ではありません。</p>
+        <p>This request is no longer valid.</p>
       </div>
       <div class="mt-16">
         <button class="btn btn-outline" onclick="window.location.href='{% url 'home' %}'">
-          ホームに戻る
+          Back to Home
         </button>
       </div>
     {% endif %}
