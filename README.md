@@ -13,6 +13,11 @@ QuickLesson は、
 
 実行：python manage.py runserver
 
+**Name of Role
+相手役/参加者(日本語）
+Partner / Guest(English)
+Guía /Participante(Español)
+Guide /Participant(e) (Français)
 
 
 目的ははっきりしていて：
