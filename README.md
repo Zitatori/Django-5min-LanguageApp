@@ -108,7 +108,7 @@ Internal system roles remain `student / tutor / admin`.
 
 - Enforce strict **Student ↔ Tutor only** logic everywhere
 - Real **5-minute enforcement** (server + client)
-- In-browser **WebRTC video**
+- In-browser **WebRTC video**（Daily Prebuilt）
 - Admin monitoring & recording
 - Reports / bans / moderation tools
 - Credit-based payments (anti-abuse)
