@@ -1,5 +1,25 @@
 # QuickLesson — 5-Minute Online Language Lessons (WIP)
+## Next Steps
 
+### Django (main development)
+- Refactor views into modules (split by feature)
+- Refactor models if they grow
+- Split settings into base / dev / prod
+- Replace function-based views with class-based views (CBV)
+- Fix duplicate view definitions (e.g. tutor_dashboard)
+- Fix HTML structure (move form tags inside <body>)
+
+### FastAPI
+- Stop using it for frontend rendering
+- Either:
+  - use it only as an API, or
+  - pause it for now
+
+### Environment
+- Create requirements.txt with pinned versions
+
+### General
+- Clean project structure early to avoid future issues
 **Live demo (development):** https://django-5min-languageapp.onrender.com/
 ## Screenshots
 
