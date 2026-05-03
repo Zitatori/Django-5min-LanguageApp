@@ -4,6 +4,14 @@
 
 **Status:** 🚧 Heavy work in progress. Not production-ready.
 
+## What I would like feedback on
+
+- Whether Django is a better choice than Streamlit/FastAPI for this app
+- Database/model design
+- Authentication and role management
+- Matching logic between students and tutors
+- Deployment strategy
+- Security/moderation design
 ---
 
 ## What is QuickLesson?
@@ -108,7 +116,7 @@ Internal system roles remain `student / tutor / admin`.
 
 - Enforce strict **Student ↔ Tutor only** logic everywhere
 - Real **5-minute enforcement** (server + client)
-- In-browser **WebRTC video**
+- In-browser **WebRTC video**（Daily Prebuilt）
 - Admin monitoring & recording
 - Reports / bans / moderation tools
 - Credit-based payments (anti-abuse)
