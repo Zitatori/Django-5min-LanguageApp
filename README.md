@@ -4,6 +4,14 @@
 
 **Status:** 🚧 Heavy work in progress. Not production-ready.
 
+## What I would like feedback on
+
+- Whether Django is a better choice than Streamlit/FastAPI for this app
+- Database/model design
+- Authentication and role management
+- Matching logic between students and tutors
+- Deployment strategy
+- Security/moderation design
 ---
 
 ## What is QuickLesson?
