@@ -1,6 +1,12 @@
 # QuickLesson — 5-Minute Online Language Lessons (WIP)
 
 **Live demo (development):** https://django-5min-languageapp.onrender.com/
+## Screenshots
+
+### Dashboard
+
+![Dashboard](django_langApp.png)
+
 
 **Status:** 🚧 Heavy work in progress. Not production-ready.
 
