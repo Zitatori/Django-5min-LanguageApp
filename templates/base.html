@@ -1,36 +1,39 @@
 {% load static %}
 {% load i18n %}
+
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="{{ request.LANGUAGE_CODE|default:'ja' }}">
 <head>
   <meta charset="UTF-8">
   <title>QuickLesson</title>
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
-  <body><form action="{% url 'set_language' %}" method="post" style="display:inline;">
-  {% csrf_token %}
-  <select name="language" onchange="this.form.submit()">
-    <option value="ja" {% if request.LANGUAGE_CODE == "ja" %}selected{% endif %}>日本語</option>
-    <option value="en" {% if request.LANGUAGE_CODE == "en" %}selected{% endif %}>English</option>
-    <option value="es" {% if request.LANGUAGE_CODE == "es" %}selected{% endif %}>Español</option>
-    <option value="fr" {% if request.LANGUAGE_CODE == "fr" %}selected{% endif %}>Français</option>
-  </select>
-  <input type="hidden" name="next" value="{{ request.path }}">
-</form>
-</body>
 </head>
+
 <body>
   <header class="header">
     <div class="header-title">
       <a href="{% url 'home' %}">QuickLesson</a>
     </div>
+
     <nav class="header-nav">
+      <form action="{% url 'set_language' %}" method="post" style="display:inline;">
+        {% csrf_token %}
+        <select name="language" onchange="this.form.submit()">
+          <option value="ja" {% if request.LANGUAGE_CODE == "ja" %}selected{% endif %}>日本語</option>
+          <option value="en" {% if request.LANGUAGE_CODE == "en" %}selected{% endif %}>English</option>
+          <option value="es" {% if request.LANGUAGE_CODE == "es" %}selected{% endif %}>Español</option>
+          <option value="fr" {% if request.LANGUAGE_CODE == "fr" %}selected{% endif %}>Français</option>
+        </select>
+        <input type="hidden" name="next" value="{{ request.path }}">
+      </form>
+
       {% if user.is_authenticated %}
-        <span>Hi, {{ user.username }}</span>
-        <a href="{% url 'create_request' %}">5分レッスン</a>
-        <a href="{% url 'tutor_dashboard' %}">講師画面</a>
-        <a href="{% url 'logout' %}">ログアウト</a>
+        <span>{% trans "Hi" %}, {{ user.username }}</span>
+        <a href="{% url 'create_request' %}">{% trans "5-minute lesson" %}</a>
+        <a href="{% url 'tutor_dashboard' %}">{% trans "Tutor Dashboard" %}</a>
+        <a href="{% url 'logout' %}">{% trans "Log out" %}</a>
       {% else %}
-        <a href="{% url 'login' %}">ログイン</a>
+        <a href="{% url 'login' %}">{% trans "Log In" %}</a>
       {% endif %}
     </nav>
   </header>

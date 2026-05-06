@@ -1,0 +1,287 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-05-06 23:17+0200\n"
+"PO-Revision-Date: 2026-05-06 23:10+0200\n"
+"Last-Translator: YOUR NAME\n"
+"Language-Team: Japanese\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: quicklesson/settings.py:107
+msgid "Japanese"
+msgstr "日本語"
+
+#: quicklesson/settings.py:108
+msgid "English"
+msgstr "英語"
+
+#: quicklesson/settings.py:109
+msgid "Spanish"
+msgstr "スペイン語"
+
+#: quicklesson/settings.py:110
+msgid "French"
+msgstr "フランス語"
+
+#: templates/core/create_request.html:7
+#, fuzzy
+#| msgid "Start a 5-Minute Lesson Now"
+msgid "Talk for 5 Minutes Now"
+msgstr "5分お話ししましょう"
+
+#: templates/core/create_request.html:8
+msgid "Step 1"
+msgstr "ステップ1"
+
+#: templates/core/create_request.html:12
+msgid ""
+"Select the language you want to practice. If any tutors are online, you will "
+"be randomly matched."
+msgstr ""
+"練習したい言語を選択してください。オンラインの講師がいれば、自動でランダムに"
+"マッチングされます。"
+
+#: templates/core/create_request.html:18
+msgid "Select a language"
+msgstr "言語を選択"
+
+#: templates/core/create_request.html:26
+#, fuzzy
+#| msgid "Start a 5-Minute Lesson Now"
+msgid "Start a 5-Minute Lesson"
+msgstr "今すぐ5分レッスン開始"
+
+#: templates/core/create_request.html:29
+msgid "Cancel"
+msgstr "キャンセル"
+
+#: templates/core/home.html:8
+msgid "5-Minute Online Lessons"
+msgstr "5分オンラインレッスン"
+
+#: templates/core/home.html:10
+msgid ""
+"A super-light conversation platform for people who want to talk with someone "
+"right now."
+msgstr "今すぐ誰かと会話したい人向けの超軽量会話プラットフォーム"
+
+#: templates/core/home.html:16
+msgid "Select a language and start a 5-minute lesson."
+msgstr "言語を選択して5分レッスンを開始してください"
+
+#: templates/core/home.html:18
+msgid "Start a 5-Minute Lesson Now"
+msgstr "今すぐ5分レッスン開始"
+
+#: templates/core/home.html:21
+msgid "You need to log in to start a lesson."
+msgstr "レッスン開始にはログインが必要です"
+
+#: templates/core/home.html:23
+msgid "Log In"
+msgstr "ログイン"
+
+#: templates/core/home.html:30
+msgid "How does it work?"
+msgstr "使い方"
+
+#: templates/core/home.html:33
+msgid "1. Teachers switch their status to “Online” and wait."
+msgstr "1. 講師はオンライン状態にして待機します"
+
+#: templates/core/home.html:34
+msgid "2. Students choose a language and click “Start a 5-minute lesson now”."
+msgstr "2. 生徒は言語を選択して5分レッスンを開始します"
+
+#: templates/core/home.html:35
+msgid "3. The system randomly matches an available teacher."
+msgstr "3. システムが利用可能な講師を自動でマッチングします"
+
+#: templates/core/home.html:36
+msgid "4. Join the meeting URL and talk for 5 minutes."
+msgstr "4. ミーティングURLに参加して5分間会話します"
+
+#: templates/core/lesson_room.html:8
+msgid "5-minute lesson room"
+msgstr "5分レッスンルーム"
+
+#: templates/core/lesson_room.html:10
+msgid ""
+"First, we only set up your camera and a placeholder for the remote video to "
+"design the layout."
+msgstr "まずはカメラと相手映像のプレースホルダーのみ表示しています"
+
+#: templates/core/lesson_room.html:21
+msgid "Remaining time"
+msgstr "残り時間"
+
+#: templates/core/lesson_room.html:31
+msgid "Your browser does not support the video tag."
+msgstr "このブラウザはvideoタグに対応していません"
+
+#: templates/core/lesson_room.html:37
+msgid "Student"
+msgstr "生徒"
+
+#: templates/core/lesson_room.html:38 templates/core/request_detail.html:29
+msgid "Tutor"
+msgstr "講師"
+
+#: templates/core/lesson_room.html:39
+msgid "Language"
+msgstr "言語"
+
+#: templates/core/lesson_room.html:44
+msgid "End lesson"
+msgstr "レッスン終了"
+
+#: templates/core/lesson_room.html:51 templates/core/lesson_room.html:124
+msgid "Camera OFF"
+msgstr "カメラOFF"
+
+#: templates/core/lesson_room.html:54 templates/core/lesson_room.html:133
+msgid "Mic OFF"
+msgstr "マイクOFF"
+
+#: templates/core/lesson_room.html:83
+msgid "The 5-minute lesson will end."
+msgstr "5分レッスンが終了します"
+
+#: templates/core/lesson_room.html:83
+msgid "Reason"
+msgstr "理由"
+
+#: templates/core/lesson_room.html:114
+msgid "Could not access camera/microphone. Please check your browser settings."
+msgstr "カメラまたはマイクにアクセスできません。ブラウザ設定を確認してください"
+
+#: templates/core/lesson_room.html:124
+msgid "Camera ON"
+msgstr "カメラON"
+
+#: templates/core/lesson_room.html:133
+msgid "Mic ON"
+msgstr "マイクON"
+
+#: templates/core/lesson_room.html:139
+msgid "This browser does not support getUserMedia."
+msgstr "このブラウザはgetUserMediaに対応していません"
+
+#: templates/core/request_detail.html:8
+msgid "Matching Result"
+msgstr "マッチング結果"
+
+#: templates/core/request_detail.html:10
+#, fuzzy
+#| msgid "The 5-minute lesson will end."
+msgid "Your 5-minute lesson is ready."
+msgstr "5分レッスンの準備ができました"
+
+#: templates/core/request_detail.html:15
+msgid "Matched"
+msgstr "マッチしました"
+
+#: templates/core/request_detail.html:17
+msgid "Matching"
+msgstr "マッチング中"
+
+#: templates/core/request_detail.html:19
+#, fuzzy
+#| msgid "Cancel"
+msgid "Canceled"
+msgstr "キャンセル"
+
+#: templates/core/request_detail.html:24
+#, fuzzy
+#| msgid "Select a language"
+msgid "Selected language"
+msgstr "言語を選択"
+
+#: templates/core/request_detail.html:34
+#, fuzzy
+#| msgid "5-minute lesson room"
+msgid "Enter Lesson Room"
+msgstr "レッスンルームに入る"
+
+#: templates/core/request_detail.html:37 templates/core/request_detail.html:68
+msgid "Back to Home"
+msgstr "ホームに戻る"
+
+#: templates/core/request_detail.html:44
+#, fuzzy
+#| msgid "Matching in progress…"
+msgid "Matching you with a tutor…"
+msgstr "講師とマッチングしています…"
+
+#: templates/core/request_detail.html:46
+msgid ""
+"This page will automatically update as soon as an available tutor is found."
+msgstr "利用可能な講師が見つかり次第、このページは自動で更新されます"
+
+#: templates/core/request_detail.html:52
+msgid "Cancel and return to Home"
+msgstr "キャンセルしてホームに戻る"
+
+#: templates/core/request_detail.html:64
+msgid "This request is no longer valid."
+msgstr "このリクエストは無効です"
+
+#: templates/core/tutor_dashboard.html:8
+msgid "Tutor Dashboard"
+msgstr "講師ダッシュボード"
+
+#: templates/core/tutor_dashboard.html:10
+msgid "When you go online, you’ll be available for 5-minute lesson matching."
+msgstr "オンラインにすると5分レッスンのマッチング対象になります"
+
+#: templates/core/tutor_dashboard.html:16
+#: templates/core/tutor_dashboard.html:56
+msgid "Online"
+msgstr "オンライン"
+
+#: templates/core/tutor_dashboard.html:18
+#: templates/core/tutor_dashboard.html:52
+msgid "Offline"
+msgstr "オフライン"
+
+#: templates/core/tutor_dashboard.html:28
+msgid "You are discoverable now."
+msgstr "現在、生徒から見つけられる状態です"
+
+#: templates/core/tutor_dashboard.html:30
+msgid "You are not discoverable."
+msgstr "現在、非公開状態です"
+
+#: templates/core/tutor_dashboard.html:35
+msgid ""
+"Waiting for a student… We’ll move you to the lesson room automatically when "
+"matched."
+msgstr "生徒を待機中です。マッチすると自動でレッスンルームへ移動します"
+
+#: templates/core/tutor_dashboard.html:37
+msgid "Switch online to start matching."
+msgstr "オンラインにしてマッチングを開始してください"
+
+#: templates/core/tutor_dashboard.html:67
+msgid "Matching in progress…"
+msgstr "マッチング中..."
+
+msgid "Hi"
+msgstr "こんにちは"
+
+msgid "5-minute lesson"
+msgstr "5分レッスン"
+
+msgid "Log out"
+msgstr "ログアウト"

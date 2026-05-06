@@ -1,31 +1,32 @@
 {% extends "base.html" %}
+{% load i18n %}
+
 {% block content %}
   <div class="card">
     <div class="card-header">
-      <h2 class="card-title">Talk for 5 Minutes Now</h2>
-      <span class="badge badge-yellow">Step 1</span>
+      <h2 class="card-title">{% trans "Talk for 5 Minutes Now" %}</h2>
+      <span class="badge badge-yellow">{% trans "Step 1" %}</span>
     </div>
 
     <p class="card-subtitle">
-      Select the language you want to practice. If any tutors are online, you will be randomly matched.
+      {% trans "Select the language you want to practice. If any tutors are online, you will be randomly matched." %}
     </p>
 
     <form method="post" class="mt-16">
       {% csrf_token %}
       <label>
-        Select a language
+        {% trans "Select a language" %}
         <select name="language_id">
           {% for lang in languages %}
-            <option value="{{ lang.id }}">{{ lang.name }}</option>
-          {% endfor %}
+        <option value="{{ lang.id }}">{% trans lang.name %}</option>          {% endfor %}
         </select>
       </label>
 
       <div class="mt-16">
-        <button type="submit" class="btn">Start a 5-Minute Lesson</button>
+        <button type="submit" class="btn">{% trans "Start a 5-Minute Lesson" %}</button>
         <button type="button" class="btn btn-outline"
                 onclick="window.location.href='{% url 'home' %}'">
-          Cancel
+          {% trans "Cancel" %}
         </button>
       </div>
     </form>

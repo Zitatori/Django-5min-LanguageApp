@@ -1,37 +1,39 @@
 {% extends "base.html" %}
+{% load i18n %}
+
 {% block content %}
   <div class="card">
     <div class="card-header">
       <div>
-        <h2 class="card-title">5-Minute Online Lessons</h2>
+        <h2 class="card-title">{% trans "5-Minute Online Lessons" %}</h2>
         <p class="card-subtitle">
-          A super-light conversation platform for people who want to talk with someone right now.
+          {% trans "A super-light conversation platform for people who want to talk with someone right now." %}
         </p>
       </div>
     </div>
 
     {% if user.is_authenticated %}
-      <p>Select a language and start a 5-minute lesson.</p>
+      <p>{% trans "Select a language and start a 5-minute lesson." %}</p>
       <button class="btn" onclick="window.location.href='{% url 'create_request' %}'">
-        Start a 5-Minute Lesson Now
+        {% trans "Start a 5-Minute Lesson Now" %}
       </button>
     {% else %}
-      <p>You need to log in to start a lesson.</p>
+      <p>{% trans "You need to log in to start a lesson." %}</p>
       <button class="btn" onclick="window.location.href='{% url 'login' %}'">
-        Log In
+        {% trans "Log In" %}
       </button>
     {% endif %}
   </div>
 
   <div class="card">
     <div class="card-header">
-      <h3 class="card-title">How does it work?</h3>
+      <h3 class="card-title">{% trans "How does it work?" %}</h3>
     </div>
     <ul class="list">
-      <li>1. Teachers switch their status to “Online” and wait.</li>
-      <li>2. Students choose a language and click “Start a 5-minute lesson now”.</li>
-      <li>3. The system randomly matches an available teacher.</li>
-      <li>4. Join the meeting URL and talk for 5 minutes.</li>
+      <li>{% trans "1. Teachers switch their status to “Online” and wait." %}</li>
+      <li>{% trans "2. Students choose a language and click “Start a 5-minute lesson now”." %}</li>
+      <li>{% trans "3. The system randomly matches an available teacher." %}</li>
+      <li>{% trans "4. Join the meeting URL and talk for 5 minutes." %}</li>
     </ul>
   </div>
 {% endblock %}

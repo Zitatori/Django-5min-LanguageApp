@@ -1,66 +1,71 @@
 {% extends "base.html" %}
+{% load i18n %}
+
 {% block content %}
   <div class="card">
     <div class="card-header">
       <div>
-        <h2 class="card-title">Matching Result</h2>
+        <h2 class="card-title">{% trans "Matching Result" %}</h2>
         <p class="card-subtitle">
-          Your 5-minute lesson is ready.
+          {% trans "Your 5-minute lesson is ready." %}
         </p>
       </div>
+
       {% if request_obj.status == "matched" %}
-        <span class="badge badge-green">Matched</span>
+        <span class="badge badge-green">{% trans "Matched" %}</span>
       {% elif request_obj.status == "waiting" %}
-        <span class="badge badge-gray">Matching</span>
+        <span class="badge badge-gray">{% trans "Matching" %}</span>
       {% else %}
-        <span class="badge badge-gray">Canceled</span>
+        <span class="badge badge-gray">{% trans "Canceled" %}</span>
       {% endif %}
     </div>
 
     <p class="card-subtitle">
-      Selected language: {{ request_obj.language.name }}
+      {% trans "Selected language" %}: {% trans request_obj.language.name %}
     </p>
 
     {% if match %}
       <div class="mt-16">
-        <p><strong>Tutor:</strong> {{ match.tutor.user.username }}</p>
+        <p><strong>{% trans "Tutor" %}:</strong> {{ match.tutor.user.username }}</p>
       </div>
 
       <div class="mt-16">
         <button class="btn" onclick="window.location.href='{% url 'lesson_room' match.id %}'">
-          Enter Lesson Room
+          {% trans "Enter Lesson Room" %}
         </button>
         <button class="btn btn-outline" onclick="window.location.href='{% url 'home' %}'">
-          Back to Home
+          {% trans "Back to Home" %}
         </button>
       </div>
 
     {% elif request_obj.status == "waiting" %}
-      <!-- Spinner + matching in progress -->
       <div class="spinner-wrapper">
         <div class="spinner"></div>
-        <p>Matching you with a tutor…</p>
+        <p>{% trans "Matching you with a tutor…" %}</p>
         <p class="text-muted">
-          This page will automatically update as soon as an available tutor is found.
+          {% trans "This page will automatically update as soon as an available tutor is found." %}
         </p>
       </div>
+
       <div class="center mt-16">
         <button class="btn btn-outline" onclick="window.location.href='{% url 'home' %}'">
-          Cancel and return to Home
+          {% trans "Cancel and return to Home" %}
         </button>
       </div>
+
       <script>
         setTimeout(function () {
           window.location.reload();
         }, 2000);
       </script>
+
     {% else %}
       <div class="mt-16">
-        <p>This request is no longer valid.</p>
+        <p>{% trans "This request is no longer valid." %}</p>
       </div>
       <div class="mt-16">
         <button class="btn btn-outline" onclick="window.location.href='{% url 'home' %}'">
-          Back to Home
+          {% trans "Back to Home" %}
         </button>
       </div>
     {% endif %}
