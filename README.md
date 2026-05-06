@@ -164,7 +164,7 @@ Internal system roles remain `student / tutor / admin`.
 ## 👨‍🎓 For Students / 生徒の利点
 
 - 🎯 Practice anytime for **just 5 minutes**  
-- 💸 Low cost or free (prototype phase)  
+- 💸 Low cost (1$ per class) and free for first 10 times
 - 😌 100% safe — no DMs or “social” elements  
 - 🌍 Talk to real speakers, globally  
 - 🔁 Rate “Bad” to never match with someone again  
@@ -175,7 +175,7 @@ Internal system roles remain `student / tutor / admin`.
 
 ## 👩‍🏫 For Teachers / 先生の利点
 
-- 💰 Teach for 5 minutes — perfect for side income or experience  
+- 💰 Teach for 5 minutes — perfect for side income or experience  (especiall for housewife and students)
 - 🕒 Go online/offline anytime  
 - 💬 Meet motivated learners only  
 - 🎓 Great for student teachers or native speakers who want to help others  
@@ -190,7 +190,7 @@ Internal system roles remain `student / tutor / admin`.
 | セッション時間 | 30分〜60分 | **5分だけ** |
 | 料金体系 | 月額・サブスク | **1回ごと（チケット制予定）** |
 | 雰囲気 | SNS寄り・雑談多め | **完全学習特化・出会い要素ゼロ** |
-| 先生登録 | 審査制・面倒 | **即登録OK・自由** |
+| 先生登録 | 審査制・面倒 | **５分の面接のみ** |
 | 継続性 | 長期前提 | **短時間×高頻度スタイル** |
 
 ---
