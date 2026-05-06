@@ -130,6 +130,7 @@ QuickLesson is a **safety-first language conversation platform** focused on:
 
 - ❌ No random user-to-user calls
 - ❌ No long or endless sessions
+- ❌ No -18 years
 - ✅ Short, focused language practice
 - ✅ Built for moderation from day one
 
