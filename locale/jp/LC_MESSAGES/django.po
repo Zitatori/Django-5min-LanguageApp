@@ -20,19 +20,19 @@ msgstr ""
 
 #: quicklesson/settings.py:84
 msgid "Japanese"
-msgstr ""
+msgstr "日本語"
 
 #: quicklesson/settings.py:85
 msgid "English"
-msgstr ""
+msgstr "英語"
 
 #: quicklesson/settings.py:86
 msgid "Spanish"
-msgstr ""
+msgstr "スペイン語"
 
 #: quicklesson/settings.py:87
 msgid "French"
-msgstr ""
+msgstr "フランス語"
 
 #: templates/core/lesson_room.html:6
 msgid "5-minute lesson room"

@@ -10,4 +10,5 @@ urlpatterns = [
     path("i18n/", include("django.conf.urls.i18n")),
 
     path("", include("core.urls")),
+    path('', include('core.urls')),
 ]

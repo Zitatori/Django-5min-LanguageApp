@@ -1,0 +1,342 @@
+/* 全体レイアウト */
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #f3f4f6;
+  color: #111827;
+}
+
+a {
+  color: #2563eb;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* ヘッダー */
+.header {
+  background: #111827;
+  color: #f9fafb;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-title a {
+  color: #f9fafb;
+  font-weight: 700;
+  font-size: 20px;
+  text-decoration: none;
+}
+
+.header-nav a {
+  color: #e5e7eb;
+  margin-left: 12px;
+  font-size: 14px;
+}
+
+.header-nav a:hover {
+  color: #ffffff;
+}
+
+/* メインコンテナ */
+.container {
+  max-width: 960px;
+  margin: 32px auto;
+  padding: 0 16px;
+}
+
+/* カード */
+.card {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 24px;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+  margin-bottom: 24px;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.card-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.card-subtitle {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+/* ボタン */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.btn-secondary {
+  background: #6b7280;
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid #d1d5db;
+  color: #111827;
+}
+
+.btn + .btn {
+  margin-left: 8px;
+}
+
+/* フォーム */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+label {
+  font-size: 14px;
+  color: #374151;
+}
+
+select,
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+}
+
+/* リスト */
+.list {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.list li {
+  padding: 8px 0;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 14px;
+}
+
+/* タグ */
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.badge-green {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.badge-gray {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.badge-yellow {
+  background: #fef9c3;
+  color: #854d0e;
+}
+
+/* 小さなテキスト */
+.text-muted {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+/* 中央寄せ */
+.center {
+  text-align: center;
+}
+
+/* レイアウト用 */
+.flex {
+  display: flex;
+}
+
+.space-between {
+  justify-content: space-between;
+}
+
+.gap-8 {
+  gap: 8px;
+}
+
+.mt-8 {
+  margin-top: 8px;
+}
+
+.mt-16 {
+  margin-top: 16px;
+}
+
+/* ====== Loading Spinner ====== */
+.spinner-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 0;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  border: 4px solid #e5e7eb;
+  border-top-color: #2563eb;
+  animation: spin 0.8s linear infinite;
+  margin-bottom: 12px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ====== Lesson Room Layout ====== */
+.lesson-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1.5fr);
+  gap: 24px;
+}
+
+@media (max-width: 800px) {
+  .lesson-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* タイマーの丸い表示 */
+.timer-circle {
+  width: 140px;
+  height: 140px;
+  border-radius: 999px;
+  border: 8px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 8px;
+}
+
+.timer-label {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* セッション情報カード */
+.session-meta {
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/* 動画エリア（今はダミー枠） */
+.video-box {
+  border-radius: 12px;
+  background: #0f172a;
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #e5e7eb;
+  font-size: 13px;
+  position: relative;
+  overflow: hidden;
+}
+
+.video-label {
+  position: absolute;
+  top: 8px;
+  left: 10px;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.8);
+  color: #e5e7eb;
+}
+
+/* ====== Video Placeholder ====== */
+.video-placeholder {
+  border-radius: 12px;
+  background: #000000;
+  min-height: 260px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+  font-size: 14px;
+  text-align: center;
+}
+
+/* ====== Lesson Room Layout 2 columns ====== */
+.lesson-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.9fr);
+  gap: 24px;
+}
+
+@media (max-width: 900px) {
+  .lesson-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.video-wrapper {
+  margin-top: 8px;
+}
+
+.text-muted {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* リモート映像がまだ来てないときのラベル */
+.video-overlay-label {
+  position: absolute;
+  bottom: 8px;
+  right: 10px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  background: rgba(15, 23, 42, 0.85);
+  color: #e5e7eb;
+}
+
+/* もしまだなければ：ビデオ用の黒背景 */
+.video-placeholder {
+  border-radius: 12px;
+  background: #000000;
+  min-height: 220px;
+  width: 100%;
+  display: block;
+}

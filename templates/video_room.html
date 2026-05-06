@@ -1,0 +1,10 @@
+{% load static %}
+
+<h1>Video Room</h1>
+
+<video id="localVideo" autoplay muted playsinline></video>
+<video id="remoteVideo" autoplay playsinline></video>
+
+<button id="startCamera">Start Camera</button>
+
+<script src="{% static 'js/video_call.js' %}"></script>

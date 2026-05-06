@@ -6,7 +6,7 @@
   <meta charset="UTF-8">
   <title>QuickLesson</title>
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
-  <form action="{% url 'set_language' %}" method="post" style="display:inline;">
+  <body><form action="{% url 'set_language' %}" method="post" style="display:inline;">
   {% csrf_token %}
   <select name="language" onchange="this.form.submit()">
     <option value="ja" {% if request.LANGUAGE_CODE == "ja" %}selected{% endif %}>日本語</option>
@@ -16,7 +16,7 @@
   </select>
   <input type="hidden" name="next" value="{{ request.path }}">
 </form>
-
+</body>
 </head>
 <body>
   <header class="header">
