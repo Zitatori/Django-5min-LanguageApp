@@ -1,6 +1,14 @@
 # QuickLesson — 5-Minute Online Language Lessons (WIP)
 ## Next Steps
 
+
+1. DjangoだけでMVPを作る
+2. video_call.jsで最低限WebRTCを試す***
+3. DjangoをAPI化する
+4. Nuxtで画面を作り直す
+5. WebRTC部分もNuxtに移す
+
+   
 ### 1. 技術選定
 - Djangoモノリス構成で開発開始
 - 将来のフロント・バック分離を前提に設計する
@@ -12,11 +20,48 @@
 - 「理解よりまず書ける状態」を優先
 
 ### 3. Django設計改善
-- models / views のモジュール化
-- settings.py を開発用・本番用に分割
-- Class Based Views（CBV）へ移行
+- models / views のモジュール化*****
+
+views/
+ ├── video.py
+ ├── auth.py
+ └── profile.py
+  
+- settings.py を開発用・本番用に分割*****
+  
+settings/
+  base.py
+→ 共通設定
+
+local.py
+→ 開発用
+DEBUG = True
+SQLite
+ローカル用設定
+
+production.py
+→ 本番用
+DEBUG = False
+PostgreSQL
+セキュリティ設定
+
+  
+###Class Based Views（CBV）へ移行
 - 重複viewや不要コードの整理
-- TIME_ZONEの適切化（用途に応じて調整）
+- Tviews.pyに関数を増やしすぎると、コードが見づらくなりバグが出やすくなる。  
+-CBVを使うと、処理を機能ごとにクラスでまとめられて整理しやすくなる。  
+-さらにDjangoの用意されたクラスを使えば、コード量も減らせる。
+
+###Django Rest Framework（DRF）でViewのロジックをAPIに移植する
+-DRFを使うと、DjangoはHTMLではなくJSONデータを返せるようになる  
+-これにより、Nuxtやスマホアプリから同じデータを使えるようになる  
+-今のviewの処理をそのままデータとして返せばAPIになる
+
+###将来的な拡張
+-ただのJavaScript（ボタンやクリック）ではなく、「画面全体を動かす仕組み」 
+-AjaxやSPAは、ページをリロードせずにデータを更新する仕組み（今どきのWebアプリの基本）  
+-TypeScript=ミスを事前に防げる
+-JavaScriptでUIの強化
 
 ### 4. MVP機能の明確化
 - 必須機能のみ洗い出し（削る前提で整理）
@@ -38,8 +83,7 @@
 - ViewロジックをAPIへ移行
 
 ### 8. フロントエンド学習・選定
-- Vue（Nuxt） / React（Next） / Alpine.js を比較
-- 学習コスト低めならVue（Nuxt）優先
+- Vue（Nuxt）
 
 ### 9. フロントエンド実装
 - APIと連携する構成に移行
@@ -49,6 +93,14 @@
 
 ### 10. 将来展開
 - 同APIを利用してモバイルアプリ化（iOS / Android）
+
+
+###  11. 世界向け・多国籍 → UTC管理
+USE_TZ = True
+TIME_ZONE = "UTC"
+DBにはUTCで保存して、
+表示するときだけ日本時間・スイス時間に変換する
+
 
 ### General
 - Clean project structure early to avoid future issues
