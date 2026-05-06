@@ -1,22 +1,54 @@
 # QuickLesson — 5-Minute Online Language Lessons (WIP)
 ## Next Steps
 
-### Django (main development)
-- Refactor views into modules (split by feature)
-- Refactor models if they grow
-- Split settings into base / dev / prod
-- Replace function-based views with class-based views (CBV)
-- Fix duplicate view definitions (e.g. tutor_dashboard)
-- Fix HTML structure (move form tags inside <body>)
+### 1. 技術選定
+- Djangoモノリス構成で開発開始
+- 将来のフロント・バック分離を前提に設計する
+- テンプレートにロジックを書きすぎない方針を徹底
 
-### FastAPI
-- Stop using it for frontend rendering
-- Either:
-  - use it only as an API, or
-  - pause it for now
+### 2. JavaScript学習（並行）
+- ビデオ通話（WebRTC）実装に必要な最低限のJSを習得
+- DOM操作 / API通信（fetch, Ajax）の基礎理解
+- 「理解よりまず書ける状態」を優先
 
-### Environment
-- Create requirements.txt with pinned versions
+### 3. Django設計改善
+- models / views のモジュール化
+- settings.py を開発用・本番用に分割
+- Class Based Views（CBV）へ移行
+- 重複viewや不要コードの整理
+- TIME_ZONEの適切化（用途に応じて調整）
+
+### 4. MVP機能の明確化
+- 必須機能のみ洗い出し（削る前提で整理）
+- 認証・履歴機能の仕様を決定
+
+### 5. データ設計
+- ユーザー / セッション / 履歴のテーブル設計
+- 将来拡張を考慮したスキーマ設計
+
+### 6. Djangoモノリスで実装
+- Viewでロジック完結 → Templateは表示のみ
+- 最小UIで動く状態を優先
+- まずは「動くMVP」を完成させる
+
+---
+
+### 7. API化（後工程）
+- Django Rest Framework（DRF）導入
+- ViewロジックをAPIへ移行
+
+### 8. フロントエンド学習・選定
+- Vue（Nuxt） / React（Next） / Alpine.js を比較
+- 学習コスト低めならVue（Nuxt）優先
+
+### 9. フロントエンド実装
+- APIと連携する構成に移行
+- SPA / 非同期通信の実装
+
+---
+
+### 10. 将来展開
+- 同APIを利用してモバイルアプリ化（iOS / Android）
 
 ### General
 - Clean project structure early to avoid future issues
