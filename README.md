@@ -46,7 +46,7 @@ PostgreSQL
 セキュリティ設定
 
   
-###　4. Class Based Views（CBV）へ移行
+### 4. Class Based Views（CBV）へ移行
 - 重複viewや不要コードの整理
 - Tviews.pyに関数を増やしすぎると、コードが見づらくなりバグが出やすくなる。  
 -CBVを使うと、処理を機能ごとにクラスでまとめられて整理しやすくなる。  
