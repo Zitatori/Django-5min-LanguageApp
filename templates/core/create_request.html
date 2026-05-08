@@ -18,7 +18,8 @@
         {% trans "Select a language" %}
         <select name="language_id">
           {% for lang in languages %}
-        <option value="{{ lang.id }}">{% trans lang.name %}</option>          {% endfor %}
+            <option value="{{ lang.id }}">{% trans lang.name %}</option>
+          {% endfor %}
         </select>
       </label>
 
@@ -30,5 +31,34 @@
         </button>
       </div>
     </form>
+  </div>
+
+  <div class="card mt-16">
+    <div class="card-header">
+      <h3 class="card-title">{% trans "My Lesson History" %}</h3>
+    </div>
+
+    {% if matches %}
+      <table>
+        <thead>
+          <tr>
+            <th>{% trans "Date" %}</th>
+            <th>{% trans "Tutor" %}</th>
+            <th>{% trans "Language" %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for match in matches %}
+            <tr>
+              <td>{{ match.started_at|date:"Y-m-d H:i" }}</td>
+              <td>{{ match.tutor.user.username }}</td>
+              <td>{% trans match.request.language.name %}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p class="text-muted">{% trans "No lesson history yet." %}</p>
+    {% endif %}
   </div>
 {% endblock %}

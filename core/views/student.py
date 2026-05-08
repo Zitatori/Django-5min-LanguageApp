@@ -77,7 +77,19 @@ def create_request(request):
         return redirect("request_detail", request_id=qlr.id)
 
     languages = LessonLanguage.objects.all()
-    return render(request, "core/create_request.html", {"languages": languages})
+    matches = QuickLessonMatch.objects.filter(
+        request__student__user=request.user
+    ).select_related(
+        "request",
+        "request__language",
+        "tutor",
+        "tutor__user",
+    ).order_by("-started_at")
+
+    return render(request, "core/create_request.html", {
+        "languages": languages,
+        "matches": matches,
+    })
 
 
 @login_required
@@ -165,3 +177,17 @@ def create_interview_request(request):
 
     languages = LessonLanguage.objects.all()
     return render(request, "core/create_interview_request.html", {"languages": languages})
+
+def student_history(request):
+    matches = QuickLessonMatch.objects.filter(
+        request__student__user=request.user
+    ).select_related(
+        "request",
+        "request__language",
+        "tutor",
+        "tutor__user",
+    ).order_by("-started_at")
+
+    return render(request, "core/student_history.html", {
+        "matches": matches,
+    })

@@ -69,8 +69,7 @@
 </div>
 
 <!-- 最近担当したレッスン（別ファイル化） -->
-{% include "core/_recent_lessons.html" with matches=matches dummy_matches=dummy_matches %}
-
+{% include "core/_recent_lessons.html" with matches=matches %}
 <style>
   /* Simple “pro” toggle */
   .switch-track{
@@ -132,28 +131,7 @@
   rootCard.querySelector(".switch-track").addEventListener("click", () => form.submit());
   rootCard.querySelector(".switch-thumb").addEventListener("click", () => form.submit());
 
-  // ===== 自動マッチング：オンラインの時だけポーリングして match があれば lesson_roomへ =====
-  const isOnline = {{ tutor.is_online|yesno:"true,false" }};
-  if (!isOnline) return;
 
-  async function poll(){
-    try{
-      const res = await fetch(pollUrl, { headers: { "X-Requested-With": "XMLHttpRequest" }});
-      if (!res.ok) throw new Error("poll failed");
-      const data = await res.json();
-
-      // { found: true, redirect_url: "/lesson/123/" } を想定
-      if (data.found && data.redirect_url) {
-        window.location.href = data.redirect_url;
-        return;
-      }
-    } catch(e){
-      // 失敗しても静かに継続
-      console.log(e);
-    }
-    setTimeout(poll, 2000); // 2秒ごと
-  }
-  poll();
 })();
 </script>
 {% endblock %}
