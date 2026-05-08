@@ -196,5 +196,7 @@ msgstr "Leçon de 5 minutes"
 msgid "Log out"
 msgstr "Déconnexion"
 
-msgid "My Lesson History"
-msgstr "Historique des leçons"
+msgid "Tutor Dashboard"
+msgstr "Tableau du tuteur"
+
+
