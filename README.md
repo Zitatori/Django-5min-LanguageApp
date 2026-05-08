@@ -31,36 +31,8 @@ https://www.youtube.com/watch?v=8I2axE6j204
 - DOM操作 / API通信（fetch, Ajax）の基礎理解
 - 「理解よりまず書ける状態」を優先
 
-### 3. Django設計改善
-- models / views のモジュール化*****
-
-views/
- ├── video.py
- ├── auth.py
- └── profile.py
   
-- settings.py を開発用・本番用に分割*****
-  
-settings/
-  base.py
-→ 共通設定
-
-local.py
-→ 開発用
-DEBUG = True
-SQLite
-ローカル用設定
-
-production.py
-→ 本番用
-DEBUG = False
-PostgreSQL
-セキュリティ設定
-
-  
-### 4. Class Based Views（CBV）へ移行
-- 重複viewや不要コードの整理
-- Tviews.pyに関数を増やしすぎると、コードが見づらくなりバグが出やすくなる。  
+### 4. Class Based Views（CBV）へ移行 
 -CBVを使うと、処理を機能ごとにクラスでまとめられて整理しやすくなる。  
 -さらにDjangoの用意されたクラスを使えば、コード量も減らせる。
 
