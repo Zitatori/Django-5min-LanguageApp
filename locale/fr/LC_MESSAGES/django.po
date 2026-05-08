@@ -95,7 +95,7 @@ msgid "Selected language"
 msgstr "Langue sélectionnée"
 
 msgid "Tutor"
-msgstr "Professeur"
+msgstr "Guide"
 
 msgid "Enter Lesson Room"
 msgstr "Entrer dans la salle"
@@ -103,10 +103,10 @@ msgstr "Entrer dans la salle"
 msgid "Back to Home"
 msgstr "Retour à l’accueil"
 
-msgid "Matching you with a tutor…"
+msgid "Matching you with a Guide…"
 msgstr "Recherche d’un professeur disponible…"
 
-msgid "This page will automatically update as soon as an available tutor is found."
+msgid "This page will automatically update as soon as an available Guide is found."
 msgstr "Cette page sera automatiquement mise à jour dès qu’un professeur disponible sera trouvé."
 
 msgid "Cancel and return to Home"
@@ -128,7 +128,7 @@ msgid "Your browser does not support the video tag."
 msgstr "Votre navigateur ne prend pas en charge la balise vidéo."
 
 msgid "Student"
-msgstr "Étudiant"
+msgstr "Participant"
 
 msgid "Language"
 msgstr "Langue"
@@ -160,7 +160,7 @@ msgstr "Micro ON"
 msgid "This browser does not support getUserMedia."
 msgstr "Ce navigateur ne prend pas en charge getUserMedia."
 
-msgid "Tutor Dashboard"
+msgid "Guide Dashboard"
 msgstr "Tableau de bord professeur"
 
 msgid "When you go online, you’ll be available for 5-minute lesson matching."
@@ -195,3 +195,6 @@ msgstr "Leçon de 5 minutes"
 
 msgid "Log out"
 msgstr "Déconnexion"
+
+msgid "My Lesson History"
+msgstr "Historique des leçons"

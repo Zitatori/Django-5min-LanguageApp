@@ -95,7 +95,7 @@ msgid "Selected language"
 msgstr "Idioma seleccionado"
 
 msgid "Tutor"
-msgstr "Profesor"
+msgstr "Guía"
 
 msgid "Enter Lesson Room"
 msgstr "Entrar en la sala de clase"
@@ -104,10 +104,10 @@ msgid "Back to Home"
 msgstr "Volver al inicio"
 
 msgid "Matching you with a tutor…"
-msgstr "Buscando un profesor disponible…"
+msgstr "Buscando un Guía disponible…"
 
 msgid "This page will automatically update as soon as an available tutor is found."
-msgstr "Esta página se actualizará automáticamente cuando se encuentre un profesor disponible."
+msgstr "Esta página se actualizará automáticamente cuando se encuentre un Guía disponible."
 
 msgid "Cancel and return to Home"
 msgstr "Cancelar y volver al inicio"
@@ -128,7 +128,7 @@ msgid "Your browser does not support the video tag."
 msgstr "Tu navegador no admite la etiqueta de video."
 
 msgid "Student"
-msgstr "Estudiante"
+msgstr "Participante"
 
 msgid "Language"
 msgstr "Idioma"
@@ -161,7 +161,7 @@ msgid "This browser does not support getUserMedia."
 msgstr "Este navegador no admite getUserMedia."
 
 msgid "Tutor Dashboard"
-msgstr "Panel del profesor"
+msgstr "Panel del Guíar"
 
 msgid "When you go online, you’ll be available for 5-minute lesson matching."
 msgstr "Cuando te pongas en línea, estarás disponible para conexiones de clases de 5 minutos."
@@ -179,7 +179,7 @@ msgid "You are not discoverable."
 msgstr "Ahora no estás visible."
 
 msgid "Waiting for a student… We’ll move you to the lesson room automatically when matched."
-msgstr "Esperando a un estudiante… Te moveremos automáticamente a la sala de clase cuando haya conexión."
+msgstr "Esperando a un Participante… Te moveremos automáticamente a la sala de clase cuando haya conexión."
 
 msgid "Switch online to start matching."
 msgstr "Ponte en línea para empezar a conectar."
@@ -195,3 +195,6 @@ msgstr "Clase de 5 minutos"
 
 msgid "Log out"
 msgstr "Cerrar sesión"
+
+msgid "My Lesson History"
+msgstr "Historial de clases"

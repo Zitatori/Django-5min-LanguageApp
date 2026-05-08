@@ -35,8 +35,14 @@ msgid "French"
 msgstr "フランス語"
 
 #: templates/core/create_request.html:7
-#, fuzzy
-#| msgid "Start a 5-Minute Lesson Now"
+msgid "Start a 5-Minute Lesson Now"
+msgstr "今すぐスタート"
+
+#: templates/core/create_request.html:7
+msgid "Start a 5-Minute Lesson"
+msgstr "5分レッスンスタート"
+
+#: templates/core/create_request.html:7
 msgid "Talk for 5 Minutes Now"
 msgstr "5分お話ししましょう"
 
@@ -56,11 +62,6 @@ msgstr ""
 msgid "Select a language"
 msgstr "言語を選択"
 
-#: templates/core/create_request.html:26
-#, fuzzy
-#| msgid "Start a 5-Minute Lesson Now"
-msgid "Start a 5-Minute Lesson"
-msgstr "今すぐ5分レッスン開始"
 
 #: templates/core/create_request.html:29
 msgid "Cancel"
@@ -79,10 +80,6 @@ msgstr "今すぐ誰かと会話したい人向けの超軽量会話プラット
 #: templates/core/home.html:16
 msgid "Select a language and start a 5-minute lesson."
 msgstr "言語を選択して5分レッスンを開始してください"
-
-#: templates/core/home.html:18
-msgid "Start a 5-Minute Lesson Now"
-msgstr "今すぐ5分レッスン開始"
 
 #: templates/core/home.html:21
 msgid "You need to log in to start a lesson."
@@ -132,11 +129,11 @@ msgstr "このブラウザはvideoタグに対応していません"
 
 #: templates/core/lesson_room.html:37
 msgid "Student"
-msgstr "生徒"
+msgstr "参加者"
 
 #: templates/core/lesson_room.html:38 templates/core/request_detail.html:29
 msgid "Tutor"
-msgstr "講師"
+msgstr "相手役"
 
 #: templates/core/lesson_room.html:39
 msgid "Language"
@@ -183,8 +180,6 @@ msgid "Matching Result"
 msgstr "マッチング結果"
 
 #: templates/core/request_detail.html:10
-#, fuzzy
-#| msgid "The 5-minute lesson will end."
 msgid "Your 5-minute lesson is ready."
 msgstr "5分レッスンの準備ができました"
 
@@ -203,14 +198,10 @@ msgid "Canceled"
 msgstr "キャンセル"
 
 #: templates/core/request_detail.html:24
-#, fuzzy
-#| msgid "Select a language"
 msgid "Selected language"
 msgstr "言語を選択"
 
 #: templates/core/request_detail.html:34
-#, fuzzy
-#| msgid "5-minute lesson room"
 msgid "Enter Lesson Room"
 msgstr "レッスンルームに入る"
 
@@ -219,15 +210,14 @@ msgid "Back to Home"
 msgstr "ホームに戻る"
 
 #: templates/core/request_detail.html:44
-#, fuzzy
-#| msgid "Matching in progress…"
+
 msgid "Matching you with a tutor…"
-msgstr "講師とマッチングしています…"
+msgstr "相手役とマッチングしています…"
 
 #: templates/core/request_detail.html:46
 msgid ""
 "This page will automatically update as soon as an available tutor is found."
-msgstr "利用可能な講師が見つかり次第、このページは自動で更新されます"
+msgstr "利用可能な相手役が見つかり次第、このページは自動で更新されます"
 
 #: templates/core/request_detail.html:52
 msgid "Cancel and return to Home"
@@ -239,7 +229,7 @@ msgstr "このリクエストは無効です"
 
 #: templates/core/tutor_dashboard.html:8
 msgid "Tutor Dashboard"
-msgstr "講師ダッシュボード"
+msgstr "相手役ダッシュボード"
 
 #: templates/core/tutor_dashboard.html:10
 msgid "When you go online, you’ll be available for 5-minute lesson matching."
@@ -261,7 +251,7 @@ msgstr "現在、生徒から見つけられる状態です"
 
 #: templates/core/tutor_dashboard.html:30
 msgid "You are not discoverable."
-msgstr "現在、非公開状態です"
+msgstr "現在、オフライン状態です"
 
 #: templates/core/tutor_dashboard.html:35
 msgid ""
@@ -285,3 +275,6 @@ msgstr "5分レッスン"
 
 msgid "Log out"
 msgstr "ログアウト"
+
+msgid "My Lesson History"
+msgstr "レッスン履歴"
