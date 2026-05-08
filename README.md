@@ -220,6 +220,10 @@ Localized UI labels are used depending on language.
 
 ---
 
+##　Change Language
+python manage.py compilemessages
+
+
 ## Quick Start
 
 ```bash
