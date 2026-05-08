@@ -1,14 +1,18 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% block content %}
   <div class="card" style="max-width: 420px; margin: 40px auto;">
     <div class="card-header">
-      <h2 class="card-title">login</h2>
+      <h2 class="card-title">{% trans "Log In" %}</h2>
     </div>
 
     <form method="post">
       {% csrf_token %}
       {{ form.as_p }}
-      <button type="submit" class="btn">login</button>
+      <button type="submit" class="btn">{% trans "Log In" %}</button>
     </form>
+     <p class="mt-16">
+      <a href="{% url 'signup' %}">{% trans "Create an account" %}</a>
+    </p>
   </div>
 {% endblock %}

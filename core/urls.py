@@ -11,6 +11,7 @@ urlpatterns = [
     path("tutor/dashboard/", views.tutor_dashboard, name="tutor_dashboard"),
     path("interview/request/", views.create_interview_request, name="create_interview_request"),
     path("video-room/", VideoRoomView.as_view(), name="video_room"),
+    path("signup/", views.signup, name="signup"),
 
     # レッスンルーム
     path("lesson/room/<int:match_id>/", views.lesson_room, name="lesson_room"),

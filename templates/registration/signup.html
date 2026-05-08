@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="card" style="max-width: 480px; margin: 40px auto;">
+  <h2>{% trans "Create an account" %}</h2>
+
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <hr>
+
+    <label>
+      <input type="checkbox" name="wants_to_teach">
+      {% trans "I also want to teach" %}
+    </label>
+
+    <p>{% trans "Languages I can teach" %}</p>
+
+    {% for lang in languages %}
+      <label style="display:block;">
+        <input type="checkbox" name="tutor_languages" value="{{ lang.id }}">
+        {% trans lang.name %}
+      </label>
+    {% endfor %}
+
+    <button type="submit" class="btn">
+      {% trans "Sign up" %}
+    </button>
+  </form>
+</div>
+{% endblock %}
