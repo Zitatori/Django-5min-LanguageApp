@@ -178,17 +178,6 @@ Localized UI labels are used depending on language.
 
 ---
 
-## Tech Stack (Current MVP)
-
-- Python
-- Django
-- SQLite (development)
-- HTML / CSS
-- Bootstrap 5
-- JavaScript
-
----
-
 ## Current MVP Features
 
 ### Authentication & Roles
