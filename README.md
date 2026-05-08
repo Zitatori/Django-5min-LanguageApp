@@ -1,4 +1,15 @@
 # QuickLesson — 5-Minute Online Language Lessons (WIP)
+
+## MVP Progress
+
+- User registration and login
+- Basic Student / Tutor role setup
+- Language selection for students and tutors
+- Matching request creation
+- Demo matching flow
+- Lesson room entry
+- 5-minute lesson timer
+- Student and tutor session history
 ## Next Steps
 
 
