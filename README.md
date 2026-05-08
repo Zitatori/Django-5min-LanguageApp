@@ -61,9 +61,6 @@ Users can:
 This project is currently under active development.
 The goal is to build a lightweight language exchange platform focused on short and casual conversations.
 
-## Development Notes   
-## Development Direction
-
 ### Current Approach
 - Start with a Django monolith architecture
 - Prioritize a working MVP before advanced optimization
