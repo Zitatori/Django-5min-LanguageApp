@@ -30,19 +30,19 @@ Users can:
 
 ### Matching Page
 
-<img src="screenshots/matching.png" width="700">
+<img src="matching.png" width="700">
 
 ---
 
 ### Lesson Room
 
-<img src="screenshots/lesson-room.png" width="700">
+<img src="lesson-room.png" width="700">
 
 ---
 
 ### Tutor Dashboard
 
-<img src="screenshots/tutor-dashboard.png" width="700">
+<img src="tutor-dashboard.png" width="700">
 
 
 ## Tech Stack
