@@ -14,10 +14,11 @@
 
 
 1. DjangoだけでMVPを作る
-2. video_call.jsで最低限WebRTCを試す***
-3. DjangoをAPI化する
-4. Nuxtで画面を作り直す
-5. WebRTC部分もNuxtに移す
+2. video_call.jsで最低限WebRTCを試す
+https://www.youtube.com/watch?v=8I2axE6j204
+5. DjangoをAPI化する
+6. Nuxtで画面を作り直す
+7. WebRTC部分もNuxtに移す
 
    
 ### 1. 技術選定
