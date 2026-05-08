@@ -1,26 +1,66 @@
 # QuickLesson — 5-Minute Online Language Lessons (WIP)
+# Django 5min Language App
 
-## MVP Progress
+A Django-based language exchange platform for quick 5-minute conversations.
 
-- User registration and login
-- Basic Student / Tutor role setup
-- Language selection for students and tutors
-- Matching request creation
-- Demo matching flow
-- Lesson room entry
-- 5-minute lesson timer
-- Student and tutor session history
-## Next Steps
+Users can:
+- Match with tutors or learners
+- Start short language sessions
+- Practice casually without long commitments
 
 
-1. DjangoだけでMVPを作る
-2. video_call.jsで最低限WebRTCを試す
-https://www.youtube.com/watch?v=8I2axE6j204
-5. DjangoをAPI化する
-6. Nuxtで画面を作り直す
-7. WebRTC部分もNuxtに移す
+## Features
 
-   
+- User registration & login
+- Student / Tutor roles
+- Language selection
+- Quick lesson matching
+- 5-minute session timer
+- Lesson room
+- Lesson history
+- Multilingual UI (JA / EN / ES / FR)
+
+## Screenshots
+
+### Home Page
+
+<img src="screenshots/home.png" width="700">
+
+---
+
+### Matching Page
+
+<img src="screenshots/matching.png" width="700">
+
+---
+
+### Lesson Room
+
+<img src="screenshots/lesson-room.png" width="700">
+
+---
+
+### Tutor Dashboard
+
+<img src="screenshots/tutor-dashboard.png" width="700">
+
+
+## Tech Stack
+
+- Python
+- Django
+- SQLite
+- HTML / CSS
+- JavaScript
+- Render (deployment)
+
+
+## Current Status
+
+This project is currently under active development.
+The goal is to build a lightweight language exchange platform focused on short and casual conversations.
+
+## Development Notes   
 ### 1. 技術選定
 - Djangoモノリス構成で開発開始
 - 将来のフロント・バック分離を前提に設計する
