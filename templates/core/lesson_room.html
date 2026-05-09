@@ -50,11 +50,18 @@
 
 </div>
     <!-- セッション情報 -->
-    <div class="mt-16">
-      <p><strong>{% trans "Student" %}:</strong> {{ match.request.student.user.username }}</p>
-      <p><strong>{% trans "Tutor" %}:</strong> {{ match.tutor.user.username }}</p>
-      <p><strong>{% trans "Language" %}:</strong> {{ match.request.language.name }}</p>
-    </div>
+    <!-- セッション情報 -->
+<div class="mt-16">
+  {% if request.user == match.request.student.user %}
+    <p><strong>Your role:</strong> Student</p>
+    <p><strong>Partner:</strong> {{ match.tutor.user.username }}</p>
+  {% else %}
+    <p><strong>Your role:</strong> Tutor</p>
+    <p><strong>Partner:</strong> {{ match.request.student.user.username }}</p>
+  {% endif %}
+
+  <p><strong>{% trans "Language" %}:</strong> {{ match.request.language.name }}</p>
+</div>
 
     <div class="mt-16">
       <button id="leave-btn" class="btn btn-secondary">
@@ -96,11 +103,15 @@
     }
 
     function endLesson(reason) {
-      console.log("lesson ended:", reason);
-      alert("{% trans 'The 5-minute lesson will end.' %} ({% trans 'Reason' %}: " + reason + ")");
-      window.location.href = "{% url 'home' %}";
-    }
+  console.log("lesson ended:", reason);
 
+  if (typeof cleanupCall === "function") {
+    cleanupCall();
+  }
+
+  alert("{% trans 'The 5-minute lesson will end.' %} ({% trans 'Reason' %}: " + reason + ")");
+  window.location.href = "{% url 'home' %}";
+}
     leaveBtn.addEventListener("click", function () {
       endLesson("manual");
     });
@@ -123,7 +134,22 @@
     let cameraOn = true;
     let micOn = true;
     let isCaller = false;
+    function cleanupCall() {
+  if (localStream) {
+    localStream.getTracks().forEach((track) => {
+      track.stop();
+    });
+  }
 
+  if (peerConnection) {
+    peerConnection.close();
+    peerConnection = null;
+  }
+
+  if (socket && socket.readyState === WebSocket.OPEN) {
+    socket.close();
+  }
+}
     const protocol = window.location.protocol === "https:" ? "wss" : "ws";
     const socket = new WebSocket(
       protocol + "://" + window.location.host + "/ws/lesson/" + matchId + "/"
@@ -234,7 +260,21 @@
         alert("{% trans 'Could not access camera/microphone. Please check your browser settings.' %}");
       }
     };
+function cleanupCall() {
+  if (localStream) {
+    localStream.getTracks().forEach((track) => track.stop());
+    localStream = null;
+  }
 
+  if (peerConnection) {
+    peerConnection.close();
+    peerConnection = null;
+  }
+
+  if (socket && socket.readyState === WebSocket.OPEN) {
+    socket.close();
+  }
+}
     socket.onmessage = async function (event) {
       const data = JSON.parse(event.data);
 
@@ -284,6 +324,11 @@
       micBtn.textContent = micOn ? "{% trans 'Mic OFF' %}" : "{% trans 'Mic ON' %}";
     });
   })();
+      window.addEventListener("beforeunload", function () {
+  if (typeof cleanupCall === "function") {
+    cleanupCall();
+  }
+});
 </script>
   </div>
 {% endblock %}
