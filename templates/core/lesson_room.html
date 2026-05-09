@@ -22,16 +22,33 @@
     </div>
 
     <!-- 黒いダミー画面 → 自分のカメラ映像にする -->
-    <div class="mt-16">
-      <video id="localVideo"
-             class="video-placeholder"
-             autoplay
-             playsinline
-             muted>
-        {% trans "Your browser does not support the video tag." %}
-      </video>
-    </div>
+    <div style="display: flex; gap: 20px; flex-wrap: wrap;">
 
+  <div>
+    <h3>Your camera</h3>
+    <video
+      id="localVideo"
+      autoplay
+      playsinline
+      muted
+      width="360"
+      style="background: #000; border-radius: 12px;"
+    ></video>
+  </div>
+
+  <div>
+    <h3>Partner camera</h3>
+    <video
+      id="remoteVideo"
+      autoplay
+      playsinline
+      width="360"
+      height="270"
+      style="background: #222; border-radius: 12px;"
+    ></video>
+  </div>
+
+</div>
     <!-- セッション情報 -->
     <div class="mt-16">
       <p><strong>{% trans "Student" %}:</strong> {{ match.request.student.user.username }}</p>
@@ -56,92 +73,217 @@
     </div>
 
     <script>
-      // ====== タイマー ======
-      (function () {
-        let remaining = {{ remaining_seconds|default:300 }};
-        const display = document.getElementById("timer-display");
-        const leaveBtn = document.getElementById("leave-btn");
+  // ====== タイマー ======
+  (function () {
+    let remaining = {{ remaining_seconds|default:300 }};
+    const display = document.getElementById("timer-display");
+    const leaveBtn = document.getElementById("leave-btn");
 
-        function format(sec) {
-          const m = Math.floor(sec / 60);
-          const s = sec % 60;
-          return m.toString() + ":" + s.toString().padStart(2, "0");
+    function format(sec) {
+      const m = Math.floor(sec / 60);
+      const s = sec % 60;
+      return m.toString() + ":" + s.toString().padStart(2, "0");
+    }
+
+    function update() {
+      display.textContent = format(remaining);
+      if (remaining <= 0) {
+        endLesson("timeup");
+      } else {
+        remaining -= 1;
+        setTimeout(update, 1000);
+      }
+    }
+
+    function endLesson(reason) {
+      console.log("lesson ended:", reason);
+      alert("{% trans 'The 5-minute lesson will end.' %} ({% trans 'Reason' %}: " + reason + ")");
+      window.location.href = "{% url 'home' %}";
+    }
+
+    leaveBtn.addEventListener("click", function () {
+      endLesson("manual");
+    });
+
+    update();
+  })();
+
+  // ====== WebRTC video call ======
+  (function () {
+    const localVideo = document.getElementById("localVideo");
+    const remoteVideo = document.getElementById("remoteVideo");
+    const camBtn = document.getElementById("toggle-camera");
+    const micBtn = document.getElementById("toggle-mic");
+
+    const matchId = "{{ match.id }}";
+    const userId = "{{ request.user.id }}";
+
+    let localStream = null;
+    let peerConnection = null;
+    let cameraOn = true;
+    let micOn = true;
+    let isCaller = false;
+
+    const protocol = window.location.protocol === "https:" ? "wss" : "ws";
+    const socket = new WebSocket(
+      protocol + "://" + window.location.host + "/ws/lesson/" + matchId + "/"
+    );
+
+    const config = {
+      iceServers: [
+        { urls: "stun:stun.l.google.com:19302" }
+      ]
+    };
+
+    async function startLocalMedia() {
+      localStream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true,
+      });
+      localVideo.srcObject = localStream;
+    }
+
+    function createPeerConnection() {
+      peerConnection = new RTCPeerConnection(config);
+
+      localStream.getTracks().forEach((track) => {
+        peerConnection.addTrack(track, localStream);
+      });
+
+      peerConnection.ontrack = function (event) {
+        remoteVideo.srcObject = event.streams[0];
+      };
+
+      peerConnection.onicecandidate = function (event) {
+        if (event.candidate) {
+          sendSignal({
+            type: "ice-candidate",
+            candidate: event.candidate,
+            sender: userId,
+          });
         }
+      };
+    }
 
-        function update() {
-          display.textContent = format(remaining);
-          if (remaining <= 0) {
-            endLesson("timeup");
-          } else {
-            remaining -= 1;
-            setTimeout(update, 1000);
-          }
-        }
+    function sendSignal(data) {
+      if (socket.readyState === WebSocket.OPEN) {
+        socket.send(JSON.stringify(data));
+      }
+    }
 
-        function endLesson(reason) {
-          console.log("lesson ended:", reason);
-          alert("{% trans 'The 5-minute lesson will end.' %} ({% trans 'Reason' %}: " + reason + ")");
-          window.location.href = "{% url 'home' %}";
-        }
+    async function makeOffer() {
+      createPeerConnection();
 
-        leaveBtn.addEventListener("click", function () {
-          endLesson("manual");
+      const offer = await peerConnection.createOffer();
+      await peerConnection.setLocalDescription(offer);
+
+      sendSignal({
+        type: "offer",
+        offer: offer,
+        sender: userId,
+      });
+    }
+
+    async function handleOffer(data) {
+      createPeerConnection();
+
+      await peerConnection.setRemoteDescription(
+        new RTCSessionDescription(data.offer)
+      );
+
+      const answer = await peerConnection.createAnswer();
+      await peerConnection.setLocalDescription(answer);
+
+      sendSignal({
+        type: "answer",
+        answer: answer,
+        sender: userId,
+      });
+    }
+
+    async function handleAnswer(data) {
+      if (!peerConnection) return;
+
+      await peerConnection.setRemoteDescription(
+        new RTCSessionDescription(data.answer)
+      );
+    }
+
+    async function handleIceCandidate(data) {
+      if (!peerConnection) return;
+
+      try {
+        await peerConnection.addIceCandidate(
+          new RTCIceCandidate(data.candidate)
+        );
+      } catch (error) {
+        console.error("Error adding ICE candidate:", error);
+      }
+    }
+
+    socket.onopen = async function () {
+      try {
+        await startLocalMedia();
+
+        sendSignal({
+          type: "join",
+          sender: userId,
         });
+      } catch (error) {
+        console.error("media error:", error);
+        alert("{% trans 'Could not access camera/microphone. Please check your browser settings.' %}");
+      }
+    };
 
-        update();
-      })();
+    socket.onmessage = async function (event) {
+      const data = JSON.parse(event.data);
 
-      // ====== 自分のカメラ＋カメラ／マイクON/OFF ======
-      (function () {
-        const videoEl = document.getElementById("localVideo");
-        const camBtn = document.getElementById("toggle-camera");
-        const micBtn = document.getElementById("toggle-mic");
+      if (data.sender === userId) {
+        return;
+      }
 
-        let localStream = null;
-        let cameraOn = true;
-        let micOn = true;
-
-        async function startCamera() {
-          try {
-            localStream = await navigator.mediaDevices.getUserMedia({
-              video: true,
-              audio: true,
-            });
-            videoEl.srcObject = localStream;
-          } catch (err) {
-            console.error("camera/mic error:", err);
-            // videoタグの中身に文字を出したい場合は <div> 等が必要なので、ここではalertにしています
-            alert("{% trans 'Could not access camera/microphone. Please check your browser settings.' %}");
-          }
+      if (data.type === "join") {
+        if (!peerConnection) {
+          isCaller = true;
+          await makeOffer();
         }
+      }
 
-        function toggleCamera() {
-          if (!localStream) return;
-          localStream.getVideoTracks().forEach((track) => {
-            track.enabled = !track.enabled;
-            cameraOn = track.enabled;
-          });
-          camBtn.textContent = cameraOn ? "{% trans 'Camera OFF' %}" : "{% trans 'Camera ON' %}";
-        }
+      if (data.type === "offer") {
+        await handleOffer(data);
+      }
 
-        function toggleMic() {
-          if (!localStream) return;
-          localStream.getAudioTracks().forEach((track) => {
-            track.enabled = !track.enabled;
-            micOn = track.enabled;
-          });
-          micBtn.textContent = micOn ? "{% trans 'Mic OFF' %}" : "{% trans 'Mic ON' %}";
-        }
+      if (data.type === "answer") {
+        await handleAnswer(data);
+      }
 
-        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-          startCamera();
-        } else {
-          alert("{% trans 'This browser does not support getUserMedia.' %}");
-        }
+      if (data.type === "ice-candidate") {
+        await handleIceCandidate(data);
+      }
+    };
 
-        camBtn.addEventListener("click", toggleCamera);
-        micBtn.addEventListener("click", toggleMic);
-      })();
-    </script>
+    camBtn.addEventListener("click", function () {
+      if (!localStream) return;
+
+      localStream.getVideoTracks().forEach((track) => {
+        track.enabled = !track.enabled;
+        cameraOn = track.enabled;
+      });
+
+      camBtn.textContent = cameraOn ? "{% trans 'Camera OFF' %}" : "{% trans 'Camera ON' %}";
+    });
+
+    micBtn.addEventListener("click", function () {
+      if (!localStream) return;
+
+      localStream.getAudioTracks().forEach((track) => {
+        track.enabled = !track.enabled;
+        micOn = track.enabled;
+      });
+
+      micBtn.textContent = micOn ? "{% trans 'Mic OFF' %}" : "{% trans 'Mic ON' %}";
+    });
+  })();
+</script>
   </div>
 {% endblock %}

@@ -27,11 +27,23 @@ def tutor_dashboard(request):
         "request__language",
     ).order_by("-started_at")
 
+    active_matches = QuickLessonMatch.objects.filter(
+        tutor=tutor_profile
+    ).select_related(
+        "request",
+        "request__student",
+        "request__student__user",
+        "request__language",
+        "tutor",
+        "tutor__user",
+    ).order_by("-started_at")
+
     return render(
         request,
         "core/tutor_dashboard.html",
         {
             "tutor": tutor_profile,
+            "active_matches": active_matches,
             "matches": matches,
         },
     )

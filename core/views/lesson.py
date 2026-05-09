@@ -18,6 +18,13 @@ def video_room(request):
 def lesson_room(request, match_id: int):
     match = get_object_or_404(QuickLessonMatch, id=match_id)
 
+    print("===== LESSON ROOM DEBUG =====")
+    print("current user:", request.user)
+    print("match id:", match.id)
+    print("student:", match.request.student.user)
+    print("tutor:", match.tutor.user)
+    print("=============================")
+
     now = timezone.now()
     remaining_seconds = max(0, int((match.end_at - now).total_seconds()))
 
