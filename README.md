@@ -54,6 +54,7 @@ Users can:
 - HTML / CSS
 - JavaScript
 - Render (deployment)
+- WebRTC
 
 
 ## Current Status
