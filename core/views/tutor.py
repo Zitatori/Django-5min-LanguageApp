@@ -29,7 +29,7 @@ def tutor_dashboard(request):
 
     active_matches = QuickLessonMatch.objects.filter(
         tutor=tutor_profile,
-        ended_at__isnull=True
+        end_at__isnull=True
     ).select_related(
         "request",
         "request__student",
