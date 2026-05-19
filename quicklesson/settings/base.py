@@ -2,6 +2,8 @@ from pathlib import Path
 from django.utils.translation import gettext_lazy as _
 import os
 
+
+
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-change-me")
