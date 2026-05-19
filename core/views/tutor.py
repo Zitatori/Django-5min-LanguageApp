@@ -28,7 +28,8 @@ def tutor_dashboard(request):
     ).order_by("-started_at")
 
     active_matches = QuickLessonMatch.objects.filter(
-        tutor=tutor_profile
+        tutor=tutor_profile,
+        ended_at__isnull=True
     ).select_related(
         "request",
         "request__student",
