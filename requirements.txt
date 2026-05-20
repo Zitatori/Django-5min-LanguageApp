@@ -7,3 +7,5 @@ whitenoise==6.11.0
 dj-database-url
 psycopg2-binary
 daphne
+channels
+channels-redis
