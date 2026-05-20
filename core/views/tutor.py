@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-
+from django.utils import timezone
 from core.models import TutorProfile, QuickLessonMatch
 
 
@@ -29,7 +29,7 @@ def tutor_dashboard(request):
 
     active_matches = QuickLessonMatch.objects.filter(
         tutor=tutor_profile,
-        end_at__isnull=True
+        end_at__gt=timezone.now()
     ).select_related(
         "request",
         "request__student",
