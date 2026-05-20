@@ -168,7 +168,6 @@
   const rootCard = form.closest(".card");
   const matchingRow = document.getElementById("matching-row");
 
-  // 初期状態反映
   function applyUI(isOnline){
     if (isOnline) {
       rootCard.classList.add("is-online");
@@ -180,10 +179,39 @@
   }
   applyUI(toggle.checked);
 
-  // スイッチクリックでPOST（オンライン/オフライン切替）
-  rootCard.querySelector(".switch-track").addEventListener("click", () => form.submit());
-  rootCard.querySelector(".switch-thumb").addEventListener("click", () => form.submit());
+  let pollInterval = null;
 
+  function startPolling() {
+    if (pollInterval) return;
+    pollInterval = setInterval(async () => {
+      try {
+        const res = await fetch("{% url 'tutor_match_status' %}");
+        const data = await res.json();
+        if (data.matched) {
+          clearInterval(pollInterval);
+          window.location.href = data.room_url;
+        }
+      } catch (e) {
+        console.error("Polling error:", e);
+      }
+    }, 3000);
+  }
+
+  function stopPolling() {
+    clearInterval(pollInterval);
+    pollInterval = null;
+  }
+
+  if (toggle.checked) startPolling();
+
+  rootCard.querySelector(".switch-track").addEventListener("click", () => {
+    stopPolling();
+    form.submit();
+  });
+  rootCard.querySelector(".switch-thumb").addEventListener("click", () => {
+    stopPolling();
+    form.submit();
+  });
 
 })();
 </script>

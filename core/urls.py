@@ -13,6 +13,7 @@ urlpatterns = [
     path("video-room/", VideoRoomView.as_view(), name="video_room"),
     path("signup/", views.signup, name="signup"),
     path("history/", views.student_history, name="student_history"),
+    path("tutor/match-status/", views.tutor_match_status, name="tutor_match_status"),
 
     # レッスンルーム
     path("lesson/room/<int:match_id>/", views.lesson_room, name="lesson_room"),

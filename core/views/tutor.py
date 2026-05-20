@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.utils import timezone
 from core.models import TutorProfile, QuickLessonMatch
+from django.http import JsonResponse
 
 
 @login_required
@@ -48,3 +49,18 @@ def tutor_dashboard(request):
             "matches": matches,
         },
     )
+@login_required
+def tutor_match_status(request):
+    tutor_profile = TutorProfile.objects.get(user=request.user)
+    active_match = QuickLessonMatch.objects.filter(
+        tutor=tutor_profile,
+        end_at__gt=timezone.now()
+    ).first()
+
+    if active_match:
+        from django.urls import reverse
+        return JsonResponse({
+            "matched": True,
+            "room_url": reverse("lesson_room", args=[active_match.id])
+        })
+    return JsonResponse({"matched": False})
