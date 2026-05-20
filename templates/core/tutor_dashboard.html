@@ -82,11 +82,13 @@
     <p class="text-muted">{% trans "No teaching languages selected yet." %}</p>
   {% endif %}
 </div>
-        {% if tutor.is_online %}
-          {% trans "Waiting for a student… We’ll move you to the lesson room automatically when matched." %}
-        {% else %}
-          {% trans "Switch online to start matching." %}
-        {% endif %}
+        {% if active_matches %}
+  {% trans "You have an active match. Enter the lesson room." %}
+{% elif tutor.is_online %}
+  {% trans "Waiting for a student…" %}
+{% else %}
+  {% trans "Switch online to start matching." %}
+{% endif %}
       </div>
     </div>
 
