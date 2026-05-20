@@ -189,7 +189,7 @@
         const data = await res.json();
         if (data.matched) {
           clearInterval(pollInterval);
-          window.location.href = data.room_url;
+          window.location.reload();
         }
       } catch (e) {
         console.error("Polling error:", e);
