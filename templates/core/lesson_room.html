@@ -328,6 +328,12 @@ function cleanupCall() {
       if (data.type === "ice-candidate") {
         await handleIceCandidate(data);
       }
+
+      if (data.type === "peer_left") {
+  alert("Peer left the room");
+  window.location.href = "{% url 'home' %}";
+  return;
+}
     };
 
     camBtn.addEventListener("click", function () {

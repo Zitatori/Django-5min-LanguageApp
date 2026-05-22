@@ -25,6 +25,18 @@ class VideoCallConsumer(AsyncWebsocketConsumer):
         count = max(0, count - 1)
         cache.set(count_key, count, timeout=3600)
 
+        # 相手に「退室した」シグナルを送る
+        await self.channel_layer.group_send(
+            self.room_group_name,
+            {
+                "type": "send_signal",
+                "message": {
+                    "type": "peer_left",
+                },
+                "sender_channel_name": "",
+            }
+        )
+
     async def receive(self, text_data):
         data = json.loads(text_data)
 
