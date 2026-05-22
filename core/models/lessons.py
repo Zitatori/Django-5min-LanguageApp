@@ -37,11 +37,15 @@ class QuickLessonRequest(models.Model):
 class QuickLessonMatch(models.Model):
     request = models.OneToOneField(QuickLessonRequest, on_delete=models.CASCADE)
     tutor = models.ForeignKey(TutorProfile, on_delete=models.CASCADE)
-    started_at = models.DateTimeField()
-    end_at = models.DateTimeField()
+
+    student_joined_at = models.DateTimeField(null=True, blank=True)
+    tutor_joined_at = models.DateTimeField(null=True, blank=True)
+
+    started_at = models.DateTimeField(null=True, blank=True)
+    end_at = models.DateTimeField(null=True, blank=True)
+
     meeting_url = models.URLField(blank=True)
     price = models.DecimalField(max_digits=8, decimal_places=2, default=0)
-
     def __str__(self) -> str:
         return f"Match#{self.id} {self.student_name} x {self.tutor_name}"
 

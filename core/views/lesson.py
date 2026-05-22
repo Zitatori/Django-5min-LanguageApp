@@ -18,15 +18,24 @@ def video_room(request):
 def lesson_room(request, match_id: int):
     match = get_object_or_404(QuickLessonMatch, id=match_id)
 
-    print("===== LESSON ROOM DEBUG =====")
-    print("current user:", request.user)
-    print("match id:", match.id)
-    print("student:", match.request.student.user)
-    print("tutor:", match.tutor.user)
-    print("=============================")
-
     now = timezone.now()
-    remaining_seconds = max(0, int((match.end_at - now).total_seconds()))
+
+    if request.user == match.request.student.user and not match.student_joined_at:
+        match.student_joined_at = now
+
+    if request.user == match.tutor.user and not match.tutor_joined_at:
+        match.tutor_joined_at = now
+
+    if match.student_joined_at and match.tutor_joined_at and not match.started_at:
+        match.started_at = now
+        match.end_at = now + timezone.timedelta(minutes=5)
+
+    match.save()
+
+    if match.started_at:
+        remaining_seconds = max(0, int((match.end_at - now).total_seconds()))
+    else:
+        remaining_seconds = None
 
     context = {
         "match": match,

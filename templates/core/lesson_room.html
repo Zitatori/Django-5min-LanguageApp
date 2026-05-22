@@ -82,9 +82,14 @@
     <script>
   // ====== タイマー ======
   (function () {
-    let remaining = {{ remaining_seconds|default:300 }};
-    const display = document.getElementById("timer-display");
-    const leaveBtn = document.getElementById("leave-btn");
+    let remaining = {% if remaining_seconds is not None %}{{ remaining_seconds }}{% else %}null{% endif %};
+const display = document.getElementById("timer-display");
+const leaveBtn = document.getElementById("leave-btn");
+
+if (remaining === null) {
+  display.textContent = "Waiting";
+  return;
+}
 
     function format(sec) {
       const m = Math.floor(sec / 60);
