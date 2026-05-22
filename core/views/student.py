@@ -86,11 +86,15 @@ def create_request(request):
         "tutor__user",
     ).order_by("-started_at")
 
+    languages_with_count = []
+    for lang in languages:
+        count = TutorProfile.objects.filter(is_online=True, languages=lang).count()
+        languages_with_count.append((lang, count))
+
     return render(request, "core/create_request.html", {
-        "languages": languages,
+        "languages_with_count": languages_with_count,
         "matches": matches,
     })
-
 
 @login_required
 def request_detail(request, request_id: int):

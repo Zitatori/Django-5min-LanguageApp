@@ -17,9 +17,9 @@
       <label>
         {% trans "Select a language" %}
         <select name="language_id">
-          {% for lang in languages %}
-            <option value="{{ lang.id }}">{% trans lang.name %}</option>
-          {% endfor %}
+         {% for lang, count in languages_with_count %}
+  <option value="{{ lang.id }}">{% trans lang.name %} — {{ count }}Online</option>
+{% endfor %}
         </select>
       </label>
 
