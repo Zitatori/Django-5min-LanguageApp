@@ -27,7 +27,8 @@
     <div class="lang-grid">
       {% for lang, count in languages_with_count %}
       <div class="lang-card {% if forloop.first %}selected{% endif %}"
-           onclick="selectLang(this, '{{ lang.id }}')">
+     onclick="selectLang(this, '{{ lang.id }}')"
+     data-id="{{ lang.id }}">
         <div class="lang-name">{% trans lang.name %}</div>
         <div class="lang-status">
           {% if count > 0 %}
