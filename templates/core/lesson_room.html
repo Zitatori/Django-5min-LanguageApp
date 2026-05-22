@@ -81,21 +81,21 @@
 
     <script>
   // ====== タイマー ======
-  (function () {
-    let remaining = {% if remaining_seconds is not None %}{{ remaining_seconds }}{% else %}null{% endif %};
-const display = document.getElementById("timer-display");
-const leaveBtn = document.getElementById("leave-btn");
+(function () {
+  let remaining = null;  // ← 最初はnullで待機
+  const display = document.getElementById("timer-display");
+  const leaveBtn = document.getElementById("leave-btn");
 
-if (remaining === null) {
-  display.textContent = "Waiting";
-  return;
-}
+  display.textContent = "Waiting...";  // 相手を待っている表示
 
-    function format(sec) {
-      const m = Math.floor(sec / 60);
-      const s = sec % 60;
-      return m.toString() + ":" + s.toString().padStart(2, "0");
-    }
+  function format(sec) {
+    const m = Math.floor(sec / 60);
+    const s = sec % 60;
+    return m.toString() + ":" + s.toString().padStart(2, "0");
+  }
+
+  function startTimer(seconds) {
+    remaining = seconds;
 
     function update() {
       display.textContent = format(remaining);
@@ -106,23 +106,24 @@ if (remaining === null) {
         setTimeout(update, 1000);
       }
     }
-
-    function endLesson(reason) {
-  console.log("lesson ended:", reason);
-
-  if (typeof cleanupCall === "function") {
-    cleanupCall();
+    update();
   }
 
-  alert("{% trans 'The 5-minute lesson will end.' %} ({% trans 'Reason' %}: " + reason + ")");
-  window.location.href = "{% url 'home' %}";
-}
-    leaveBtn.addEventListener("click", function () {
-      endLesson("manual");
-    });
+  function endLesson(reason) {
+    if (typeof cleanupCall === "function") cleanupCall();
+    alert("The 5-minute lesson will end. (Reason: " + reason + ")");
+    window.location.href = "{% url 'home' %}";
+  }
 
-    update();
-  })();
+  leaveBtn.addEventListener("click", function () {
+    endLesson("manual");
+  });
+
+  // timer_startシグナルをグローバルで受け取れるように公開
+  window.onTimerStart = function(seconds) {
+    startTimer(seconds);
+  };
+})();
 
   // ====== WebRTC video call ======
   (function () {
@@ -287,12 +288,19 @@ function cleanupCall() {
         return;
       }
 
-      if (data.type === "join") {
-        if (!peerConnection) {
-          isCaller = true;
-          await makeOffer();
-        }
-      }
+      if (data.type === "timer_start") {
+    if (typeof window.onTimerStart === "function") {
+      window.onTimerStart(data.seconds);
+    }
+    return;
+  }
+
+  if (data.type === "join") {
+    if (!peerConnection) {
+      isCaller = true;
+      await makeOffer();
+    }
+  }
 
       if (data.type === "offer") {
         await handleOffer(data);
