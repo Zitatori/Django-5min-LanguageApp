@@ -15,10 +15,20 @@
 
     <!-- タイマー -->
     <div class="center mt-16">
-      <div class="timer-circle">
-        <span id="timer-display"></span>
-      </div>
-      <div class="timer-label">{% trans "Remaining time" %}</div>
+      <svg width="200" height="200" viewBox="0 0 200 200">
+  <circle cx="100" cy="100" r="80" fill="none" stroke="var(--color-background-secondary)" stroke-width="14"/>
+  <circle id="timer-progress" cx="100" cy="100" r="80"
+    fill="none" stroke="#6366f1" stroke-width="14"
+    stroke-linecap="round"
+    stroke-dasharray="502"
+    stroke-dashoffset="0"
+    transform="rotate(-90 100 100)"
+    style="transition: stroke-dashoffset 1s linear, stroke 0.5s;"/>
+  <text x="100" y="95" text-anchor="middle" font-size="38" font-weight="500"
+    fill="var(--color-text-primary)" font-family="monospace" id="timer-display">--:--</text>
+  <text x="100" y="120" text-anchor="middle" font-size="12"
+    fill="var(--color-text-secondary)" font-family="sans-serif">remaining</text>
+</svg>
     </div>
 
     <!-- 黒いダミー画面 → 自分のカメラ映像にする -->
@@ -95,19 +105,24 @@
   }
 
   function startTimer(seconds) {
-    remaining = seconds;
+  remaining = seconds;
+  const progress = document.getElementById("timer-progress");
 
-    function update() {
-      display.textContent = format(remaining);
-      if (remaining <= 0) {
-        endLesson("timeup");
-      } else {
-        remaining -= 1;
-        setTimeout(update, 1000);
-      }
+  function update() {
+    display.textContent = format(remaining);
+    const ratio = remaining / 300;
+    progress.style.strokeDashoffset = 502 * (1 - ratio);
+    progress.style.stroke = ratio < 0.33 ? "#ef4444" : ratio < 0.6 ? "#f59e0b" : "#6366f1";
+
+    if (remaining <= 0) {
+      endLesson("timeup");
+    } else {
+      remaining -= 1;
+      setTimeout(update, 1000);
     }
-    update();
   }
+  update();
+}
 
   function endLesson(reason) {
     if (typeof cleanupCall === "function") cleanupCall();
