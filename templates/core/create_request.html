@@ -22,8 +22,7 @@
   <p class="card-subtitle">{% trans "Select the language you want to practice. If any tutors are online, you will be randomly matched." %}</p>
 
   <form method="post">
-    {% csrf_token %}
-    <input type="hidden" name="language_id" id="selected-lang-id" value="">
+    {% csrf_token %}<input type="hidden" name="language_id" id="selected-lang-id" value="{{ languages_with_count.0.0.id }}">
 
     <div class="lang-grid">
       {% for lang, count in languages_with_count %}
