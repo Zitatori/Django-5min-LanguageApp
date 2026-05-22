@@ -2,63 +2,95 @@
 {% load i18n %}
 
 {% block content %}
-  <div class="card">
-    <div class="card-header">
-      <h2 class="card-title">{% trans "Talk for 5 Minutes Now" %}</h2>
-      <span class="badge badge-yellow">{% trans "Step 1" %}</span>
-    </div>
+<style>
+  .lang-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin: 1.25rem 0; }
+  .lang-card { border: 0.5px solid #d1d5db; border-radius: 10px; padding: 14px 12px; cursor: pointer; display: flex; flex-direction: column; gap: 6px; transition: border-color 0.15s; }
+  .lang-card:hover { border-color: #6366f1; }
+  .lang-card.selected { border: 2px solid #6366f1; background: #EEEDFE; }
+  .lang-name { font-size: 15px; font-weight: 500; }
+  .lang-status { font-size: 12px; display: flex; align-items: center; gap: 5px; }
+  .dot-on { width: 7px; height: 7px; border-radius: 50%; background: #22c55e; display: inline-block; }
+  .dot-off { width: 7px; height: 7px; border-radius: 50%; background: #d1d5db; display: inline-block; }
+  .avatar { width: 30px; height: 30px; border-radius: 50%; background: #EEEDFE; color: #3C3489; font-size: 11px; font-weight: 500; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .history-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 0.5px solid #e5e7eb; }
+  .history-row:last-child { border-bottom: none; }
+  .lang-pill { font-size: 11px; padding: 2px 10px; border-radius: 99px; background: #f3f4f6; color: #6b7280; }
+</style>
 
-    <p class="card-subtitle">
-      {% trans "Select the language you want to practice. If any tutors are online, you will be randomly matched." %}
-    </p>
+<div class="card">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+    <p style="font-size:13px; color:#6b7280; margin:0;">{% trans "Step 1" %}</p>
+    <span class="badge badge-yellow">5 min</span>
+  </div>
+  <h2 class="card-title">{% trans "Talk for 5 Minutes Now" %}</h2>
+  <p class="card-subtitle">{% trans "Select the language you want to practice. If any tutors are online, you will be randomly matched." %}</p>
 
-    <form method="post" class="mt-16">
-      {% csrf_token %}
-      <label>
-        {% trans "Select a language" %}
-        <select name="language_id">
-         {% for lang, count in languages_with_count %}
-  <option value="{{ lang.id }}">{% trans lang.name %} {% if count > 0 %}— 🟢 {{ count }} online{% else %}— offline{% endif %}</option>
-{% endfor %}
-        </select>
-      </label>
+  <form method="post">
+    {% csrf_token %}
+    <input type="hidden" name="language_id" id="selected-lang-id" value="">
 
-      <div class="mt-16">
-        <button type="submit" class="btn">{% trans "Start a 5-Minute Lesson" %}</button>
-        <button type="button" class="btn btn-outline"
-                onclick="window.location.href='{% url 'home' %}'">
-          {% trans "Cancel" %}
-        </button>
+    <div class="lang-grid">
+      {% for lang, count in languages_with_count %}
+      <div class="lang-card {% if forloop.first %}selected{% endif %}"
+           onclick="selectLang(this, '{{ lang.id }}')">
+        <div class="lang-name">{% trans lang.name %}</div>
+        <div class="lang-status">
+          {% if count > 0 %}
+            <span class="dot-on"></span>
+            <span style="color:#16a34a;">{{ count }} online</span>
+          {% else %}
+            <span class="dot-off"></span>
+            <span style="color:#9ca3af;">offline</span>
+          {% endif %}
+        </div>
       </div>
-    </form>
-  </div>
-
-  <div class="card mt-16">
-    <div class="card-header">
-      <h3 class="card-title">{% trans "My Lesson History" %}</h3>
+      {% endfor %}
     </div>
 
-    {% if matches %}
-      <table>
-        <thead>
-          <tr>
-            <th>{% trans "Date" %}</th>
-            <th>{% trans "Tutor" %}</th>
-            <th>{% trans "Language" %}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for match in matches %}
-            <tr>
-              <td>{{ match.started_at|date:"Y-m-d H:i" }}</td>
-              <td>{{ match.tutor.user.username }}</td>
-              <td>{% trans match.request.language.name %}</td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    {% else %}
-      <p class="text-muted">{% trans "No lesson history yet." %}</p>
-    {% endif %}
-  </div>
+    <div style="display:flex; gap:10px; margin-top:1rem;">
+      <button type="submit" class="btn">{% trans "Start a 5-Minute Lesson" %}</button>
+      <button type="button" class="btn btn-outline"
+              onclick="window.location.href='{% url 'home' %}'">
+        {% trans "Cancel" %}
+      </button>
+    </div>
+  </form>
+</div>
+
+<div class="card mt-16">
+  <h3 class="card-title">{% trans "My Lesson History" %}</h3>
+
+  {% if matches %}
+    {% for match in matches %}
+    <div class="history-row">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <div class="avatar">{{ match.tutor.user.username|slice:":2"|upper }}</div>
+        <div>
+          <div style="font-size:14px; font-weight:500;">{{ match.tutor.user.username }}</div>
+          <div style="font-size:12px; color:#9ca3af;">{{ match.started_at|date:"Y-m-d H:i" }}</div>
+        </div>
+      </div>
+      <span class="lang-pill">{% trans match.request.language.name %}</span>
+    </div>
+    {% endfor %}
+  {% else %}
+    <p class="text-muted">{% trans "No lesson history yet." %}</p>
+  {% endif %}
+</div>
+
+<script>
+  const cards = document.querySelectorAll('.lang-card');
+  const input = document.getElementById('selected-lang-id');
+
+  if (cards.length > 0) {
+    input.value = cards[0].getAttribute('data-id');
+    cards[0].classList.add('selected');
+  }
+
+  function selectLang(el, id) {
+    cards.forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    input.value = id;
+  }
+</script>
 {% endblock %}
