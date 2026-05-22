@@ -18,7 +18,7 @@
         {% trans "Select a language" %}
         <select name="language_id">
          {% for lang, count in languages_with_count %}
-  <option value="{{ lang.id }}">{% trans lang.name %} — {{ count }}Online</option>
+  <option value="{{ lang.id }}">{% trans lang.name %} {% if count > 0 %}— 🟢 {{ count }} online{% else %}— offline{% endif %}</option>
 {% endfor %}
         </select>
       </label>
