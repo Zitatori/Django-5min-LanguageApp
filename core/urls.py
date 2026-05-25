@@ -1,6 +1,8 @@
 from django.urls import path
 from . import views
 from .views import VideoRoomView
+from core.views.admin import admin_dashboard, update_tutor_languages
+
 
 
 
@@ -17,4 +19,8 @@ urlpatterns = [
 
     # レッスンルーム
     path("lesson/room/<int:match_id>/", views.lesson_room, name="lesson_room"),
+
+    #アドミンページ
+    path('admin-dashboard/', admin_dashboard, name='admin_dashboard'),
+    path('admin-dashboard/tutor/<int:tutor_id>/languages/', update_tutor_languages, name='update_tutor_languages'),
 ]
