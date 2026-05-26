@@ -155,22 +155,8 @@
     let cameraOn = true;
     let micOn = true;
     let isCaller = false;
-    function cleanupCall() {
-  if (localStream) {
-    localStream.getTracks().forEach((track) => {
-      track.stop();
-    });
-  }
-
-  if (peerConnection) {
-    peerConnection.close();
-    peerConnection = null;
-  }
-
-  if (socket && socket.readyState === WebSocket.OPEN) {
-    socket.close();
-  }
-}
+    let pendingCandidates = [];
+    let remoteDescSet = false;
     const protocol = window.location.protocol === "https:" ? "wss" : "ws";
     const socket = new WebSocket(
       protocol + "://" + window.location.host + "/ws/lesson/" + matchId + "/"
@@ -178,7 +164,17 @@
 
     const config = {
       iceServers: [
-        { urls: "stun:stun.l.google.com:19302" }
+        { urls: "stun:stun.l.google.com:19302" },
+        {
+          urls: "turn:openrelay.metered.ca:80",
+          username: "openrelayproject",
+          credential: "openrelayproject",
+        },
+        {
+          urls: "turn:openrelay.metered.ca:443?transport=tcp",
+          username: "openrelayproject",
+          credential: "openrelayproject",
+        },
       ]
     };
 
@@ -237,6 +233,11 @@
       await peerConnection.setRemoteDescription(
         new RTCSessionDescription(data.offer)
       );
+      remoteDescSet = true;
+      for (const c of pendingCandidates) {
+        await peerConnection.addIceCandidate(c);
+      }
+      pendingCandidates = [];
 
       const answer = await peerConnection.createAnswer();
       await peerConnection.setLocalDescription(answer);
@@ -254,15 +255,23 @@
       await peerConnection.setRemoteDescription(
         new RTCSessionDescription(data.answer)
       );
+      remoteDescSet = true;
+      for (const c of pendingCandidates) {
+        await peerConnection.addIceCandidate(c);
+      }
+      pendingCandidates = [];
     }
 
     async function handleIceCandidate(data) {
       if (!peerConnection) return;
 
+      const candidate = new RTCIceCandidate(data.candidate);
+      if (!remoteDescSet) {
+        pendingCandidates.push(candidate);
+        return;
+      }
       try {
-        await peerConnection.addIceCandidate(
-          new RTCIceCandidate(data.candidate)
-        );
+        await peerConnection.addIceCandidate(candidate);
       } catch (error) {
         console.error("Error adding ICE candidate:", error);
       }
