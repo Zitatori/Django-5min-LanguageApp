@@ -45,6 +45,10 @@ Users can:
 
 <img src="tutor-dashboard.png" width="700">
 
+### Point Page
+
+<img src="point.png" width="700">
+
 
 ## Tech Stack
 
