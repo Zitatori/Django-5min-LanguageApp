@@ -25,7 +25,7 @@ Users can:
 
 ### Home Page
 
-<img src="home.png" width="700">
+<img src="home_new.png" width="700">
 
 ---
 
