@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<style>
+  .purchase-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  .purchase-header h2 { font-size: 22px; font-weight: 700; color: #1f2937; }
+  .purchase-header p  { color: #6b7280; font-size: 14px; margin-top: 4px; }
+  .current-balance {
+    display: inline-block;
+    background: #ede9fe;
+    color: #5b21b6;
+    border-radius: 99px;
+    padding: 4px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 8px;
+  }
+  .tier-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .tier-card {
+    border: 2px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 1.5rem 1rem;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .tier-card:hover, .tier-card.selected {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
+  }
+  .tier-card .pts  { font-size: 36px; font-weight: 700; color: #6366f1; }
+  .tier-card .unit { font-size: 16px; color: #6366f1; }
+  .tier-card .price { font-size: 18px; font-weight: 600; color: #1f2937; margin-top: 8px; }
+  .tier-card .per  { font-size: 12px; color: #9ca3af; margin-top: 2px; }
+
+  .stripe-note {
+    text-align: center;
+    color: #9ca3af;
+    font-size: 13px;
+    margin-top: 1.5rem;
+  }
+  .btn-purchase {
+    display: block; width: 100%; padding: 14px;
+    background: #6366f1; color: white; border: none;
+    border-radius: 12px; font-size: 16px; font-weight: 600;
+    cursor: pointer; opacity: 0.5; pointer-events: none;
+    transition: opacity 0.15s;
+  }
+  .btn-purchase.active { opacity: 1; pointer-events: auto; }
+  .btn-purchase.active:hover { background: #4f46e5; }
+</style>
+
+<div class="card">
+  <div class="purchase-header">
+    <h2>💳 {% trans "Buy Points" %}</h2>
+    <p>{% trans "Use points to take lessons with a tutor." %}</p>
+    <span class="current-balance">{% trans "Current Balance" %}: {{ balance.balance }} pt</span>
+  </div>
+
+  <div class="tier-grid">
+    {% for tier in tiers %}
+    <div class="tier-card" onclick="selectTier(this, {{ tier.points }}, {{ tier.price_jpy }})">
+      <div class="pts">{{ tier.points }}<span class="unit"> pt</span></div>
+      <div class="price">¥{{ tier.price_jpy|floatformat:0 }}</div>
+      <div class="per">¥{{ tier.price_jpy|floatformat:0 }} / {{ tier.points }}pt</div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <button id="purchase-btn" class="btn-purchase">
+    {% trans "Proceed to Payment" %}
+  </button>
+
+  <p class="stripe-note">
+    🔒 {% trans "Secure payment via Stripe — coming soon" %}
+  </p>
+</div>
+
+<div style="text-align:center; margin-top:1rem;">
+  <a href="{% url 'profile' %}" style="color:#6366f1; font-size:14px;">← {% trans "Back to Profile" %}</a>
+</div>
+
+<script>
+let selectedPoints = null;
+function selectTier(el, points, price) {
+  document.querySelectorAll('.tier-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedPoints = points;
+  const btn = document.getElementById('purchase-btn');
+  btn.classList.add('active');
+  btn.textContent = `{% trans "Proceed to Payment" %} (${points} pt)`;
+}
+</script>
+{% endblock %}

@@ -28,7 +28,7 @@
       </form>
 
       {% if user.is_authenticated %}
-        <span>{% trans "Hi" %}, {{ user.username }}</span>
+        <a href="{% url 'profile' %}" style="text-decoration:none; color:inherit;">{% trans "Hi" %}, {{ user.username }}</a>
         <a href="{% url 'create_request' %}">{% trans "5-minute lesson" %}</a>
         <a href="{% url 'tutor_dashboard' %}">{% trans "Tutor Dashboard" %}</a>
         <a href="{% url 'logout' %}">{% trans "Log out" %}</a>

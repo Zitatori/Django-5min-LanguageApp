@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<style>
+  .point-hero {
+    text-align: center;
+    padding: 2rem 1rem 1.5rem;
+    background: linear-gradient(135deg, #6366f1 0%, #818cf8 100%);
+    border-radius: 20px;
+    color: white;
+    margin-bottom: 1.5rem;
+  }
+  .point-hero .label { font-size: 14px; opacity: 0.85; margin-bottom: 4px; }
+  .point-hero .amount { font-size: 56px; font-weight: 700; line-height: 1; }
+  .point-hero .unit   { font-size: 20px; font-weight: 500; margin-left: 4px; opacity: 0.9; }
+  .point-hero .earned { font-size: 13px; opacity: 0.75; margin-top: 8px; }
+
+  .btn-buy {
+    display: block;
+    width: 100%;
+    margin-top: 1.2rem;
+    padding: 12px;
+    background: white;
+    color: #6366f1;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+  }
+  .btn-buy:hover { background: #f0f0ff; }
+
+  .tx-list { list-style: none; padding: 0; margin: 0; }
+  .tx-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #f3f4f6;
+    font-size: 14px;
+  }
+  .tx-item:last-child { border-bottom: none; }
+  .tx-label { color: #374151; }
+  .tx-date  { color: #9ca3af; font-size: 12px; margin-top: 2px; }
+  .tx-amount-plus  { font-weight: 700; color: #16a34a; font-size: 16px; }
+  .tx-amount-minus { font-weight: 700; color: #dc2626; font-size: 16px; }
+  .tx-type-badge {
+    font-size: 11px; padding: 2px 8px; border-radius: 99px;
+    background: #f3f4f6; color: #6b7280; margin-left: 6px;
+  }
+</style>
+
+<div class="point-hero">
+  <p class="label">{% trans "Your Points" %}</p>
+  <div>
+    <span class="amount">{{ balance.balance }}</span>
+    <span class="unit">pt</span>
+  </div>
+  {% if request.user.tutorprofile %}
+    <p class="earned">{% trans "Withdrawable" %}: {{ balance.earned_balance }} pt</p>
+  {% endif %}
+  <a href="{% url 'purchase_points' %}" class="btn-buy">＋ {% trans "Buy Points" %}</a>
+</div>
+
+<div class="card">
+  <h3 class="card-title" style="margin-bottom:1rem;">{% trans "Transaction History" %}</h3>
+
+  {% if transactions %}
+    <ul class="tx-list">
+      {% for tx in transactions %}
+      <li class="tx-item">
+        <div>
+          <div class="tx-label">
+            {% if tx.transaction_type == 'signup_bonus' %}🎁 {% trans "Welcome Bonus" %}
+            {% elif tx.transaction_type == 'lesson_taken' %}📚 {% trans "Lesson (Student)" %}
+            {% elif tx.transaction_type == 'lesson_taught' %}🎓 {% trans "Lesson (Tutor)" %}
+            {% elif tx.transaction_type == 'purchase' %}💳 {% trans "Points Purchase" %}
+            {% elif tx.transaction_type == 'withdrawal' %}💸 {% trans "Withdrawal" %}
+            {% else %}{{ tx.transaction_type }}{% endif %}
+          </div>
+          <div class="tx-date">{{ tx.created_at|date:"Y-m-d H:i" }}</div>
+        </div>
+        <div>
+          {% if tx.amount > 0 %}
+            <span class="tx-amount-plus">+{{ tx.amount }} pt</span>
+          {% else %}
+            <span class="tx-amount-minus">{{ tx.amount }} pt</span>
+          {% endif %}
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p style="color:#9ca3af; text-align:center; padding: 1.5rem 0;">{% trans "No transactions yet." %}</p>
+  {% endif %}
+</div>
+{% endblock %}

@@ -3,6 +3,9 @@ from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import redirect, render
 
 from core.models import StudentProfile, TutorProfile, LessonLanguage
+from core.models import PointBalance, PointTransaction
+
+SIGNUP_BONUS_POINTS = 10
 
 
 def signup(request):
@@ -23,6 +26,15 @@ def signup(request):
                 tutor_profile, _ = TutorProfile.objects.get_or_create(user=user)
                 tutor_profile.languages.set(selected_languages)
                 tutor_profile.save()
+
+            # 新規ユーザーにサインアップボーナスを付与
+            PointBalance.objects.create(user=user, balance=SIGNUP_BONUS_POINTS)
+            PointTransaction.objects.create(
+                user=user,
+                amount=SIGNUP_BONUS_POINTS,
+                transaction_type=PointTransaction.TYPE_SIGNUP_BONUS,
+                note="Welcome bonus",
+            )
 
             login(request, user)
             return redirect("home")
