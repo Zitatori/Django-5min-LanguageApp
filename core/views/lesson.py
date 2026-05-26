@@ -1,9 +1,9 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.utils import timezone
 from django.views.generic import TemplateView
 
-from core.models import QuickLessonMatch
+from core.models import QuickLessonMatch, PointBalance
 
 
 class VideoRoomView(TemplateView):
@@ -17,6 +17,13 @@ def video_room(request):
 @login_required
 def lesson_room(request, match_id: int):
     match = get_object_or_404(QuickLessonMatch, id=match_id)
+
+    # 生徒は残高1pt以上ないと入室不可
+    is_student = (request.user == match.request.student.user)
+    if is_student:
+        balance = PointBalance.objects.filter(user=request.user).first()
+        if not balance or balance.balance < 1:
+            return redirect('purchase_points')
 
     now = timezone.now()
 

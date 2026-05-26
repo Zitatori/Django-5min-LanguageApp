@@ -30,10 +30,10 @@ class PointTransaction(models.Model):
     ]
 
     user             = models.ForeignKey(User, on_delete=models.CASCADE, related_name='point_transactions')
-    amount           = models.IntegerField()          # 正 = 加算 / 負 = 減算
+    amount           = models.IntegerField()
     transaction_type = models.CharField(max_length=20, choices=TRANSACTION_TYPES)
     created_at       = models.DateTimeField(auto_now_add=True)
-    reference_id     = models.IntegerField(null=True, blank=True)  # match_id など
+    reference_id     = models.IntegerField(null=True, blank=True)
     note             = models.CharField(max_length=200, blank=True)
 
     class Meta:
@@ -41,3 +41,40 @@ class PointTransaction(models.Model):
 
     def __str__(self):
         return f"{self.user.username} {self.amount:+d}pt ({self.transaction_type})"
+
+
+class WithdrawalRequest(models.Model):
+    CURRENCY_CHOICES = [
+        ('EUR', 'EUR (€)'),
+        ('USD', 'USD ($)'),
+        ('CHF', 'CHF (Fr.)'),
+    ]
+    METHOD_CHOICES = [
+        ('wise',     'Wise'),
+        ('paypal',   'PayPal'),
+        ('bank',     'Bank Transfer'),
+    ]
+    STATUS_PENDING  = 'pending'
+    STATUS_PAID     = 'paid'
+    STATUS_REJECTED = 'rejected'
+    STATUS_CHOICES = [
+        (STATUS_PENDING,  'Pending'),
+        (STATUS_PAID,     'Paid'),
+        (STATUS_REJECTED, 'Rejected'),
+    ]
+
+    user            = models.ForeignKey(User, on_delete=models.CASCADE, related_name='withdrawal_requests')
+    points          = models.PositiveIntegerField()          # 引き出すポイント数
+    currency        = models.CharField(max_length=3, choices=CURRENCY_CHOICES)
+    payment_method  = models.CharField(max_length=20, choices=METHOD_CHOICES)
+    payment_details = models.TextField(help_text="口座番号・PayPalメール・WiseメールなどをテキストでOK")
+    status          = models.CharField(max_length=20, choices=STATUS_CHOICES, default=STATUS_PENDING)
+    admin_note      = models.TextField(blank=True)
+    created_at      = models.DateTimeField(auto_now_add=True)
+    processed_at    = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.user.username} {self.points}pt → {self.currency} ({self.status})"

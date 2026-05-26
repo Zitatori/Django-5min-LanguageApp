@@ -3,6 +3,23 @@
 
 {% block content %}
 <style>
+  .withdraw-card { margin-top: 1.2rem; }
+  .withdraw-label { font-size:13px; font-weight:500; color:#374151; display:block; margin-bottom:5px; }
+  .withdraw-input, .withdraw-select, .withdraw-textarea {
+    width:100%; padding:9px 12px; border:1.5px solid #e5e7eb;
+    border-radius:10px; font-size:14px; box-sizing:border-box; margin-bottom:10px;
+  }
+  .withdraw-textarea { min-height:70px; resize:vertical; }
+  .btn-withdraw {
+    width:100%; padding:11px; background:#6366f1; color:white;
+    border:none; border-radius:10px; font-size:14px; font-weight:600; cursor:pointer;
+  }
+  .btn-withdraw:hover { background:#4f46e5; }
+  .pending-badge {
+    display:inline-block; background:#fef9c3; color:#854d0e;
+    border:1.5px solid #fde047; border-radius:99px;
+    padding:4px 14px; font-size:13px; font-weight:500;
+  }
   .point-hero {
     text-align: center;
     padding: 2rem 1rem 1.5rem;
@@ -65,7 +82,57 @@
   <a href="{% url 'purchase_points' %}" class="btn-buy">＋ {% trans "Buy Points" %}</a>
 </div>
 
-<div class="card">
+{% if request.user.tutorprofile %}
+<div class="card withdraw-card">
+  <h3 class="card-title" style="margin-bottom:.8rem;">💸 {% trans "Withdraw Points" %}</h3>
+
+  {% if pending_withdrawal %}
+    <p style="font-size:14px; color:#6b7280; margin-bottom:.8rem;">{% trans "Withdrawal request in progress:" %}</p>
+    <span class="pending-badge">⏳ {{ pending_withdrawal.points }} pt → {{ pending_withdrawal.currency }} ({{ pending_withdrawal.get_payment_method_display }}) — Pending</span>
+
+  {% elif can_withdraw %}
+    <p style="font-size:13px; color:#6b7280; margin-bottom:1rem;">
+      {% trans "Withdrawable" %}: <strong>{{ balance.earned_balance }} pt</strong>　（{% trans "Min." %} {{ min_withdrawal }} pt）
+    </p>
+    <form method="post" action="{% url 'request_withdrawal' %}">
+      {% csrf_token %}
+
+      <label class="withdraw-label">{% trans "Points to withdraw" %}</label>
+      <input type="number" name="points" class="withdraw-input"
+             min="{{ min_withdrawal }}" max="{{ balance.earned_balance }}"
+             value="{{ min_withdrawal }}" required>
+
+      <label class="withdraw-label">{% trans "Currency" %}</label>
+      <select name="currency" class="withdraw-select">
+        {% for val, label in withdrawal_currencies %}
+          <option value="{{ val }}">{{ label }}</option>
+        {% endfor %}
+      </select>
+
+      <label class="withdraw-label">{% trans "Payment method" %}</label>
+      <select name="payment_method" class="withdraw-select">
+        {% for val, label in withdrawal_methods %}
+          <option value="{{ val }}">{{ label }}</option>
+        {% endfor %}
+      </select>
+
+      <label class="withdraw-label">{% trans "Payment details" %} <span style="font-weight:400; color:#9ca3af;">({% trans "email / account no." %})</span></label>
+      <textarea name="payment_details" class="withdraw-textarea" required
+                placeholder="e.g. your@email.com"></textarea>
+
+      <button type="submit" class="btn-withdraw">{% trans "Submit Request" %}</button>
+    </form>
+
+  {% else %}
+    <p style="font-size:14px; color:#9ca3af; padding:.5rem 0;">
+      {% trans "You need at least" %} {{ min_withdrawal }} pt {% trans "of lesson earnings to withdraw." %}
+      （{% trans "Current" %}: {{ balance.earned_balance }} pt）
+    </p>
+  {% endif %}
+</div>
+{% endif %}
+
+<div class="card" style="margin-top:1.2rem;">
   <h3 class="card-title" style="margin-bottom:1rem;">{% trans "Transaction History" %}</h3>
 
   {% if transactions %}

@@ -2,8 +2,9 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.models import User
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
+from django.utils import timezone
 from core.models import TutorProfile, QuickLessonMatch, LessonLanguage
-from core.models import PointBalance, PointTransaction
+from core.models import PointBalance, PointTransaction, WithdrawalRequest
 
 INITIAL_BONUS = 10
 
@@ -24,15 +25,16 @@ def admin_dashboard(request):
 
     languages = LessonLanguage.objects.all()
 
-    # ボーナス未付与のユーザー数（バナー表示用）
     no_balance_count = User.objects.filter(point_balance__isnull=True).count()
+    withdrawal_requests = WithdrawalRequest.objects.select_related('user').order_by('-created_at')
 
     return render(request, 'core/admin_dashboard.html', {
-        'users': users,
-        'tutors': tutors,
-        'matches': matches,
-        'languages': languages,
-        'no_balance_count': no_balance_count,
+        'users':               users,
+        'tutors':              tutors,
+        'matches':             matches,
+        'languages':           languages,
+        'no_balance_count':    no_balance_count,
+        'withdrawal_requests': withdrawal_requests,
     })
 
 @staff_member_required
@@ -73,6 +75,38 @@ def update_user_points(request, user_id):
                 note=f"Admin adjustment by {request.user.username}",
             )
     return redirect('admin_dashboard')
+
+@staff_member_required
+def process_withdrawal(request, withdrawal_id):
+    """引き出し申請を 支払済み or 却下 に更新する"""
+    if request.method == 'POST':
+        wr = get_object_or_404(WithdrawalRequest, id=withdrawal_id)
+        action = request.POST.get('action')  # 'paid' or 'reject'
+
+        if action == 'paid' and wr.status == WithdrawalRequest.STATUS_PENDING:
+            wr.status = WithdrawalRequest.STATUS_PAID
+            wr.admin_note = request.POST.get('admin_note', '')
+            wr.processed_at = timezone.now()
+            wr.save()
+
+        elif action == 'reject' and wr.status == WithdrawalRequest.STATUS_PENDING:
+            wr.status = WithdrawalRequest.STATUS_REJECTED
+            wr.admin_note = request.POST.get('admin_note', '')
+            wr.processed_at = timezone.now()
+            wr.save()
+            # ポイントを返却
+            balance, _ = PointBalance.objects.get_or_create(user=wr.user)
+            balance.balance        += wr.points
+            balance.earned_balance += wr.points
+            balance.save()
+            PointTransaction.objects.create(
+                user=wr.user,
+                amount=wr.points,
+                transaction_type=PointTransaction.TYPE_SIGNUP_BONUS,
+                note=f"Withdrawal rejected — points returned",
+            )
+    return redirect('admin_dashboard')
+
 
 @staff_member_required
 def grant_initial_points_all(request):

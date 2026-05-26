@@ -1,8 +1,8 @@
 from django.urls import path
 from . import views
 from .views import VideoRoomView
-from core.views.admin import admin_dashboard, update_tutor_languages, delete_user, update_user_points, grant_initial_points_all
-from core.views.profile import profile, purchase_points
+from core.views.admin import admin_dashboard, update_tutor_languages, delete_user, update_user_points, grant_initial_points_all, process_withdrawal
+from core.views.profile import profile, purchase_points, request_withdrawal
 
 
 
@@ -31,4 +31,8 @@ urlpatterns = [
     # プロフィール・ポイント
     path('profile/', profile, name='profile'),
     path('points/purchase/', purchase_points, name='purchase_points'),
+    path('points/withdraw/', request_withdrawal, name='request_withdrawal'),
+
+    # 引き出し申請処理（admin用）
+    path('admin-dashboard/withdrawal/<int:withdrawal_id>/', process_withdrawal, name='process_withdrawal'),
 ]
