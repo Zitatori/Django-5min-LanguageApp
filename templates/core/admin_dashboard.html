@@ -32,15 +32,36 @@
   .cancel-btn { margin-top:8px; width:100%; padding:10px; background:white; color:#6b7280; border:1.5px solid #e5e7eb; border-radius:10px; font-size:14px; cursor:pointer; }
   .match-status-active { background:#dcfce7; color:#166534; border:1.5px solid #86efac; border-radius:99px; padding:2px 10px; font-size:12px; }
   .match-status-done { background:#f3f4f6; color:#6b7280; border:1.5px solid #e5e7eb; border-radius:99px; padding:2px 10px; font-size:12px; }
+  .points-btn { font-size:12px; padding:4px 12px; border-radius:8px; border:1.5px solid #f59e0b; color:#b45309; background:white; cursor:pointer; margin-left:6px; }
+  .points-btn:hover { background:#fffbeb; }
+  .pt-badge { font-size:13px; font-weight:600; color:#6366f1; }
+  .pt-none  { font-size:12px; color:#d1d5db; }
+  .grant-banner { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;
+    background:#fffbeb; border:1.5px solid #fde68a; border-radius:12px; padding:12px 16px; margin-bottom:1.2rem; font-size:14px; color:#92400e; }
+  .grant-btn { padding:7px 18px; background:#f59e0b; color:white; border:none; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; }
+  .grant-btn:hover { background:#d97706; }
 </style>
 
 <div class="card admin-section">
   <h2 class="card-title">👥 All Users</h2>
+
+  {% if no_balance_count > 0 %}
+  <div class="grant-banner">
+    <span>⚠️ <strong>{{ no_balance_count }} users</strong> have no points yet.</span>
+    <form method="post" action="{% url 'grant_initial_points_all' %}"
+          onsubmit="return confirm('Grant 10 pt to all {{ no_balance_count }} users?')">
+      {% csrf_token %}
+      <button type="submit" class="grant-btn">Grant 10 pt to all</button>
+    </form>
+  </div>
+  {% endif %}
+
   <table class="table">
     <thead>
       <tr>
         <th>Username</th>
         <th>Role</th>
+        <th>Points</th>
         <th>Status</th>
         <th>Languages</th>
         <th></th>
@@ -57,6 +78,13 @@
             <span class="role-tutor">Tutor</span>
           {% else %}
             <span class="role-student">Student</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if u.point_balance %}
+            <span class="pt-badge">{{ u.point_balance.balance }} pt</span>
+          {% else %}
+            <span class="pt-none">—</span>
           {% endif %}
         </td>
         <td>
@@ -88,6 +116,7 @@
           {% if u.tutorprofile %}
             <button class="edit-btn" onclick="openModal({{ u.tutorprofile.id }}, '{{ u.username }}', [{% for l in u.tutorprofile.languages.all %}{{ l.id }},{% endfor %}])">Edit</button>
           {% endif %}
+          <button class="points-btn" onclick="openPointsModal({{ u.id }}, '{{ u.username }}', {{ u.point_balance.balance|default:0 }})">Pts</button>
           {% if u != request.user %}
             <form method="post" action="{% url 'delete_user' u.id %}" style="display:inline;"
                   onsubmit="return confirm('Delete {{ u.username }}? This cannot be undone.')">
@@ -143,7 +172,7 @@
   </table>
 </div>
 
-<!-- Edit Modal -->
+<!-- Language Edit Modal -->
 <div class="modal-overlay" id="modal">
   <div class="modal">
     <h3>Edit languages: <span id="modal-username"></span></h3>
@@ -161,6 +190,22 @@
   </div>
 </div>
 
+<!-- Points Edit Modal -->
+<div class="modal-overlay" id="points-modal">
+  <div class="modal">
+    <h3>✏️ Edit points: <span id="pts-modal-username"></span></h3>
+    <p style="font-size:13px; color:#6b7280; margin-bottom:12px;">Current: <strong id="pts-current"></strong> pt</p>
+    <form method="post" id="points-form" action="">
+      {% csrf_token %}
+      <label style="font-size:14px; font-weight:500; display:block; margin-bottom:6px;">New Balance</label>
+      <input type="number" name="balance" id="pts-input" min="0"
+             style="width:100%; padding:10px; border:1.5px solid #e5e7eb; border-radius:10px; font-size:16px; box-sizing:border-box;">
+      <button type="submit" class="save-btn" style="background:#f59e0b;">Save</button>
+    </form>
+    <button class="cancel-btn" onclick="closePointsModal()">Cancel</button>
+  </div>
+</div>
+
 <script>
   function openModal(tutorId, username, activeLangIds) {
     document.getElementById('modal-username').textContent = username;
@@ -172,6 +217,17 @@
   }
   function closeModal() {
     document.getElementById('modal').classList.remove('open');
+  }
+
+  function openPointsModal(userId, username, currentBalance) {
+    document.getElementById('pts-modal-username').textContent = username;
+    document.getElementById('pts-current').textContent = currentBalance;
+    document.getElementById('pts-input').value = currentBalance;
+    document.getElementById('points-form').action = `/admin-dashboard/user/${userId}/points/`;
+    document.getElementById('points-modal').classList.add('open');
+  }
+  function closePointsModal() {
+    document.getElementById('points-modal').classList.remove('open');
   }
 </script>
 {% endblock %}
