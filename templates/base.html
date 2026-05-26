@@ -5,8 +5,17 @@
 <html lang="{{ request.LANGUAGE_CODE|default:'ja' }}">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>QuickLesson</title>
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+  <!-- PWA -->
+  <link rel="manifest" href="{% static 'manifest.json' %}">
+  <meta name="theme-color" content="#6366f1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="QuickLesson">
+  <link rel="apple-touch-icon" href="{% static 'icons/icon-192.png' %}">
 </head>
 
 <body>
@@ -41,5 +50,93 @@
   <main class="container">
     {% block content %}{% endblock %}
   </main>
+<!-- ── インストールバナー ── -->
+<div id="pwa-banner" style="display:none; position:fixed; bottom:0; left:0; right:0; z-index:999;
+  background:#6366f1; color:white; padding:14px 16px;
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  box-shadow:0 -2px 12px rgba(0,0,0,0.15);">
+  <span style="font-size:14px; font-weight:500;">📱 アプリとしてインストールできます</span>
+  <div style="display:flex;gap:8px;flex-shrink:0;">
+    <button id="pwa-install-btn" style="background:white;color:#6366f1;border:none;border-radius:8px;
+      padding:7px 16px;font-size:13px;font-weight:700;cursor:pointer;">インストール</button>
+    <button onclick="document.getElementById('pwa-banner').style.display='none';localStorage.setItem('pwa-dismissed','1');"
+      style="background:transparent;color:rgba(255,255,255,0.7);border:none;font-size:20px;cursor:pointer;padding:0 4px;">✕</button>
+  </div>
+</div>
+
+<!-- ── iPhoneインストール手順モーダル ── -->
+<div id="ios-modal" style="display:none; position:fixed; inset:0; z-index:1000;
+  background:rgba(0,0,0,0.5); align-items:flex-end; justify-content:center;">
+  <div style="background:white; border-radius:20px 20px 0 0; padding:24px 20px 36px;
+    width:100%; max-width:480px; text-align:center;">
+    <p style="font-size:18px; font-weight:700; margin-bottom:4px;">📱 ホーム画面に追加</p>
+    <p style="font-size:13px; color:#6b7280; margin-bottom:20px;">3ステップでアプリとして使えます</p>
+
+    <div style="text-align:left; display:flex; flex-direction:column; gap:14px; margin-bottom:24px;">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <span style="background:#6366f1;color:white;border-radius:50%;width:28px;height:28px;
+          display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;">1</span>
+        <span style="font-size:14px;">Safariの下の <strong>共有ボタン（□↑）</strong> をタップ</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:12px;">
+        <span style="background:#6366f1;color:white;border-radius:50%;width:28px;height:28px;
+          display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;">2</span>
+        <span style="font-size:14px;">メニューを下にスクロールして <strong>「ホーム画面に追加」</strong> をタップ</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:12px;">
+        <span style="background:#6366f1;color:white;border-radius:50%;width:28px;height:28px;
+          display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;">3</span>
+        <span style="font-size:14px;">右上の <strong>「追加」</strong> をタップして完了！</span>
+      </div>
+    </div>
+
+    <button onclick="document.getElementById('ios-modal').style.display='none';localStorage.setItem('pwa-dismissed','1');"
+      style="width:100%;padding:13px;background:#6366f1;color:white;border:none;
+      border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;">わかった！</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  // すでにインストール済み or バナーを閉じた場合はスキップ
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+                    || window.navigator.standalone;
+  if (isStandalone || localStorage.getItem('pwa-dismissed')) return;
+
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const banner = document.getElementById('pwa-banner');
+  let deferredPrompt = null;
+
+  if (isIOS) {
+    // iPhone: バナーを表示してタップでモーダルを開く
+    banner.style.display = 'flex';
+    document.getElementById('pwa-install-btn').addEventListener('click', () => {
+      banner.style.display = 'none';
+      document.getElementById('ios-modal').style.display = 'flex';
+    });
+  } else {
+    // Android: beforeinstallprompt イベントを待つ
+    window.addEventListener('beforeinstallprompt', e => {
+      e.preventDefault();
+      deferredPrompt = e;
+      banner.style.display = 'flex';
+    });
+
+    document.getElementById('pwa-install-btn').addEventListener('click', async () => {
+      if (!deferredPrompt) return;
+      banner.style.display = 'none';
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      deferredPrompt = null;
+      if (outcome === 'accepted') localStorage.setItem('pwa-dismissed', '1');
+    });
+  }
+
+  // Service Worker 登録
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  }
+})();
+</script>
 </body>
 </html>
