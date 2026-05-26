@@ -17,6 +17,11 @@
   .badge-offline { background:#f3f4f6; color:#6b7280; border:1.5px solid #e5e7eb; border-radius:99px; padding:2px 10px; font-size:12px; font-weight:500; }
   .edit-btn { font-size:12px; padding:4px 12px; border-radius:8px; border:1.5px solid #6366f1; color:#6366f1; background:white; cursor:pointer; }
   .edit-btn:hover { background:#EEEDFE; }
+  .delete-btn { font-size:12px; padding:4px 12px; border-radius:8px; border:1.5px solid #ef4444; color:#ef4444; background:white; cursor:pointer; margin-left:6px; }
+  .delete-btn:hover { background:#fef2f2; }
+  .role-admin  { background:#ede9fe; color:#5b21b6; border:1.5px solid #c4b5fd; border-radius:99px; padding:2px 10px; font-size:12px; font-weight:500; }
+  .role-tutor  { background:#dbeafe; color:#1d4ed8; border:1.5px solid #93c5fd; border-radius:99px; padding:2px 10px; font-size:12px; font-weight:500; }
+  .role-student{ background:#f3f4f6; color:#374151; border:1.5px solid #e5e7eb; border-radius:99px; padding:2px 10px; font-size:12px; font-weight:500; }
   .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.3); z-index:100; align-items:center; justify-content:center; }
   .modal-overlay.open { display:flex; }
   .modal { background:white; border-radius:16px; padding:1.5rem; width:360px; max-width:90vw; }
@@ -30,39 +35,70 @@
 </style>
 
 <div class="card admin-section">
-  <h2 class="card-title">👥 Tutor List</h2>
+  <h2 class="card-title">👥 All Users</h2>
   <table class="table">
     <thead>
       <tr>
         <th>Username</th>
+        <th>Role</th>
         <th>Status</th>
         <th>Languages</th>
         <th></th>
       </tr>
     </thead>
     <tbody>
-      {% for tutor in tutors %}
+      {% for u in users %}
       <tr>
-        <td>{{ tutor.user.username }}</td>
+        <td>{{ u.username }}</td>
         <td>
-          {% if tutor.is_online %}
-            <span class="badge-online">Online</span>
+          {% if u.is_staff %}
+            <span class="role-admin">Admin</span>
           {% else %}
-            <span class="badge-offline">Offline</span>
+            {% with role=u.userprofile.role %}
+              {% if role == 'tutor' %}
+                <span class="role-tutor">Tutor</span>
+              {% else %}
+                <span class="role-student">Student</span>
+              {% endif %}
+            {% endwith %}
           {% endif %}
         </td>
         <td>
-          {% for lang in tutor.languages.all %}
-            {% if lang.name == 'English' %}<span class="lang-tag tag-en">{{ lang.name }}</span>
-            {% elif lang.name == 'French' %}<span class="lang-tag tag-fr">{{ lang.name }}</span>
-            {% elif lang.name == 'Spanish' %}<span class="lang-tag tag-es">{{ lang.name }}</span>
-            {% elif lang.name == 'Japanese' %}<span class="lang-tag tag-ja">{{ lang.name }}</span>
-            {% else %}<span class="lang-tag tag-default">{{ lang.name }}</span>
+          {% if u.userprofile.role == 'tutor' %}
+            {% if u.tutorprofile.is_online %}
+              <span class="badge-online">Online</span>
+            {% else %}
+              <span class="badge-offline">Offline</span>
             {% endif %}
-          {% endfor %}
+          {% else %}
+            —
+          {% endif %}
         </td>
         <td>
-          <button class="edit-btn" onclick="openModal({{ tutor.id }}, '{{ tutor.user.username }}', [{% for l in tutor.languages.all %}{{ l.id }},{% endfor %}])">Edit</button>
+          {% if u.userprofile.role == 'tutor' %}
+            {% for lang in u.tutorprofile.languages.all %}
+              {% if lang.name == 'English' %}<span class="lang-tag tag-en">{{ lang.name }}</span>
+              {% elif lang.name == 'French' %}<span class="lang-tag tag-fr">{{ lang.name }}</span>
+              {% elif lang.name == 'Spanish' %}<span class="lang-tag tag-es">{{ lang.name }}</span>
+              {% elif lang.name == 'Japanese' %}<span class="lang-tag tag-ja">{{ lang.name }}</span>
+              {% else %}<span class="lang-tag tag-default">{{ lang.name }}</span>
+              {% endif %}
+            {% endfor %}
+          {% else %}
+            —
+          {% endif %}
+        </td>
+        <td style="white-space:nowrap;">
+          {% if u.userprofile.role == 'tutor' %}
+            <button class="edit-btn" onclick="openModal({{ u.tutorprofile.id }}, '{{ u.username }}', [{% for l in u.tutorprofile.languages.all %}{{ l.id }},{% endfor %}])">Edit</button>
+          {% endif %}
+          {% if u != request.user %}
+            <form method="post" action="{% url 'delete_user' u.id %}" style="display:inline;"
+                  onsubmit="return confirm('Delete {{ u.username }}? This cannot be undone.')">
+              {% csrf_token %}
+              <button type="submit" class="delete-btn">Delete</button>
+            </form>
+          {% endif %}
         </td>
       </tr>
       {% endfor %}
