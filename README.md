@@ -25,7 +25,7 @@ Users can:
 
 ### Home Page
 
-<img src="home.png" width="700">
+<img src="home_new.png" width="700">
 
 ---
 
@@ -37,13 +37,17 @@ Users can:
 
 ### Lesson Room
 
-<img src="lesson-room.png" width="700">
+<img src="lesson-room_new1.png" width="700">
 
 ---
 
 ### Tutor Dashboard
 
 <img src="tutor-dashboard.png" width="700">
+
+### Point Page
+
+<img src="point.png" width="700">
 
 
 ## Tech Stack
