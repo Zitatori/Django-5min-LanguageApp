@@ -53,18 +53,14 @@
         <td>
           {% if u.is_staff %}
             <span class="role-admin">Admin</span>
+          {% elif u.tutorprofile %}
+            <span class="role-tutor">Tutor</span>
           {% else %}
-            {% with role=u.userprofile.role %}
-              {% if role == 'tutor' %}
-                <span class="role-tutor">Tutor</span>
-              {% else %}
-                <span class="role-student">Student</span>
-              {% endif %}
-            {% endwith %}
+            <span class="role-student">Student</span>
           {% endif %}
         </td>
         <td>
-          {% if u.userprofile.role == 'tutor' %}
+          {% if u.tutorprofile %}
             {% if u.tutorprofile.is_online %}
               <span class="badge-online">Online</span>
             {% else %}
@@ -75,7 +71,7 @@
           {% endif %}
         </td>
         <td>
-          {% if u.userprofile.role == 'tutor' %}
+          {% if u.tutorprofile %}
             {% for lang in u.tutorprofile.languages.all %}
               {% if lang.name == 'English' %}<span class="lang-tag tag-en">{{ lang.name }}</span>
               {% elif lang.name == 'French' %}<span class="lang-tag tag-fr">{{ lang.name }}</span>
@@ -89,7 +85,7 @@
           {% endif %}
         </td>
         <td style="white-space:nowrap;">
-          {% if u.userprofile.role == 'tutor' %}
+          {% if u.tutorprofile %}
             <button class="edit-btn" onclick="openModal({{ u.tutorprofile.id }}, '{{ u.username }}', [{% for l in u.tutorprofile.languages.all %}{{ l.id }},{% endfor %}])">Edit</button>
           {% endif %}
           {% if u != request.user %}
