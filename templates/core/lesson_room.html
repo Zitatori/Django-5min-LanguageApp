@@ -2,376 +2,373 @@
 {% load i18n %}
 
 {% block content %}
-  <div class="card">
-    <div class="card-header">
-      <div>
-        <h2 class="card-title">{% trans "5-minute lesson room" %}</h2>
-        <p class="card-subtitle">
-          {% trans "First, we only set up your camera and a placeholder for the remote video to design the layout." %}
-        </p>
-      </div>
-      <span class="badge badge-yellow">Test</span>
+
+<div class="lr-room" id="lr-room">
+
+  {# ── パートナー映像（背景全面） ── #}
+  <video id="remoteVideo" class="lr-remote" autoplay playsinline></video>
+
+  {# リモート映像が来るまでのアバタープレースホルダー #}
+  <div class="lr-remote-placeholder" id="remote-placeholder">
+    <div class="lr-avatar">
+      {{ partner_initial|default:"?" }}
     </div>
-
-    <!-- タイマー -->
-    <div class="center mt-16">
-      <svg width="200" height="200" viewBox="0 0 200 200">
-  <circle cx="100" cy="100" r="80" fill="none" stroke="var(--color-background-secondary)" stroke-width="14"/>
-  <circle id="timer-progress" cx="100" cy="100" r="80"
-    fill="none" stroke="#6366f1" stroke-width="14"
-    stroke-linecap="round"
-    stroke-dasharray="502"
-    stroke-dashoffset="0"
-    transform="rotate(-90 100 100)"
-    style="transition: stroke-dashoffset 1s linear, stroke 0.5s;"/>
-  <text x="100" y="95" text-anchor="middle" font-size="38" font-weight="500"
-    fill="var(--color-text-primary)" font-family="monospace" id="timer-display">--:--</text>
-  <text x="100" y="120" text-anchor="middle" font-size="12"
-    fill="var(--color-text-secondary)" font-family="sans-serif">remaining</text>
-</svg>
-    </div>
-
-    <!-- 黒いダミー画面 → 自分のカメラ映像にする -->
-    <div style="display: flex; gap: 20px; flex-wrap: wrap;">
-
-  <div>
-    <h3>Your camera</h3>
-    <video
-      id="localVideo"
-      autoplay
-      playsinline
-      muted
-      width="360"
-      style="background: #000; border-radius: 12px;"
-    ></video>
+    <div class="lr-partner-name">{{ partner_name|default:"Waiting…" }}</div>
   </div>
 
-  <div>
-    <h3>Partner camera</h3>
-    <video
-      id="remoteVideo"
-      autoplay
-      playsinline
-      width="360"
-      height="270"
-      style="background: #222; border-radius: 12px;"
-    ></video>
+  {# ── タイマー（上部オーバーレイ） ── #}
+  <div class="lr-timer-overlay">
+    <span class="lr-timer-dot" id="timer-dot"></span>
+    <span class="lr-timer-text" id="timer-display">--:--</span>
+  </div>
+
+  {# ── 言語バッジ（左上） ── #}
+  <div class="lr-session-badge">
+    <span class="lr-badge-lang">{{ match.request.language.name }}</span>
+    <span class="lr-badge-role">
+      {% if request.user == match.request.student.user %}Student{% else %}Tutor{% endif %}
+    </span>
+  </div>
+
+  {# ── 自分の映像（右下PiP） ── #}
+  <div class="lr-pip-wrap">
+    <video id="localVideo" class="lr-pip" autoplay playsinline muted></video>
+  </div>
+
+  {# ── コントロールバー（下部） ── #}
+  <div class="lr-controls">
+    <button id="toggle-mic" class="lr-ctrl-btn" title="Mic">
+      <span id="mic-icon">🎤</span>
+    </button>
+    <button id="leave-btn" class="lr-ctrl-btn lr-ctrl-end" title="End">
+      📵
+    </button>
+    <button id="toggle-camera" class="lr-ctrl-btn" title="Camera">
+      <span id="cam-icon">📷</span>
+    </button>
   </div>
 
 </div>
-    <!-- セッション情報 -->
-    <!-- セッション情報 -->
-<div class="mt-16">
-  {% if request.user == match.request.student.user %}
-    <p><strong>Your role:</strong> Student</p>
-    <p><strong>Partner:</strong> {{ match.tutor.user.username }}</p>
-  {% else %}
-    <p><strong>Your role:</strong> Tutor</p>
-    <p><strong>Partner:</strong> {{ match.request.student.user.username }}</p>
-  {% endif %}
 
-  <p><strong>{% trans "Language" %}:</strong> {{ match.request.language.name }}</p>
-</div>
+<style>
+  /* ルームはヘッダー直下から全画面 */
+  .container { margin: 0 !important; padding: 0 !important; max-width: 100% !important; }
 
-    <div class="mt-16">
-      <button id="leave-btn" class="btn btn-secondary">
-        {% trans "End lesson" %}
-      </button>
-    </div>
-
-    <!-- カメラ／マイクのON/OFFボタン -->
-    <div class="mt-16">
-      <button id="toggle-camera" class="btn btn-outline">
-        {% trans "Camera OFF" %}
-      </button>
-      <button id="toggle-mic" class="btn btn-outline">
-        {% trans "Mic OFF" %}
-      </button>
-    </div>
-
-    <script>
-  // ====== タイマー ======
-(function () {
-  let remaining = null;  // ← 最初はnullで待機
-  const display = document.getElementById("timer-display");
-  const leaveBtn = document.getElementById("leave-btn");
-
-  display.textContent = "Waiting...";  // 相手を待っている表示
-
-  function format(sec) {
-    const m = Math.floor(sec / 60);
-    const s = sec % 60;
-    return m.toString() + ":" + s.toString().padStart(2, "0");
+  .lr-room {
+    position: fixed;
+    top: 54px; /* ヘッダー高さ */
+    left: 0; right: 0; bottom: 0;
+    background: #0a0a0a;
+    overflow: hidden;
   }
 
+  /* パートナー映像 */
+  .lr-remote {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+  }
+
+  /* アバタープレースホルダー */
+  .lr-remote-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    z-index: 2;
+    background: linear-gradient(160deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  }
+  .lr-remote-placeholder.hidden { display: none; }
+  .lr-avatar {
+    width: 88px; height: 88px;
+    border-radius: 50%;
+    background: #1e40af;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 36px; font-weight: 700; color: #fff;
+  }
+  .lr-partner-name { font-size: 14px; color: #9ca3af; }
+
+  /* タイマーオーバーレイ */
+  .lr-timer-overlay {
+    position: absolute;
+    top: 16px; left: 50%; transform: translateX(-50%);
+    z-index: 10;
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 99px;
+    padding: 7px 20px;
+    display: flex; align-items: center; gap: 9px;
+    white-space: nowrap;
+  }
+  .lr-timer-dot {
+    width: 8px; height: 8px;
+    background: #6366f1;
+    border-radius: 50%;
+    flex-shrink: 0;
+    transition: background 0.5s;
+  }
+  .lr-timer-dot.red { background: #ef4444; animation: td-blink 1s ease-in-out infinite; }
+  @keyframes td-blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+  .lr-timer-text {
+    font-size: 22px; font-weight: 700;
+    font-family: 'Space Grotesk', monospace;
+    color: #f4f4f5;
+    letter-spacing: 0.03em;
+    min-width: 60px; text-align: center;
+  }
+
+  /* 言語・ロールバッジ */
+  .lr-session-badge {
+    position: absolute;
+    top: 16px; left: 16px;
+    z-index: 10;
+    display: flex; flex-direction: column; gap: 5px;
+  }
+  .lr-badge-lang, .lr-badge-role {
+    display: inline-block;
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px;
+    padding: 4px 10px;
+    font-size: 12px; font-weight: 600; color: #d4d4d8;
+  }
+  .lr-badge-lang { color: #60a5fa; }
+
+  /* 自分の映像PiP */
+  .lr-pip-wrap {
+    position: absolute;
+    bottom: 90px; right: 16px;
+    z-index: 10;
+    width: 100px; height: 140px;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 2px solid rgba(255,255,255,0.2);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+    background: #111827;
+  }
+  .lr-pip {
+    width: 100%; height: 100%;
+    object-fit: cover;
+  }
+  @media (orientation: landscape) {
+    .lr-pip-wrap { width: 80px; height: 104px; bottom: 76px; }
+  }
+  @media (max-width: 400px) {
+    .lr-pip-wrap { width: 84px; height: 116px; }
+  }
+
+  /* コントロールバー */
+  .lr-controls {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    z-index: 10;
+    padding: 16px 24px 28px;
+    background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+  }
+  .lr-ctrl-btn {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.2);
+    font-size: 22px;
+    cursor: pointer;
+    transition: transform 0.1s, background 0.15s;
+    display: flex; align-items: center; justify-content: center;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .lr-ctrl-btn:active { transform: scale(0.9); }
+  .lr-ctrl-btn.lr-ctrl-end {
+    width: 64px; height: 64px;
+    font-size: 24px;
+    background: #ef4444;
+    border-color: #ef4444;
+  }
+  .lr-ctrl-btn.lr-muted {
+    background: rgba(239,68,68,0.25);
+    border-color: rgba(239,68,68,0.6);
+  }
+  @media (orientation: landscape) {
+    .lr-controls { padding: 10px 24px 16px; gap: 16px; }
+    .lr-ctrl-btn { width: 48px; height: 48px; font-size: 18px; }
+    .lr-ctrl-btn.lr-ctrl-end { width: 56px; height: 56px; font-size: 20px; }
+  }
+</style>
+
+<script>
+(function () {
+  const localVideo   = document.getElementById("localVideo");
+  const remoteVideo  = document.getElementById("remoteVideo");
+  const placeholder  = document.getElementById("remote-placeholder");
+  const camBtn       = document.getElementById("toggle-camera");
+  const micBtn       = document.getElementById("toggle-mic");
+  const camIcon      = document.getElementById("cam-icon");
+  const micIcon      = document.getElementById("mic-icon");
+  const display      = document.getElementById("timer-display");
+  const timerDot     = document.getElementById("timer-dot");
+  const leaveBtn     = document.getElementById("leave-btn");
+
+  const matchId = "{{ match.id }}";
+  const userId  = "{{ request.user.id }}";
+
+  let localStream    = null;
+  let peerConnection = null;
+  let cameraOn       = true;
+  let micOn          = true;
+  let isCaller       = false;
+  let pendingCandidates = [];
+  let remoteDescSet  = false;
+
+  display.textContent = "Waiting…";
+
+  // ── タイマー ──
+  function format(sec) {
+    return Math.floor(sec / 60) + ":" + String(sec % 60).padStart(2, "0");
+  }
   function startTimer(seconds) {
-  remaining = seconds;
-  const progress = document.getElementById("timer-progress");
-
-  function update() {
-    display.textContent = format(remaining);
-    const ratio = remaining / 300;
-    progress.style.strokeDashoffset = 502 * (1 - ratio);
-    progress.style.stroke = ratio < 0.33 ? "#ef4444" : ratio < 0.6 ? "#f59e0b" : "#6366f1";
-
-    if (remaining <= 0) {
-      endLesson("timeup");
-    } else {
-      remaining -= 1;
+    let remaining = seconds;
+    const progress = document.getElementById("timer-progress");
+    function update() {
+      display.textContent = format(remaining);
+      if (remaining < 60) timerDot.classList.add("red");
+      if (remaining <= 0) { endLesson("timeup"); return; }
+      remaining--;
       setTimeout(update, 1000);
     }
+    update();
   }
-  update();
-}
+  window.onTimerStart = startTimer;
 
   function endLesson(reason) {
     if (typeof cleanupCall === "function") cleanupCall();
-    alert("The 5-minute lesson will end. (Reason: " + reason + ")");
     window.location.href = "{% url 'home' %}";
   }
+  leaveBtn.addEventListener("click", () => endLesson("manual"));
 
-  leaveBtn.addEventListener("click", function () {
-    endLesson("manual");
+  // ── WebRTC ──
+  const protocol = location.protocol === "https:" ? "wss" : "ws";
+  const socket   = new WebSocket(protocol + "://" + location.host + "/ws/lesson/" + matchId + "/");
+
+  const config = {
+    iceServers: [
+      { urls: "stun:stun.l.google.com:19302" },
+      { urls: "turn:openrelay.metered.ca:80",        username: "openrelayproject", credential: "openrelayproject" },
+      { urls: "turn:openrelay.metered.ca:443?transport=tcp", username: "openrelayproject", credential: "openrelayproject" },
+    ]
+  };
+
+  async function startLocalMedia() {
+    localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+    localVideo.srcObject = localStream;
+  }
+
+  function createPeerConnection() {
+    peerConnection = new RTCPeerConnection(config);
+    localStream.getTracks().forEach(t => peerConnection.addTrack(t, localStream));
+    peerConnection.ontrack = e => {
+      remoteVideo.srcObject = e.streams[0];
+      placeholder.classList.add("hidden");
+    };
+    peerConnection.onicecandidate = e => {
+      if (e.candidate) sendSignal({ type: "ice-candidate", candidate: e.candidate, sender: userId });
+    };
+  }
+
+  function sendSignal(data) {
+    if (socket.readyState === WebSocket.OPEN) socket.send(JSON.stringify(data));
+  }
+
+  async function makeOffer() {
+    createPeerConnection();
+    const offer = await peerConnection.createOffer();
+    await peerConnection.setLocalDescription(offer);
+    sendSignal({ type: "offer", offer, sender: userId });
+  }
+
+  async function handleOffer(data) {
+    createPeerConnection();
+    await peerConnection.setRemoteDescription(new RTCSessionDescription(data.offer));
+    remoteDescSet = true;
+    for (const c of pendingCandidates) await peerConnection.addIceCandidate(c);
+    pendingCandidates = [];
+    const answer = await peerConnection.createAnswer();
+    await peerConnection.setLocalDescription(answer);
+    sendSignal({ type: "answer", answer, sender: userId });
+  }
+
+  async function handleAnswer(data) {
+    if (!peerConnection) return;
+    await peerConnection.setRemoteDescription(new RTCSessionDescription(data.answer));
+    remoteDescSet = true;
+    for (const c of pendingCandidates) await peerConnection.addIceCandidate(c);
+    pendingCandidates = [];
+  }
+
+  async function handleIceCandidate(data) {
+    if (!peerConnection) return;
+    const candidate = new RTCIceCandidate(data.candidate);
+    if (!remoteDescSet) { pendingCandidates.push(candidate); return; }
+    try { await peerConnection.addIceCandidate(candidate); } catch(e) {}
+  }
+
+  socket.onopen = async () => {
+    try {
+      await startLocalMedia();
+      sendSignal({ type: "join", sender: userId });
+    } catch(e) {
+      alert("{% trans 'Could not access camera/microphone. Please check your browser settings.' %}");
+    }
+  };
+
+  socket.onmessage = async e => {
+    const data = JSON.parse(e.data);
+    if (data.sender === userId) return;
+    if (data.type === "timer_start") { startTimer(data.seconds); return; }
+    if (data.type === "join"         && !peerConnection) { isCaller = true; await makeOffer(); }
+    if (data.type === "offer")        await handleOffer(data);
+    if (data.type === "answer")       await handleAnswer(data);
+    if (data.type === "ice-candidate") await handleIceCandidate(data);
+    if (data.type === "peer_left")    endLesson("peer_left");
+  };
+
+  function cleanupCall() {
+    if (localStream)     { localStream.getTracks().forEach(t => t.stop()); localStream = null; }
+    if (peerConnection)  { peerConnection.close(); peerConnection = null; }
+    if (socket.readyState === WebSocket.OPEN) socket.close();
+  }
+  window.addEventListener("beforeunload", cleanupCall);
+
+  // ── カメラ・マイク切替 ──
+  camBtn.addEventListener("click", () => {
+    if (!localStream) return;
+    localStream.getVideoTracks().forEach(t => { t.enabled = !t.enabled; cameraOn = t.enabled; });
+    camIcon.textContent = cameraOn ? "📷" : "🚫";
+    camBtn.classList.toggle("lr-muted", !cameraOn);
   });
 
-  // timer_startシグナルをグローバルで受け取れるように公開
-  window.onTimerStart = function(seconds) {
-    startTimer(seconds);
-  };
+  micBtn.addEventListener("click", () => {
+    if (!localStream) return;
+    localStream.getAudioTracks().forEach(t => { t.enabled = !t.enabled; micOn = t.enabled; });
+    micIcon.textContent = micOn ? "🎤" : "🔇";
+    micBtn.classList.toggle("lr-muted", !micOn);
+  });
 })();
-
-  // ====== WebRTC video call ======
-  (function () {
-    const localVideo = document.getElementById("localVideo");
-    const remoteVideo = document.getElementById("remoteVideo");
-    const camBtn = document.getElementById("toggle-camera");
-    const micBtn = document.getElementById("toggle-mic");
-
-    const matchId = "{{ match.id }}";
-    const userId = "{{ request.user.id }}";
-
-    let localStream = null;
-    let peerConnection = null;
-    let cameraOn = true;
-    let micOn = true;
-    let isCaller = false;
-    let pendingCandidates = [];
-    let remoteDescSet = false;
-    const protocol = window.location.protocol === "https:" ? "wss" : "ws";
-    const socket = new WebSocket(
-      protocol + "://" + window.location.host + "/ws/lesson/" + matchId + "/"
-    );
-
-    const config = {
-      iceServers: [
-        { urls: "stun:stun.l.google.com:19302" },
-        {
-          urls: "turn:openrelay.metered.ca:80",
-          username: "openrelayproject",
-          credential: "openrelayproject",
-        },
-        {
-          urls: "turn:openrelay.metered.ca:443?transport=tcp",
-          username: "openrelayproject",
-          credential: "openrelayproject",
-        },
-      ]
-    };
-
-    async function startLocalMedia() {
-      localStream = await navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: true,
-      });
-      localVideo.srcObject = localStream;
-    }
-
-    function createPeerConnection() {
-      peerConnection = new RTCPeerConnection(config);
-
-      localStream.getTracks().forEach((track) => {
-        peerConnection.addTrack(track, localStream);
-      });
-
-      peerConnection.ontrack = function (event) {
-        remoteVideo.srcObject = event.streams[0];
-      };
-
-      peerConnection.onicecandidate = function (event) {
-        if (event.candidate) {
-          sendSignal({
-            type: "ice-candidate",
-            candidate: event.candidate,
-            sender: userId,
-          });
-        }
-      };
-    }
-
-    function sendSignal(data) {
-      if (socket.readyState === WebSocket.OPEN) {
-        socket.send(JSON.stringify(data));
-      }
-    }
-
-    async function makeOffer() {
-      createPeerConnection();
-
-      const offer = await peerConnection.createOffer();
-      await peerConnection.setLocalDescription(offer);
-
-      sendSignal({
-        type: "offer",
-        offer: offer,
-        sender: userId,
-      });
-    }
-
-    async function handleOffer(data) {
-      createPeerConnection();
-
-      await peerConnection.setRemoteDescription(
-        new RTCSessionDescription(data.offer)
-      );
-      remoteDescSet = true;
-      for (const c of pendingCandidates) {
-        await peerConnection.addIceCandidate(c);
-      }
-      pendingCandidates = [];
-
-      const answer = await peerConnection.createAnswer();
-      await peerConnection.setLocalDescription(answer);
-
-      sendSignal({
-        type: "answer",
-        answer: answer,
-        sender: userId,
-      });
-    }
-
-    async function handleAnswer(data) {
-      if (!peerConnection) return;
-
-      await peerConnection.setRemoteDescription(
-        new RTCSessionDescription(data.answer)
-      );
-      remoteDescSet = true;
-      for (const c of pendingCandidates) {
-        await peerConnection.addIceCandidate(c);
-      }
-      pendingCandidates = [];
-    }
-
-    async function handleIceCandidate(data) {
-      if (!peerConnection) return;
-
-      const candidate = new RTCIceCandidate(data.candidate);
-      if (!remoteDescSet) {
-        pendingCandidates.push(candidate);
-        return;
-      }
-      try {
-        await peerConnection.addIceCandidate(candidate);
-      } catch (error) {
-        console.error("Error adding ICE candidate:", error);
-      }
-    }
-
-    socket.onopen = async function () {
-      try {
-        await startLocalMedia();
-
-        sendSignal({
-          type: "join",
-          sender: userId,
-        });
-      } catch (error) {
-        console.error("media error:", error);
-        alert("{% trans 'Could not access camera/microphone. Please check your browser settings.' %}");
-      }
-    };
-function cleanupCall() {
-  if (localStream) {
-    localStream.getTracks().forEach((track) => track.stop());
-    localStream = null;
-  }
-
-  if (peerConnection) {
-    peerConnection.close();
-    peerConnection = null;
-  }
-
-  if (socket && socket.readyState === WebSocket.OPEN) {
-    socket.close();
-  }
-}
-    socket.onmessage = async function (event) {
-      const data = JSON.parse(event.data);
-
-      if (data.sender === userId) {
-        return;
-      }
-
-      if (data.type === "timer_start") {
-    if (typeof window.onTimerStart === "function") {
-      window.onTimerStart(data.seconds);
-    }
-    return;
-  }
-
-  if (data.type === "join") {
-    if (!peerConnection) {
-      isCaller = true;
-      await makeOffer();
-    }
-  }
-
-      if (data.type === "offer") {
-        await handleOffer(data);
-      }
-
-      if (data.type === "answer") {
-        await handleAnswer(data);
-      }
-
-      if (data.type === "ice-candidate") {
-        await handleIceCandidate(data);
-      }
-
-      if (data.type === "peer_left") {
-  alert("Peer left the room");
-  window.location.href = "{% url 'home' %}";
-  return;
-}
-    };
-
-    camBtn.addEventListener("click", function () {
-      if (!localStream) return;
-
-      localStream.getVideoTracks().forEach((track) => {
-        track.enabled = !track.enabled;
-        cameraOn = track.enabled;
-      });
-
-      camBtn.textContent = cameraOn ? "{% trans 'Camera OFF' %}" : "{% trans 'Camera ON' %}";
-    });
-
-    micBtn.addEventListener("click", function () {
-      if (!localStream) return;
-
-      localStream.getAudioTracks().forEach((track) => {
-        track.enabled = !track.enabled;
-        micOn = track.enabled;
-      });
-
-      micBtn.textContent = micOn ? "{% trans 'Mic OFF' %}" : "{% trans 'Mic ON' %}";
-    });
-  })();
-      window.addEventListener("beforeunload", function () {
-  if (typeof cleanupCall === "function") {
-    cleanupCall();
-  }
-});
 </script>
-  </div>
+
 {% endblock %}
