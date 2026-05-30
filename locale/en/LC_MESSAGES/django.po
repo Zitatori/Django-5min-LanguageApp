@@ -44,6 +44,27 @@ msgid ""
 "design the layout."
 msgstr ""
 
+msgid "Online · Waiting for a match"
+msgstr ""
+
+msgid "No teaching languages selected yet."
+msgstr ""
+
+msgid "Waiting for a student…"
+msgstr ""
+
+msgid "You'll be matched as soon as a student comes online."
+msgstr ""
+
+msgid "No active matches yet."
+msgstr ""
+
+msgid "Matches will appear here automatically."
+msgstr ""
+
+msgid "Enter lesson room"
+msgstr ""
+
 #: venv/lib/python3.12/site-packages/django/contrib/messages/apps.py:15
 msgid "Messages"
 msgstr ""

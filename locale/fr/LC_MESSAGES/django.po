@@ -199,4 +199,28 @@ msgstr "Déconnexion"
 msgid "Tutor Dashboard"
 msgstr "Tableau du tuteur"
 
+msgid "My Lesson History"
+msgstr "Historique des leçons"
+
+msgid "Online · Waiting for a match"
+msgstr "En ligne · En attente d'un matching"
+
+msgid "No teaching languages selected yet."
+msgstr "Aucune langue d'enseignement sélectionnée."
+
+msgid "Waiting for a student…"
+msgstr "En attente d'un étudiant…"
+
+msgid "You'll be matched as soon as a student comes online."
+msgstr "Vous serez associé dès qu'un étudiant sera disponible."
+
+msgid "No active matches yet."
+msgstr "Aucun matching actif pour l'instant."
+
+msgid "Matches will appear here automatically."
+msgstr "Les matchings apparaîtront ici automatiquement."
+
+msgid "Enter lesson room"
+msgstr "Entrer dans la salle"
+
 

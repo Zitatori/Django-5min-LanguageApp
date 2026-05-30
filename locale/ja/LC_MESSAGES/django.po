@@ -278,3 +278,24 @@ msgstr "ログアウト"
 
 msgid "My Lesson History"
 msgstr "レッスン履歴"
+
+msgid "Online · Waiting for a match"
+msgstr "オンライン・マッチング待機中"
+
+msgid "No teaching languages selected yet."
+msgstr "担当言語がまだ設定されていません"
+
+msgid "Waiting for a student…"
+msgstr "生徒を待っています…"
+
+msgid "You'll be matched as soon as a student comes online."
+msgstr "オンラインの生徒が見つかり次第マッチします"
+
+msgid "No active matches yet."
+msgstr "まだアクティブなマッチはありません"
+
+msgid "Matches will appear here automatically."
+msgstr "マッチすると自動でここに表示されます"
+
+msgid "Enter lesson room"
+msgstr "レッスンルームに入る"

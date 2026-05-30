@@ -198,3 +198,24 @@ msgstr "Cerrar sesión"
 
 msgid "My Lesson History"
 msgstr "Historial de clases"
+
+msgid "Online · Waiting for a match"
+msgstr "En línea · Esperando conexión"
+
+msgid "No teaching languages selected yet."
+msgstr "Aún no has seleccionado idiomas de enseñanza."
+
+msgid "Waiting for a student…"
+msgstr "Esperando a un Participante…"
+
+msgid "You'll be matched as soon as a student comes online."
+msgstr "Se te conectará tan pronto como haya un Participante disponible."
+
+msgid "No active matches yet."
+msgstr "Aún no hay conexiones activas."
+
+msgid "Matches will appear here automatically."
+msgstr "Las conexiones aparecerán aquí automáticamente."
+
+msgid "Enter lesson room"
+msgstr "Entrar en la sala de clase"
