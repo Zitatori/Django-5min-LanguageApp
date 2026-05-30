@@ -299,3 +299,87 @@ msgstr "マッチすると自動でここに表示されます"
 
 msgid "Enter lesson room"
 msgstr "レッスンルームに入る"
+
+msgid "Active Matches"
+msgstr "アクティブなマッチ"
+
+msgid "Recent History"
+msgstr "最近の履歴"
+
+msgid "Your Points"
+msgstr "あなたのポイント"
+
+msgid "Withdrawable"
+msgstr "引き出し可能"
+
+msgid "Buy Points"
+msgstr "ポイントを購入"
+
+msgid "Withdraw Points"
+msgstr "ポイントを引き出す"
+
+msgid "Withdrawal request in progress:"
+msgstr "出金リクエスト処理中："
+
+msgid "Points to withdraw"
+msgstr "引き出すポイント数"
+
+msgid "Currency"
+msgstr "通貨"
+
+msgid "Payment method"
+msgstr "支払い方法"
+
+msgid "Payment details"
+msgstr "支払い詳細"
+
+msgid "email / account no."
+msgstr "メールアドレス / 口座番号"
+
+msgid "Submit Request"
+msgstr "リクエストを送信"
+
+msgid "You need at least"
+msgstr "引き出しには最低"
+
+msgid "of lesson earnings to withdraw."
+msgstr "ptのレッスン収益が必要です。"
+
+msgid "Current"
+msgstr "現在"
+
+msgid "Min."
+msgstr "最低"
+
+msgid "Transaction History"
+msgstr "取引履歴"
+
+msgid "Welcome Bonus"
+msgstr "ウェルカムボーナス"
+
+msgid "Lesson (Student)"
+msgstr "レッスン（生徒）"
+
+msgid "Lesson (Tutor)"
+msgstr "レッスン（相手役）"
+
+msgid "Points Purchase"
+msgstr "ポイント購入"
+
+msgid "Withdrawal"
+msgstr "出金"
+
+msgid "No transactions yet."
+msgstr "まだ取引はありません。"
+
+msgid "Create an account"
+msgstr "アカウントを作成"
+
+msgid "I also want to teach"
+msgstr "相手役としても参加する"
+
+msgid "Languages I can teach"
+msgstr "担当できる言語"
+
+msgid "Sign up"
+msgstr "登録する"

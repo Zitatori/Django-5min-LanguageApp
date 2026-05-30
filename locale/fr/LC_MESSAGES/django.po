@@ -223,4 +223,88 @@ msgstr "Les matchings apparaîtront ici automatiquement."
 msgid "Enter lesson room"
 msgstr "Entrer dans la salle"
 
+msgid "Active Matches"
+msgstr "Matchings actifs"
+
+msgid "Recent History"
+msgstr "Historique récent"
+
+msgid "Your Points"
+msgstr "Vos points"
+
+msgid "Withdrawable"
+msgstr "Retirable"
+
+msgid "Buy Points"
+msgstr "Acheter des points"
+
+msgid "Withdraw Points"
+msgstr "Retirer des points"
+
+msgid "Withdrawal request in progress:"
+msgstr "Demande de retrait en cours :"
+
+msgid "Points to withdraw"
+msgstr "Points à retirer"
+
+msgid "Currency"
+msgstr "Devise"
+
+msgid "Payment method"
+msgstr "Méthode de paiement"
+
+msgid "Payment details"
+msgstr "Détails du paiement"
+
+msgid "email / account no."
+msgstr "e-mail / nº de compte"
+
+msgid "Submit Request"
+msgstr "Soumettre la demande"
+
+msgid "You need at least"
+msgstr "Vous avez besoin d'au moins"
+
+msgid "of lesson earnings to withdraw."
+msgstr "pt de revenus de leçons pour retirer."
+
+msgid "Current"
+msgstr "Actuel"
+
+msgid "Min."
+msgstr "Min."
+
+msgid "Transaction History"
+msgstr "Historique des transactions"
+
+msgid "Welcome Bonus"
+msgstr "Bonus de bienvenue"
+
+msgid "Lesson (Student)"
+msgstr "Leçon (Étudiant)"
+
+msgid "Lesson (Tutor)"
+msgstr "Leçon (Guide)"
+
+msgid "Points Purchase"
+msgstr "Achat de points"
+
+msgid "Withdrawal"
+msgstr "Retrait"
+
+msgid "No transactions yet."
+msgstr "Aucune transaction pour l'instant."
+
+msgid "Create an account"
+msgstr "Créer un compte"
+
+msgid "I also want to teach"
+msgstr "Je veux aussi enseigner"
+
+msgid "Languages I can teach"
+msgstr "Langues que je peux enseigner"
+
+msgid "Sign up"
+msgstr "S'inscrire"
+
 
