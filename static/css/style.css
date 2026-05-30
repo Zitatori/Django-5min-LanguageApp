@@ -96,6 +96,73 @@ a:hover {
   outline: none;
 }
 
+/* ハンバーガーボタン */
+.burger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+}
+.burger span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: #d4d4d8;
+  border-radius: 2px;
+  transition: transform 0.2s, opacity 0.2s;
+}
+.burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.burger.open span:nth-child(2) { opacity: 0; }
+.burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* モバイルメニュー */
+.mobile-menu {
+  display: none;
+  flex-direction: column;
+  background: #111113;
+  border-top: 1px solid #27272a;
+  padding: 8px 0 12px;
+}
+.mobile-menu.open {
+  display: flex;
+}
+.mobile-menu a {
+  color: #d4d4d8;
+  font-size: 15px;
+  font-weight: 500;
+  padding: 12px 24px;
+  text-decoration: none !important;
+  border-bottom: 1px solid #1f1f21;
+}
+.mobile-menu a:last-child {
+  border-bottom: none;
+}
+.mobile-menu form {
+  display: flex;
+  flex-direction: row;
+  padding: 10px 24px;
+  border-bottom: 1px solid #1f1f21;
+}
+.mobile-menu select {
+  background: #1c1c1e;
+  color: #d4d4d8;
+  border: 1px solid #3f3f46;
+  border-radius: 6px;
+  font-size: 14px;
+  padding: 6px 10px;
+  outline: none;
+  width: 100%;
+}
+
+@media (max-width: 640px) {
+  .header-nav { display: none; }
+  .burger { display: flex; }
+}
+
 /* メインコンテナ */
 .container {
   max-width: 960px;
