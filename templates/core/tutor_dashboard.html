@@ -181,6 +181,37 @@
 
   let pollInterval = null;
 
+  function playMatchSound() {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      [0, 200, 400].forEach(delay => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = "sine";
+        osc.frequency.value = 880;
+        const t = ctx.currentTime + delay / 1000;
+        gain.gain.setValueAtTime(0.4, t);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+        osc.start(t);
+        osc.stop(t + 0.3);
+      });
+    } catch(e) {}
+  }
+
+  function flashScreen() {
+    const overlay = document.createElement("div");
+    overlay.style.cssText = "position:fixed;inset:0;background:#22c55e;opacity:0;z-index:9999;pointer-events:none;transition:opacity 0.15s ease;";
+    document.body.appendChild(overlay);
+    let count = 0;
+    const id = setInterval(() => {
+      overlay.style.opacity = count % 2 === 0 ? "0.45" : "0";
+      count++;
+      if (count >= 6) { clearInterval(id); overlay.remove(); }
+    }, 200);
+  }
+
   function startPolling() {
     if (pollInterval) return;
     pollInterval = setInterval(async () => {
@@ -189,7 +220,10 @@
         const data = await res.json();
         if (data.matched) {
           clearInterval(pollInterval);
-          window.location.reload();
+          playMatchSound();
+          flashScreen();
+          document.title = "🔔 " + document.title;
+          setTimeout(() => window.location.reload(), 1500);
         }
       } catch (e) {
         console.error("Polling error:", e);
