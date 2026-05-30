@@ -3,84 +3,239 @@
 
 {% block content %}
 <style>
-  .lang-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin: 1.25rem 0; }
-  .lang-card { border: 0.5px solid #d1d5db; border-radius: 10px; padding: 14px 12px; cursor: pointer; display: flex; flex-direction: column; gap: 6px; transition: border-color 0.15s; }
-  .lang-card:hover { border-color: #6366f1; }
-  .lang-card.selected { border: 2px solid #6366f1; background: #EEEDFE; }
-  .lang-name { font-size: 15px; font-weight: 500; }
-  .lang-status { font-size: 12px; display: flex; align-items: center; gap: 5px; }
-  .dot-on { width: 7px; height: 7px; border-radius: 50%; background: #22c55e; display: inline-block; }
-  .dot-off { width: 7px; height: 7px; border-radius: 50%; background: #d1d5db; display: inline-block; }
-  .avatar { width: 30px; height: 30px; border-radius: 50%; background: #EEEDFE; color: #3C3489; font-size: 11px; font-weight: 500; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-  .history-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 0.5px solid #e5e7eb; }
-  .history-row:last-child { border-bottom: none; }
-  .lang-pill { font-size: 11px; padding: 2px 10px; border-radius: 99px; background: #f3f4f6; color: #6b7280; }
+  /* ── Hero ── */
+  .cr-hero {
+    background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+    border-radius: 18px;
+    padding: 22px 20px 20px;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cr-hero::after {
+    content: '';
+    position: absolute;
+    top: -50px; right: -50px;
+    width: 160px; height: 160px;
+    background: rgba(99,102,241,0.25);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .cr-hero-tag {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.15);
+    padding: 3px 12px; border-radius: 99px;
+    font-size: 12px; font-weight: 600; color: #c7d2fe;
+    margin-bottom: 10px;
+  }
+  .cr-hero-title {
+    font-size: 24px; font-weight: 700; color: #fff;
+    margin: 0 0 6px;
+  }
+  .cr-hero-sub { font-size: 13px; color: #a5b4fc; margin: 0; }
+
+  /* ── Language grid ── */
+  .cr-lang-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 10px;
+    margin: 0 0 16px;
+  }
+  .cr-lang-card {
+    border-radius: 14px;
+    padding: 14px 12px 12px;
+    cursor: pointer;
+    border: 1.5px solid #e5e7eb;
+    background: #fff;
+    transition: transform 0.12s, box-shadow 0.12s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .cr-lang-card:active { transform: scale(0.97); }
+  .cr-lang-card.selected {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99,102,241,0.2);
+  }
+
+  /* per-language tint */
+  .cr-lang-en  { background: linear-gradient(135deg, #eff6ff 0%, #fff 60%); border-color: #bfdbfe; }
+  .cr-lang-fr  { background: linear-gradient(135deg, #f0fdf4 0%, #fff 60%); border-color: #bbf7d0; }
+  .cr-lang-es  { background: linear-gradient(135deg, #fffbeb 0%, #fff 60%); border-color: #fde68a; }
+  .cr-lang-ja  { background: linear-gradient(135deg, #fff1f2 0%, #fff 60%); border-color: #fecaca; }
+  .cr-lang-en.selected, .cr-lang-fr.selected, .cr-lang-es.selected, .cr-lang-ja.selected {
+    border-color: #6366f1;
+  }
+
+  .cr-flag    { font-size: 28px; line-height: 1; margin-bottom: 8px; }
+  .cr-lang-name { font-size: 14px; font-weight: 700; color: #111827; margin-bottom: 6px; }
+
+  .cr-status-on {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: #dcfce7; color: #15803d;
+    font-size: 11px; font-weight: 600;
+    padding: 3px 8px; border-radius: 99px;
+  }
+  .cr-status-off {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: #f3f4f6; color: #9ca3af;
+    font-size: 11px; font-weight: 600;
+    padding: 3px 8px; border-radius: 99px;
+  }
+  .cr-dot-on {
+    width: 6px; height: 6px; border-radius: 50%; background: #22c55e; flex-shrink: 0;
+    animation: cr-pulse 1.5s ease-in-out infinite;
+  }
+  .cr-dot-off { width: 6px; height: 6px; border-radius: 50%; background: #d1d5db; flex-shrink: 0; }
+  @keyframes cr-pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+  /* ── Buttons ── */
+  .cr-btns { display: flex; gap: 10px; margin-bottom: 0; }
+  .cr-btn-start {
+    flex: 1;
+    background: linear-gradient(135deg, #6366f1 0%, #818cf8 100%);
+    color: #fff;
+    padding: 13px 0;
+    border-radius: 99px;
+    font-size: 15px; font-weight: 700;
+    border: none; cursor: pointer;
+    box-shadow: 0 4px 14px rgba(99,102,241,0.4);
+    transition: opacity 0.15s;
+  }
+  .cr-btn-start:active { opacity: 0.85; }
+  .cr-btn-cancel {
+    background: #f3f4f6; color: #6b7280;
+    padding: 13px 18px;
+    border-radius: 99px;
+    font-size: 15px; font-weight: 600;
+    border: none; cursor: pointer;
+  }
+
+  /* ── History ── */
+  .cr-hist-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  .cr-hist-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid #f3f4f6;
+  }
+  .cr-hist-item:last-child { border-bottom: none; }
+  .cr-hist-avatar {
+    width: 40px; height: 40px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; flex-shrink: 0; color: #fff;
+  }
+  .cr-hist-item:nth-child(4n+1) .cr-hist-avatar { background: linear-gradient(135deg, #6366f1, #818cf8); }
+  .cr-hist-item:nth-child(4n+2) .cr-hist-avatar { background: linear-gradient(135deg, #10b981, #34d399); }
+  .cr-hist-item:nth-child(4n+3) .cr-hist-avatar { background: linear-gradient(135deg, #f59e0b, #fbbf24); }
+  .cr-hist-item:nth-child(4n+4) .cr-hist-avatar { background: linear-gradient(135deg, #ef4444, #f87171); }
+
+  .cr-hist-info { flex: 1; min-width: 0; }
+  .cr-hist-name { font-size: 14px; font-weight: 600; color: #111827; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cr-hist-date { font-size: 11px; color: #9ca3af; margin-top: 2px; }
+  .cr-hist-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
+
+  .lang-badge {
+    font-size: 11px; font-weight: 700;
+    padding: 3px 9px; border-radius: 99px;
+  }
+  .lang-badge-en { background: #dbeafe; color: #1e40af; }
+  .lang-badge-fr { background: #dcfce7; color: #166534; }
+  .lang-badge-es { background: #fef9c3; color: #854d0e; }
+  .lang-badge-ja { background: #fee2e2; color: #991b1b; }
+  .lang-badge-default { background: #f3f4f6; color: #6b7280; }
 </style>
 
+{# ── Hero ── #}
+<div class="cr-hero">
+  <div class="cr-hero-tag">⚡ {% trans "5-minute lesson" %}</div>
+  <h2 class="cr-hero-title">{% trans "Talk for 5 Minutes Now" %}</h2>
+  <p class="cr-hero-sub">{% trans "Select the language you want to practice. If any tutors are online, you will be randomly matched." %}</p>
+</div>
+
+{# ── Language select + buttons ── #}
 <div class="card">
-  <h2 class="card-title">{% trans "Talk for 5 Minutes Now" %}</h2>
-  <p class="card-subtitle">{% trans "Select the language you want to practice. If any tutors are online, you will be randomly matched." %}</p>
-
   <form method="post">
-    {% csrf_token %}<input type="hidden" name="language_id" id="selected-lang-id" value="{{ languages_with_count.0.0.id }}">
+    {% csrf_token %}
+    <input type="hidden" name="language_id" id="selected-lang-id" value="{{ languages_with_count.0.0.id }}">
 
-    <div class="lang-grid">
+    <div class="cr-lang-grid">
       {% for lang, count in languages_with_count %}
-      <div class="lang-card {% if forloop.first %}selected{% endif %}"
-     onclick="selectLang(this, '{{ lang.id }}')"
-     data-id="{{ lang.id }}">
-        <div class="lang-name">{% trans lang.name %}</div>
-        <div class="lang-status">
-          {% if count > 0 %}
-            <span class="dot-on"></span>
-            <span style="color:#16a34a;">{{ count }} online</span>
-          {% else %}
-            <span class="dot-off"></span>
-            <span style="color:#9ca3af;">offline</span>
-          {% endif %}
+      <div class="cr-lang-card {% if forloop.first %}selected{% endif %}
+                  {% if lang.name == 'English' %}cr-lang-en
+                  {% elif lang.name == 'French' %}cr-lang-fr
+                  {% elif lang.name == 'Spanish' %}cr-lang-es
+                  {% elif lang.name == 'Japanese' %}cr-lang-ja{% endif %}"
+           onclick="selectLang(this, '{{ lang.id }}')"
+           data-id="{{ lang.id }}">
+        <div class="cr-flag">
+          {% if lang.name == 'English' %}🇺🇸
+          {% elif lang.name == 'French' %}🇫🇷
+          {% elif lang.name == 'Spanish' %}🇪🇸
+          {% elif lang.name == 'Japanese' %}🇯🇵
+          {% else %}🌐{% endif %}
         </div>
+        <div class="cr-lang-name">{% trans lang.name %}</div>
+        {% if count > 0 %}
+          <div class="cr-status-on"><span class="cr-dot-on"></span>{{ count }} online</div>
+        {% else %}
+          <div class="cr-status-off"><span class="cr-dot-off"></span>{% trans "Offline" %}</div>
+        {% endif %}
       </div>
       {% endfor %}
     </div>
 
-    <div style="display:flex; gap:10px; margin-top:1rem;">
-      <button type="submit" class="btn">{% trans "Start a 5-Minute Lesson" %}</button>
-      <button type="button" class="btn btn-outline"
-              onclick="window.location.href='{% url 'home' %}'">
-        {% trans "Cancel" %}
-      </button>
+    <div class="cr-btns">
+      <button type="submit" class="cr-btn-start">🎯 {% trans "Start a 5-Minute Lesson" %}</button>
+      <button type="button" class="cr-btn-cancel"
+              onclick="window.location.href='{% url 'home' %}'">✕</button>
     </div>
   </form>
 </div>
 
-<div class="card mt-16">
-  <h3 class="card-title">{% trans "My Lesson History" %}</h3>
+{# ── Lesson history ── #}
+<div class="card">
+  <div class="cr-hist-header">
+    <h3 class="card-title" style="margin:0;">{% trans "My Lesson History" %}</h3>
+  </div>
 
   {% if matches %}
     {% for match in matches %}
-    <div class="history-row">
-      <div style="display:flex; align-items:center; gap:10px;">
-        <div class="avatar">{{ match.tutor.user.username|slice:":2"|upper }}</div>
-        <div>
-          <div style="font-size:14px; font-weight:500;">{{ match.tutor.user.username }}</div>
-          <div style="font-size:12px; color:#9ca3af;">{{ match.started_at|date:"Y-m-d H:i" }}</div>
-        </div>
+    <div class="cr-hist-item">
+      <div class="cr-hist-avatar">{{ match.tutor.user.username|slice:":2"|upper }}</div>
+      <div class="cr-hist-info">
+        <div class="cr-hist-name">{{ match.tutor.user.username }}</div>
+        <div class="cr-hist-date">{{ match.started_at|date:"Y-m-d H:i" }}</div>
       </div>
-      <span class="lang-pill">{% trans match.request.language.name %}</span>
+
+      <div class="cr-hist-right">
+        <span class="lang-badge
+          {% if match.request.language.name == 'English' %}lang-badge-en
+          {% elif match.request.language.name == 'French' %}lang-badge-fr
+          {% elif match.request.language.name == 'Spanish' %}lang-badge-es
+          {% elif match.request.language.name == 'Japanese' %}lang-badge-ja
+          {% else %}lang-badge-default{% endif %}">
+          {% if match.request.language.name == 'English' %}🇺🇸
+          {% elif match.request.language.name == 'French' %}🇫🇷
+          {% elif match.request.language.name == 'Spanish' %}🇪🇸
+          {% elif match.request.language.name == 'Japanese' %}🇯🇵{% endif %}
+          {% trans match.request.language.name %}
+        </span>
+      </div>
     </div>
     {% endfor %}
   {% else %}
-    <p class="text-muted">{% trans "No lesson history yet." %}</p>
+    <p class="text-muted" style="text-align:center; padding:1.5rem 0;">{% trans "No lesson history yet." %}</p>
   {% endif %}
 </div>
 
 <script>
-  const cards = document.querySelectorAll('.lang-card');
+  const cards = document.querySelectorAll('.cr-lang-card');
   const input = document.getElementById('selected-lang-id');
 
-  if (cards.length > 0) {
+  if (cards.length > 0 && !input.value) {
     input.value = cards[0].getAttribute('data-id');
-    cards[0].classList.add('selected');
   }
 
   function selectLang(el, id) {

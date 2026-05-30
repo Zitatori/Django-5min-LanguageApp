@@ -307,4 +307,7 @@ msgstr "Langues que je peux enseigner"
 msgid "Sign up"
 msgstr "S'inscrire"
 
+msgid "No lesson history yet."
+msgstr "Aucun historique de leçon pour l'instant."
+
 

@@ -303,3 +303,6 @@ msgstr "Idiomas que puedo enseñar"
 
 msgid "Sign up"
 msgstr "Registrarse"
+
+msgid "No lesson history yet."
+msgstr "Aún no hay historial de clases."

@@ -383,3 +383,6 @@ msgstr "担当できる言語"
 
 msgid "Sign up"
 msgstr "登録する"
+
+msgid "No lesson history yet."
+msgstr "まだレッスン履歴はありません。"
