@@ -17,29 +17,75 @@ a:hover {
 
 /* ヘッダー */
 .header {
-  background: #111827;
-  color: #f9fafb;
-  padding: 12px 24px;
+  background: #0a0a0a;
+  color: #f4f4f5;
+  display: flex;
+  flex-direction: column;
+}
+
+.header-neon-line {
+  height: 2px;
+  background: linear-gradient(90deg, #06b6d4, #8b5cf6, #ec4899, #06b6d4);
+  background-size: 200% 100%;
+  animation: neon-shimmer 3s linear infinite;
+}
+
+@keyframes neon-shimmer {
+  to { background-position: -200% 0; }
+}
+
+.header-inner {
+  padding: 0 24px;
+  height: 52px;
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
 .header-title a {
-  color: #f9fafb;
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  color: #f4f4f5;
   font-weight: 700;
-  font-size: 20px;
+  font-size: 18px;
+  letter-spacing: -0.3px;
   text-decoration: none;
 }
 
+.header-title a span {
+  color: #06b6d4;
+}
+
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
 .header-nav a {
-  color: #e5e7eb;
-  margin-left: 12px;
-  font-size: 14px;
+  color: #71717a;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 10px;
+  border-radius: 6px;
+  margin-left: 0;
+  text-decoration: none;
+  transition: color 0.15s;
 }
 
 .header-nav a:hover {
-  color: #ffffff;
+  color: #f4f4f5;
+  text-decoration: none;
+}
+
+.header-nav select {
+  background: transparent;
+  color: #71717a;
+  border: none;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 6px 4px;
+  outline: none;
 }
 
 /* メインコンテナ */
