@@ -41,6 +41,7 @@ def admin_dashboard(request):
 
     return render(request, 'core/admin_dashboard.html', {
         'users':               users,
+        'users_count': users.count(),
         'tutors':              tutors,
         'matches':             matches,
         'languages':           languages,
