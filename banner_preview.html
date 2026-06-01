@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>バナーデザイン案</title>
+  <style>
+    body { background: #f3f4f6; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; padding: 32px 24px; }
+    .label { font-size: 13px; font-weight: 700; color: #6b7280; margin: 32px 0 8px; text-transform: uppercase; letter-spacing: 0.08em; }
+    .label:first-child { margin-top: 0; }
+
+    /* ── 案1: インディゴグラデーション ── */
+    .h1 {
+      background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%);
+      color: #fff;
+      padding: 14px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-radius: 12px;
+    }
+    .h1 .logo { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
+    .h1 .logo span { opacity: 0.7; font-weight: 400; font-size: 14px; margin-left: 6px; }
+    .h1 nav { display: flex; gap: 20px; align-items: center; font-size: 13px; opacity: 0.85; }
+
+    /* ── 案2: ホワイト + インディゴアクセント ── */
+    .h2 {
+      background: #fff;
+      border-bottom: 3px solid #6366f1;
+      padding: 14px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-radius: 12px 12px 0 0;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    }
+    .h2 .logo { font-size: 20px; font-weight: 800; color: #6366f1; letter-spacing: -0.5px; }
+    .h2 .logo em { color: #111827; font-style: normal; }
+    .h2 nav { display: flex; gap: 20px; align-items: center; font-size: 13px; color: #374151; }
+    .h2 nav a { color: #374151; }
+    .h2 nav .cta { background: #6366f1; color: #fff; padding: 6px 14px; border-radius: 8px; font-weight: 600; font-size: 12px; }
+
+    /* ── 案3: ダーク + グラデーション文字 ── */
+    .h3 {
+      background: #0f172a;
+      padding: 14px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-radius: 12px;
+    }
+    .h3 .logo {
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: -1px;
+      background: linear-gradient(90deg, #818cf8, #c084fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .h3 nav { display: flex; gap: 20px; align-items: center; font-size: 13px; color: #94a3b8; }
+    .h3 .dot { width: 8px; height: 8px; background: #22c55e; border-radius: 50%; display: inline-block; margin-right: 6px; }
+
+    /* ── 案4: フロストガラス風 ── */
+    .h4-wrap {
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
+      padding: 4px;
+      border-radius: 14px;
+    }
+    .h4 {
+      background: rgba(255,255,255,0.12);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.25);
+      padding: 14px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-radius: 11px;
+    }
+    .h4 .logo { font-size: 20px; font-weight: 800; color: #fff; letter-spacing: -0.5px; }
+    .h4 .logo sup { font-size: 9px; background: rgba(255,255,255,0.3); padding: 2px 6px; border-radius: 99px; margin-left: 6px; font-weight: 500; vertical-align: middle; }
+    .h4 nav { display: flex; gap: 20px; align-items: center; font-size: 13px; color: rgba(255,255,255,0.85); }
+
+    /* ── 案5: ミニマル + 左ロゴ大 ── */
+    .h5 {
+      background: #fff;
+      padding: 0 28px;
+      display: flex;
+      align-items: stretch;
+      justify-content: space-between;
+      border-radius: 12px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+    .h5 .logo-block {
+      background: #6366f1;
+      color: #fff;
+      font-size: 19px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      margin-left: -28px;
+    }
+    .h5 .logo-block span { font-size: 10px; font-weight: 500; opacity: 0.8; display: block; letter-spacing: 0.1em; }
+    .h5 nav { display: flex; gap: 24px; align-items: center; font-size: 13px; color: #374151; padding: 16px 0; }
+    .h5 nav .active { color: #6366f1; font-weight: 600; border-bottom: 2px solid #6366f1; padding-bottom: 2px; }
+
+    nav a { text-decoration: none; color: inherit; }
+  </style>
+</head>
+<body>
+
+  <div class="label">案1 — インディゴ〜パープル グラデーション</div>
+  <header class="h1">
+    <div class="logo">QuickLesson <span>言語学習</span></div>
+    <nav>
+      <a href="#">5分レッスン</a>
+      <a href="#">相手役ダッシュボード</a>
+      <a href="#">ログアウト</a>
+    </nav>
+  </header>
+
+  <div class="label">案2 — ホワイト + インディゴ下線アクセント</div>
+  <header class="h2">
+    <div class="logo">Quick<em>Lesson</em></div>
+    <nav>
+      <a href="#">5分レッスン</a>
+      <a href="#">相手役</a>
+      <span class="cta">ログアウト</span>
+    </nav>
+  </header>
+
+  <div class="label">案3 — ディープダーク + グラデーション文字ロゴ</div>
+  <header class="h3">
+    <div class="logo">QuickLesson</div>
+    <nav>
+      <span><span class="dot"></span>オンライン中</span>
+      <a href="#">5分レッスン</a>
+      <a href="#">ログアウト</a>
+    </nav>
+  </header>
+
+  <div class="label">案4 — グラデーション背景 + フロストガラス</div>
+  <div class="h4-wrap">
+    <header class="h4">
+      <div class="logo">QuickLesson <sup>BETA</sup></div>
+      <nav>
+        <a href="#">5分レッスン</a>
+        <a href="#">相手役</a>
+        <a href="#">ログアウト</a>
+      </nav>
+    </header>
+  </div>
+
+  <div class="label">案5 — ミニマル白 + 左カラーブロックロゴ</div>
+  <header class="h5">
+    <div class="logo-block">
+      QuickLesson
+      <span>LANGUAGE APP</span>
+    </div>
+    <nav>
+      <a href="#" class="active">5分レッスン</a>
+      <a href="#">相手役ダッシュボード</a>
+      <a href="#">ログアウト</a>
+    </nav>
+  </header>
+
+</body>
+</html>

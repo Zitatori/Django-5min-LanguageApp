@@ -1,6 +1,9 @@
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseForbidden
 from django.shortcuts import render, get_object_or_404, redirect
+from functools import wraps
 from django.http import JsonResponse
 from django.utils import timezone
 from core.models import TutorProfile, QuickLessonMatch, LessonLanguage
@@ -8,7 +11,15 @@ from core.models import PointBalance, PointTransaction, WithdrawalRequest
 
 INITIAL_BONUS = 10
 
-@staff_member_required
+def staff_or_admin_role_required(view_func):
+    @wraps(view_func)
+    def wrapper(request, *args, **kwargs):
+        if request.user.is_staff or (hasattr(request.user, 'userprofile') and request.user.userprofile.role == 'Admin'):
+            return view_func(request, *args, **kwargs)
+        return HttpResponseForbidden("You don't have permission to access this page.")
+    return wrapper
+
+@staff_or_admin_role_required
 def admin_dashboard(request):
     users = (
         User.objects
@@ -37,7 +48,7 @@ def admin_dashboard(request):
         'withdrawal_requests': withdrawal_requests,
     })
 
-@staff_member_required
+@staff_or_admin_role_required
 def update_tutor_languages(request, tutor_id):
     if request.method == 'POST':
         tutor = get_object_or_404(TutorProfile, id=tutor_id)
@@ -45,7 +56,7 @@ def update_tutor_languages(request, tutor_id):
         tutor.languages.set(lang_ids)
         return redirect('admin_dashboard')
 
-@staff_member_required
+@staff_or_admin_role_required
 def delete_user(request, user_id):
     if request.method == 'POST':
         user = get_object_or_404(User, id=user_id)
@@ -53,7 +64,7 @@ def delete_user(request, user_id):
             user.delete()
     return redirect('admin_dashboard')
 
-@staff_member_required
+@staff_or_admin_role_required
 def update_user_points(request, user_id):
     """管理者がユーザーのポイント残高を直接セットする"""
     if request.method == 'POST':
@@ -76,7 +87,7 @@ def update_user_points(request, user_id):
             )
     return redirect('admin_dashboard')
 
-@staff_member_required
+@staff_or_admin_role_required
 def process_withdrawal(request, withdrawal_id):
     """引き出し申請を 支払済み or 却下 に更新する"""
     if request.method == 'POST':
@@ -108,7 +119,7 @@ def process_withdrawal(request, withdrawal_id):
     return redirect('admin_dashboard')
 
 
-@staff_member_required
+@staff_or_admin_role_required
 def grant_initial_points_all(request):
     """PointBalanceを持っていない全ユーザーに初期ポイントを一括付与"""
     if request.method == 'POST':
