@@ -1,4 +1,6 @@
-# QuickLesson — Django 5min Language App
+# 🚀 20 Active Users Reached! 🚀
+
+## 🎯 Goal: 100 Active Users by the End of This Month 💯
 
 A Django-based language exchange platform for quick 5-minute conversations.
 
