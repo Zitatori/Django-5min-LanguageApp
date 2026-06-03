@@ -10,8 +10,11 @@
       <li style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px;">
         <div>
           <div><strong>{{ m.started_at|date:"Y-m-d" }}</strong></div>
-          <div class="text-muted" style="margin-top:4px;">
+          <div class="text-muted" style="margin-top:4px; display:flex; align-items:center; gap:5px;">
             参加者：{{ m.student_name|default:"非表示" }}
+            {% if m.request.student.user.is_superuser %}<span class="header-badge header-badge-dev">Dev</span>
+            {% elif m.request.student.user.is_staff %}<span class="header-badge header-badge-admin">Admin</span>
+            {% endif %}
           </div>
         </div>
         <span class="badge badge-gray">{{ m.request.language.name }}</span>

@@ -205,7 +205,12 @@
     <div class="cr-hist-item">
       <div class="cr-hist-avatar">{{ match.tutor.user.username|slice:":2"|upper }}</div>
       <div class="cr-hist-info">
-        <div class="cr-hist-name">{{ match.tutor.user.username }}</div>
+        <div class="cr-hist-name" style="display:flex; align-items:center; gap:5px;">
+          {{ match.tutor.user.username }}
+          {% if match.tutor.user.is_superuser %}<span class="header-badge header-badge-dev">Dev</span>
+          {% elif match.tutor.user.is_staff %}<span class="header-badge header-badge-admin">Admin</span>
+          {% endif %}
+        </div>
         <div class="cr-hist-date">{{ match.started_at|date:"Y-m-d H:i" }}</div>
       </div>
 

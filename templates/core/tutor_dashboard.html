@@ -75,7 +75,12 @@
   {% if active_matches %}
     {% for match in active_matches %}
       <div style="padding:12px; border:1px solid #e5e7eb; border-radius:12px; margin-bottom:12px;">
-        <p><strong>Student:</strong> {{ match.request.student.user.username }}</p>
+        <p><strong>Student:</strong>
+          {{ match.request.student.user.username }}
+          {% if match.request.student.user.is_superuser %}<span class="header-badge header-badge-dev">Dev</span>
+          {% elif match.request.student.user.is_staff %}<span class="header-badge header-badge-admin">Admin</span>
+          {% endif %}
+        </p>
         <p><strong>Language:</strong> {{ match.request.language.name }}</p>
         <a href="{% url 'lesson_room' match.id %}" class="btn btn-primary" style="margin-top:8px; display:inline-block;">
           {% trans "Enter lesson room" %}
