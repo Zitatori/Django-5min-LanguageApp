@@ -45,15 +45,19 @@ def lesson_room(request, match_id: int):
         remaining_seconds = None
 
     if request.user == match.request.student.user:
-        partner_name = match.tutor.user.username
+        partner_user = match.tutor.user
     else:
-        partner_name = match.request.student.user.username
+        partner_user = match.request.student.user
+
+    partner_name = partner_user.username
+    partner_badge = "dev" if partner_user.is_superuser else ("admin" if partner_user.is_staff else None)
 
     context = {
         "match": match,
         "remaining_seconds": remaining_seconds,
         "partner_name": partner_name,
         "partner_initial": partner_name[0].upper() if partner_name else "?",
+        "partner_badge": partner_badge,
     }
 
     return render(request, "core/lesson_room.html", context)

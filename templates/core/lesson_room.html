@@ -13,7 +13,12 @@
     <div class="lr-avatar">
       {{ partner_initial|default:"?" }}
     </div>
-    <div class="lr-partner-name">{{ partner_name|default:"Waiting…" }}</div>
+    <div class="lr-partner-name">
+      {{ partner_name|default:"Waiting…" }}
+      {% if partner_badge == "dev" %}<span class="lr-partner-badge lr-pbadge-dev">Dev</span>
+      {% elif partner_badge == "admin" %}<span class="lr-partner-badge lr-pbadge-admin">Admin</span>
+      {% endif %}
+    </div>
   </div>
 
   {# ── タイマー（上部オーバーレイ） ── #}
@@ -27,6 +32,12 @@
     <span class="lr-badge-lang">{{ match.request.language.name }}</span>
     <span class="lr-badge-role">
       {% if request.user == match.request.student.user %}Student{% else %}Tutor{% endif %}
+    </span>
+    <span class="lr-badge-partner">
+      {{ partner_name }}
+      {% if partner_badge == "dev" %}<span class="lr-partner-badge lr-pbadge-dev">Dev</span>
+      {% elif partner_badge == "admin" %}<span class="lr-partner-badge lr-pbadge-admin">Admin</span>
+      {% endif %}
     </span>
   </div>
 
@@ -92,7 +103,27 @@
     display: flex; align-items: center; justify-content: center;
     font-size: 36px; font-weight: 700; color: #fff;
   }
-  .lr-partner-name { font-size: 14px; color: #9ca3af; }
+  .lr-partner-name {
+    font-size: 14px; color: #9ca3af;
+    display: flex; align-items: center; gap: 6px;
+  }
+
+  /* パートナーバッジ */
+  .lr-partner-badge {
+    font-size: 10px; font-weight: 700;
+    padding: 2px 7px; border-radius: 99px;
+    letter-spacing: 0.04em; flex-shrink: 0;
+  }
+  .lr-pbadge-dev {
+    background: linear-gradient(135deg, #06b6d4, #8b5cf6);
+    color: #fff;
+    box-shadow: 0 0 6px rgba(139,92,246,0.5);
+  }
+  .lr-pbadge-admin {
+    background: rgba(255,255,255,0.15);
+    color: #d1d5db;
+    border: 1px solid rgba(255,255,255,0.25);
+  }
 
   /* タイマーオーバーレイ */
   .lr-timer-overlay {
@@ -143,6 +174,16 @@
     font-size: 12px; font-weight: 600; color: #d4d4d8;
   }
   .lr-badge-lang { color: #60a5fa; }
+  .lr-badge-partner {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px;
+    padding: 4px 10px;
+    font-size: 12px; font-weight: 600; color: #d4d4d8;
+  }
 
   /* 自分の映像PiP */
   .lr-pip-wrap {
