@@ -15,6 +15,20 @@ from core.models import (
     QuickLessonMatch,
 )
 
+ONLINE_TIMEOUT_SECONDS = 90  # tutor.py と合わせる
+
+
+def active_tutors_qs(language=None):
+    """実際にオンライン中（90秒以内に ping あり）のチュータークエリセット。"""
+    cutoff = timezone.now() - timedelta(seconds=ONLINE_TIMEOUT_SECONDS)
+    qs = TutorProfile.objects.filter(
+        is_online=True,
+        last_ping_at__gte=cutoff,
+    )
+    if language:
+        qs = qs.filter(languages=language)
+    return qs.distinct()
+
 
 @login_required
 def create_request(request):
@@ -51,10 +65,7 @@ def create_request(request):
 
             return redirect("request_detail", request_id=qlr.id)
 
-        tutors_qs = TutorProfile.objects.filter(
-            is_online=True,
-            languages=language,
-        ).distinct()
+        tutors_qs = active_tutors_qs(language=language)
 
         if tutors_qs.exists():
             tutor = random.choice(list(tutors_qs))
@@ -88,7 +99,7 @@ def create_request(request):
 
     languages_with_count = []
     for lang in languages:
-        count = TutorProfile.objects.filter(is_online=True, languages=lang).count()
+        count = active_tutors_qs(language=lang).count()
         languages_with_count.append((lang, count))
 
     return render(request, "core/create_request.html", {
@@ -107,10 +118,7 @@ def request_detail(request, request_id: int):
     match = QuickLessonMatch.objects.filter(request=qlr).first()
 
     if qlr.status == "waiting" and match is None:
-        tutors_qs = TutorProfile.objects.filter(
-            is_online=True,
-            languages=qlr.language,
-        ).distinct()
+        tutors_qs = active_tutors_qs(language=qlr.language)
 
         if tutors_qs.exists():
             tutor = random.choice(list(tutors_qs))

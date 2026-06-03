@@ -50,12 +50,22 @@ def tutor_dashboard(request):
             "matches": matches,
         },
     )
+ONLINE_TIMEOUT_SECONDS = 90  # 90秒以内の ping がないとオフライン扱い
+
+
 @login_required
 def tutor_match_status(request):
+    """ポーリング兼ハートビート。呼ばれるたびに last_ping_at を更新。"""
+    now = timezone.now()
     tutor_profile = TutorProfile.objects.get(user=request.user)
+
+    # ハートビート更新（オンライン中のみ）
+    if tutor_profile.is_online:
+        TutorProfile.objects.filter(pk=tutor_profile.pk).update(last_ping_at=now)
+
     active_match = QuickLessonMatch.objects.filter(
         tutor=tutor_profile,
-        end_at__gt=timezone.now()
+        end_at__gt=now
     ).first()
 
     if active_match:
