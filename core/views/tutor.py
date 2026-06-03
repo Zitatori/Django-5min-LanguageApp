@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.utils import timezone
+from django.views.decorators.http import require_POST
 from core.models import TutorProfile, QuickLessonMatch
 from django.http import JsonResponse
 
@@ -64,3 +65,11 @@ def tutor_match_status(request):
             "room_url": reverse("lesson_room", args=[active_match.id])
         })
     return JsonResponse({"matched": False})
+
+
+@login_required
+@require_POST
+def tutor_set_offline(request):
+    """チューターがタブを閉じたときなどに sendBeacon で叩くエンドポイント。"""
+    TutorProfile.objects.filter(user=request.user).update(is_online=False)
+    return JsonResponse({"ok": True})

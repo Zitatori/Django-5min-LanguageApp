@@ -315,6 +315,20 @@
     stopPolling();
     form.submit();
   });
+
+  // タブを閉じたりページ離脱時にオフライン化
+  function getCsrf() {
+    const m = document.cookie.match(/csrftoken=([^;]+)/);
+    return m ? m[1] : '';
+  }
+  function sendOfflineBeacon() {
+    if (!toggle || !toggle.checked) return; // オフラインなら不要
+    const fd = new FormData();
+    fd.append('csrfmiddlewaretoken', getCsrf());
+    navigator.sendBeacon("{% url 'tutor_set_offline' %}", fd);
+  }
+  window.addEventListener('beforeunload', sendOfflineBeacon);
+  window.addEventListener('pagehide',     sendOfflineBeacon);
 })();
 </script>
 

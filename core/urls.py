@@ -17,6 +17,7 @@ urlpatterns = [
     path("signup/", views.signup, name="signup"),
     path("history/", views.student_history, name="student_history"),
     path("tutor/match-status/", views.tutor_match_status, name="tutor_match_status"),
+    path("tutor/set-offline/", views.tutor_set_offline, name="tutor_set_offline"),
 
     # レッスンルーム
     path("lesson/room/<int:match_id>/", views.lesson_room, name="lesson_room"),

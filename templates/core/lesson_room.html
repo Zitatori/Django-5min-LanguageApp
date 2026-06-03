@@ -265,8 +265,21 @@
   const timerDot     = document.getElementById("timer-dot");
   const leaveBtn     = document.getElementById("leave-btn");
 
-  const matchId = "{{ match.id }}";
-  const userId  = "{{ request.user.id }}";
+  const matchId  = "{{ match.id }}";
+  const userId   = "{{ request.user.id }}";
+  const isTutor  = (userId === "{{ match.tutor.user.id }}");
+
+  // チューターがルームを離れるときオフライン化
+  function getCsrf() {
+    const m = document.cookie.match(/csrftoken=([^;]+)/);
+    return m ? m[1] : '';
+  }
+  function sendOfflineBeacon() {
+    if (!isTutor) return;
+    const fd = new FormData();
+    fd.append('csrfmiddlewaretoken', getCsrf());
+    navigator.sendBeacon("{% url 'tutor_set_offline' %}", fd);
+  }
 
   let localStream    = null;
   let peerConnection = null;
@@ -297,10 +310,13 @@
   window.onTimerStart = startTimer;
 
   function endLesson(reason) {
+    sendOfflineBeacon();
     if (typeof cleanupCall === "function") cleanupCall();
     window.location.href = "{% url 'home' %}";
   }
   leaveBtn.addEventListener("click", () => endLesson("manual"));
+  window.addEventListener('beforeunload', sendOfflineBeacon);
+  window.addEventListener('pagehide',     sendOfflineBeacon);
 
   // ── WebRTC ──
   const protocol = location.protocol === "https:" ? "wss" : "ws";
