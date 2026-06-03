@@ -77,6 +77,36 @@ a:hover {
   text-decoration: none !important;
 }
 
+/* ユーザー名リンク（バッジ付き） */
+.header-user-link {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Admin / Dev バッジ */
+.header-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 2px 7px;
+  border-radius: 99px;
+  line-height: 1.5;
+  text-decoration: none !important;
+  pointer-events: none;
+}
+.header-badge-dev {
+  background: linear-gradient(135deg, #06b6d4, #8b5cf6);
+  color: #fff;
+  box-shadow: 0 0 6px rgba(139,92,246,0.45);
+}
+.header-badge-admin {
+  background: #374151;
+  color: #d1d5db;
+  border: 1px solid #4b5563;
+}
+
 .header-nav form {
   display: flex;
   align-items: center;
