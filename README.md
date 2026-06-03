@@ -1,5 +1,7 @@
 # 🚀 20 Active Users Reached! 🚀
 
+🚀 **8 Users Connected at the Same Time!** 🚀
+
 ## 🎯 Goal: 100 Active Users by the End of This Month 💯
 
 A Django-based language exchange platform for quick 5-minute conversations.
