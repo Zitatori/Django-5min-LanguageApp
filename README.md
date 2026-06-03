@@ -27,7 +27,7 @@ Users can:
 
 ### Home Page
 
-<img src="home_new.png" width="700">
+<img src="Home_new1.png" width="700">
 
 ---
 
@@ -45,7 +45,7 @@ Users can:
 
 ### Tutor Dashboard
 
-<img src="tutor-dashboard.png" width="700">
+<img src="tutor-dashboard1.png" width="700">
 
 ### Point Page
 
