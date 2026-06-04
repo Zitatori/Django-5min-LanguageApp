@@ -77,7 +77,7 @@
     <span class="unit">pt</span>
   </div>
   {% if request.user.tutorprofile %}
-    <p class="earned">{% trans "Withdrawable" %}: {{ balance.earned_balance }} pt</p>
+    <p class="earned">{% trans "Withdrawable" %}: {{ withdrawable }} pt</p>
   {% endif %}
   <a href="{% url 'purchase_points' %}" class="btn-buy">＋ {% trans "Buy Points" %}</a>
 </div>
@@ -92,14 +92,14 @@
 
   {% elif can_withdraw %}
     <p style="font-size:13px; color:#6b7280; margin-bottom:1rem;">
-      {% trans "Withdrawable" %}: <strong>{{ balance.earned_balance }} pt</strong>　（{% trans "Min." %} {{ min_withdrawal }} pt）
+      {% trans "Withdrawable" %}: <strong>{{ withdrawable }} pt</strong>　（{% trans "Min." %} {{ min_withdrawal }} pt）
     </p>
     <form method="post" action="{% url 'request_withdrawal' %}">
       {% csrf_token %}
 
       <label class="withdraw-label">{% trans "Points to withdraw" %}</label>
       <input type="number" name="points" class="withdraw-input"
-             min="{{ min_withdrawal }}" max="{{ balance.earned_balance }}"
+             min="{{ min_withdrawal }}" max="{{ withdrawable }}"
              value="{{ min_withdrawal }}" required>
 
       <label class="withdraw-label">{% trans "Currency" %}</label>
@@ -126,7 +126,7 @@
   {% else %}
     <p style="font-size:14px; color:#9ca3af; padding:.5rem 0;">
       {% trans "You need at least" %} {{ min_withdrawal }} pt {% trans "of lesson earnings to withdraw." %}
-      （{% trans "Current" %}: {{ balance.earned_balance }} pt）
+      （{% trans "Current" %}: {{ withdrawable }} pt）
     </p>
   {% endif %}
 </div>

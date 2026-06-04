@@ -19,14 +19,18 @@ def profile(request):
         user=request.user, status=WithdrawalRequest.STATUS_PENDING
     ).first()
 
+    # 引き出し可能額 = 講師として稼いだ分 と 総残高 の小さい方
+    withdrawable = min(balance.earned_balance, balance.balance)
+
     return render(request, 'core/profile.html', {
         'balance':            balance,
+        'withdrawable':       withdrawable,
         'transactions':       transactions,
         'pending_withdrawal': pending_withdrawal,
         'min_withdrawal':     MIN_WITHDRAWAL_PTS,
         'can_withdraw':       (
             hasattr(request.user, 'tutorprofile')
-            and balance.earned_balance >= MIN_WITHDRAWAL_PTS
+            and withdrawable >= MIN_WITHDRAWAL_PTS
             and not pending_withdrawal
         ),
         'withdrawal_currencies': WithdrawalRequest.CURRENCY_CHOICES,
@@ -46,9 +50,10 @@ def request_withdrawal(request):
     except ValueError:
         return redirect('profile')
 
-    # バリデーション
+    # バリデーション（引き出し可能額 = earned と balance の小さい方）
+    withdrawable = min(balance.earned_balance, balance.balance)
     if (points < MIN_WITHDRAWAL_PTS
-            or balance.earned_balance < points
+            or withdrawable < points
             or not hasattr(request.user, 'tutorprofile')):
         return redirect('profile')
 
