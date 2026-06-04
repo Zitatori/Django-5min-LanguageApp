@@ -95,7 +95,7 @@ msgid "Selected language"
 msgstr "Langue sélectionnée"
 
 msgid "Tutor"
-msgstr "Guide"
+msgstr "Tuteur"
 
 msgid "Enter Lesson Room"
 msgstr "Entrer dans la salle"
@@ -197,7 +197,7 @@ msgid "Log out"
 msgstr "Déconnexion"
 
 msgid "Tutor Dashboard"
-msgstr "Tableau du tuteur"
+msgstr "Tableau du Tuteur"
 
 msgid "My Lesson History"
 msgstr "Historique des leçons"
@@ -284,7 +284,7 @@ msgid "Lesson (Student)"
 msgstr "Leçon (Étudiant)"
 
 msgid "Lesson (Tutor)"
-msgstr "Leçon (Guide)"
+msgstr "Leçon (Tuteur)"
 
 msgid "Points Purchase"
 msgstr "Achat de points"

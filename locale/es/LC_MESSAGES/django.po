@@ -95,7 +95,7 @@ msgid "Selected language"
 msgstr "Idioma seleccionado"
 
 msgid "Tutor"
-msgstr "Guía"
+msgstr "Tutor"
 
 msgid "Enter Lesson Room"
 msgstr "Entrar en la sala de clase"
@@ -104,10 +104,10 @@ msgid "Back to Home"
 msgstr "Volver al inicio"
 
 msgid "Matching you with a tutor…"
-msgstr "Buscando un Guía disponible…"
+msgstr "Buscando un Tutor disponible…"
 
 msgid "This page will automatically update as soon as an available tutor is found."
-msgstr "Esta página se actualizará automáticamente cuando se encuentre un Guía disponible."
+msgstr "Esta página se actualizará automáticamente cuando se encuentre un Tutor disponible."
 
 msgid "Cancel and return to Home"
 msgstr "Cancelar y volver al inicio"
@@ -161,7 +161,7 @@ msgid "This browser does not support getUserMedia."
 msgstr "Este navegador no admite getUserMedia."
 
 msgid "Tutor Dashboard"
-msgstr "Panel del Guíar"
+msgstr "Panel del Tutor"
 
 msgid "When you go online, you’ll be available for 5-minute lesson matching."
 msgstr "Cuando te pongas en línea, estarás disponible para conexiones de clases de 5 minutos."
@@ -281,7 +281,7 @@ msgid "Lesson (Student)"
 msgstr "Clase (Participante)"
 
 msgid "Lesson (Tutor)"
-msgstr "Clase (Guía)"
+msgstr "Clase (Tutor)"
 
 msgid "Points Purchase"
 msgstr "Compra de puntos"

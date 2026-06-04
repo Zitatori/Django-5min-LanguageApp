@@ -133,7 +133,7 @@ msgstr "参加者"
 
 #: templates/core/lesson_room.html:38 templates/core/request_detail.html:29
 msgid "Tutor"
-msgstr "相手役"
+msgstr "講師"
 
 #: templates/core/lesson_room.html:39
 msgid "Language"
@@ -212,12 +212,12 @@ msgstr "ホームに戻る"
 #: templates/core/request_detail.html:44
 
 msgid "Matching you with a tutor…"
-msgstr "相手役とマッチングしています…"
+msgstr "講師とマッチングしています…"
 
 #: templates/core/request_detail.html:46
 msgid ""
 "This page will automatically update as soon as an available tutor is found."
-msgstr "利用可能な相手役が見つかり次第、このページは自動で更新されます"
+msgstr "利用可能な講師が見つかり次第、このページは自動で更新されます"
 
 #: templates/core/request_detail.html:52
 msgid "Cancel and return to Home"
@@ -229,7 +229,7 @@ msgstr "このリクエストは無効です"
 
 #: templates/core/tutor_dashboard.html:8
 msgid "Tutor Dashboard"
-msgstr "相手役ダッシュボード"
+msgstr "講師ダッシュボード"
 
 #: templates/core/tutor_dashboard.html:10
 msgid "When you go online, you’ll be available for 5-minute lesson matching."
@@ -361,7 +361,7 @@ msgid "Lesson (Student)"
 msgstr "レッスン（生徒）"
 
 msgid "Lesson (Tutor)"
-msgstr "レッスン（相手役）"
+msgstr "レッスン（講師）"
 
 msgid "Points Purchase"
 msgstr "ポイント購入"
@@ -376,7 +376,7 @@ msgid "Create an account"
 msgstr "アカウントを作成"
 
 msgid "I also want to teach"
-msgstr "相手役としても参加する"
+msgstr "講師としても参加する"
 
 msgid "Languages I can teach"
 msgstr "担当できる言語"
