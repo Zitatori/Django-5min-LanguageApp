@@ -35,27 +35,46 @@
   </form>
 </div>
 
-{# ── ❷ 言語 + マッチング状態カード（オンライン時のみ） ── #}
+{# ── ❷ 言語カード（オンライン時のみ） ── #}
 {% if tutor.is_online %}
 <div class="card td-matching-card" id="matching-card">
-  <div class="td-lang-row">
+
+  {# 言語カードグリッド #}
+  <p class="td-lang-label">{% trans "Teaching languages" %}</p>
+  <div class="td-lang-grid">
     {% for lang in tutor.languages.all %}
       {% if lang.name == "Japanese" %}
-        <span class="td-lang td-lang-ja">{% trans lang.name %}</span>
+        <div class="td-lang-card td-lc-ja">
+          <span class="td-lc-flag">🇯🇵</span>
+          <span class="td-lc-name">{% trans "Japanese" %}</span>
+        </div>
       {% elif lang.name == "English" %}
-        <span class="td-lang td-lang-en">{% trans lang.name %}</span>
+        <div class="td-lang-card td-lc-en">
+          <span class="td-lc-flag">🇬🇧</span>
+          <span class="td-lc-name">{% trans "English" %}</span>
+        </div>
       {% elif lang.name == "Spanish" %}
-        <span class="td-lang td-lang-es">{% trans lang.name %}</span>
+        <div class="td-lang-card td-lc-es">
+          <span class="td-lc-flag">🇪🇸</span>
+          <span class="td-lc-name">{% trans "Spanish" %}</span>
+        </div>
       {% elif lang.name == "French" %}
-        <span class="td-lang td-lang-fr">{% trans lang.name %}</span>
+        <div class="td-lang-card td-lc-fr">
+          <span class="td-lc-flag">🇫🇷</span>
+          <span class="td-lc-name">{% trans "French" %}</span>
+        </div>
       {% else %}
-        <span class="td-lang">{% trans lang.name %}</span>
+        <div class="td-lang-card">
+          <span class="td-lc-flag">🌐</span>
+          <span class="td-lc-name">{% trans lang.name %}</span>
+        </div>
       {% endif %}
     {% empty %}
-      <p class="text-muted">{% trans "No teaching languages selected yet." %}</p>
+      <p class="text-muted" style="font-size:13px;">{% trans "No teaching languages selected yet." %}</p>
     {% endfor %}
   </div>
 
+  {# 待機中アニメーション #}
   <div class="td-wave-box">
     <div class="td-wave">
       <span></span><span></span><span></span><span></span><span></span>
@@ -180,25 +199,47 @@
   #online-toggle:checked + .td-slider { background: #22c55e; }
   #online-toggle:checked + .td-slider::before { transform: translateX(24px); }
 
-  /* ── マッチングカード ── */
-  .td-lang-row {
+  /* ── 言語カードグリッド ── */
+  .td-lang-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #9ca3af;
+    margin: 0 0 10px;
+  }
+  .td-lang-grid {
     display: flex;
     flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .td-lang-card {
+    display: flex;
+    align-items: center;
     gap: 8px;
-    margin-bottom: 16px;
+    padding: 10px 18px;
+    border-radius: 14px;
+    border: 1.5px solid #e5e7eb;
+    background: #f9fafb;
+    cursor: default;
+    transition: transform 0.12s, box-shadow 0.12s;
   }
-  .td-lang {
-    padding: 6px 14px;
-    border-radius: 99px;
-    font-size: 13px;
-    font-weight: 600;
-    background: #f3f4f6;
-    color: #374151;
+  .td-lang-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.07);
   }
-  .td-lang-ja { background: #fee2e2; color: #991b1b; }
-  .td-lang-en { background: #dbeafe; color: #1e40af; }
-  .td-lang-es { background: #fef9c3; color: #854d0e; }
-  .td-lang-fr { background: #dcfce7; color: #166534; }
+  .td-lc-flag { font-size: 22px; line-height: 1; }
+  .td-lc-name { font-size: 14px; font-weight: 700; color: #1f2937; }
+
+  .td-lc-en { background: linear-gradient(135deg, #eff6ff 0%, #fff 70%); border-color: #bfdbfe; }
+  .td-lc-en .td-lc-name { color: #1e40af; }
+  .td-lc-fr { background: linear-gradient(135deg, #f0fdf4 0%, #fff 70%); border-color: #bbf7d0; }
+  .td-lc-fr .td-lc-name { color: #166534; }
+  .td-lc-es { background: linear-gradient(135deg, #fffbeb 0%, #fff 70%); border-color: #fde68a; }
+  .td-lc-es .td-lc-name { color: #92400e; }
+  .td-lc-ja { background: linear-gradient(135deg, #fff1f2 0%, #fff 70%); border-color: #fecaca; }
+  .td-lc-ja .td-lc-name { color: #991b1b; }
 
   .td-wave-box {
     background: #f8fafc;
