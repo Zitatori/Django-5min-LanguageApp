@@ -45,26 +45,31 @@
     {% for lang in tutor.languages.all %}
       {% if lang.name == "Japanese" %}
         <div class="td-lang-card td-lc-ja">
+          <div class="td-lc-bg"></div><div class="td-lc-ov"></div>
           <span class="fi fi-jp td-lc-flag"></span>
           <span class="td-lc-name">{% trans "Japanese" %}</span>
         </div>
       {% elif lang.name == "English" %}
         <div class="td-lang-card td-lc-en">
+          <div class="td-lc-bg"></div><div class="td-lc-ov"></div>
           <span class="fi fi-gb td-lc-flag"></span>
           <span class="td-lc-name">{% trans "English" %}</span>
         </div>
       {% elif lang.name == "Spanish" %}
         <div class="td-lang-card td-lc-es">
+          <div class="td-lc-bg"></div><div class="td-lc-ov"></div>
           <span class="fi fi-es td-lc-flag"></span>
           <span class="td-lc-name">{% trans "Spanish" %}</span>
         </div>
       {% elif lang.name == "French" %}
         <div class="td-lang-card td-lc-fr">
+          <div class="td-lc-bg"></div><div class="td-lc-ov"></div>
           <span class="fi fi-fr td-lc-flag"></span>
           <span class="td-lc-name">{% trans "French" %}</span>
         </div>
       {% else %}
         <div class="td-lang-card">
+          <div class="td-lc-bg"></div><div class="td-lc-ov"></div>
           <span class="fi fi-un td-lc-flag"></span>
           <span class="td-lc-name">{% trans lang.name %}</span>
         </div>
@@ -201,45 +206,34 @@
 
   /* ── 言語カードグリッド ── */
   .td-lang-label {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: #9ca3af;
-    margin: 0 0 10px;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; color: #9ca3af; margin: 0 0 10px;
   }
-  .td-lang-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 18px;
-  }
+  .td-lang-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 18px; }
   .td-lang-card {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 18px;
-    border-radius: 14px;
-    border: 1.5px solid #e5e7eb;
-    background: #f9fafb;
-    cursor: default;
-    transition: transform 0.12s, box-shadow 0.12s;
+    position: relative;
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 20px; border-radius: 14px;
+    border: 2px solid transparent; overflow: hidden;
+    cursor: default; transition: transform 0.12s, box-shadow 0.12s;
+    min-width: 130px;
   }
-  .td-lang-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.07);
-  }
-  .td-lc-flag { width: 28px; height: 20px; border-radius: 3px; flex-shrink: 0; }
-  .td-lc-name { font-size: 14px; font-weight: 700; color: #1f2937; }
+  .td-lang-card:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,0.18); }
 
-  .td-lc-en { background: linear-gradient(135deg, #eff6ff 0%, #fff 70%); border-color: #bfdbfe; }
-  .td-lc-en .td-lc-name { color: #1e40af; }
-  .td-lc-fr { background: linear-gradient(135deg, #f0fdf4 0%, #fff 70%); border-color: #bbf7d0; }
-  .td-lc-fr .td-lc-name { color: #166534; }
-  .td-lc-es { background: linear-gradient(135deg, #fffbeb 0%, #fff 70%); border-color: #fde68a; }
-  .td-lc-es .td-lc-name { color: #92400e; }
-  .td-lc-ja { background: linear-gradient(135deg, #fff1f2 0%, #fff 70%); border-color: #fecaca; }
-  .td-lc-ja .td-lc-name { color: #991b1b; }
+  .td-lc-bg { position:absolute; inset:0; background-size:cover; background-position:center; border-radius:12px; }
+  .td-lc-ov { position:absolute; inset:0; border-radius:12px; }
+
+  .td-lc-en .td-lc-bg { background-image: url('https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=400&q=80&auto=format&fit=crop'); }
+  .td-lc-en .td-lc-ov { background: linear-gradient(135deg, rgba(30,64,175,0.82) 0%, rgba(37,99,235,0.65) 100%); }
+  .td-lc-fr .td-lc-bg { background-image: url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=400&q=80&auto=format&fit=crop'); }
+  .td-lc-fr .td-lc-ov { background: linear-gradient(135deg, rgba(109,40,217,0.82) 0%, rgba(124,58,237,0.65) 100%); }
+  .td-lc-es .td-lc-bg { background-image: url('https://images.unsplash.com/photo-1539037116277-4db20889f2d4?w=400&q=80&auto=format&fit=crop'); }
+  .td-lc-es .td-lc-ov { background: linear-gradient(135deg, rgba(180,83,9,0.82) 0%, rgba(217,119,6,0.65) 100%); }
+  .td-lc-ja .td-lc-bg { background-image: url('https://images.unsplash.com/photo-1490806843957-31f4c9a91c65?w=400&q=80&auto=format&fit=crop'); }
+  .td-lc-ja .td-lc-ov { background: linear-gradient(135deg, rgba(159,18,57,0.82) 0%, rgba(190,18,60,0.65) 100%); }
+
+  .td-lc-flag { width: 28px; height: 20px; border-radius: 3px; flex-shrink: 0; position:relative; z-index:1; }
+  .td-lc-name { font-size: 14px; font-weight: 700; color: #fff; position:relative; z-index:1; text-shadow: 0 1px 3px rgba(0,0,0,0.2); }
 
   .td-wave-box {
     background: #f8fafc;

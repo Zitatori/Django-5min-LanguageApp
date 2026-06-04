@@ -43,51 +43,68 @@
     margin: 0 0 16px;
   }
   .cr-lang-card {
+    position: relative;
     border-radius: 14px;
-    padding: 14px 12px 12px;
+    padding: 16px 14px 14px;
     cursor: pointer;
-    border: 1.5px solid #e5e7eb;
-    background: #fff;
+    border: 2px solid transparent;
+    overflow: hidden;
     transition: transform 0.12s, box-shadow 0.12s;
     -webkit-tap-highlight-color: transparent;
+    min-height: 110px;
   }
+  .cr-lang-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.18); }
   .cr-lang-card:active { transform: scale(0.97); }
   .cr-lang-card.selected {
-    border-color: #6366f1;
-    box-shadow: 0 0 0 3px rgba(99,102,241,0.2);
+    border-color: rgba(255,255,255,0.8);
+    box-shadow: 0 0 0 3px rgba(255,255,255,0.3);
   }
 
-  /* per-language tint */
-  .cr-lang-en  { background: linear-gradient(135deg, #eff6ff 0%, #fff 60%); border-color: #bfdbfe; }
-  .cr-lang-fr  { background: linear-gradient(135deg, #f0fdf4 0%, #fff 60%); border-color: #bbf7d0; }
-  .cr-lang-es  { background: linear-gradient(135deg, #fffbeb 0%, #fff 60%); border-color: #fde68a; }
-  .cr-lang-ja  { background: linear-gradient(135deg, #fff1f2 0%, #fff 60%); border-color: #fecaca; }
-  .cr-lang-en.selected, .cr-lang-fr.selected, .cr-lang-es.selected, .cr-lang-ja.selected {
-    border-color: #6366f1;
+  /* 背景写真 */
+  .cr-bg-photo {
+    position: absolute; inset: 0;
+    background-size: cover; background-position: center;
+    border-radius: 12px;
   }
+  /* カラーオーバーレイ */
+  .cr-overlay {
+    position: absolute; inset: 0;
+    border-radius: 12px;
+  }
+  .cr-lang-en .cr-bg-photo { background-image: url('https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=400&q=80&auto=format&fit=crop'); }
+  .cr-lang-en .cr-overlay  { background: linear-gradient(135deg, rgba(30,64,175,0.82) 0%, rgba(37,99,235,0.65) 100%); }
+  .cr-lang-fr .cr-bg-photo { background-image: url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=400&q=80&auto=format&fit=crop'); }
+  .cr-lang-fr .cr-overlay  { background: linear-gradient(135deg, rgba(109,40,217,0.82) 0%, rgba(124,58,237,0.65) 100%); }
+  .cr-lang-es .cr-bg-photo { background-image: url('https://images.unsplash.com/photo-1539037116277-4db20889f2d4?w=400&q=80&auto=format&fit=crop'); }
+  .cr-lang-es .cr-overlay  { background: linear-gradient(135deg, rgba(180,83,9,0.82) 0%, rgba(217,119,6,0.65) 100%); }
+  .cr-lang-ja .cr-bg-photo { background-image: url('https://images.unsplash.com/photo-1490806843957-31f4c9a91c65?w=400&q=80&auto=format&fit=crop'); }
+  .cr-lang-ja .cr-overlay  { background: linear-gradient(135deg, rgba(159,18,57,0.82) 0%, rgba(190,18,60,0.65) 100%); }
 
-  .cr-flag    { line-height: 1; margin-bottom: 8px; display:flex; justify-content:center; }
+  .cr-flag    { line-height: 1; margin-bottom: 8px; display:flex; justify-content:center; position:relative; z-index:1; }
   .cr-fi      { width: 36px; height: 26px; border-radius: 4px; display:inline-block; }
   .cr-fi-sm   { width: 18px; height: 13px; border-radius: 2px; display:inline-block; vertical-align: middle; margin-right: 3px; }
-  .cr-lang-name { font-size: 14px; font-weight: 700; color: #111827; margin-bottom: 6px; }
+  .cr-lang-name { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 6px; position:relative; z-index:1; text-shadow: 0 1px 3px rgba(0,0,0,0.2); }
 
   .cr-status-on {
     display: inline-flex; align-items: center; gap: 4px;
-    background: #dcfce7; color: #15803d;
+    background: rgba(255,255,255,0.22); color: #fff;
     font-size: 11px; font-weight: 600;
     padding: 3px 8px; border-radius: 99px;
+    position: relative; z-index: 1;
+    backdrop-filter: blur(4px);
   }
   .cr-status-off {
     display: inline-flex; align-items: center; gap: 4px;
-    background: #f3f4f6; color: #9ca3af;
+    background: rgba(0,0,0,0.2); color: rgba(255,255,255,0.7);
     font-size: 11px; font-weight: 600;
     padding: 3px 8px; border-radius: 99px;
+    position: relative; z-index: 1;
   }
   .cr-dot-on {
-    width: 6px; height: 6px; border-radius: 50%; background: #22c55e; flex-shrink: 0;
+    width: 6px; height: 6px; border-radius: 50%; background: #4ade80; flex-shrink: 0;
     animation: cr-pulse 1.5s ease-in-out infinite;
   }
-  .cr-dot-off { width: 6px; height: 6px; border-radius: 50%; background: #d1d5db; flex-shrink: 0; }
+  .cr-dot-off { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.4); flex-shrink: 0; }
   @keyframes cr-pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
 
   /* ── Buttons ── */
@@ -171,6 +188,8 @@
                   {% elif lang.name == 'Japanese' %}cr-lang-ja{% endif %}"
            onclick="selectLang(this, '{{ lang.id }}')"
            data-id="{{ lang.id }}">
+        <div class="cr-bg-photo"></div>
+        <div class="cr-overlay"></div>
         <div class="cr-flag">
           {% if lang.name == 'English' %}<span class="fi fi-gb cr-fi"></span>
           {% elif lang.name == 'French' %}<span class="fi fi-fr cr-fi"></span>
