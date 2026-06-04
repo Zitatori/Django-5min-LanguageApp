@@ -3,26 +3,88 @@
 
 {% block content %}
 <div class="card" style="max-width: 480px; margin: 40px auto;">
-  <h2>{% trans "Create an account" %}</h2>
+  <h2 style="margin-bottom: 24px;">{% trans "Create an account" %}</h2>
 
   <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
 
-    <hr>
+    {% for field in form %}
+    <div class="signup-field">
+      <label class="signup-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+      {{ field }}
+      {% if field.errors %}
+        {% for error in field.errors %}
+          <p class="signup-error">{{ error }}</p>
+        {% endfor %}
+      {% endif %}
+      {% if field.help_text %}
+        <p class="signup-help">{{ field.help_text }}</p>
+      {% endif %}
+    </div>
+    {% endfor %}
 
-    <label>
+    <hr style="margin: 20px 0;">
+
+    <label class="signup-teach-label">
       <input type="checkbox" name="wants_to_teach">
       {% trans "I also want to teach" %}
     </label>
 
-    <button type="submit" class="btn">
+    <button type="submit" class="btn" style="width:100%; margin-top:20px;">
       {% trans "Sign up" %}
     </button>
   </form>
+
   <p style="margin-top:16px; text-align:center; font-size:14px; color:#6b7280;">
     {% trans "Already have an account?" %}
     <a href="{% url 'login' %}" style="color:#6366f1; font-weight:600;">{% trans "Log in here" %}</a>
   </p>
 </div>
+
+<style>
+  .signup-field {
+    margin-bottom: 18px;
+  }
+  .signup-label {
+    display: block;
+    font-weight: 700;
+    font-size: 14px;
+    color: #111827;
+    margin-bottom: 6px;
+  }
+  .signup-field input[type="text"],
+  .signup-field input[type="password"] {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 10px;
+    font-size: 15px;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+  }
+  .signup-field input:focus {
+    outline: none;
+    border-color: #6366f1;
+  }
+  .signup-error {
+    margin: 6px 0 0;
+    font-size: 13px;
+    color: #dc2626;
+    font-weight: 500;
+  }
+  .signup-help {
+    margin: 6px 0 0;
+    font-size: 12px;
+    color: #9ca3af;
+    line-height: 1.5;
+  }
+  .signup-teach-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #374151;
+    cursor: pointer;
+  }
+</style>
 {% endblock %}
