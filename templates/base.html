@@ -51,6 +51,7 @@
           <a href="{% url 'logout' %}">{% trans "Log out" %}</a>
         {% else %}
           <a href="{% url 'login' %}">{% trans "Log In" %}</a>
+          <a href="{% url 'signup' %}" class="btn-signup-header">{% trans "Sign Up" %}</a>
         {% endif %}
       </nav>
 
@@ -84,6 +85,7 @@
         <a href="{% url 'logout' %}">{% trans "Log out" %}</a>
       {% else %}
         <a href="{% url 'login' %}">{% trans "Log In" %}</a>
+        <a href="{% url 'signup' %}" class="btn-signup-header">{% trans "Sign Up" %}</a>
       {% endif %}
     </div>
   </header>

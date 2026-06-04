@@ -20,5 +20,9 @@
       {% trans "Sign up" %}
     </button>
   </form>
+  <p style="margin-top:16px; text-align:center; font-size:14px; color:#6b7280;">
+    {% trans "Already have an account?" %}
+    <a href="{% url 'login' %}" style="color:#6366f1; font-weight:600;">{% trans "Log in here" %}</a>
+  </p>
 </div>
 {% endblock %}

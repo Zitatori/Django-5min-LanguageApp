@@ -526,3 +526,17 @@ input[type="password"] {
   color: #166534;
   border-color: #bbf7d0;
 }
+/* ── ヘッダー サインアップボタン ── */
+.btn-signup-header {
+  background: #6366f1;
+  color: #fff !important;
+  padding: 6px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+.btn-signup-header:hover {
+  background: #4f46e5;
+}
