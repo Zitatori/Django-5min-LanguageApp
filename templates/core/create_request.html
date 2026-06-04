@@ -66,7 +66,9 @@
     border-color: #6366f1;
   }
 
-  .cr-flag    { font-size: 28px; line-height: 1; margin-bottom: 8px; }
+  .cr-flag    { line-height: 1; margin-bottom: 8px; display:flex; justify-content:center; }
+  .cr-fi      { width: 36px; height: 26px; border-radius: 4px; display:inline-block; }
+  .cr-fi-sm   { width: 18px; height: 13px; border-radius: 2px; display:inline-block; vertical-align: middle; margin-right: 3px; }
   .cr-lang-name { font-size: 14px; font-weight: 700; color: #111827; margin-bottom: 6px; }
 
   .cr-status-on {
@@ -170,11 +172,11 @@
            onclick="selectLang(this, '{{ lang.id }}')"
            data-id="{{ lang.id }}">
         <div class="cr-flag">
-          {% if lang.name == 'English' %}🇺🇸
-          {% elif lang.name == 'French' %}🇫🇷
-          {% elif lang.name == 'Spanish' %}🇪🇸
-          {% elif lang.name == 'Japanese' %}🇯🇵
-          {% else %}🌐{% endif %}
+          {% if lang.name == 'English' %}<span class="fi fi-gb cr-fi"></span>
+          {% elif lang.name == 'French' %}<span class="fi fi-fr cr-fi"></span>
+          {% elif lang.name == 'Spanish' %}<span class="fi fi-es cr-fi"></span>
+          {% elif lang.name == 'Japanese' %}<span class="fi fi-jp cr-fi"></span>
+          {% else %}<span class="fi fi-un cr-fi"></span>{% endif %}
         </div>
         <div class="cr-lang-name">{% trans lang.name %}</div>
         {% if count > 0 %}
@@ -221,10 +223,10 @@
           {% elif match.request.language.name == 'Spanish' %}lang-badge-es
           {% elif match.request.language.name == 'Japanese' %}lang-badge-ja
           {% else %}lang-badge-default{% endif %}">
-          {% if match.request.language.name == 'English' %}🇺🇸
-          {% elif match.request.language.name == 'French' %}🇫🇷
-          {% elif match.request.language.name == 'Spanish' %}🇪🇸
-          {% elif match.request.language.name == 'Japanese' %}🇯🇵{% endif %}
+          {% if match.request.language.name == 'English' %}<span class="fi fi-gb cr-fi-sm"></span>
+          {% elif match.request.language.name == 'French' %}<span class="fi fi-fr cr-fi-sm"></span>
+          {% elif match.request.language.name == 'Spanish' %}<span class="fi fi-es cr-fi-sm"></span>
+          {% elif match.request.language.name == 'Japanese' %}<span class="fi fi-jp cr-fi-sm"></span>{% endif %}
           {% trans match.request.language.name %}
         </span>
       </div>

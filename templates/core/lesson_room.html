@@ -49,13 +49,26 @@
   {# ── コントロールバー（下部） ── #}
   <div class="lr-controls">
     <button id="toggle-mic" class="lr-ctrl-btn" title="Mic">
-      <span id="mic-icon">🎤</span>
+      <span id="mic-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2a3 3 0 013 3v7a3 3 0 01-6 0V5a3 3 0 013-3z"/>
+          <path d="M19 10v1a7 7 0 01-14 0v-1M12 19v3M8 22h8"/>
+        </svg>
+      </span>
     </button>
     <button id="leave-btn" class="lr-ctrl-btn lr-ctrl-end" title="End">
-      📵
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M10.68 13.31a16 16 0 003.41 2.6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7 2 2 0 012 2v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.42 19.42 0 01-3.33-2.67m-2.67-3.34a19.79 19.79 0 01-3.07-8.63A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91"/>
+        <line x1="23" y1="1" x2="1" y2="23"/>
+      </svg>
     </button>
     <button id="toggle-camera" class="lr-ctrl-btn" title="Camera">
-      <span id="cam-icon">📷</span>
+      <span id="cam-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M15 10l4.553-2.069A1 1 0 0121 8.82v6.36a1 1 0 01-1.447.89L15 14"/>
+          <rect x="3" y="8" width="12" height="8" rx="2"/>
+        </svg>
+      </span>
     </button>
   </div>
 
@@ -415,14 +428,18 @@
   camBtn.addEventListener("click", () => {
     if (!localStream) return;
     localStream.getVideoTracks().forEach(t => { t.enabled = !t.enabled; cameraOn = t.enabled; });
-    camIcon.textContent = cameraOn ? "📷" : "🚫";
+    camIcon.innerHTML = cameraOn
+      ? `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 10l4.553-2.069A1 1 0 0121 8.82v6.36a1 1 0 01-1.447.89L15 14"/><rect x="3" y="8" width="12" height="8" rx="2"/></svg>`
+      : `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 10l4.553-2.069A1 1 0 0121 8.82v6.36a1 1 0 01-1.447.89L15 14"/><rect x="3" y="8" width="12" height="8" rx="2"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`;
     camBtn.classList.toggle("lr-muted", !cameraOn);
   });
 
   micBtn.addEventListener("click", () => {
     if (!localStream) return;
     localStream.getAudioTracks().forEach(t => { t.enabled = !t.enabled; micOn = t.enabled; });
-    micIcon.textContent = micOn ? "🎤" : "🔇";
+    micIcon.innerHTML = micOn
+      ? `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 013 3v7a3 3 0 01-6 0V5a3 3 0 013-3z"/><path d="M19 10v1a7 7 0 01-14 0v-1M12 19v3M8 22h8"/></svg>`
+      : `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="1" y1="1" x2="23" y2="23"/><path d="M9 9v3a3 3 0 005.12 2.12M15 9.34V5a3 3 0 00-5.94-.6"/><path d="M17 16.95A7 7 0 015 12v-2m14 0v2a7 7 0 01-.11 1.23M12 19v3M8 22h8"/></svg>`;
     micBtn.classList.toggle("lr-muted", !micOn);
   });
 })();

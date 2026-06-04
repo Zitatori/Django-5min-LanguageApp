@@ -45,27 +45,27 @@
     {% for lang in tutor.languages.all %}
       {% if lang.name == "Japanese" %}
         <div class="td-lang-card td-lc-ja">
-          <span class="td-lc-flag">🇯🇵</span>
+          <span class="fi fi-jp td-lc-flag"></span>
           <span class="td-lc-name">{% trans "Japanese" %}</span>
         </div>
       {% elif lang.name == "English" %}
         <div class="td-lang-card td-lc-en">
-          <span class="td-lc-flag">🇬🇧</span>
+          <span class="fi fi-gb td-lc-flag"></span>
           <span class="td-lc-name">{% trans "English" %}</span>
         </div>
       {% elif lang.name == "Spanish" %}
         <div class="td-lang-card td-lc-es">
-          <span class="td-lc-flag">🇪🇸</span>
+          <span class="fi fi-es td-lc-flag"></span>
           <span class="td-lc-name">{% trans "Spanish" %}</span>
         </div>
       {% elif lang.name == "French" %}
         <div class="td-lang-card td-lc-fr">
-          <span class="td-lc-flag">🇫🇷</span>
+          <span class="fi fi-fr td-lc-flag"></span>
           <span class="td-lc-name">{% trans "French" %}</span>
         </div>
       {% else %}
         <div class="td-lang-card">
-          <span class="td-lc-flag">🌐</span>
+          <span class="fi fi-un td-lc-flag"></span>
           <span class="td-lc-name">{% trans lang.name %}</span>
         </div>
       {% endif %}
@@ -229,7 +229,7 @@
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0,0,0,0.07);
   }
-  .td-lc-flag { font-size: 22px; line-height: 1; }
+  .td-lc-flag { width: 28px; height: 20px; border-radius: 3px; flex-shrink: 0; }
   .td-lc-name { font-size: 14px; font-weight: 700; color: #1f2937; }
 
   .td-lc-en { background: linear-gradient(135deg, #eff6ff 0%, #fff 70%); border-color: #bfdbfe; }
