@@ -41,11 +41,11 @@ Users can:
 
 ### Tutor Dashboard
 
-<img src="tutor-dashboard1.png" width="700">
+<img src="tutor-dashboard2.png" width="700">
 
 ### Point Page
 
-<img src="point.png" width="700">
+<img src="point1.png" width="700">
 
 
 ## Tech Stack
