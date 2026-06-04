@@ -11,10 +11,15 @@
   }
   .withdraw-textarea { min-height:70px; resize:vertical; }
   .btn-withdraw {
-    width:100%; padding:11px; background:#6366f1; color:white;
-    border:none; border-radius:10px; font-size:14px; font-weight:600; cursor:pointer;
+    width:100%; padding:11px;
+    background: linear-gradient(135deg, #6366f1 0%, #818cf8 100%);
+    color:white; border:none; border-radius:999px;
+    font-size:14px; font-weight:600; cursor:pointer;
+    transition: opacity 0.15s, transform 0.12s, box-shadow 0.15s;
+    box-shadow: 0 2px 8px rgba(99,102,241,0.25);
   }
-  .btn-withdraw:hover { background:#4f46e5; }
+  .btn-withdraw:hover { opacity:0.92; transform:translateY(-1px); box-shadow:0 4px 14px rgba(99,102,241,0.35); }
+  .btn-withdraw:active { opacity:0.82; transform:scale(0.97); }
   .pending-badge {
     display:inline-block; background:#fef9c3; color:#854d0e;
     border:1.5px solid #fde047; border-radius:99px;
@@ -38,17 +43,19 @@
     width: 100%;
     margin-top: 1.2rem;
     padding: 12px;
-    background: white;
-    color: #6366f1;
-    border: none;
-    border-radius: 12px;
+    background: rgba(255,255,255,0.18);
+    color: white;
+    border: 1.5px solid rgba(255,255,255,0.4);
+    border-radius: 999px;
     font-size: 15px;
     font-weight: 600;
     cursor: pointer;
     text-align: center;
     text-decoration: none;
+    transition: background 0.15s, transform 0.12s;
   }
-  .btn-buy:hover { background: #f0f0ff; }
+  .btn-buy:hover { background: rgba(255,255,255,0.28); transform: translateY(-1px); }
+  .btn-buy:active { transform: scale(0.97); }
 
   .tx-list { list-style: none; padding: 0; margin: 0; }
   .tx-item {
