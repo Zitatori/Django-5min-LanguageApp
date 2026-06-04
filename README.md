@@ -29,7 +29,7 @@ Users can:
 
 ### Home Page
 
-<img src="Home_new1.png" width="700">
+<img src="Home_new2.png" width="700">
 
 ---
 
