@@ -33,12 +33,6 @@ Users can:
 
 ---
 
-### Matching Page
-
-<img src="matching.png" width="700">
-
----
-
 ### Lesson Room
 
 <img src="lesson-room_new1.png" width="700">
