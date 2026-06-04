@@ -113,9 +113,7 @@
           {% endif %}
         </td>
         <td style="white-space:nowrap;">
-          {% if u.tutorprofile %}
-            <button class="edit-btn" onclick="openModal({{ u.tutorprofile.id }}, '{{ u.username }}', [{% for l in u.tutorprofile.languages.all %}{{ l.id }},{% endfor %}])">Edit</button>
-          {% endif %}
+          <button class="edit-btn" onclick="openModal({{ u.id }}, '{{ u.username }}', [{% if u.tutorprofile %}{% for l in u.tutorprofile.languages.all %}{{ l.id }},{% endfor %}{% endif %}])">Edit</button>
           <button class="points-btn" onclick="openPointsModal({{ u.id }}, '{{ u.username }}', {{ u.point_balance.balance|default:0 }})">Pts</button>
           {% if u != request.user %}
             <form method="post" action="{% url 'delete_user' u.id %}" style="display:inline;"
@@ -266,9 +264,9 @@
 </div>
 
 <script>
-  function openModal(tutorId, username, activeLangIds) {
+  function openModal(userId, username, activeLangIds) {
     document.getElementById('modal-username').textContent = username;
-    document.getElementById('lang-form').action = `/admin-dashboard/tutor/${tutorId}/languages/`;
+    document.getElementById('lang-form').action = `/admin-dashboard/user/${userId}/languages/`;
     document.querySelectorAll('input[name="languages"]').forEach(cb => {
       cb.checked = activeLangIds.includes(parseInt(cb.value));
     });

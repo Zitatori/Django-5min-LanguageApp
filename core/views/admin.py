@@ -66,6 +66,17 @@ def update_tutor_languages(request, tutor_id):
         tutor.languages.set(lang_ids)
         return redirect('admin_dashboard')
 
+
+@staff_or_admin_role_required
+def update_user_languages(request, user_id):
+    """StudentでもTutorProfileを作成して言語を設定する"""
+    if request.method == 'POST':
+        user = get_object_or_404(User, id=user_id)
+        tutor, _ = TutorProfile.objects.get_or_create(user=user)
+        lang_ids = request.POST.getlist('languages')
+        tutor.languages.set(lang_ids)
+        return redirect('admin_dashboard')
+
 @staff_or_admin_role_required
 def delete_user(request, user_id):
     if request.method == 'POST':
