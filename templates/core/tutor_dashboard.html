@@ -3,6 +3,9 @@
 
 {% block content %}
 
+<div class="td-pc-grid">
+<div class="td-col-left">
+
 {# ── ❶ ステータスカード ── #}
 <div class="card td-status-card">
   <div class="td-status-left">
@@ -92,6 +95,9 @@
 </div>
 {% endif %}
 
+</div>{# /td-col-left #}
+<div class="td-col-right">
+
 {# ── ❸ Active Matches カード ── #}
 <div class="card">
   <h3 class="card-title" style="margin-bottom:16px;">{% trans "Active Matches" %}</h3>
@@ -122,6 +128,9 @@
 
 {# ── ❹ Recent History ── #}
 {% include "core/_recent_lessons.html" with matches=matches %}
+
+</div>{# /td-col-right #}
+</div>{# /td-pc-grid #}
 
 <style>
   /* ── ステータスカード ── */
@@ -285,6 +294,25 @@
   }
   .td-empty-icon { font-size: 36px; margin-bottom: 4px; }
   .td-empty-state p { font-size: 13px; }
+
+  /* ── PC 2カラムレイアウト ── */
+  @media (min-width: 900px) {
+    .td-pc-grid {
+      display: grid;
+      grid-template-columns: 400px 1fr;
+      gap: 0 28px;
+      align-items: start;
+    }
+    .td-col-left,
+    .td-col-right {
+      min-width: 0;
+    }
+    /* 各カラムの最後のカードは下マージン不要 */
+    .td-col-left > *:last-child,
+    .td-col-right > *:last-child {
+      margin-bottom: 0;
+    }
+  }
 </style>
 
 <script>

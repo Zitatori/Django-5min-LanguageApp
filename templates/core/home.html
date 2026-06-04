@@ -1,39 +1,98 @@
-{% extends "base.html" %}
+{% extends “base.html” %}
 {% load i18n %}
 
 {% block content %}
-  <div class="card">
-    <div class="card-header">
-      <div>
-        <h2 class="card-title">{% trans "5-Minute Online Lessons" %}</h2>
-        <p class="card-subtitle">
-          {% trans "A super-light conversation platform for people who want to talk with someone right now." %}
-        </p>
-      </div>
-    </div>
+
+<div class=”home-grid”>
+
+  {# ── ❶ ヒーローカード ── #}
+  <div class=”card home-hero-card”>
+    <div class=”home-hero-tag”>⚡ {% trans “5-minute lesson” %}</div>
+    <h2 class=”card-title” style=”font-size:22px; margin:10px 0 8px;”>{% trans “5-Minute Online Lessons” %}</h2>
+    <p class=”card-subtitle” style=”margin-bottom:20px; line-height:1.6;”>
+      {% trans “A super-light conversation platform for people who want to talk with someone right now.” %}
+    </p>
 
     {% if user.is_authenticated %}
-      <p>{% trans "Select a language and start a 5-minute lesson." %}</p>
-      <button class="btn" onclick="window.location.href='{% url 'create_request' %}'">
-        {% trans "Start a 5-Minute Lesson Now" %}
+      <p style=”font-size:14px; color:#374151; margin-bottom:16px;”>{% trans “Select a language and start a 5-minute lesson.” %}</p>
+      <button class=”btn” style=”width:100%;” onclick=”window.location.href='{% url 'create_request' %}'”>
+        🎯 {% trans “Start a 5-Minute Lesson Now” %}
       </button>
+      <a href=”{% url 'tutor_dashboard' %}” class=”btn btn-secondary” style=”width:100%; margin-top:10px; margin-left:0; box-sizing:border-box; text-align:center;”>
+        {% trans “Tutor Dashboard” %}
+      </a>
     {% else %}
-      <p>{% trans "You need to log in to start a lesson." %}</p>
-      <button class="btn" onclick="window.location.href='{% url 'login' %}'">
-        {% trans "Log In" %}
-      </button>
+      <p style=”font-size:14px; color:#374151; margin-bottom:16px;”>{% trans “You need to log in to start a lesson.” %}</p>
+      <div style=”display:flex; gap:10px; flex-wrap:wrap;”>
+        <button class=”btn” style=”flex:1;” onclick=”window.location.href='{% url 'login' %}'”>
+          {% trans “Log In” %}
+        </button>
+        <a href=”{% url 'signup' %}” class=”btn btn-outline” style=”flex:1; text-align:center;”>
+          {% trans “Sign Up” %}
+        </a>
+      </div>
     {% endif %}
   </div>
 
-  <div class="card">
-    <div class="card-header">
-      <h3 class="card-title">{% trans "How does it work?" %}</h3>
+  {# ── ❷ How it works ── #}
+  <div class=”card”>
+    <h3 class=”card-title” style=”margin-bottom:16px;”>{% trans “How does it work?” %}</h3>
+    <div class=”home-steps”>
+      <div class=”home-step”>
+        <div class=”home-step-num”>1</div>
+        <p>{% trans “Teachers switch their status to “Online” and wait.” %}</p>
+      </div>
+      <div class=”home-step”>
+        <div class=”home-step-num”>2</div>
+        <p>{% trans “Students choose a language and click “Start a 5-minute lesson now”.” %}</p>
+      </div>
+      <div class=”home-step”>
+        <div class=”home-step-num”>3</div>
+        <p>{% trans “The system randomly matches an available teacher.” %}</p>
+      </div>
+      <div class=”home-step”>
+        <div class=”home-step-num”>4</div>
+        <p>{% trans “Join the meeting URL and talk for 5 minutes.” %}</p>
+      </div>
     </div>
-    <ul class="list">
-      <li>{% trans "1. Teachers switch their status to “Online” and wait." %}</li>
-      <li>{% trans "2. Students choose a language and click “Start a 5-minute lesson now”." %}</li>
-      <li>{% trans "3. The system randomly matches an available teacher." %}</li>
-      <li>{% trans "4. Join the meeting URL and talk for 5 minutes." %}</li>
-    </ul>
   </div>
+
+</div>
+
+<style>
+  /* ── ステップリスト ── */
+  .home-steps { display: flex; flex-direction: column; gap: 14px; }
+  .home-step  { display: flex; align-items: flex-start; gap: 12px; font-size: 14px; color: #374151; line-height: 1.5; }
+  .home-step-num {
+    flex-shrink: 0;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6366f1, #818cf8);
+    color: #fff; font-size: 13px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 2px 6px rgba(99,102,241,0.35);
+  }
+  .home-step p { margin: 0; padding-top: 4px; }
+
+  /* ── ヒーロータグ ── */
+  .home-hero-tag {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: #ede9fe; color: #6d28d9;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.05em;
+    padding: 3px 10px; border-radius: 99px;
+  }
+
+  /* ── PC 2カラムグリッド ── */
+  @media (min-width: 900px) {
+    .home-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+    .home-grid > .card { margin-bottom: 0; }
+    .home-hero-card { padding: 28px; }
+  }
+</style>
+
 {% endblock %}

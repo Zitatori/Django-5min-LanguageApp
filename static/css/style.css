@@ -577,3 +577,10 @@ input[type="password"] {
 .btn-signup-header:hover {
   background: #4f46e5;
 }
+
+/* ── PC 広域レイアウト ── */
+@media (min-width: 1100px) {
+  .container {
+    max-width: 1200px;
+  }
+}

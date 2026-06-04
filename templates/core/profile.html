@@ -75,8 +75,38 @@
     font-size: 11px; padding: 2px 8px; border-radius: 99px;
     background: #f3f4f6; color: #6b7280; margin-left: 6px;
   }
+
+  /* ── PC レイアウト ── */
+  @media (min-width: 900px) {
+    /* ポイントヒーロー＋引出フォームを横並び（講師のみ） */
+    .pf-pc-top.pf-is-tutor {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      align-items: start;
+      margin-bottom: 24px;
+    }
+    .pf-pc-top.pf-is-tutor .point-hero {
+      margin-bottom: 0;
+      border-radius: 16px;
+    }
+    .pf-pc-top.pf-is-tutor .withdraw-card {
+      margin-top: 0;
+    }
+    /* ヒーロー内のBuyボタンはPC幅をコントロール */
+    .pf-pc-top.pf-is-tutor .btn-buy {
+      max-width: 280px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    /* トランザクション履歴は常に全幅 */
+    .pf-tx-card {
+      margin-top: 0;
+    }
+  }
 </style>
 
+<div class="pf-pc-top {% if request.user.tutorprofile %}pf-is-tutor{% endif %}">
 <div class="point-hero">
   <p class="label">{% trans "Your Points" %}</p>
   <div>
@@ -90,7 +120,7 @@
 </div>
 
 {% if request.user.tutorprofile %}
-<div class="card withdraw-card">
+<div class="card withdraw-card" style="height:fit-content;">
   <h3 class="card-title" style="margin-bottom:.8rem;">💸 {% trans "Withdraw Points" %}</h3>
 
   {% if pending_withdrawal %}
@@ -139,7 +169,9 @@
 </div>
 {% endif %}
 
-<div class="card" style="margin-top:1.2rem;">
+</div>{# /pf-pc-top #}
+
+<div class="card pf-tx-card">
   <h3 class="card-title" style="margin-bottom:1rem;">{% trans "Transaction History" %}</h3>
 
   {% if transactions %}

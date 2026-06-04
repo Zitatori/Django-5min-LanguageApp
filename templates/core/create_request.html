@@ -164,7 +164,33 @@
   .lang-badge-es { background: #fef9c3; color: #854d0e; }
   .lang-badge-ja { background: #fee2e2; color: #991b1b; }
   .lang-badge-default { background: #f3f4f6; color: #6b7280; }
+
+  /* ── PC 2カラムレイアウト ── */
+  @media (min-width: 900px) {
+    .cr-pc-grid {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 0 28px;
+      align-items: start;
+    }
+    .cr-pc-left,
+    .cr-pc-right {
+      min-width: 0;
+    }
+    .cr-pc-left > *:last-child,
+    .cr-pc-right > *:last-child {
+      margin-bottom: 0;
+    }
+    /* 右カラムの履歴カードはヒーローの高さに合わせてストレッチしない */
+    .cr-pc-right .card {
+      position: sticky;
+      top: 24px;
+    }
+  }
 </style>
+
+<div class="cr-pc-grid">
+<div class="cr-pc-left">
 
 {# ── Hero ── #}
 <div class="cr-hero">
@@ -215,6 +241,9 @@
   </form>
 </div>
 
+</div>{# /cr-pc-left #}
+<div class="cr-pc-right">
+
 {# ── Lesson history ── #}
 <div class="card">
   <div class="cr-hist-header">
@@ -255,6 +284,9 @@
     <p class="text-muted" style="text-align:center; padding:1.5rem 0;">{% trans "No lesson history yet." %}</p>
   {% endif %}
 </div>
+
+</div>{# /cr-pc-right #}
+</div>{# /cr-pc-grid #}
 
 <script>
   const cards = document.querySelectorAll('.cr-lang-card');
