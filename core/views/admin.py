@@ -6,6 +6,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from functools import wraps
 from django.http import JsonResponse
 from django.utils import timezone
+from django.db.models import Case, When, Value, IntegerField, Count
 from core.models import TutorProfile, QuickLessonMatch, LessonLanguage
 from core.models import PointBalance, PointTransaction, WithdrawalRequest
 
@@ -25,7 +26,15 @@ def admin_dashboard(request):
         User.objects
         .select_related('userprofile', 'tutorprofile', 'point_balance')
         .prefetch_related('tutorprofile__languages')
-        .order_by('date_joined')
+        .annotate(
+            is_online_sort=Case(
+                When(tutorprofile__is_online=True, then=Value(1)),
+                default=Value(0),
+                output_field=IntegerField(),
+            ),
+            lesson_count=Count('tutorprofile__quicklessonmatch', distinct=True),
+        )
+        .order_by('-is_online_sort', '-lesson_count', '-last_login')
     )
     tutors = TutorProfile.objects.select_related('user').prefetch_related('languages').all()
     matches = QuickLessonMatch.objects.select_related(
