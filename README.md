@@ -33,12 +33,6 @@ Users can:
 
 ---
 
-### Lesson Room
-
-<img src="lesson-room_new1.png" width="700">
-
----
-
 ### Tutor Dashboard
 
 <img src="tutor-dashboard2.png" width="700">
