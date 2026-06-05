@@ -4,6 +4,7 @@ from datetime import timedelta
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.db.models import OuterRef, Subquery
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 
@@ -16,6 +17,41 @@ from core.models import (
 )
 
 ONLINE_TIMEOUT_SECONDS = 300  # tutor.py と合わせる（5分）
+
+
+def _get_consecutive_exclude_ids(student_profile):
+    """連続マッチを防ぐために除外すべきチューター PK のセット。
+    - 生徒の直前マッチ相手を除外（生徒視点）
+    - 各チューターの直前マッチ相手がこの生徒だった場合も除外（チューター視点）
+    """
+    exclude_ids = set()
+
+    # 生徒側: 直前にマッチしたチューターを除外
+    last = (
+        QuickLessonMatch.objects
+        .filter(request__student=student_profile)
+        .order_by("-started_at")
+        .values("tutor_id")
+        .first()
+    )
+    if last:
+        exclude_ids.add(last["tutor_id"])
+
+    # チューター側: 直前のマッチがこの生徒だったチューターを除外
+    latest_student_sq = (
+        QuickLessonMatch.objects
+        .filter(tutor=OuterRef("pk"))
+        .order_by("-started_at")
+        .values("request__student_id")[:1]
+    )
+    ids = (
+        TutorProfile.objects
+        .annotate(last_student_id=Subquery(latest_student_sq))
+        .filter(last_student_id=student_profile.pk)
+        .values_list("pk", flat=True)
+    )
+    exclude_ids.update(ids)
+    return exclude_ids
 
 
 def active_tutors_qs(language=None):
@@ -66,6 +102,13 @@ def create_request(request):
             return redirect("request_detail", request_id=qlr.id)
 
         tutors_qs = active_tutors_qs(language=language)
+
+        # 連続マッチ防止: 直前の相手を除外（他に候補がいる場合のみ）
+        exclude_ids = _get_consecutive_exclude_ids(student_profile)
+        if exclude_ids:
+            filtered_qs = tutors_qs.exclude(pk__in=exclude_ids)
+            if filtered_qs.exists():
+                tutors_qs = filtered_qs
 
         if tutors_qs.exists():
             tutor = random.choice(list(tutors_qs))
@@ -119,6 +162,13 @@ def request_detail(request, request_id: int):
 
     if qlr.status == "waiting" and match is None:
         tutors_qs = active_tutors_qs(language=qlr.language)
+
+        # 連続マッチ防止: 直前の相手を除外（他に候補がいる場合のみ）
+        exclude_ids = _get_consecutive_exclude_ids(qlr.student)
+        if exclude_ids:
+            filtered_qs = tutors_qs.exclude(pk__in=exclude_ids)
+            if filtered_qs.exists():
+                tutors_qs = filtered_qs
 
         if tutors_qs.exists():
             tutor = random.choice(list(tutors_qs))
