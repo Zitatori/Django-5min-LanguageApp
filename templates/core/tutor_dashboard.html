@@ -391,7 +391,11 @@
     navigator.sendBeacon("{% url 'tutor_set_offline' %}", fd);
   }
   window.addEventListener('beforeunload', sendOfflineBeacon);
-  window.addEventListener('pagehide',     sendOfflineBeacon);
+  // pagehide: persisted=true はbfcache（アプリ切替・スリープ）なのでオフラインにしない
+  // persisted=false の時だけ（タブを本当に閉じた時）オフライン化する
+  window.addEventListener('pagehide', (e) => {
+    if (!e.persisted) sendOfflineBeacon();
+  });
 })();
 </script>
 
