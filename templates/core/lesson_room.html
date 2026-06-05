@@ -17,6 +17,7 @@
       {{ partner_name|default:"Waiting…" }}
       {% if partner_badge == "dev" %}<span class="lr-partner-badge lr-pbadge-dev">Dev</span>
       {% elif partner_badge == "admin" %}<span class="lr-partner-badge lr-pbadge-admin">Admin</span>
+      {% elif partner_badge == "gold" %}<span class="lr-partner-badge lr-pbadge-gold">&#x1F451; Gold</span>
       {% endif %}
     </div>
   </div>
@@ -37,6 +38,7 @@
       {{ partner_name }}
       {% if partner_badge == "dev" %}<span class="lr-partner-badge lr-pbadge-dev">Dev</span>
       {% elif partner_badge == "admin" %}<span class="lr-partner-badge lr-pbadge-admin">Admin</span>
+      {% elif partner_badge == "gold" %}<span class="lr-partner-badge lr-pbadge-gold">&#x1F451; Gold</span>
       {% endif %}
     </span>
   </div>
@@ -136,6 +138,11 @@
     background: rgba(255,255,255,0.15);
     color: #d1d5db;
     border: 1px solid rgba(255,255,255,0.25);
+  }
+  .lr-pbadge-gold {
+    background: linear-gradient(135deg, #f59e0b, #fbbf24);
+    color: #78350f;
+    box-shadow: 0 0 6px rgba(251,191,36,0.5);
   }
 
   /* タイマーオーバーレイ */

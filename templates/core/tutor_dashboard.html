@@ -107,7 +107,8 @@
       <div style="padding:12px; border:1px solid #e5e7eb; border-radius:12px; margin-bottom:12px;">
         <p><strong>Student:</strong>
           {{ match.request.student.user.username }}
-          {% if match.request.student.user.is_superuser %}<span class="header-badge header-badge-dev">Dev</span>
+          {% if match.request.student.user.gold_membership.is_active %}<span class="header-badge header-badge-gold">&#x1F451; Gold</span>
+          {% elif match.request.student.user.is_superuser %}<span class="header-badge header-badge-dev">Dev</span>
           {% elif match.request.student.user.is_staff %}<span class="header-badge header-badge-admin">Admin</span>
           {% endif %}
         </p>

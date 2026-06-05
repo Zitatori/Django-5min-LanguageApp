@@ -59,7 +59,18 @@ def lesson_room(request, match_id: int):
         partner_user = match.request.student.user
 
     partner_name = partner_user.username
-    partner_badge = "dev" if partner_user.is_superuser else ("admin" if partner_user.is_staff else None)
+    if partner_user.is_superuser:
+        partner_badge = "dev"
+    elif partner_user.is_staff:
+        partner_badge = "admin"
+    else:
+        partner_badge = None
+        try:
+            gm = partner_user.gold_membership
+            if gm.expires_at > tz.now():
+                partner_badge = "gold"
+        except Exception:
+            pass
 
     context = {
         "match": match,
