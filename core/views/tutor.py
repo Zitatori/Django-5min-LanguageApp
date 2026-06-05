@@ -15,6 +15,7 @@ def tutor_dashboard(request):
 
         if action == "go_online":
             tutor_profile.is_online = True
+            tutor_profile.last_ping_at = timezone.now()  # オンライン時は即座にping時刻を設定
         elif action == "go_offline":
             tutor_profile.is_online = False
 
