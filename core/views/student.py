@@ -148,9 +148,15 @@ def create_request(request):
         "tutor__user",
     ).order_by("-started_at")
 
+    # この生徒にとって連続マッチで除外すべきチューターIDを取得
+    consecutive_exclude = _get_consecutive_exclude_ids(student_profile)
+
     languages_with_count = []
     for lang in languages:
-        count = active_tutors_qs(language=lang).count()
+        qs = active_tutors_qs(language=lang)
+        if consecutive_exclude:
+            qs = qs.exclude(pk__in=consecutive_exclude)
+        count = qs.count()
         languages_with_count.append((lang, count))
 
     return render(request, "core/create_request.html", {
@@ -259,8 +265,15 @@ def create_interview_request(request):
 def student_online_counts(request):
     """言語ごとのオンライン講師数をJSONで返す（生徒側ポーリング用）"""
     from django.http import JsonResponse
+    student_profile, _ = StudentProfile.objects.get_or_create(user=request.user)
+    consecutive_exclude = _get_consecutive_exclude_ids(student_profile)
     languages = LessonLanguage.objects.all()
-    data = {str(lang.id): active_tutors_qs(language=lang).count() for lang in languages}
+    data = {}
+    for lang in languages:
+        qs = active_tutors_qs(language=lang)
+        if consecutive_exclude:
+            qs = qs.exclude(pk__in=consecutive_exclude)
+        data[str(lang.id)] = qs.count()
     return JsonResponse(data)
 
 
