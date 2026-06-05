@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.utils import timezone
 from core.models import PointBalance, PointTransaction, WithdrawalRequest
+from core.models import GoldMembership, GoldSubscriptionRequest
 
 MIN_WITHDRAWAL_PTS = 50  # 最低引き出しポイント
 
@@ -22,6 +23,11 @@ def profile(request):
     # 引き出し可能額 = 講師として稼いだ分 と 総残高 の小さい方
     withdrawable = min(balance.earned_balance, balance.balance)
 
+    # Gold 申請中かどうか
+    gold_request_pending = GoldSubscriptionRequest.objects.filter(
+        user=request.user, status=GoldSubscriptionRequest.STATUS_PENDING
+    ).exists()
+
     return render(request, 'core/profile.html', {
         'balance':            balance,
         'withdrawable':       withdrawable,
@@ -35,6 +41,7 @@ def profile(request):
         ),
         'withdrawal_currencies': WithdrawalRequest.CURRENCY_CHOICES,
         'withdrawal_methods':    WithdrawalRequest.METHOD_CHOICES,
+        'gold_request_pending':  gold_request_pending,
     })
 
 
@@ -98,3 +105,27 @@ def purchase_points(request):
         'tiers':   TIERS,
         'balance': balance,
     })
+
+
+@login_required
+def request_gold(request):
+    """ゴールド会員申請（重複防止、申請中は再送不可）"""
+    if request.method != 'POST':
+        return redirect('profile')
+
+    # 既にアクティブな Gold メンバーなら不要
+    try:
+        membership = request.user.gold_membership
+        if membership.is_active:
+            return redirect('profile')
+    except Exception:
+        pass
+
+    # 申請中なら重複させない
+    if GoldSubscriptionRequest.objects.filter(
+        user=request.user, status=GoldSubscriptionRequest.STATUS_PENDING
+    ).exists():
+        return redirect('profile')
+
+    GoldSubscriptionRequest.objects.create(user=request.user)
+    return redirect('profile')

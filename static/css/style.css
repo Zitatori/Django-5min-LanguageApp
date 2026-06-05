@@ -106,6 +106,12 @@ a:hover {
   color: #d1d5db;
   border: 1px solid #4b5563;
 }
+.header-badge-gold {
+  background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 50%, #d97706 100%);
+  color: #78350f;
+  box-shadow: 0 0 8px rgba(251,191,36,0.55);
+  font-weight: 800;
+}
 
 .header-nav form {
   display: flex;

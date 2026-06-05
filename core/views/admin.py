@@ -9,6 +9,8 @@ from django.utils import timezone
 from django.db.models import Case, When, Value, IntegerField, Count
 from core.models import TutorProfile, QuickLessonMatch, LessonLanguage
 from core.models import PointBalance, PointTransaction, WithdrawalRequest
+from core.models import GoldMembership, GoldSubscriptionRequest
+from datetime import timedelta
 
 INITIAL_BONUS = 10
 
@@ -47,6 +49,9 @@ def admin_dashboard(request):
 
     no_balance_count = User.objects.filter(point_balance__isnull=True).count()
     withdrawal_requests = WithdrawalRequest.objects.select_related('user').order_by('-created_at')
+    gold_requests = GoldSubscriptionRequest.objects.select_related('user').filter(
+        status=GoldSubscriptionRequest.STATUS_PENDING
+    )
 
     return render(request, 'core/admin_dashboard.html', {
         'users':               users,
@@ -56,6 +61,7 @@ def admin_dashboard(request):
         'languages':           languages,
         'no_balance_count':    no_balance_count,
         'withdrawal_requests': withdrawal_requests,
+        'gold_requests':       gold_requests,
     })
 
 @staff_or_admin_role_required
@@ -153,4 +159,34 @@ def grant_initial_points_all(request):
                 transaction_type=PointTransaction.TYPE_SIGNUP_BONUS,
                 note="Initial bonus (admin grant)",
             )
+    return redirect('admin_dashboard')
+
+
+@staff_or_admin_role_required
+def grant_gold(request, user_id):
+    """ユーザーに Gold メンバーシップを 30 日付与（申請承認 or 直接付与）"""
+    if request.method == 'POST':
+        user = get_object_or_404(User, id=user_id)
+        now = timezone.now()
+        expires_at = now + timedelta(days=30)
+
+        # 既存の membership があれば延長、なければ新規作成
+        membership, created = GoldMembership.objects.get_or_create(
+            user=user,
+            defaults={'expires_at': expires_at},
+        )
+        if not created:
+            # 既に active なら残り日数に +30日、期限切れなら今から30日
+            base = max(membership.expires_at, now)
+            membership.expires_at = base + timedelta(days=30)
+            membership.save()
+
+        # 対応する申請があれば承認済みに更新
+        GoldSubscriptionRequest.objects.filter(
+            user=user, status=GoldSubscriptionRequest.STATUS_PENDING
+        ).update(
+            status=GoldSubscriptionRequest.STATUS_ACTIVATED,
+            processed_at=now,
+        )
+
     return redirect('admin_dashboard')

@@ -102,17 +102,27 @@ class VideoCallConsumer(AsyncWebsocketConsumer):
             student_user = match.request.student.user
             tutor_user   = match.tutor.user
 
-            # 生徒: -1pt（残高がある場合のみ）
-            s_bal, _ = PointBalance.objects.get_or_create(user=student_user)
-            if s_bal.balance >= 1:
-                s_bal.balance -= 1
-                s_bal.save()
-                PointTransaction.objects.create(
-                    user=student_user,
-                    amount=-1,
-                    transaction_type=PointTransaction.TYPE_LESSON_TAKEN,
-                    reference_id=int(self.match_id),
-                )
+            # 生徒: -1pt（Gold会員・残高不足は免除）
+            from core.models import GoldMembership
+            from django.utils import timezone as _tz
+            student_is_gold = False
+            try:
+                gm = GoldMembership.objects.get(user=student_user)
+                student_is_gold = gm.expires_at > _tz.now()
+            except GoldMembership.DoesNotExist:
+                pass
+
+            if not student_is_gold:
+                s_bal, _ = PointBalance.objects.get_or_create(user=student_user)
+                if s_bal.balance >= 1:
+                    s_bal.balance -= 1
+                    s_bal.save()
+                    PointTransaction.objects.create(
+                        user=student_user,
+                        amount=-1,
+                        transaction_type=PointTransaction.TYPE_LESSON_TAKEN,
+                        reference_id=int(self.match_id),
+                    )
 
             # 講師: +1pt（引き出し可能額にも加算）
             t_bal, _ = PointBalance.objects.get_or_create(user=tutor_user)

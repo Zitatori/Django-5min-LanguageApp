@@ -115,6 +115,11 @@
         <td style="white-space:nowrap;">
           <button class="edit-btn" onclick="openModal({{ u.id }}, '{{ u.username }}', [{% if u.tutorprofile %}{% for l in u.tutorprofile.languages.all %}{{ l.id }},{% endfor %}{% endif %}])">Edit</button>
           <button class="points-btn" onclick="openPointsModal({{ u.id }}, '{{ u.username }}', {{ u.point_balance.balance|default:0 }})">Pts</button>
+          <form method="post" action="{% url 'grant_gold' u.id %}" style="display:inline;"
+                onsubmit="return confirm('Grant Gold 30 days to {{ u.username }}?')">
+            {% csrf_token %}
+            <button type="submit" class="edit-btn" style="border-color:#f59e0b;color:#b45309;" title="Grant Gold 30 days">&#x1F451;</button>
+          </form>
           {% if u != request.user %}
             <form method="post" action="{% url 'delete_user' u.id %}" style="display:inline;"
                   onsubmit="return confirm('Delete {{ u.username }}? This cannot be undone.')">
@@ -226,6 +231,42 @@
   </table>
   {% else %}
     <p style="color:#9ca3af;text-align:center;padding:1.5rem 0;">No withdrawal requests yet.</p>
+  {% endif %}
+</div>
+
+<!-- Gold Subscription Requests -->
+<div class="card admin-section">
+  <h2 class="card-title">&#x1F451; Gold Subscription Requests</h2>
+  {% if gold_requests %}
+  <table class="table">
+    <thead>
+      <tr>
+        <th>User</th>
+        <th>Requested</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for gr in gold_requests %}
+      <tr>
+        <td><strong>{{ gr.user.username }}</strong></td>
+        <td style="font-size:12px;color:#6b7280;">{{ gr.created_at|date:"Y-m-d H:i" }}</td>
+        <td>
+          <form method="post" action="{% url 'grant_gold' gr.user.id %}"
+                style="display:inline;"
+                onsubmit="return confirm('Grant Gold 30 days to {{ gr.user.username }}?')">
+            {% csrf_token %}
+            <button type="submit" class="edit-btn" style="border-color:#f59e0b;color:#b45309;font-weight:700;">
+              &#x1F451; Activate 30 days
+            </button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+    <p style="color:#9ca3af;text-align:center;padding:1.5rem 0;">No pending Gold requests.</p>
   {% endif %}
 </div>
 
