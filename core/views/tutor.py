@@ -51,7 +51,7 @@ def tutor_dashboard(request):
             "matches": matches,
         },
     )
-ONLINE_TIMEOUT_SECONDS = 90  # 90秒以内の ping がないとオフライン扱い
+ONLINE_TIMEOUT_SECONDS = 300  # 5分以内の ping がないとオフライン扱い
 
 
 @login_required

@@ -15,7 +15,7 @@ from core.models import (
     QuickLessonMatch,
 )
 
-ONLINE_TIMEOUT_SECONDS = 90  # tutor.py と合わせる
+ONLINE_TIMEOUT_SECONDS = 300  # tutor.py と合わせる（5分）
 
 
 def active_tutors_qs(language=None):
@@ -189,6 +189,15 @@ def create_interview_request(request):
 
     languages = LessonLanguage.objects.all()
     return render(request, "core/create_interview_request.html", {"languages": languages})
+
+@login_required
+def student_online_counts(request):
+    """言語ごとのオンライン講師数をJSONで返す（生徒側ポーリング用）"""
+    from django.http import JsonResponse
+    languages = LessonLanguage.objects.all()
+    data = {str(lang.id): active_tutors_qs(language=lang).count() for lang in languages}
+    return JsonResponse(data)
+
 
 def student_history(request):
     matches = QuickLessonMatch.objects.filter(

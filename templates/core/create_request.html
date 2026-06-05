@@ -301,5 +301,32 @@
     el.classList.add('selected');
     input.value = id;
   }
+
+  // ── オンライン人数をリアルタイム更新（5秒ごと） ──
+  const offlineLabel = "{% trans 'Offline' %}";
+
+  async function refreshOnlineCounts() {
+    try {
+      const res = await fetch("{% url 'student_online_counts' %}");
+      if (!res.ok) return;
+      const data = await res.json();
+      for (const [langId, count] of Object.entries(data)) {
+        const card = document.querySelector('.cr-lang-card[data-id="' + langId + '"]');
+        if (!card) continue;
+        const statusEl = card.querySelector('.cr-status-on, .cr-status-off');
+        if (!statusEl) continue;
+        if (count > 0) {
+          statusEl.className = 'cr-status-on';
+          statusEl.innerHTML = '<span class="cr-dot-on"></span>' + count + ' online';
+        } else {
+          statusEl.className = 'cr-status-off';
+          statusEl.innerHTML = '<span class="cr-dot-off"></span>' + offlineLabel;
+        }
+      }
+    } catch(e) { /* ネットワークエラーは無視 */ }
+  }
+
+  // 5秒ごとに更新
+  setInterval(refreshOnlineCounts, 5000);
 </script>
 {% endblock %}
