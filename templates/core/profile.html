@@ -76,66 +76,43 @@
     background: #f3f4f6; color: #6b7280; margin-left: 6px;
   }
 
-  /* ── Gold カード ── */
-  .gold-hero {
-    background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 60%, #d97706 100%);
-    border-radius: 20px;
-    padding: 1.8rem 1.4rem 1.4rem;
-    color: #78350f;
-    margin-bottom: 1.5rem;
-    position: relative;
-    overflow: hidden;
-  }
-  .gold-hero::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: repeating-linear-gradient(
-      45deg,
-      rgba(255,255,255,0.06) 0px,
-      rgba(255,255,255,0.06) 1px,
-      transparent 1px, transparent 12px
-    );
-  }
-  .gold-hero .gold-crown { font-size: 2.2rem; display:block; margin-bottom: .4rem; }
-  .gold-hero .gold-title { font-size: 22px; font-weight:800; margin-bottom: .2rem; }
-  .gold-hero .gold-sub   { font-size: 13px; opacity: .75; margin-bottom: 1rem; }
-  .gold-hero .gold-expiry {
-    display: inline-block;
-    background: rgba(255,255,255,0.35);
-    border-radius: 10px;
-    padding: 6px 14px;
+  /* ── Gold バナー（コンパクト） ── */
+  .gold-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 16px;
+    border-radius: 12px;
+    margin-bottom: 1rem;
     font-size: 13px;
-    font-weight: 600;
   }
-  .gold-upsell {
-    border: 2px solid #fbbf24;
-    border-radius: 20px;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-    background: #fffbeb;
+  .gold-banner.gold-active {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border: 1.5px solid #fbbf24;
+    color: #92400e;
   }
-  .gold-upsell .gold-upsell-title { font-size: 18px; font-weight: 700; color: #92400e; margin-bottom: .4rem; }
-  .gold-upsell .gold-price { font-size: 28px; font-weight: 800; color: #b45309; }
-  .gold-upsell .gold-price span { font-size: 14px; font-weight: 500; color: #92400e; }
-  .gold-upsell ul { margin: .8rem 0 1rem; padding-left: 1.2rem; color: #78350f; font-size: 14px; line-height: 1.9; }
-  .btn-gold {
-    display: block; width: 100%;
-    padding: 12px;
-    background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+  .gold-banner.gold-inactive {
+    background: #fafafa;
+    border: 1.5px solid #e5e7eb;
+    color: #6b7280;
+  }
+  .gold-banner .gold-left { display:flex; align-items:center; gap:8px; font-weight:600; }
+  .gold-banner .gold-expiry-text { font-size:12px; font-weight:400; opacity:.8; }
+  .btn-gold-sm {
+    padding: 6px 14px;
+    background: linear-gradient(135deg, #f59e0b, #fbbf24);
     color: #78350f;
     border: none; border-radius: 999px;
-    font-size: 15px; font-weight: 700;
-    cursor: pointer; text-align: center;
-    text-decoration: none;
-    transition: opacity .15s, transform .12s, box-shadow .15s;
-    box-shadow: 0 2px 10px rgba(251,191,36,.4);
+    font-size: 12px; font-weight: 700;
+    cursor: pointer; white-space: nowrap;
+    transition: opacity .15s;
   }
-  .btn-gold:hover { opacity: .9; transform: translateY(-1px); box-shadow: 0 4px 16px rgba(251,191,36,.5); }
-  .btn-gold:active { transform: scale(.97); }
-  .gold-pending {
-    display:inline-block; background:#fef3c7; color:#92400e;
-    border:1.5px solid #fbbf24; border-radius:99px;
-    padding:5px 14px; font-size:13px; font-weight:500;
+  .btn-gold-sm:hover { opacity: .85; }
+  .gold-pending-sm {
+    font-size:12px; color:#92400e; background:#fef3c7;
+    border:1px solid #fbbf24; border-radius:99px;
+    padding:4px 10px; white-space:nowrap;
   }
 
   /* ── PC レイアウト ── */
@@ -169,31 +146,22 @@
 </style>
 
 {% if is_gold %}
-<div class="gold-hero">
-  <span class="gold-crown">&#x1F451;</span>
-  <div class="gold-title">Gold Member</div>
-  <div class="gold-sub">{% trans "Unlimited lessons — no points deducted per lesson" %}</div>
-  <span class="gold-expiry">{% trans "Active until" %} {{ gold_expires_at|date:"Y-m-d" }}</span>
+<div class="gold-banner gold-active">
+  <div class="gold-left">
+    &#x1F451; <span>Gold {% trans "Member" %}</span>
+    <span class="gold-expiry-text">— {% trans "Active until" %} {{ gold_expires_at|date:"Y/m/d" }}</span>
+  </div>
 </div>
 {% else %}
-<div class="gold-upsell">
-  <div class="gold-upsell-title">&#x1F451; {% trans "Go Gold" %}</div>
-  <div class="gold-price">¥10,000 <span>/ {% trans "month" %}</span></div>
-  <ul>
-    <li>&#x2714; {% trans "Unlimited lessons — no points needed" %}</li>
-    <li>&#x2714; {% trans "Gold crown badge on your name" %}</li>
-    <li>&#x2714; {% trans "Priority matching" %} ({% trans "coming soon" %})</li>
-  </ul>
+<div class="gold-banner gold-inactive">
+  <div class="gold-left">&#x1F451; Gold ¥10,000/{% trans "month" %} — {% trans "Unlimited lessons" %}</div>
   {% if gold_request_pending %}
-    <span class="gold-pending">&#x23F3; {% trans "Subscription request pending" %}</span>
+    <span class="gold-pending-sm">&#x23F3; {% trans "Pending" %}</span>
   {% else %}
-    <form method="post" action="{% url 'request_gold' %}">
+    <form method="post" action="{% url 'request_gold' %}" style="margin:0;">
       {% csrf_token %}
-      <button type="submit" class="btn-gold">&#x1F451; {% trans "Request Gold Subscription" %}</button>
+      <button type="submit" class="btn-gold-sm">{% trans "Subscribe" %}</button>
     </form>
-    <p style="font-size:12px; color:#92400e; margin-top:.6rem; text-align:center;">
-      {% trans "After submitting, please transfer ¥10,000 to the admin. Activated within 24h." %}
-    </p>
   {% endif %}
 </div>
 {% endif %}
