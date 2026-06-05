@@ -16,7 +16,8 @@ from core.models import (
     QuickLessonMatch,
 )
 
-ONLINE_TIMEOUT_SECONDS = 300  # tutor.py と合わせる（5分）
+ONLINE_TIMEOUT_SECONDS = 300      # tutor.py と合わせる（5分）
+CONSECUTIVE_WAIT_SECONDS = 180   # 連続マッチを禁じる猶予期間（3分）
 
 
 def _get_consecutive_exclude_ids(student_profile):
@@ -103,12 +104,19 @@ def create_request(request):
 
         tutors_qs = active_tutors_qs(language=language)
 
-        # 連続マッチ防止: 直前の相手を除外（他に候補がいる場合のみ）
+        # 連続マッチ防止
         exclude_ids = _get_consecutive_exclude_ids(student_profile)
         if exclude_ids:
             filtered_qs = tutors_qs.exclude(pk__in=exclude_ids)
             if filtered_qs.exists():
+                # 別の候補がいる → 除外して選ぶ
                 tutors_qs = filtered_qs
+            elif (timezone.now() - qlr.created_at).total_seconds() >= CONSECUTIVE_WAIT_SECONDS:
+                # 3分以上待った → 例外的に連続マッチを許可
+                pass
+            else:
+                # 3分未満 → まだ待機（マッチさせない）
+                tutors_qs = tutors_qs.none()
 
         if tutors_qs.exists():
             tutor = random.choice(list(tutors_qs))
@@ -163,12 +171,19 @@ def request_detail(request, request_id: int):
     if qlr.status == "waiting" and match is None:
         tutors_qs = active_tutors_qs(language=qlr.language)
 
-        # 連続マッチ防止: 直前の相手を除外（他に候補がいる場合のみ）
+        # 連続マッチ防止
         exclude_ids = _get_consecutive_exclude_ids(qlr.student)
         if exclude_ids:
             filtered_qs = tutors_qs.exclude(pk__in=exclude_ids)
             if filtered_qs.exists():
+                # 別の候補がいる → 除外して選ぶ
                 tutors_qs = filtered_qs
+            elif (timezone.now() - qlr.created_at).total_seconds() >= CONSECUTIVE_WAIT_SECONDS:
+                # 3分以上待った → 例外的に連続マッチを許可
+                pass
+            else:
+                # 3分未満 → まだ待機（マッチさせない）
+                tutors_qs = tutors_qs.none()
 
         if tutors_qs.exists():
             tutor = random.choice(list(tutors_qs))
