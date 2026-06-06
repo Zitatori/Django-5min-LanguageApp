@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-06 23:01+0200\n"
+"POT-Creation-Date: 2026-06-06 11:33+0200\n"
 "PO-Revision-Date: 2026-05-06 23:40+0200\n"
 "Last-Translator: YOUR NAME\n"
 "Language-Team: French\n"
@@ -13,301 +13,552 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+#: quicklesson/settings/base.py:71 quicklesson/settings_old.py:107
+#: templates/core/tutor_dashboard.html:78
 msgid "Japanese"
 msgstr "Japonais"
 
+#: quicklesson/settings/base.py:72 quicklesson/settings_old.py:108
+#: templates/core/tutor_dashboard.html:84
 msgid "English"
 msgstr "Anglais"
 
+#: quicklesson/settings/base.py:73 quicklesson/settings_old.py:109
+#: templates/core/tutor_dashboard.html:90
 msgid "Spanish"
 msgstr "Espagnol"
 
+#: quicklesson/settings/base.py:74 quicklesson/settings_old.py:110
+#: templates/core/tutor_dashboard.html:96
 msgid "French"
 msgstr "Français"
 
-msgid "5-Minute Online Lessons"
-msgstr "Leçons en ligne de 5 minutes"
-
-msgid "A super-light conversation platform for people who want to talk with someone right now."
-msgstr "Une plateforme de conversation ultra légère pour les personnes qui veulent parler avec quelqu’un immédiatement."
-
-msgid "Select a language and start a 5-minute lesson."
-msgstr "Choisissez une langue et commencez une leçon de 5 minutes."
-
-msgid "Start a 5-Minute Lesson Now"
-msgstr "Commencer une leçon de 5 minutes"
-
-msgid "You need to log in to start a lesson."
-msgstr "Vous devez vous connecter pour commencer une leçon."
-
-msgid "Log In"
-msgstr "Connexion"
-
-msgid "How does it work?"
-msgstr "Comment ça marche ?"
-
-msgid "1. Teachers switch their status to “Online” and wait."
-msgstr "1. Les professeurs passent en ligne et attendent."
-
-msgid "2. Students choose a language and click “Start a 5-minute lesson now”."
-msgstr "2. Les étudiants choisissent une langue et cliquent sur « Commencer une leçon de 5 minutes »."
-
-msgid "3. The system randomly matches an available teacher."
-msgstr "3. Le système associe automatiquement un professeur disponible."
-
-msgid "4. Join the meeting URL and talk for 5 minutes."
-msgstr "4. Rejoignez le lien de réunion et parlez pendant 5 minutes."
-
-msgid "Talk for 5 Minutes Now"
-msgstr "Parler pendant 5 minutes"
-
-msgid "Step 1"
-msgstr "Étape 1"
-
-msgid "Select the language you want to practice. If any tutors are online, you will be randomly matched."
-msgstr "Choisissez la langue que vous souhaitez pratiquer. Si des professeurs sont en ligne, vous serez associé aléatoirement."
-
-msgid "Select a language"
-msgstr "Choisissez une langue"
-
-msgid "Start a 5-Minute Lesson"
-msgstr "Commencer une leçon de 5 minutes"
-
-msgid "Cancel"
-msgstr "Annuler"
-
-msgid "Matching Result"
-msgstr "Résultat du matching"
-
-msgid "Your 5-minute lesson is ready."
-msgstr "Votre leçon de 5 minutes est prête."
-
-msgid "Matched"
-msgstr "Connecté"
-
-msgid "Matching"
-msgstr "Recherche en cours"
-
-msgid "Canceled"
-msgstr "Annulé"
-
-msgid "Selected language"
-msgstr "Langue sélectionnée"
-
-msgid "Tutor"
-msgstr "Tuteur"
-
-msgid "Enter Lesson Room"
-msgstr "Entrer dans la salle"
-
-msgid "Back to Home"
-msgstr "Retour à l’accueil"
-
-msgid "Matching you with a Guide…"
-msgstr "Recherche d’un professeur disponible…"
-
-msgid "This page will automatically update as soon as an available Guide is found."
-msgstr "Cette page sera automatiquement mise à jour dès qu’un professeur disponible sera trouvé."
-
-msgid "Cancel and return to Home"
-msgstr "Annuler et retourner à l’accueil"
-
-msgid "This request is no longer valid."
-msgstr "Cette demande n’est plus valide."
-
-msgid "5-minute lesson room"
-msgstr "Salle de leçon de 5 minutes"
-
-msgid "First, we only set up your camera and a placeholder for the remote video to design the layout."
-msgstr "Pour l’instant, seule votre caméra et un emplacement vidéo distant sont affichés afin de préparer l’interface."
-
-msgid "Remaining time"
-msgstr "Temps restant"
-
-msgid "Your browser does not support the video tag."
-msgstr "Votre navigateur ne prend pas en charge la balise vidéo."
-
-msgid "Student"
-msgstr "Participant"
-
-msgid "Language"
-msgstr "Langue"
-
-msgid "End lesson"
-msgstr "Terminer la leçon"
-
-msgid "Camera OFF"
-msgstr "Caméra OFF"
-
-msgid "Mic OFF"
-msgstr "Micro OFF"
-
-msgid "The 5-minute lesson will end."
-msgstr "La leçon de 5 minutes va se terminer."
-
-msgid "Reason"
-msgstr "Raison"
-
-msgid "Could not access camera/microphone. Please check your browser settings."
-msgstr "Impossible d’accéder à la caméra ou au microphone. Vérifiez les paramètres du navigateur."
-
-msgid "Camera ON"
-msgstr "Caméra ON"
-
-msgid "Mic ON"
-msgstr "Micro ON"
-
-msgid "This browser does not support getUserMedia."
-msgstr "Ce navigateur ne prend pas en charge getUserMedia."
-
-msgid "Guide Dashboard"
-msgstr "Tableau de bord professeur"
-
-msgid "When you go online, you’ll be available for 5-minute lesson matching."
-msgstr "Lorsque vous êtes en ligne, vous serez disponible pour les leçons de 5 minutes."
-
-msgid "Online"
-msgstr "En ligne"
-
-msgid "Offline"
-msgstr "Hors ligne"
-
-msgid "You are discoverable now."
-msgstr "Vous êtes maintenant visible."
-
-msgid "You are not discoverable."
-msgstr "Vous n’êtes pas visible."
-
-msgid "Waiting for a student… We’ll move you to the lesson room automatically when matched."
-msgstr "En attente d’un étudiant… Vous serez automatiquement redirigé vers la salle lorsqu’un matching sera trouvé."
-
-msgid "Switch online to start matching."
-msgstr "Passez en ligne pour commencer le matching."
-
-msgid "Matching in progress…"
-msgstr "Matching en cours…"
-
-msgid "Hi"
-msgstr "Bonjour"
-
+#: templates/base.html:51 templates/base.html:86
+#: templates/core/create_request.html:220 templates/core/home.html:10
 msgid "5-minute lesson"
 msgstr "Leçon de 5 minutes"
 
-msgid "Log out"
-msgstr "Déconnexion"
-
+#: templates/base.html:52 templates/base.html:87 templates/core/home.html:22
+#: templates/core/tutor_dashboard.html:12
 msgid "Tutor Dashboard"
 msgstr "Tableau du Tuteur"
 
-msgid "My Lesson History"
-msgstr "Historique des leçons"
+#: templates/base.html:53 templates/base.html:88
+msgid "Log out"
+msgstr "Déconnexion"
 
-msgid "Online · Waiting for a match"
-msgstr "En ligne · En attente d'un matching"
+#: templates/base.html:55 templates/base.html:90 templates/core/home.html:28
+#: templates/registration/login.html:5 templates/registration/login.html:22
+msgid "Log In"
+msgstr "Connexion"
 
-msgid "No teaching languages selected yet."
-msgstr "Aucune langue d'enseignement sélectionnée."
+#: templates/base.html:56 templates/base.html:91 templates/core/home.html:31
+#, fuzzy
+#| msgid "Sign up"
+msgid "Sign Up"
+msgstr "S'inscrire"
 
-msgid "Waiting for a student…"
-msgstr "En attente d'un étudiant…"
-
-msgid "You'll be matched as soon as a student comes online."
-msgstr "Vous serez associé dès qu'un étudiant sera disponible."
-
-msgid "No active matches yet."
-msgstr "Aucun matching actif pour l'instant."
-
-msgid "Matches will appear here automatically."
-msgstr "Les matchings apparaîtront ici automatiquement."
-
-msgid "Enter lesson room"
-msgstr "Entrer dans la salle"
-
-msgid "Active Matches"
-msgstr "Matchings actifs"
-
+#: templates/core/_recent_lessons.html:5
 msgid "Recent History"
 msgstr "Historique récent"
 
-msgid "Your Points"
-msgstr "Vos points"
+#: templates/core/create_request.html:221
+msgid "Talk for 5 Minutes Now"
+msgstr "Parler pendant 5 minutes"
 
-msgid "Withdrawable"
-msgstr "Retirable"
+#: templates/core/create_request.html:222
+msgid ""
+"Select the language you want to practice. If any tutors are online, you will "
+"be randomly matched."
+msgstr ""
+"Choisissez la langue que vous souhaitez pratiquer. Si des professeurs sont "
+"en ligne, vous serez associé aléatoirement."
 
-msgid "Buy Points"
-msgstr "Acheter des points"
+#: templates/core/create_request.html:224
+#, fuzzy
+#| msgid "End lesson"
+msgid "Total lessons"
+msgstr "Terminer la leçon"
 
-msgid "Withdraw Points"
-msgstr "Retirer des points"
+#: templates/core/create_request.html:253
+#: templates/core/create_request.html:278
+#, fuzzy
+#| msgid "End lesson"
+msgid " lessons"
+msgstr "Terminer la leçon"
 
-msgid "Withdrawal request in progress:"
-msgstr "Demande de retrait en cours :"
+#: templates/core/create_request.html:257
+#: templates/core/create_request.html:335
+#: templates/core/tutor_dashboard.html:19
+#: templates/core/tutor_dashboard.html:31
+msgid "Offline"
+msgstr "Hors ligne"
 
-msgid "Points to withdraw"
-msgstr "Points à retirer"
+#: templates/core/create_request.html:264
+msgid "Start a 5-Minute Lesson"
+msgstr "Commencer une leçon de 5 minutes"
 
-msgid "Currency"
-msgstr "Devise"
+#: templates/core/create_request.html:277 templates/core/student_history.html:7
+msgid "My Lesson History"
+msgstr "Historique des leçons"
 
-msgid "Payment method"
-msgstr "Méthode de paiement"
-
-msgid "Payment details"
-msgstr "Détails du paiement"
-
-msgid "email / account no."
-msgstr "e-mail / nº de compte"
-
-msgid "Submit Request"
-msgstr "Soumettre la demande"
-
-msgid "You need at least"
-msgstr "Vous avez besoin d'au moins"
-
-msgid "of lesson earnings to withdraw."
-msgstr "pt de revenus de leçons pour retirer."
-
-msgid "Current"
-msgstr "Actuel"
-
-msgid "Min."
-msgstr "Min."
-
-msgid "Transaction History"
-msgstr "Historique des transactions"
-
-msgid "Welcome Bonus"
-msgstr "Bonus de bienvenue"
-
-msgid "Lesson (Student)"
-msgstr "Leçon (Étudiant)"
-
-msgid "Lesson (Tutor)"
-msgstr "Leçon (Tuteur)"
-
-msgid "Points Purchase"
-msgstr "Achat de points"
-
-msgid "Withdrawal"
-msgstr "Retrait"
-
-msgid "No transactions yet."
-msgstr "Aucune transaction pour l'instant."
-
-msgid "Create an account"
-msgstr "Créer un compte"
-
-msgid "I also want to teach"
-msgstr "Je veux aussi enseigner"
-
-msgid "Languages I can teach"
-msgstr "Langues que je peux enseigner"
-
-msgid "Sign up"
-msgstr "S'inscrire"
-
+#: templates/core/create_request.html:313
+#: templates/core/student_history.html:36
 msgid "No lesson history yet."
 msgstr "Aucun historique de leçon pour l'instant."
 
+#: templates/core/home.html:11
+msgid "5-Minute Online Lessons"
+msgstr "Leçons en ligne de 5 minutes"
 
+#: templates/core/home.html:13
+msgid ""
+"A super-light conversation platform for people who want to talk with someone "
+"right now."
+msgstr ""
+"Une plateforme de conversation ultra légère pour les personnes qui veulent "
+"parler avec quelqu’un immédiatement."
+
+#: templates/core/home.html:17
+msgid "Select a language and start a 5-minute lesson."
+msgstr "Choisissez une langue et commencez une leçon de 5 minutes."
+
+#: templates/core/home.html:19
+msgid "Start a 5-Minute Lesson Now"
+msgstr "Commencer une leçon de 5 minutes"
+
+#: templates/core/home.html:25
+msgid "You need to log in to start a lesson."
+msgstr "Vous devez vous connecter pour commencer une leçon."
+
+#: templates/core/home.html:39
+msgid "How does it work?"
+msgstr "Comment ça marche ?"
+
+#: templates/core/home.html:43
+#, fuzzy
+#| msgid "1. Teachers switch their status to “Online” and wait."
+msgid "Teachers switch their status to Online and wait."
+msgstr "1. Les professeurs passent en ligne et attendent."
+
+#: templates/core/home.html:47
+#, fuzzy
+#| msgid ""
+#| "2. Students choose a language and click “Start a 5-minute lesson now”."
+msgid "Students choose a language and tap Start."
+msgstr ""
+"2. Les étudiants choisissent une langue et cliquent sur « Commencer une "
+"leçon de 5 minutes »."
+
+#: templates/core/home.html:51
+#, fuzzy
+#| msgid "3. The system randomly matches an available teacher."
+msgid "The system randomly matches an available teacher."
+msgstr "3. Le système associe automatiquement un professeur disponible."
+
+#: templates/core/home.html:55
+#, fuzzy
+#| msgid "4. Join the meeting URL and talk for 5 minutes."
+msgid "Join the meeting URL and talk for 5 minutes."
+msgstr "4. Rejoignez le lien de réunion et parlez pendant 5 minutes."
+
+#: templates/core/lesson_room.html:43 templates/core/request_detail.html:29
+#: templates/core/student_history.html:15
+msgid "Tutor"
+msgstr "Tuteur"
+
+#: templates/core/lesson_room.html:43
+msgid "Student"
+msgstr "Participant"
+
+#: templates/core/lesson_room.html:434
+#, fuzzy
+#| msgid ""
+#| "Could not access camera/microphone. Please check your browser settings."
+msgid "Could not access camera/microphone."
+msgstr ""
+"Impossible d’accéder à la caméra ou au microphone. Vérifiez les paramètres "
+"du navigateur."
+
+#: templates/core/lesson_room.html:436
+#, fuzzy
+#| msgid ""
+#| "Could not access camera/microphone. Please check your browser settings."
+msgid ""
+"Camera/microphone permission was denied. Please allow access in your browser "
+"settings and reload."
+msgstr ""
+"Impossible d’accéder à la caméra ou au microphone. Vérifiez les paramètres "
+"du navigateur."
+
+#: templates/core/lesson_room.html:438
+msgid "No camera or microphone found. Please connect a device and reload."
+msgstr ""
+
+#: templates/core/lesson_room.html:440
+msgid "Camera is already in use by another app. Please close it and reload."
+msgstr ""
+
+#: templates/core/lesson_room.html:442
+msgid "Camera does not meet requirements. Please try a different device."
+msgstr ""
+
+#: templates/core/profile.html:178
+msgid "Member"
+msgstr "Membre"
+
+#: templates/core/profile.html:179
+msgid "Active until"
+msgstr "Valide jusqu'au"
+
+#: templates/core/profile.html:186
+msgid "Your Points"
+msgstr "Vos points"
+
+#: templates/core/profile.html:192 templates/core/profile.html:207
+msgid "Withdrawable"
+msgstr "Retirable"
+
+#: templates/core/profile.html:194 templates/core/purchase_points.html:67
+msgid "Buy Points"
+msgstr "Acheter des points"
+
+#: templates/core/profile.html:199
+msgid "Withdraw Points"
+msgstr "Retirer des points"
+
+#: templates/core/profile.html:202
+msgid "Withdrawal request in progress:"
+msgstr "Demande de retrait en cours :"
+
+#: templates/core/profile.html:207
+msgid "Min."
+msgstr "Min."
+
+#: templates/core/profile.html:212
+msgid "Points to withdraw"
+msgstr "Points à retirer"
+
+#: templates/core/profile.html:217
+msgid "Currency"
+msgstr "Devise"
+
+#: templates/core/profile.html:224
+msgid "Payment method"
+msgstr "Méthode de paiement"
+
+#: templates/core/profile.html:231
+msgid "Payment details"
+msgstr "Détails du paiement"
+
+#: templates/core/profile.html:231
+msgid "email / account no."
+msgstr "e-mail / nº de compte"
+
+#: templates/core/profile.html:235
+msgid "Submit Request"
+msgstr "Soumettre la demande"
+
+#: templates/core/profile.html:240
+msgid "You need at least"
+msgstr "Vous avez besoin d'au moins"
+
+#: templates/core/profile.html:240
+msgid "of lesson earnings to withdraw."
+msgstr "pt de revenus de leçons pour retirer."
+
+#: templates/core/profile.html:241
+msgid "Current"
+msgstr "Actuel"
+
+#: templates/core/profile.html:249
+msgid "Membership"
+msgstr "Abonnement"
+
+#: templates/core/profile.html:250
+msgid "month"
+msgstr "mois"
+
+#: templates/core/profile.html:250
+msgid "Unlimited lessons, no points needed"
+msgstr "Cours illimités, sans points nécessaires"
+
+#: templates/core/profile.html:252
+msgid "Request pending — we'll activate it shortly."
+msgstr "Demande en attente — nous l'activerons bientôt."
+
+#: templates/core/profile.html:256
+msgid "Subscribe to Gold"
+msgstr "S'abonner à Gold"
+
+#: templates/core/profile.html:265
+msgid "Transaction History"
+msgstr "Historique des transactions"
+
+#: templates/core/profile.html:273
+msgid "Welcome Bonus"
+msgstr "Bonus de bienvenue"
+
+#: templates/core/profile.html:274
+msgid "Lesson (Student)"
+msgstr "Leçon (Étudiant)"
+
+#: templates/core/profile.html:275
+msgid "Lesson (Tutor)"
+msgstr "Leçon (Tuteur)"
+
+#: templates/core/profile.html:276
+msgid "Points Purchase"
+msgstr "Achat de points"
+
+#: templates/core/profile.html:277
+msgid "Withdrawal"
+msgstr "Retrait"
+
+#: templates/core/profile.html:293
+msgid "No transactions yet."
+msgstr "Aucune transaction pour l'instant."
+
+#: templates/core/purchase_points.html:68
+msgid "Use points to take lessons with a tutor."
+msgstr ""
+
+#: templates/core/purchase_points.html:69
+#, fuzzy
+#| msgid "Current"
+msgid "Current Balance"
+msgstr "Actuel"
+
+#: templates/core/purchase_points.html:83
+#: templates/core/purchase_points.html:103
+msgid "Proceed to Payment"
+msgstr ""
+
+#: templates/core/purchase_points.html:87
+msgid "Secure payment via Stripe — coming soon"
+msgstr ""
+
+#: templates/core/purchase_points.html:92
+#, fuzzy
+#| msgid "Back to Home"
+msgid "Back to Profile"
+msgstr "Retour à l’accueil"
+
+#: templates/core/request_detail.html:8
+msgid "Matching Result"
+msgstr "Résultat du matching"
+
+#: templates/core/request_detail.html:10
+msgid "Your 5-minute lesson is ready."
+msgstr "Votre leçon de 5 minutes est prête."
+
+#: templates/core/request_detail.html:15
+msgid "Matched"
+msgstr "Connecté"
+
+#: templates/core/request_detail.html:17
+msgid "Matching"
+msgstr "Recherche en cours"
+
+#: templates/core/request_detail.html:19
+msgid "Canceled"
+msgstr "Annulé"
+
+#: templates/core/request_detail.html:24
+msgid "Selected language"
+msgstr "Langue sélectionnée"
+
+#: templates/core/request_detail.html:34
+msgid "Enter Lesson Room"
+msgstr "Entrer dans la salle"
+
+#: templates/core/request_detail.html:37 templates/core/request_detail.html:68
+msgid "Back to Home"
+msgstr "Retour à l’accueil"
+
+#: templates/core/request_detail.html:44
+#, fuzzy
+#| msgid "Matching you with a Guide…"
+msgid "Matching you with a tutor…"
+msgstr "Recherche d’un professeur disponible…"
+
+#: templates/core/request_detail.html:46
+#, fuzzy
+#| msgid ""
+#| "This page will automatically update as soon as an available Guide is "
+#| "found."
+msgid ""
+"This page will automatically update as soon as an available tutor is found."
+msgstr ""
+"Cette page sera automatiquement mise à jour dès qu’un professeur disponible "
+"sera trouvé."
+
+#: templates/core/request_detail.html:52
+msgid "Cancel and return to Home"
+msgstr "Annuler et retourner à l’accueil"
+
+#: templates/core/request_detail.html:64
+msgid "This request is no longer valid."
+msgstr "Cette demande n’est plus valide."
+
+#: templates/core/student_history.html:14
+msgid "Date"
+msgstr ""
+
+#: templates/core/student_history.html:16
+msgid "Language"
+msgstr "Langue"
+
+#: templates/core/tutor_dashboard.html:16
+msgid "Online · Waiting for a match"
+msgstr "En ligne · En attente d'un matching"
+
+#: templates/core/tutor_dashboard.html:36
+msgid "Online"
+msgstr "En ligne"
+
+#: templates/core/tutor_dashboard.html:47
+msgid "Total Lessons"
+msgstr ""
+
+#: templates/core/tutor_dashboard.html:71
+#, fuzzy
+#| msgid "No teaching languages selected yet."
+msgid "Teaching languages"
+msgstr "Aucune langue d'enseignement sélectionnée."
+
+#: templates/core/tutor_dashboard.html:106
+msgid "No teaching languages selected yet."
+msgstr "Aucune langue d'enseignement sélectionnée."
+
+#: templates/core/tutor_dashboard.html:116
+msgid "Waiting for a student…"
+msgstr "En attente d'un étudiant…"
+
+#: templates/core/tutor_dashboard.html:117
+msgid "You'll be matched as soon as a student comes online."
+msgstr "Vous serez associé dès qu'un étudiant sera disponible."
+
+#: templates/core/tutor_dashboard.html:128
+msgid "Active Matches"
+msgstr "Matchings actifs"
+
+#: templates/core/tutor_dashboard.html:142
+msgid "Enter lesson room"
+msgstr "Entrer dans la salle"
+
+#: templates/core/tutor_dashboard.html:149
+msgid "No active matches yet."
+msgstr "Aucun matching actif pour l'instant."
+
+#: templates/core/tutor_dashboard.html:150
+msgid "Matches will appear here automatically."
+msgstr "Les matchings apparaîtront ici automatiquement."
+
+#: templates/registration/login.html:26
+#, fuzzy
+#| msgid "Create an account"
+msgid "Don't have an account?"
+msgstr "Créer un compte"
+
+#: templates/registration/login.html:27 templates/registration/signup.html:6
+msgid "Create an account"
+msgstr "Créer un compte"
+
+#: templates/registration/signup.html:30
+msgid "I also want to teach"
+msgstr "Je veux aussi enseigner"
+
+#: templates/registration/signup.html:34
+msgid "Sign up"
+msgstr "S'inscrire"
+
+#: templates/registration/signup.html:39
+#, fuzzy
+#| msgid "Create an account"
+msgid "Already have an account?"
+msgstr "Créer un compte"
+
+#: templates/registration/signup.html:40
+msgid "Log in here"
+msgstr ""
+
+#~ msgid "Step 1"
+#~ msgstr "Étape 1"
+
+#~ msgid "Select a language"
+#~ msgstr "Choisissez une langue"
+
+#~ msgid "Cancel"
+#~ msgstr "Annuler"
+
+#~ msgid "5-minute lesson room"
+#~ msgstr "Salle de leçon de 5 minutes"
+
+#~ msgid ""
+#~ "First, we only set up your camera and a placeholder for the remote video "
+#~ "to design the layout."
+#~ msgstr ""
+#~ "Pour l’instant, seule votre caméra et un emplacement vidéo distant sont "
+#~ "affichés afin de préparer l’interface."
+
+#~ msgid "Remaining time"
+#~ msgstr "Temps restant"
+
+#~ msgid "Your browser does not support the video tag."
+#~ msgstr "Votre navigateur ne prend pas en charge la balise vidéo."
+
+#~ msgid "Camera OFF"
+#~ msgstr "Caméra OFF"
+
+#~ msgid "Mic OFF"
+#~ msgstr "Micro OFF"
+
+#~ msgid "The 5-minute lesson will end."
+#~ msgstr "La leçon de 5 minutes va se terminer."
+
+#~ msgid "Reason"
+#~ msgstr "Raison"
+
+#~ msgid "Camera ON"
+#~ msgstr "Caméra ON"
+
+#~ msgid "Mic ON"
+#~ msgstr "Micro ON"
+
+#~ msgid "This browser does not support getUserMedia."
+#~ msgstr "Ce navigateur ne prend pas en charge getUserMedia."
+
+#~ msgid "Guide Dashboard"
+#~ msgstr "Tableau de bord professeur"
+
+#~ msgid ""
+#~ "When you go online, you’ll be available for 5-minute lesson matching."
+#~ msgstr ""
+#~ "Lorsque vous êtes en ligne, vous serez disponible pour les leçons de 5 "
+#~ "minutes."
+
+#~ msgid "You are discoverable now."
+#~ msgstr "Vous êtes maintenant visible."
+
+#~ msgid "You are not discoverable."
+#~ msgstr "Vous n’êtes pas visible."
+
+#~ msgid ""
+#~ "Waiting for a student… We’ll move you to the lesson room automatically "
+#~ "when matched."
+#~ msgstr ""
+#~ "En attente d’un étudiant… Vous serez automatiquement redirigé vers la "
+#~ "salle lorsqu’un matching sera trouvé."
+
+#~ msgid "Switch online to start matching."
+#~ msgstr "Passez en ligne pour commencer le matching."
+
+#~ msgid "Matching in progress…"
+#~ msgstr "Matching en cours…"
+
+#~ msgid "Hi"
+#~ msgstr "Bonjour"
+
+#~ msgid "Languages I can teach"
+#~ msgstr "Langues que je peux enseigner"
