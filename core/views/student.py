@@ -17,7 +17,7 @@ from core.models import (
 )
 
 ONLINE_TIMEOUT_SECONDS = 300      # tutor.py と合わせる（5分）
-CONSECUTIVE_WAIT_SECONDS = 180   # 連続マッチを禁じる猶予期間（3分）
+CONSECUTIVE_WAIT_SECONDS = 60    # 連続マッチを禁じる猶予期間（1分）
 
 
 def _get_consecutive_exclude_ids(student_profile):
