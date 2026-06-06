@@ -38,7 +38,33 @@
   </form>
 </div>
 
-{# ── ❷ 言語カード（オンライン時のみ） ── #}
+{# ── ❷ レッスン統計 ── #}
+{% if total_lessons_taught %}
+<div class="card td-stats-card">
+  <div class="td-stats-grid">
+    <div class="td-stat-total">
+      <span class="td-stat-big">{{ total_lessons_taught }}</span>
+      <span class="td-stat-lbl">{% trans "Total Lessons" %}</span>
+    </div>
+    <div class="td-stat-langs">
+      {% if lang_name_counts.English %}
+        <div class="td-stat-lang"><span class="fi fi-gb td-slc-flag"></span><span class="td-slc-num">{{ lang_name_counts.English }}</span><span class="td-slc-name">EN</span></div>
+      {% endif %}
+      {% if lang_name_counts.French %}
+        <div class="td-stat-lang"><span class="fi fi-fr td-slc-flag"></span><span class="td-slc-num">{{ lang_name_counts.French }}</span><span class="td-slc-name">FR</span></div>
+      {% endif %}
+      {% if lang_name_counts.Spanish %}
+        <div class="td-stat-lang"><span class="fi fi-es td-slc-flag"></span><span class="td-slc-num">{{ lang_name_counts.Spanish }}</span><span class="td-slc-name">ES</span></div>
+      {% endif %}
+      {% if lang_name_counts.Japanese %}
+        <div class="td-stat-lang"><span class="fi fi-jp td-slc-flag"></span><span class="td-slc-num">{{ lang_name_counts.Japanese }}</span><span class="td-slc-name">JA</span></div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{# ── ❸ 言語カード（オンライン時のみ） ── #}
 {% if tutor.is_online %}
 <div class="card td-matching-card" id="matching-card">
 
@@ -213,6 +239,22 @@
   }
   #online-toggle:checked + .td-slider { background: #22c55e; }
   #online-toggle:checked + .td-slider::before { transform: translateX(24px); }
+
+  /* ── レッスン統計カード ── */
+  .td-stats-card { padding: 14px 20px; }
+  .td-stats-grid { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+  .td-stat-total { display: flex; flex-direction: column; gap: 2px; min-width: 64px; }
+  .td-stat-big { font-size: 30px; font-weight: 800; color: #111827; line-height: 1; }
+  .td-stat-lbl { font-size: 11px; font-weight: 600; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.06em; }
+  .td-stat-langs { display: flex; gap: 8px; flex-wrap: wrap; }
+  .td-stat-lang {
+    display: flex; align-items: center; gap: 5px;
+    background: #f8fafc; border: 1px solid #e5e7eb;
+    border-radius: 8px; padding: 6px 10px;
+  }
+  .td-slc-flag { width: 20px; height: 14px; border-radius: 2px; flex-shrink: 0; }
+  .td-slc-num { font-size: 15px; font-weight: 800; color: #111827; }
+  .td-slc-name { font-size: 11px; font-weight: 600; color: #6b7280; }
 
   /* ── 言語カードグリッド ── */
   .td-lang-label {

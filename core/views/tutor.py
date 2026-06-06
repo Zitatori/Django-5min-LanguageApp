@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.db.models import Count
 from django.shortcuts import render
 from django.utils import timezone
 from django.views.decorators.http import require_POST
@@ -42,6 +43,15 @@ def tutor_dashboard(request):
         "tutor__user",
     ).order_by("-started_at")
 
+    # 言語別の担当レッスン数（テンプレートで {{ lang_name_counts.English }} のように参照可）
+    lang_name_counts = dict(
+        QuickLessonMatch.objects.filter(tutor=tutor_profile)
+        .values("request__language__name")
+        .annotate(cnt=Count("id"))
+        .values_list("request__language__name", "cnt")
+    )
+    total_lessons_taught = sum(lang_name_counts.values())
+
     return render(
         request,
         "core/tutor_dashboard.html",
@@ -49,6 +59,8 @@ def tutor_dashboard(request):
             "tutor": tutor_profile,
             "active_matches": active_matches,
             "matches": matches,
+            "lang_name_counts": lang_name_counts,
+            "total_lessons_taught": total_lessons_taught,
         },
     )
 ONLINE_TIMEOUT_SECONDS = 300  # 5分以内の ping がないとオフライン扱い
