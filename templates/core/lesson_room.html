@@ -28,19 +28,28 @@
     <span class="lr-timer-text" id="timer-display">--:--</span>
   </div>
 
-  {# ── 言語バッジ（左上） ── #}
+  {# ── セッション情報（左上） ── #}
   <div class="lr-session-badge">
-    <span class="lr-badge-lang">{{ match.request.language.name }}</span>
-    <span class="lr-badge-role">
-      {% if request.user == match.request.student.user %}Student{% else %}Tutor{% endif %}
-    </span>
-    <span class="lr-badge-partner">
-      {{ partner_name }}
-      {% if partner_badge == "dev" %}<span class="lr-partner-badge lr-pbadge-dev">Dev</span>
-      {% elif partner_badge == "admin" %}<span class="lr-partner-badge lr-pbadge-admin">Admin</span>
-      {% elif partner_badge == "gold" %}<span class="lr-partner-badge lr-pbadge-gold">&#x1F451; Gold</span>
-      {% endif %}
-    </span>
+    <div class="lr-badge-lang">
+      {% if match.request.language.name == 'English' %}<span class="fi fi-gb lr-fi-sm"></span>
+      {% elif match.request.language.name == 'French' %}<span class="fi fi-fr lr-fi-sm"></span>
+      {% elif match.request.language.name == 'Spanish' %}<span class="fi fi-es lr-fi-sm"></span>
+      {% elif match.request.language.name == 'Japanese' %}<span class="fi fi-jp lr-fi-sm"></span>
+      {% else %}<span class="fi fi-un lr-fi-sm"></span>{% endif %}
+      {% trans match.request.language.name %}
+    </div>
+    <div class="lr-badge-partner-card">
+      <div class="lr-partner-role-label">
+        {% if request.user == match.request.student.user %}🎓 {% trans "Tutor" %}{% else %}👤 {% trans "Student" %}{% endif %}
+      </div>
+      <div class="lr-partner-name-main">
+        {{ partner_name }}
+        {% if partner_badge == "dev" %}<span class="lr-partner-badge lr-pbadge-dev">Dev</span>
+        {% elif partner_badge == "admin" %}<span class="lr-partner-badge lr-pbadge-admin">Admin</span>
+        {% elif partner_badge == "gold" %}<span class="lr-partner-badge lr-pbadge-gold">&#x1F451; Gold</span>
+        {% endif %}
+      </div>
+    </div>
   </div>
 
   {# ── 自分の映像（右下PiP） ── #}
@@ -176,33 +185,46 @@
     min-width: 60px; text-align: center;
   }
 
-  /* 言語・ロールバッジ */
+  /* セッション情報（左上） */
   .lr-session-badge {
     position: absolute;
     top: 16px; left: 16px;
     z-index: 10;
-    display: flex; flex-direction: column; gap: 5px;
+    display: flex; flex-direction: column; gap: 6px;
+    max-width: 200px;
   }
-  .lr-badge-lang, .lr-badge-role {
-    display: inline-block;
-    background: rgba(0,0,0,0.55);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 8px;
-    padding: 4px 10px;
-    font-size: 12px; font-weight: 600; color: #d4d4d8;
+  .lr-fi-sm { width: 20px; height: 15px; border-radius: 3px; flex-shrink: 0; }
+  .lr-badge-lang {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: rgba(0,0,0,0.65);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 10px;
+    padding: 7px 13px;
+    font-size: 15px; font-weight: 700; color: #93c5fd;
+    align-self: flex-start;
   }
-  .lr-badge-lang { color: #60a5fa; }
-  .lr-badge-partner {
-    display: inline-flex; align-items: center; gap: 5px;
-    background: rgba(0,0,0,0.55);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 8px;
-    padding: 4px 10px;
-    font-size: 12px; font-weight: 600; color: #d4d4d8;
+  .lr-badge-partner-card {
+    background: rgba(0,0,0,0.65);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 10px;
+    padding: 9px 13px;
+    display: flex; flex-direction: column; gap: 3px;
+  }
+  .lr-partner-role-label {
+    font-size: 11px; font-weight: 700;
+    color: #a78bfa;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .lr-partner-name-main {
+    font-size: 17px; font-weight: 700; color: #fff;
+    display: flex; align-items: center; gap: 6px;
+    flex-wrap: wrap;
+    line-height: 1.3;
   }
 
   /* 自分の映像PiP */
