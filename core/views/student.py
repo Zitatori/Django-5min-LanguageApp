@@ -4,7 +4,7 @@ from datetime import timedelta
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.db.models import OuterRef, Q, Subquery
+from django.db.models import Count, OuterRef, Q, Subquery
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 
@@ -152,15 +152,24 @@ def create_request(request):
     # この生徒にとって連続マッチで除外すべきチューターIDを取得
     consecutive_exclude = _get_consecutive_exclude_ids(student_profile)
 
+    # 言語別の受講済みレッスン数
+    lang_lesson_counts = dict(
+        QuickLessonMatch.objects.filter(request__student=student_profile)
+        .values("request__language_id")
+        .annotate(cnt=Count("id"))
+        .values_list("request__language_id", "cnt")
+    )
+
     languages_with_count = []
     for lang in languages:
         qs = active_tutors_qs(language=lang)
         if consecutive_exclude:
             qs = qs.exclude(pk__in=consecutive_exclude)
-        count = qs.count()
-        languages_with_count.append((lang, count))
+        online_count = qs.count()
+        lesson_count = lang_lesson_counts.get(lang.id, 0)
+        languages_with_count.append((lang, online_count, lesson_count))
 
-    total_lessons = matches.count()
+    total_lessons = sum(lang_lesson_counts.values())
 
     return render(request, "core/create_request.html", {
         "languages_with_count": languages_with_count,

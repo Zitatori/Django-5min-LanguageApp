@@ -97,6 +97,12 @@
   .cr-fi-sm   { width: 18px; height: 13px; border-radius: 2px; display:inline-block; vertical-align: middle; margin-right: 3px; }
   .cr-lang-name { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 6px; position:relative; z-index:1; text-shadow: 0 1px 3px rgba(0,0,0,0.2); }
 
+  .cr-lesson-stat {
+    font-size: 11px; font-weight: 600;
+    color: rgba(255,255,255,0.75);
+    position: relative; z-index: 1;
+    margin-bottom: 4px;
+  }
   .cr-status-on {
     display: inline-flex; align-items: center; gap: 4px;
     background: rgba(255,255,255,0.22); color: #fff;
@@ -226,7 +232,7 @@
     <input type="hidden" name="language_id" id="selected-lang-id" value="{{ languages_with_count.0.0.id }}">
 
     <div class="cr-lang-grid">
-      {% for lang, count in languages_with_count %}
+      {% for lang, count, lesson_count in languages_with_count %}
       <div class="cr-lang-card {% if forloop.first %}selected{% endif %}
                   {% if lang.name == 'English' %}cr-lang-en
                   {% elif lang.name == 'French' %}cr-lang-fr
@@ -244,6 +250,7 @@
           {% else %}<span class="fi fi-un cr-fi"></span>{% endif %}
         </div>
         <div class="cr-lang-name">{% trans lang.name %}</div>
+        {% if lesson_count > 0 %}<div class="cr-lesson-stat">📚 {{ lesson_count }}{% trans " lessons" %}</div>{% endif %}
         {% if count > 0 %}
           <div class="cr-status-on"><span class="cr-dot-on"></span>{{ count }} online</div>
         {% else %}
