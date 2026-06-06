@@ -4,7 +4,7 @@ from datetime import timedelta
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.db.models import OuterRef, Subquery
+from django.db.models import OuterRef, Q, Subquery
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 
@@ -56,11 +56,12 @@ def _get_consecutive_exclude_ids(student_profile):
 
 
 def active_tutors_qs(language=None):
-    """実際にオンライン中（90秒以内に ping あり）のチュータークエリセット。"""
+    """実際にオンライン中（5分以内に ping あり）のチュータークエリセット。
+    last_ping_at が未設定（None）の場合は ping タイムアウトを適用しない。
+    """
     cutoff = timezone.now() - timedelta(seconds=ONLINE_TIMEOUT_SECONDS)
-    qs = TutorProfile.objects.filter(
-        is_online=True,
-        last_ping_at__gte=cutoff,
+    qs = TutorProfile.objects.filter(is_online=True).filter(
+        Q(last_ping_at__isnull=True) | Q(last_ping_at__gte=cutoff)
     )
     if language:
         qs = qs.filter(languages=language)
