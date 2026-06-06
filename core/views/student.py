@@ -160,9 +160,12 @@ def create_request(request):
         count = qs.count()
         languages_with_count.append((lang, count))
 
+    total_lessons = matches.count()
+
     return render(request, "core/create_request.html", {
         "languages_with_count": languages_with_count,
         "matches": matches,
+        "total_lessons": total_lessons,
     })
 
 @login_required
