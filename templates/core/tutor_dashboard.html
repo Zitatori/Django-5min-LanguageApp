@@ -47,18 +47,17 @@
       <span class="td-stat-lbl">{% trans "Total Lessons" %}</span>
     </div>
     <div class="td-stat-langs">
-      {% if lang_name_counts.English %}
-        <div class="td-stat-lang"><span class="fi fi-gb td-slc-flag"></span><span class="td-slc-num">{{ lang_name_counts.English }}</span><span class="td-slc-name">EN</span></div>
-      {% endif %}
-      {% if lang_name_counts.French %}
-        <div class="td-stat-lang"><span class="fi fi-fr td-slc-flag"></span><span class="td-slc-num">{{ lang_name_counts.French }}</span><span class="td-slc-name">FR</span></div>
-      {% endif %}
-      {% if lang_name_counts.Spanish %}
-        <div class="td-stat-lang"><span class="fi fi-es td-slc-flag"></span><span class="td-slc-num">{{ lang_name_counts.Spanish }}</span><span class="td-slc-name">ES</span></div>
-      {% endif %}
-      {% if lang_name_counts.Japanese %}
-        <div class="td-stat-lang"><span class="fi fi-jp td-slc-flag"></span><span class="td-slc-num">{{ lang_name_counts.Japanese }}</span><span class="td-slc-name">JA</span></div>
-      {% endif %}
+      {% for lang, count in lang_lesson_stats %}
+      <div class="td-stat-lang">
+        {% if lang.name == 'English' %}<span class="fi fi-gb td-slc-flag"></span>
+        {% elif lang.name == 'French' %}<span class="fi fi-fr td-slc-flag"></span>
+        {% elif lang.name == 'Spanish' %}<span class="fi fi-es td-slc-flag"></span>
+        {% elif lang.name == 'Japanese' %}<span class="fi fi-jp td-slc-flag"></span>
+        {% else %}<span class="fi fi-un td-slc-flag"></span>{% endif %}
+        <span class="td-slc-num">{{ count }}</span>
+        <span class="td-slc-name">{% trans lang.name %}</span>
+      </div>
+      {% endfor %}
     </div>
   </div>
 </div>

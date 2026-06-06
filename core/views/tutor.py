@@ -3,7 +3,7 @@ from django.db.models import Count
 from django.shortcuts import render
 from django.utils import timezone
 from django.views.decorators.http import require_POST
-from core.models import TutorProfile, QuickLessonMatch
+from core.models import LessonLanguage, TutorProfile, QuickLessonMatch
 from django.http import JsonResponse
 
 
@@ -43,7 +43,7 @@ def tutor_dashboard(request):
         "tutor__user",
     ).order_by("-started_at")
 
-    # 言語別の担当レッスン数（テンプレートで {{ lang_name_counts.English }} のように参照可）
+    # 言語別の担当レッスン数
     lang_name_counts = dict(
         QuickLessonMatch.objects.filter(tutor=tutor_profile)
         .values("request__language__name")
@@ -51,6 +51,12 @@ def tutor_dashboard(request):
         .values_list("request__language__name", "cnt")
     )
     total_lessons_taught = sum(lang_name_counts.values())
+    # 全言語対応: DBの言語を順番に並べて (lang, count) のリストに
+    lang_lesson_stats = [
+        (lang, lang_name_counts[lang.name])
+        for lang in LessonLanguage.objects.all()
+        if lang.name in lang_name_counts
+    ]
 
     return render(
         request,
@@ -59,7 +65,7 @@ def tutor_dashboard(request):
             "tutor": tutor_profile,
             "active_matches": active_matches,
             "matches": matches,
-            "lang_name_counts": lang_name_counts,
+            "lang_lesson_stats": lang_lesson_stats,
             "total_lessons_taught": total_lessons_taught,
         },
     )
