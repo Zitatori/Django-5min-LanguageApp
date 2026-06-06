@@ -431,7 +431,26 @@
       await startLocalMedia();
       sendSignal({ type: "join", sender: userId });
     } catch(e) {
-      alert("{% trans 'Could not access camera/microphone. Please check your browser settings.' %}");
+      let msg = "{% trans 'Could not access camera/microphone.' %}";
+      if (e.name === "NotAllowedError" || e.name === "PermissionDeniedError") {
+        msg = "{% trans 'Camera/microphone permission was denied. Please allow access in your browser settings and reload.' %}";
+      } else if (e.name === "NotFoundError" || e.name === "DevicesNotFoundError") {
+        msg = "{% trans 'No camera or microphone found. Please connect a device and reload.' %}";
+      } else if (e.name === "NotReadableError" || e.name === "TrackStartError") {
+        msg = "{% trans 'Camera is already in use by another app. Please close it and reload.' %}";
+      } else if (e.name === "OverconstrainedError") {
+        msg = "{% trans 'Camera does not meet requirements. Please try a different device.' %}";
+      }
+      // エラー内容を画面にも表示する
+      const placeholder = document.getElementById("remote-placeholder");
+      if (placeholder) {
+        const errEl = document.createElement("p");
+        errEl.style.cssText = "color:#f87171;font-size:14px;text-align:center;padding:0 20px;margin-top:8px;";
+        errEl.textContent = "⚠ " + msg;
+        placeholder.appendChild(errEl);
+      }
+      console.error("Camera error:", e.name, e.message);
+      alert(msg);
     }
   };
 
