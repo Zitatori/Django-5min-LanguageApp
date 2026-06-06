@@ -62,6 +62,7 @@
         <th>Username</th>
         <th>Role</th>
         <th>Points</th>
+        <th>Gold</th>
         <th>Status</th>
         <th>Languages</th>
         <th></th>
@@ -83,6 +84,15 @@
         <td>
           {% if u.point_balance %}
             <span class="pt-badge">{{ u.point_balance.balance }} pt</span>
+          {% else %}
+            <span class="pt-none">—</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if u.gold_membership.is_active %}
+            <span style="font-size:13px; font-weight:700; color:#b45309;">&#x1F451; {{ u.gold_membership.expires_at|date:"m/d" }}まで</span>
+          {% elif u.gold_membership %}
+            <span style="font-size:12px; color:#9ca3af;">期限切れ</span>
           {% else %}
             <span class="pt-none">—</span>
           {% endif %}

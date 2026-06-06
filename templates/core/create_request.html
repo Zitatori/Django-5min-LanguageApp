@@ -257,7 +257,8 @@
       <div class="cr-hist-info">
         <div class="cr-hist-name" style="display:flex; align-items:center; gap:5px;">
           {{ match.tutor.user.username }}
-          {% if match.tutor.user.is_superuser %}<span class="header-badge header-badge-dev">Dev</span>
+          {% if match.tutor.user.gold_membership.is_active %}<span class="header-badge header-badge-gold">&#x1F451; Gold</span>
+          {% elif match.tutor.user.is_superuser %}<span class="header-badge header-badge-dev">Dev</span>
           {% elif match.tutor.user.is_staff %}<span class="header-badge header-badge-admin">Admin</span>
           {% endif %}
         </div>

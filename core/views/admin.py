@@ -26,7 +26,7 @@ def staff_or_admin_role_required(view_func):
 def admin_dashboard(request):
     users = (
         User.objects
-        .select_related('userprofile', 'tutorprofile', 'point_balance')
+        .select_related('userprofile', 'tutorprofile', 'point_balance', 'gold_membership')
         .prefetch_related('tutorprofile__languages')
         .annotate(
             is_online_sort=Case(
