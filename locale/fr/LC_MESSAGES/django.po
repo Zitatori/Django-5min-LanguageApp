@@ -483,11 +483,8 @@ msgstr "Créer un compte"
 msgid "Log in here"
 msgstr ""
 
-msgid "To add a teaching language, an interview with the developer is required."
-msgstr "Pour ajouter une langue d'enseignement, un entretien avec le développeur est requis."
-
-msgid "Contact us"
-msgstr "Contactez-nous"
+msgid "To add a teaching language, an interview is required. Please email your available times to"
+msgstr "Pour ajouter une langue d'enseignement, un entretien est requis. Veuillez envoyer vos disponibilités à"
 
 #~ msgid "Step 1"
 #~ msgstr "Étape 1"
