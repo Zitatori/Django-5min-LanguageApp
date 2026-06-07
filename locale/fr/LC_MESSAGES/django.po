@@ -169,7 +169,7 @@ msgstr "Tuteur"
 
 #: templates/core/lesson_room.html:43
 msgid "Student"
-msgstr "Participant"
+msgstr "Élève"
 
 #: templates/core/lesson_room.html:434
 #, fuzzy

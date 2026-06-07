@@ -170,7 +170,7 @@ msgstr "講師"
 
 #: templates/core/lesson_room.html:43
 msgid "Student"
-msgstr "参加者"
+msgstr "生徒"
 
 #: templates/core/lesson_room.html:434
 #, fuzzy

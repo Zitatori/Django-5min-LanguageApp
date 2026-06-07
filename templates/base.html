@@ -48,7 +48,7 @@
             {% elif user.is_staff %}<span class="header-badge header-badge-admin">Admin</span>
             {% endif %}
           </a>
-          <a href="{% url 'create_request' %}">{% trans "5-minute lesson" %}</a>
+          <a href="{% url 'create_request' %}">{% trans "Student" %}</a>
           <a href="{% url 'tutor_dashboard' %}">{% trans "Tutor Dashboard" %}</a>
           <a href="{% url 'logout' %}">{% trans "Log out" %}</a>
         {% else %}
@@ -83,7 +83,7 @@
           {% elif user.is_staff %}<span class="header-badge header-badge-admin">Admin</span>
           {% endif %}
         </a>
-        <a href="{% url 'create_request' %}">{% trans "5-minute lesson" %}</a>
+        <a href="{% url 'create_request' %}">{% trans "Student" %}</a>
         <a href="{% url 'tutor_dashboard' %}">{% trans "Tutor Dashboard" %}</a>
         <a href="{% url 'logout' %}">{% trans "Log out" %}</a>
       {% else %}
