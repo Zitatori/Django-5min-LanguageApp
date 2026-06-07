@@ -67,6 +67,13 @@
 {% if tutor.is_online %}
 <div class="card td-matching-card" id="matching-card">
 
+  {# 言語未設定の警告 #}
+  {% if not tutor.languages.all %}
+  <div style="background:#fef3c7; border:1.5px solid #fde68a; border-radius:10px; padding:10px 14px; margin-bottom:14px; font-size:13px; color:#92400e;">
+    ⚠️ {% trans "No teaching languages set — students cannot find you. Please contact an admin." %}
+  </div>
+  {% endif %}
+
   {# 言語カードグリッド #}
   <p class="td-lang-label">{% trans "Teaching languages" %}</p>
   <div class="td-lang-grid">
@@ -437,6 +444,13 @@
   // persisted=false の時だけ（タブを本当に閉じた時）オフライン化する
   window.addEventListener('pagehide', (e) => {
     if (!e.persisted) sendOfflineBeacon();
+  });
+
+  // スマホがスリープから復帰したとき（bfcache復元）即pingして last_ping_at を更新
+  window.addEventListener('pageshow', (e) => {
+    if (e.persisted && toggle && toggle.checked) {
+      fetch("{% url 'tutor_match_status' %}").catch(() => {});
+    }
   });
 })();
 </script>

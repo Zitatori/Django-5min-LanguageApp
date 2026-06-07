@@ -69,7 +69,7 @@ def tutor_dashboard(request):
             "total_lessons_taught": total_lessons_taught,
         },
     )
-ONLINE_TIMEOUT_SECONDS = 300  # 5分以内の ping がないとオフライン扱い
+ONLINE_TIMEOUT_SECONDS = 1800  # 30分以内の ping がないとオフライン扱い（スマホスリープ対策）
 
 
 @login_required

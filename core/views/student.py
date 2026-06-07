@@ -16,7 +16,7 @@ from core.models import (
     QuickLessonMatch,
 )
 
-ONLINE_TIMEOUT_SECONDS = 300      # tutor.py と合わせる（5分）
+ONLINE_TIMEOUT_SECONDS = 1800     # tutor.py と合わせる（30分）スマホスリープ対策
 CONSECUTIVE_WAIT_SECONDS = 60    # 連続マッチを禁じる猶予期間（1分）
 
 
