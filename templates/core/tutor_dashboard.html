@@ -134,9 +134,9 @@
 </div>
 
 </div>{# /td-col-left #}
-<div class="td-col-right">
 
-{# ── ❸ Active Matches カード ── #}
+{# ── ❸ Active Matches（モバイル: toggle直下 / PC: 右カラム上部） ── #}
+<div class="td-active-matches">
 <div class="card">
   <h3 class="card-title" style="margin-bottom:16px;">{% trans "Active Matches" %}</h3>
 
@@ -164,11 +164,13 @@
     </div>
   {% endif %}
 </div>
+</div>{# /td-active-matches #}
 
 {# ── ❹ Recent History ── #}
+<div class="td-col-right">
 {% include "core/_recent_lessons.html" with matches=matches %}
-
 </div>{# /td-col-right #}
+
 </div>{# /td-pc-grid #}
 
 <style>
@@ -373,14 +375,16 @@
     .td-pc-grid {
       display: grid;
       grid-template-columns: 400px 1fr;
+      grid-template-areas:
+        "left matches"
+        "left history";
       gap: 0 28px;
       align-items: start;
     }
-    .td-col-left,
-    .td-col-right {
-      min-width: 0;
-    }
-    /* 各カラムの最後のカードは下マージン不要 */
+    .td-col-left      { grid-area: left;    min-width: 0; }
+    .td-active-matches{ grid-area: matches; min-width: 0; }
+    .td-col-right     { grid-area: history; min-width: 0; }
+
     .td-col-left > *:last-child,
     .td-col-right > *:last-child {
       margin-bottom: 0;
