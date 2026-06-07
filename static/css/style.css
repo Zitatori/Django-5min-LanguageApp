@@ -77,7 +77,36 @@ a:hover {
   text-decoration: none !important;
 }
 
-/* ユーザー名リンク（バッジ付き） */
+/* ユーザー名（テキストのみ、リンクなし） */
+.header-username {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #9ca3af;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 6px;
+}
+
+/* My Point リンク */
+.header-points-link {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 3px;
+  background: rgba(99,102,241,0.15);
+  border: 1px solid rgba(99,102,241,0.35);
+  border-radius: 99px;
+  padding: 4px 10px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  color: #a5b4fc !important;
+}
+.header-points-link:hover {
+  background: rgba(99,102,241,0.28) !important;
+  color: #c7d2fe !important;
+}
+
+/* 旧 header-user-link（後方互換） */
 .header-user-link {
   display: inline-flex !important;
   align-items: center;
