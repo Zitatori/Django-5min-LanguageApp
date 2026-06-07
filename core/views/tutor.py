@@ -78,9 +78,11 @@ def tutor_match_status(request):
     now = timezone.now()
     tutor_profile = TutorProfile.objects.get(user=request.user)
 
-    # ハートビート更新（オンライン中のみ）
-    if tutor_profile.is_online:
-        TutorProfile.objects.filter(pk=tutor_profile.pk).update(last_ping_at=now)
+    # ハートビート: 呼ばれた＝チューターがオンライン画面を開いている → is_online=True を維持
+    # ビーコンなどで誤ってFalseになっても次のポーリングで自動復旧する
+    TutorProfile.objects.filter(pk=tutor_profile.pk).update(
+        is_online=True, last_ping_at=now
+    )
 
     active_match = QuickLessonMatch.objects.filter(
         tutor=tutor_profile,

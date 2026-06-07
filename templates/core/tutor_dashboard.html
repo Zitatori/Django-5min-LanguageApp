@@ -428,30 +428,15 @@
     form.submit();
   });
 
-  // タブを閉じたりページ離脱時にオフライン化
-  function getCsrf() {
-    const m = document.cookie.match(/csrftoken=([^;]+)/);
-    return m ? m[1] : '';
-  }
-  function sendOfflineBeacon() {
-    if (!toggle || !toggle.checked) return; // オフラインなら不要
-    const fd = new FormData();
-    fd.append('csrfmiddlewaretoken', getCsrf());
-    navigator.sendBeacon("{% url 'tutor_set_offline' %}", fd);
-  }
-  // beforeunload は削除: モバイルでアプリ切替・画面ロック時に誤発火してオフライン化される問題を防ぐ
-  // pagehide: persisted=false（タブを本当に閉じた時）のみオフライン化
-  window.addEventListener('pagehide', (e) => {
-    if (!e.persisted) sendOfflineBeacon();
-  });
+  // ビーコンは使わない: モバイルで誤発火してオフライン化される問題があるため削除
+  // オフライン化は明示的なトグル操作のみ。タイムアウト(30分)がクラッシュ時のフォールバック。
 
-  // スマホがスリープ・アプリ切替から復帰したとき 即pingして last_ping_at を更新
+  // スマホのスリープ・アプリ切替からの復帰時に即pingして last_ping_at を更新
   window.addEventListener('pageshow', (e) => {
     if (e.persisted && toggle && toggle.checked) {
       fetch("{% url 'tutor_match_status' %}").catch(() => {});
     }
   });
-  // visibilitychange でも復帰を検知（より幅広いブラウザ対応）
   document.addEventListener('visibilitychange', () => {
     if (!document.hidden && toggle && toggle.checked) {
       fetch("{% url 'tutor_match_status' %}").catch(() => {});
