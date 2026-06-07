@@ -127,6 +127,12 @@
 </div>
 {% endif %}
 
+{# ── 言語追加案内 ── #}
+<div class="td-lang-notice">
+  <span class="td-lang-notice-icon">💬</span>
+  <span>{% trans "To add a teaching language, an interview with the developer is required." %} <a href="mailto:quicklesson.contact@gmail.com" class="td-lang-notice-link">{% trans "Contact us" %}</a></span>
+</div>
+
 </div>{# /td-col-left #}
 <div class="td-col-right">
 
@@ -343,6 +349,24 @@
   }
   .td-empty-icon { font-size: 36px; margin-bottom: 4px; }
   .td-empty-state p { font-size: 13px; }
+
+  /* ── 言語追加案内 ── */
+  .td-lang-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 12px;
+    color: #6b7280;
+    line-height: 1.5;
+    margin-bottom: 16px;
+  }
+  .td-lang-notice-icon { flex-shrink: 0; font-size: 15px; }
+  .td-lang-notice-link { color: #6366f1; text-decoration: underline; }
+  .td-lang-notice-link:hover { color: #4f46e5; }
 
   /* ── PC 2カラムレイアウト ── */
   @media (min-width: 900px) {

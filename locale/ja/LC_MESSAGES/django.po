@@ -474,6 +474,12 @@ msgstr "アカウントを作成"
 msgid "Log in here"
 msgstr ""
 
+msgid "To add a teaching language, an interview with the developer is required."
+msgstr "担当言語を追加する場合は、開発者との面接が必要です。"
+
+msgid "Contact us"
+msgstr "お問い合わせ"
+
 #~ msgid "Step 1"
 #~ msgstr "ステップ1"
 
