@@ -1,9 +1,11 @@
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.utils import timezone
+from django.views.decorators.http import require_POST
 from django.views.generic import TemplateView
 
-from core.models import QuickLessonMatch, PointBalance, GoldMembership
+from core.models import QuickLessonMatch, TutorProfile, PointBalance, GoldMembership
 from django.utils import timezone as tz
 
 
@@ -81,3 +83,22 @@ def lesson_room(request, match_id: int):
     }
 
     return render(request, "core/lesson_room.html", context)
+
+
+@login_required
+@require_POST
+def lesson_end(request, match_id: int):
+    """レッスン途中退出・タイムアップ時に end_at を今に縮める。
+    チューターもオフライン化する（次のポーリングで自動復帰するが意図的退出扱い）。
+    """
+    match = get_object_or_404(QuickLessonMatch, id=match_id)
+    now = timezone.now()
+
+    # end_at をまだ迎えていない場合のみ今に更新（延長はしない）
+    if match.end_at is None or match.end_at > now:
+        QuickLessonMatch.objects.filter(pk=match.pk).update(end_at=now)
+
+    # チューターをオフライン化
+    TutorProfile.objects.filter(pk=match.tutor.pk).update(is_online=False)
+
+    return JsonResponse({"ok": True})

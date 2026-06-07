@@ -311,16 +311,15 @@
   const userId   = "{{ request.user.id }}";
   const isTutor  = (userId === "{{ match.tutor.user.id }}");
 
-  // チューターがルームを離れるときオフライン化
+  // レッスン終了: end_at を今に更新 + チューターオフライン化
   function getCsrf() {
     const m = document.cookie.match(/csrftoken=([^;]+)/);
     return m ? m[1] : '';
   }
-  function sendOfflineBeacon() {
-    if (!isTutor) return;
+  function sendEndLessonBeacon() {
     const fd = new FormData();
     fd.append('csrfmiddlewaretoken', getCsrf());
-    navigator.sendBeacon("{% url 'tutor_set_offline' %}", fd);
+    navigator.sendBeacon("{% url 'lesson_end' match.id %}", fd);
   }
 
   let localStream    = null;
@@ -352,13 +351,13 @@
   window.onTimerStart = startTimer;
 
   function endLesson(reason) {
-    sendOfflineBeacon();
+    sendEndLessonBeacon();
     if (typeof cleanupCall === "function") cleanupCall();
     window.location.href = "{% url 'home' %}";
   }
   leaveBtn.addEventListener("click", () => endLesson("manual"));
-  window.addEventListener('beforeunload', sendOfflineBeacon);
-  window.addEventListener('pagehide',     sendOfflineBeacon);
+  // ページを閉じたり離脱したときも end_at を今に更新する
+  window.addEventListener('pagehide', sendEndLessonBeacon);
 
   // ── WebRTC ──
   const protocol = location.protocol === "https:" ? "wss" : "ws";
