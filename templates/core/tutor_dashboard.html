@@ -4,9 +4,9 @@
 {% block content %}
 
 <div class="td-pc-grid">
-<div class="td-col-left">
 
-{# ── ❶ ステータスカード ── #}
+{# ── ❶ ステータスカード（独立: モバイルで最上部） ── #}
+<div class="td-item-status">
 <div class="card td-status-card">
   <div class="td-status-left">
     <h2 class="card-title" style="margin:0;">{% trans "Tutor Dashboard" %}</h2>
@@ -37,6 +37,41 @@
     </div>
   </form>
 </div>
+</div>{# /td-item-status #}
+
+{# ── ❸ Active Matches（モバイル: toggle直下 / PC: 右カラム） ── #}
+<div class="td-active-matches">
+<div class="card">
+  <h3 class="card-title" style="margin-bottom:16px;">{% trans "Active Matches" %}</h3>
+
+  {% if active_matches %}
+    {% for match in active_matches %}
+      <div style="padding:12px; border:1px solid #e5e7eb; border-radius:12px; margin-bottom:12px;">
+        <p><strong>Student:</strong>
+          {{ match.request.student.user.username }}
+          {% if match.request.student.user.gold_membership.is_active %}<span class="header-badge header-badge-gold">&#x1F451; Gold</span>
+          {% elif match.request.student.user.is_superuser %}<span class="header-badge header-badge-dev">Dev</span>
+          {% elif match.request.student.user.is_staff %}<span class="header-badge header-badge-admin">Admin</span>
+          {% endif %}
+        </p>
+        <p><strong>Language:</strong> {{ match.request.language.name }}</p>
+        <a href="{% url 'lesson_room' match.id %}" class="btn btn-primary" style="margin-top:8px; display:inline-block;">
+          {% trans "Enter lesson room" %}
+        </a>
+      </div>
+    {% endfor %}
+  {% else %}
+    <div class="td-empty-state">
+      <div class="td-empty-icon">🎯</div>
+      <p>{% trans "No active matches yet." %}</p>
+      <p style="font-size:12px;">{% trans "Matches will appear here automatically." %}</p>
+    </div>
+  {% endif %}
+</div>
+</div>{# /td-active-matches #}
+
+{# ── 左カラム残り（統計・言語・案内） ── #}
+<div class="td-col-left">
 
 {# ── ❷ レッスン統計 ── #}
 {% if total_lessons_taught %}
@@ -134,37 +169,6 @@
 </div>
 
 </div>{# /td-col-left #}
-
-{# ── ❸ Active Matches（モバイル: toggle直下 / PC: 右カラム上部） ── #}
-<div class="td-active-matches">
-<div class="card">
-  <h3 class="card-title" style="margin-bottom:16px;">{% trans "Active Matches" %}</h3>
-
-  {% if active_matches %}
-    {% for match in active_matches %}
-      <div style="padding:12px; border:1px solid #e5e7eb; border-radius:12px; margin-bottom:12px;">
-        <p><strong>Student:</strong>
-          {{ match.request.student.user.username }}
-          {% if match.request.student.user.gold_membership.is_active %}<span class="header-badge header-badge-gold">&#x1F451; Gold</span>
-          {% elif match.request.student.user.is_superuser %}<span class="header-badge header-badge-dev">Dev</span>
-          {% elif match.request.student.user.is_staff %}<span class="header-badge header-badge-admin">Admin</span>
-          {% endif %}
-        </p>
-        <p><strong>Language:</strong> {{ match.request.language.name }}</p>
-        <a href="{% url 'lesson_room' match.id %}" class="btn btn-primary" style="margin-top:8px; display:inline-block;">
-          {% trans "Enter lesson room" %}
-        </a>
-      </div>
-    {% endfor %}
-  {% else %}
-    <div class="td-empty-state">
-      <div class="td-empty-icon">🎯</div>
-      <p>{% trans "No active matches yet." %}</p>
-      <p style="font-size:12px;">{% trans "Matches will appear here automatically." %}</p>
-    </div>
-  {% endif %}
-</div>
-</div>{# /td-active-matches #}
 
 {# ── ❹ Recent History ── #}
 <div class="td-col-right">
@@ -376,13 +380,15 @@
       display: grid;
       grid-template-columns: 400px 1fr;
       grid-template-areas:
-        "left matches"
-        "left history";
+        "status  matches"
+        "left    matches"
+        "left    history";
       gap: 0 28px;
       align-items: start;
     }
+    .td-item-status   { grid-area: status;  min-width: 0; }
     .td-col-left      { grid-area: left;    min-width: 0; }
-    .td-active-matches{ grid-area: matches; min-width: 0; }
+    .td-active-matches{ grid-area: matches; min-width: 0; align-self: start; }
     .td-col-right     { grid-area: history; min-width: 0; }
 
     .td-col-left > *:last-child,
