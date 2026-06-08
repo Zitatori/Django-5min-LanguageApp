@@ -28,36 +28,62 @@
       <div class="mt-16">
         <p><strong>{% trans "Tutor" %}:</strong> {{ match.tutor.user.username }}</p>
       </div>
-
       <div class="mt-16">
-        <button class="btn" onclick="window.location.href='{% url 'lesson_room' match.id %}'">
-          {% trans "Enter Lesson Room" %}
-        </button>
-        <button class="btn btn-outline" onclick="window.location.href='{% url 'home' %}'">
-          {% trans "Back to Home" %}
-        </button>
+        <p class="text-muted" style="font-size:13px;">{% trans "Entering lesson room…" %}</p>
       </div>
+      {# マッチしたら即座にレッスンルームへ自動遷移 #}
+      <script>
+        window.location.href = "{% url 'lesson_room' match.id %}";
+      </script>
 
     {% elif request_obj.status == "waiting" %}
-      <div class="spinner-wrapper">
-        <div class="spinner"></div>
-        <p>{% trans "Matching you with a tutor…" %}</p>
-        <p class="text-muted">
-          {% trans "This page will automatically update as soon as an available tutor is found." %}
-        </p>
-      </div>
+      {% if consecutive_wait_remaining > 0 %}
+        {# 連続マッチ待機中: カウントダウン表示 #}
+        <div class="spinner-wrapper">
+          <div class="spinner"></div>
+          <p>{% trans "Please wait before your next lesson…" %}</p>
+          <p class="text-muted" id="countdown-msg" style="font-size:22px; font-weight:700; color:#6366f1; margin-top:8px;">
+            {{ consecutive_wait_remaining }}s
+          </p>
+          <p class="text-muted" style="font-size:13px;">{% trans "You will be matched automatically." %}</p>
+        </div>
+        <div class="center mt-16">
+          <button class="btn btn-outline" onclick="window.location.href='{% url 'home' %}'">
+            {% trans "Cancel and return to Home" %}
+          </button>
+        </div>
+        <script>
+          let remaining = {{ consecutive_wait_remaining }};
+          const el = document.getElementById('countdown-msg');
+          const timer = setInterval(() => {
+            remaining--;
+            if (remaining <= 0) {
+              clearInterval(timer);
+              window.location.reload();
+            } else {
+              el.textContent = remaining + 's';
+            }
+          }, 1000);
+        </script>
 
-      <div class="center mt-16">
-        <button class="btn btn-outline" onclick="window.location.href='{% url 'home' %}'">
-          {% trans "Cancel and return to Home" %}
-        </button>
-      </div>
-
-      <script>
-        setTimeout(function () {
-          window.location.reload();
-        }, 2000);
-      </script>
+      {% else %}
+        {# 通常の検索中 #}
+        <div class="spinner-wrapper">
+          <div class="spinner"></div>
+          <p>{% trans "Matching you with a tutor…" %}</p>
+          <p class="text-muted">
+            {% trans "This page will automatically update as soon as an available tutor is found." %}
+          </p>
+        </div>
+        <div class="center mt-16">
+          <button class="btn btn-outline" onclick="window.location.href='{% url 'home' %}'">
+            {% trans "Cancel and return to Home" %}
+          </button>
+        </div>
+        <script>
+          setTimeout(function () { window.location.reload(); }, 2000);
+        </script>
+      {% endif %}
 
     {% else %}
       <div class="mt-16">

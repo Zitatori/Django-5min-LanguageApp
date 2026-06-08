@@ -235,7 +235,10 @@ def request_detail(request, request_id: int):
 
     match = QuickLessonMatch.objects.filter(request=qlr).first()
 
+    consecutive_wait_remaining = 0  # テンプレートに渡す残り待機秒数
+
     if qlr.status == "waiting" and match is None:
+        now = timezone.now()
         tutors_qs = active_tutors_qs(language=qlr.language)
 
         # 連続マッチ防止
@@ -245,12 +248,15 @@ def request_detail(request, request_id: int):
             if filtered_qs.exists():
                 # 別の候補がいる → 除外して選ぶ
                 tutors_qs = filtered_qs
-            elif (timezone.now() - qlr.created_at).total_seconds() >= CONSECUTIVE_WAIT_SECONDS:
-                # 3分以上待った → 例外的に連続マッチを許可
-                pass
             else:
-                # 3分未満 → まだ待機（マッチさせない）
-                tutors_qs = tutors_qs.none()
+                elapsed = (now - qlr.created_at).total_seconds()
+                if elapsed >= CONSECUTIVE_WAIT_SECONDS:
+                    # 待機時間が過ぎた → 連続マッチを許可
+                    pass
+                else:
+                    # まだ待機中 → 残り時間を計算してテンプレートへ
+                    consecutive_wait_remaining = int(CONSECUTIVE_WAIT_SECONDS - elapsed) + 1
+                    tutors_qs = tutors_qs.none()
 
         if tutors_qs.exists():
             tutor = random.choice(list(tutors_qs))
@@ -274,7 +280,11 @@ def request_detail(request, request_id: int):
     return render(
         request,
         "core/request_detail.html",
-        {"request_obj": qlr, "match": match},
+        {
+            "request_obj": qlr,
+            "match": match,
+            "consecutive_wait_remaining": consecutive_wait_remaining,
+        },
     )
 
 
