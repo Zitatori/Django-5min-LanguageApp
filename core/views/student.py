@@ -134,6 +134,9 @@ def active_tutors_qs(language=None):
 def create_request(request):
     student_profile, _ = StudentProfile.objects.get_or_create(user=request.user)
 
+    # Student ページに来たら自分の Tutor をオフラインに
+    TutorProfile.objects.filter(user=request.user, is_online=True).update(is_online=False)
+
     if request.method == "POST":
         lang_id = request.POST.get("language_id")
         language = get_object_or_404(LessonLanguage, id=lang_id)
@@ -207,7 +210,11 @@ def create_request(request):
             tutor.is_online = False
             tutor.save()
 
-        return redirect("request_detail", request_id=qlr.id)
+            return redirect("request_detail", request_id=qlr.id)
+
+        # マッチできる相手がいない（前回の相手は60秒除外中）→ リクエストを破棄してホームへ戻す
+        qlr.delete()
+        return redirect("create_request")
 
     languages = LessonLanguage.objects.all()
     matches = QuickLessonMatch.objects.filter(
@@ -257,33 +264,15 @@ def request_detail(request, request_id: int):
 
     match = QuickLessonMatch.objects.filter(request=qlr).first()
 
-    consecutive_wait_remaining = 0  # テンプレートに渡す残り待機秒数
-
     if qlr.status == "waiting" and match is None:
         now = timezone.now()
         tutors_qs = active_tutors_qs(language=qlr.language)
 
-        # 連続マッチ防止（60秒以内の同一ペアのみ除外）
+        # 60秒以内の同一ペアを除外して別の相手を優先
         exclude_ids = _get_consecutive_exclude_ids(qlr.student)
         if exclude_ids:
             filtered_qs = tutors_qs.exclude(pk__in=exclude_ids)
-            if filtered_qs.exists():
-                # 別の候補がいる → すぐマッチ
-                tutors_qs = filtered_qs
-            else:
-                # 同一ペアしかいない → 前回レッスン終了からの残り時間を計算
-                last_match = (
-                    QuickLessonMatch.objects
-                    .filter(request__student=qlr.student)
-                    .order_by("-end_at")
-                    .first()
-                )
-                if last_match and last_match.end_at:
-                    elapsed_since_end = (now - last_match.end_at).total_seconds()
-                    if elapsed_since_end < CONSECUTIVE_WAIT_SECONDS:
-                        consecutive_wait_remaining = int(CONSECUTIVE_WAIT_SECONDS - elapsed_since_end) + 1
-                        tutors_qs = tutors_qs.none()
-                    # 60秒過ぎていれば同一ペアでもマッチ許可（tutors_qs そのまま）
+            tutors_qs = filtered_qs if filtered_qs.exists() else tutors_qs.none()
 
         if tutors_qs.exists():
             tutor = random.choice(list(tutors_qs))
@@ -310,7 +299,6 @@ def request_detail(request, request_id: int):
         {
             "request_obj": qlr,
             "match": match,
-            "consecutive_wait_remaining": consecutive_wait_remaining,
         },
     )
 
