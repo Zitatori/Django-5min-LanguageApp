@@ -9,6 +9,7 @@ from core.views.profile import profile, purchase_points, request_withdrawal, req
 
 urlpatterns = [
     path("", views.home, name="home"),
+    path("privacy/", views.privacy, name="privacy"),
     path("request/", views.create_request, name="create_request"),
     path("request/online-counts/", views.student_online_counts, name="student_online_counts"),
     path("match/<int:request_id>/", views.request_detail, name="request_detail"),
