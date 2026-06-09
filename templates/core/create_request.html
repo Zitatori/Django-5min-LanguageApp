@@ -69,24 +69,25 @@
   .cr-lang-card:active { transform: scale(0.97); }
   .cr-lang-card.selected {
     border-color: #fff;
-    border-width: 3px;
-    box-shadow: 0 0 0 3px rgba(255,255,255,0.6), 0 8px 28px rgba(99,102,241,0.4);
-    transform: scale(1.05);
+    border-width: 4px;
+    box-shadow: 0 0 0 4px rgba(255,255,255,0.9), 0 0 0 7px #6366f1, 0 12px 32px rgba(99,102,241,0.5);
+    transform: scale(1.08);
+    z-index: 2;
   }
-  /* 選択中ラベル */
-  .cr-lang-card.selected::before {
-    content: '✓ Selected';
+  /* 大きな✓バッジ */
+  .cr-lang-card.selected::after {
+    content: '✓';
     position: absolute;
-    bottom: 8px; left: 50%; transform: translateX(-50%);
-    background: rgba(255,255,255,0.95);
-    color: #4f46e5;
-    font-size: 10px;
-    font-weight: 800;
-    padding: 2px 9px;
-    border-radius: 99px;
-    z-index: 10;
-    white-space: nowrap;
-    letter-spacing: 0.03em;
+    top: -1px; right: -1px;
+    width: 32px; height: 32px;
+    background: #6366f1;
+    border-radius: 0 12px 0 12px;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 900;
+    line-height: 32px;
+    text-align: center;
+    z-index: 20;
   }
 
   /* 背景写真 */
