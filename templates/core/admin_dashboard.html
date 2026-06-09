@@ -43,7 +43,14 @@
 </style>
 
 <div class="card admin-section">
-  <h2>All users ({{ users_count }})</h2>
+  <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:14px;">
+    <h2 style="margin:0;">All users ({{ users_count }})</h2>
+    <input type="text" id="user-search" placeholder="🔍 Search by username…"
+           oninput="filterUsers(this.value)"
+           style="padding:7px 14px; border:1.5px solid #e5e7eb; border-radius:99px;
+                  font-size:13px; outline:none; width:220px; transition:border-color 0.15s;"
+           onfocus="this.style.borderColor='#6366f1'" onblur="this.style.borderColor='#e5e7eb'">
+  </div>
 
   {% if no_balance_count > 0 %}
   <div class="grant-banner">
@@ -70,7 +77,7 @@
     </thead>
     <tbody>
       {% for u in users %}
-      <tr>
+      <tr data-username="{{ u.username|lower }}">
         <td>{{ u.username }}</td>
         <td>
           {% if u.is_staff %}
@@ -336,6 +343,15 @@
   }
   function closePointsModal() {
     document.getElementById('points-modal').classList.remove('open');
+  }
+</script>
+
+<script>
+  function filterUsers(query) {
+    const q = query.toLowerCase().trim();
+    document.querySelectorAll('tbody tr[data-username]').forEach(row => {
+      row.style.display = row.dataset.username.includes(q) ? '' : 'none';
+    });
   }
 </script>
 {% endblock %}
