@@ -68,26 +68,34 @@
   .cr-lang-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.18); }
   .cr-lang-card:active { transform: scale(0.97); }
   .cr-lang-card.selected {
-    border-color: #fff;
-    border-width: 4px;
-    box-shadow: 0 0 0 4px rgba(255,255,255,0.9), 0 0 0 7px #6366f1, 0 12px 32px rgba(99,102,241,0.5);
     transform: scale(1.08);
     z-index: 2;
   }
-  /* 大きな✓バッジ */
-  .cr-lang-card.selected::after {
-    content: '✓';
+  /* overflow:hidden を避けてリングを内側に描画 */
+  .cr-select-ring {
     position: absolute;
-    top: -1px; right: -1px;
-    width: 32px; height: 32px;
+    inset: 0;
+    border: 4px solid #fff;
+    border-radius: 12px;
+    box-shadow: inset 0 0 0 3px #6366f1;
+    z-index: 30;
+    pointer-events: none;
+  }
+  /* ✓ バッジ */
+  .cr-select-badge {
+    position: absolute;
+    top: 8px; right: 8px;
+    width: 28px; height: 28px;
     background: #6366f1;
-    border-radius: 0 12px 0 12px;
+    border: 2px solid #fff;
+    border-radius: 50%;
     color: #fff;
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 900;
-    line-height: 32px;
+    line-height: 24px;
     text-align: center;
-    z-index: 20;
+    z-index: 40;
+    pointer-events: none;
   }
 
   /* 背景写真 */
@@ -339,13 +347,31 @@
   const cards = document.querySelectorAll('.cr-lang-card');
   const input = document.getElementById('selected-lang-id');
 
-  if (cards.length > 0 && !input.value) {
-    input.value = cards[0].getAttribute('data-id');
+  function applySelection(el) {
+    // 全カードのリング・バッジを除去
+    cards.forEach(c => {
+      c.classList.remove('selected');
+      c.querySelectorAll('.cr-select-ring, .cr-select-badge').forEach(n => n.remove());
+    });
+    // 選択カードにリング・バッジを追加
+    el.classList.add('selected');
+    const ring = document.createElement('div');
+    ring.className = 'cr-select-ring';
+    el.appendChild(ring);
+    const badge = document.createElement('div');
+    badge.className = 'cr-select-badge';
+    badge.textContent = '✓';
+    el.appendChild(badge);
+  }
+
+  // 初期選択（最初のカード）
+  if (cards.length > 0) {
+    applySelection(cards[0]);
+    if (!input.value) input.value = cards[0].getAttribute('data-id');
   }
 
   function selectLang(el, id) {
-    cards.forEach(c => c.classList.remove('selected'));
-    el.classList.add('selected');
+    applySelection(el);
     input.value = id;
   }
 
