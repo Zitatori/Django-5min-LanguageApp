@@ -194,25 +194,23 @@ def create_request(request):
 
         if tutors_qs.exists():
             tutor = random.choice(list(tutors_qs))
-            now = timezone.now()
 
-            QuickLessonMatch.objects.create(
-                request=qlr,
-                tutor=tutor,
-                started_at=now,
-                end_at=now + timedelta(minutes=5),
-                price=5.0,
-            )
+            # Optimistic locking: is_online=True の場合のみ更新（同時リクエストでの二重マッチ防止）
+            claimed = TutorProfile.objects.filter(pk=tutor.pk, is_online=True).update(is_online=False)
+            if claimed == 1:
+                now = timezone.now()
+                QuickLessonMatch.objects.create(
+                    request=qlr,
+                    tutor=tutor,
+                    started_at=now,
+                    end_at=now + timedelta(minutes=5),
+                    price=5.0,
+                )
+                qlr.status = "matched"
+                qlr.save()
+                return redirect("request_detail", request_id=qlr.id)
 
-            qlr.status = "matched"
-            qlr.save()
-
-            tutor.is_online = False
-            tutor.save()
-
-            return redirect("request_detail", request_id=qlr.id)
-
-        # マッチできる相手がいない（前回の相手は60秒除外中）→ リクエストを破棄してホームへ戻す
+        # マッチできなかった（相手なし or 他のリクエストに先を越された）→ 破棄してホームへ
         qlr.delete()
         return redirect("create_request")
 
@@ -280,22 +278,21 @@ def request_detail(request, request_id: int):
 
         if tutors_qs.exists():
             tutor = random.choice(list(tutors_qs))
-            now = timezone.now()
 
-            match = QuickLessonMatch.objects.create(
-                request=qlr,
-                tutor=tutor,
-                started_at=now,
-                end_at=now + timedelta(minutes=5),
-                meeting_url="https://example.com/dummy-room",
-                price=5.0,
-            )
-
-            qlr.status = "matched"
-            qlr.save()
-
-            tutor.is_online = False
-            tutor.save()
+            # Optimistic locking: 同時リクエストで同じ講師への二重マッチを防ぐ
+            claimed = TutorProfile.objects.filter(pk=tutor.pk, is_online=True).update(is_online=False)
+            if claimed == 1:
+                now = timezone.now()
+                match = QuickLessonMatch.objects.create(
+                    request=qlr,
+                    tutor=tutor,
+                    started_at=now,
+                    end_at=now + timedelta(minutes=5),
+                    meeting_url="https://example.com/dummy-room",
+                    price=5.0,
+                )
+                qlr.status = "matched"
+                qlr.save()
 
     return render(
         request,
