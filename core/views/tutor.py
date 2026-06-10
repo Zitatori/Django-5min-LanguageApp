@@ -23,7 +23,8 @@ def tutor_dashboard(request):
         tutor_profile.save()
 
     matches = QuickLessonMatch.objects.filter(
-        tutor=tutor_profile
+        tutor=tutor_profile,
+        student_joined_at__isnull=False,  # 実際に通話したものだけ
     ).select_related(
         "request",
         "request__student",
