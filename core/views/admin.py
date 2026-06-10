@@ -36,7 +36,7 @@ def admin_dashboard(request):
             ),
             lesson_count=Count('tutorprofile__quicklessonmatch', distinct=True),
         )
-        .order_by('-is_online_sort', '-lesson_count', '-last_login')
+        .order_by('date_joined')
     )
     tutors = TutorProfile.objects.select_related('user').prefetch_related('languages').all()
     matches = QuickLessonMatch.objects.select_related(
