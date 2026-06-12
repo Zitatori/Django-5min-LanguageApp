@@ -76,26 +76,29 @@ ONLINE_TIMEOUT_SECONDS = 1800  # 30分以内の ping がないとオフライン
 @login_required
 def tutor_match_status(request):
     """ポーリング兼ハートビート。呼ばれるたびに last_ping_at を更新。"""
+    from django.urls import reverse
     now = timezone.now()
     tutor_profile = TutorProfile.objects.get(user=request.user)
 
-    # ハートビート: 呼ばれた＝チューターがオンライン画面を開いている → is_online=True を維持
-    # ビーコンなどで誤ってFalseになっても次のポーリングで自動復旧する
-    TutorProfile.objects.filter(pk=tutor_profile.pk).update(
-        is_online=True, last_ping_at=now
-    )
-
+    # マッチ中かどうかを先に確認する（is_online の上書きより前）
     active_match = QuickLessonMatch.objects.filter(
         tutor=tutor_profile,
         end_at__gt=now
     ).first()
 
     if active_match:
-        from django.urls import reverse
+        # レッスン中: is_online=False のまま維持し、last_ping_at だけ更新
+        # ← ここで is_online=True に戻すとダブルブッキングが発生する
+        TutorProfile.objects.filter(pk=tutor_profile.pk).update(last_ping_at=now)
         return JsonResponse({
             "matched": True,
             "room_url": reverse("lesson_room", args=[active_match.id])
         })
+
+    # マッチなし: ハートビートで is_online=True を維持（スマホスリープ等からの復旧も兼ねる）
+    TutorProfile.objects.filter(pk=tutor_profile.pk).update(
+        is_online=True, last_ping_at=now
+    )
     return JsonResponse({"matched": False})
 
 
