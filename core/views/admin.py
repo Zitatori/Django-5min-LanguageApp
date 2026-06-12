@@ -39,7 +39,9 @@ def admin_dashboard(request):
         .order_by('date_joined')
     )
     tutors = TutorProfile.objects.select_related('user').prefetch_related('languages').all()
-    matches = QuickLessonMatch.objects.select_related(
+    matches = QuickLessonMatch.objects.filter(
+        student_joined_at__isnull=False,  # 実際に通話したものだけ
+    ).select_related(
         'request__student__user',
         'request__language',
         'tutor__user',
