@@ -1,6 +1,6 @@
 # 🚀 40 Active Users Reached! 🚀
 
-🚀 **8 Users Connected at the Same Time!** 🚀
+🚀 **12 Users Connected at the Same Time!** 🚀
 
 ## 🎯 Goal: 100 Active Users by the End of This Month 💯
 
