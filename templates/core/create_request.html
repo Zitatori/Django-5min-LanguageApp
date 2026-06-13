@@ -294,6 +294,27 @@
   </form>
 </div>
 
+{# ── 講師がいない場合の案内 ── #}
+<div style="
+  display:flex; align-items:flex-start; gap:12px;
+  background:#f0f9ff;
+  border:1.5px solid #bae6fd;
+  border-radius:14px;
+  padding:14px 16px;
+  margin-top:12px;
+  font-size:13px; color:#0c4a6e; line-height:1.6;
+">
+  <span style="font-size:20px; flex-shrink:0; margin-top:1px;">📧</span>
+  <div>
+    <strong style="display:block; margin-bottom:3px;">{% trans "No tutors available at your preferred time?" %}</strong>
+    {% trans "Please send your preferred time slot and language to" %}
+    <a href="mailto:zitatori@gmail.com" style="color:#0284c7; font-weight:600; text-decoration:none;">
+      zitatori@gmail.com
+    </a>
+    {% trans "and we'll do our best to match you with a tutor." %}
+  </div>
+</div>
+
 </div>{# /cr-pc-left #}
 <div class="cr-pc-right">
 
