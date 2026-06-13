@@ -40,6 +40,15 @@
     background:#fffbeb; border:1.5px solid #fde68a; border-radius:12px; padding:12px 16px; margin-bottom:1.2rem; font-size:14px; color:#92400e; }
   .grant-btn { padding:7px 18px; background:#f59e0b; color:white; border:none; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; }
   .grant-btn:hover { background:#d97706; }
+  .history-btn { font-size:12px; padding:4px 12px; border-radius:8px; border:1.5px solid #10b981; color:#059669; background:white; cursor:pointer; margin-left:6px; }
+  .history-btn:hover { background:#ecfdf5; }
+  .history-modal { background:white; border-radius:16px; padding:1.5rem; width:480px; max-width:92vw; max-height:80vh; display:flex; flex-direction:column; }
+  .history-modal h3 { margin:0 0 1rem; font-size:16px; }
+  .history-list { overflow-y:auto; flex:1; }
+  .history-row { display:flex; align-items:center; gap:8px; padding:9px 0; border-bottom:1px solid #f3f4f6; font-size:13px; }
+  .history-row:last-child { border-bottom:none; }
+  .role-badge-s { background:#f3f4f6; color:#374151; border:1.5px solid #e5e7eb; border-radius:99px; padding:1px 8px; font-size:11px; font-weight:600; }
+  .role-badge-t { background:#dbeafe; color:#1d4ed8; border:1.5px solid #93c5fd; border-radius:99px; padding:1px 8px; font-size:11px; font-weight:600; }
 </style>
 
 <div class="card admin-section">
@@ -131,6 +140,7 @@
         </td>
         <td style="white-space:nowrap;">
           <button class="edit-btn" onclick="openModal({{ u.id }}, '{{ u.username }}', [{% if u.tutorprofile %}{% for l in u.tutorprofile.languages.all %}{{ l.id }},{% endfor %}{% endif %}])">Edit</button>
+          <button class="history-btn" onclick="openHistoryModal({{ u.id }}, '{{ u.username }}')">History</button>
           <button class="points-btn" onclick="openPointsModal({{ u.id }}, '{{ u.username }}', {{ u.point_balance.balance|default:0 }})">Pts</button>
           <form method="post" action="{% url 'grant_gold' u.id %}" style="display:inline;"
                 onsubmit="return confirm('Grant Gold 30 days to {{ u.username }}?')">
@@ -287,6 +297,15 @@
   {% endif %}
 </div>
 
+<!-- Lesson History Modal -->
+<div class="modal-overlay" id="history-modal">
+  <div class="history-modal">
+    <h3>📋 Lesson history: <span id="history-username"></span></h3>
+    <div class="history-list" id="history-list"></div>
+    <button class="cancel-btn" onclick="closeHistoryModal()">Close</button>
+  </div>
+</div>
+
 <!-- Language Edit Modal -->
 <div class="modal-overlay" id="modal">
   <div class="modal">
@@ -352,6 +371,40 @@
     document.querySelectorAll('tbody tr[data-username]').forEach(row => {
       row.style.display = row.dataset.username.includes(q) ? '' : 'none';
     });
+  }
+
+  const USER_MATCHES = {{ user_matches_json|safe }};
+
+  const LANG_CLASS = {
+    'English': 'tag-en', 'French': 'tag-fr',
+    'Spanish': 'tag-es', 'Japanese': 'tag-ja'
+  };
+
+  function openHistoryModal(userId, username) {
+    document.getElementById('history-username').textContent = username;
+    const list = document.getElementById('history-list');
+    const entries = USER_MATCHES[userId] || [];
+
+    if (entries.length === 0) {
+      list.innerHTML = '<p style="color:#9ca3af;text-align:center;padding:1.5rem 0;">No lessons yet.</p>';
+    } else {
+      list.innerHTML = entries.map(e => {
+        const roleClass = e.role === 'tutor' ? 'role-badge-t' : 'role-badge-s';
+        const roleLabel = e.role === 'tutor' ? 'Tutor' : 'Student';
+        const langClass = LANG_CLASS[e.language] || 'tag-default';
+        return `<div class="history-row">
+          <span class="${roleClass}">${roleLabel}</span>
+          <span style="flex:1;font-weight:500;">🤝 ${e.partner}</span>
+          <span class="lang-tag ${langClass}" style="margin:0;">${e.language}</span>
+          <span style="color:#9ca3af;font-size:11px;white-space:nowrap;">${e.date}</span>
+        </div>`;
+      }).join('');
+    }
+    document.getElementById('history-modal').classList.add('open');
+  }
+
+  function closeHistoryModal() {
+    document.getElementById('history-modal').classList.remove('open');
   }
 </script>
 {% endblock %}

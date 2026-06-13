@@ -1,3 +1,5 @@
+import json
+from collections import defaultdict
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
@@ -49,6 +51,27 @@ def admin_dashboard(request):
 
     languages = LessonLanguage.objects.all()
 
+    # ユーザーごとの会話履歴（Student/Tutor 両方の視点）
+    user_matches_dict = defaultdict(list)
+    for m in matches:
+        lang_name = m.request.language.name
+        date_str = m.started_at.strftime('%m/%d %H:%M')
+        student_uid = m.request.student.user_id
+        tutor_uid = m.tutor.user_id
+        user_matches_dict[student_uid].append({
+            'role': 'student',
+            'partner': m.tutor.user.username,
+            'language': lang_name,
+            'date': date_str,
+        })
+        user_matches_dict[tutor_uid].append({
+            'role': 'tutor',
+            'partner': m.request.student.user.username,
+            'language': lang_name,
+            'date': date_str,
+        })
+    user_matches_json = json.dumps(dict(user_matches_dict))
+
     no_balance_count = User.objects.filter(point_balance__isnull=True).count()
     withdrawal_requests = WithdrawalRequest.objects.select_related('user').order_by('-created_at')
     gold_requests = GoldSubscriptionRequest.objects.select_related('user').filter(
@@ -61,6 +84,7 @@ def admin_dashboard(request):
         'tutors':              tutors,
         'matches':             matches,
         'languages':           languages,
+        'user_matches_json':   user_matches_json,
         'no_balance_count':    no_balance_count,
         'withdrawal_requests': withdrawal_requests,
         'gold_requests':       gold_requests,
