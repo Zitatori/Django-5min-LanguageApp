@@ -480,6 +480,15 @@ msgstr ""
 msgid "To add a teaching language, an interview is required. Please email your available times to"
 msgstr "Para agregar un idioma de enseñanza, se requiere una entrevista. Por favor envía tus horarios disponibles a"
 
+msgid "No tutors available at your preferred time?"
+msgstr "¿No hay tutores disponibles en tu horario preferido?"
+
+msgid "Please send your preferred time slot and language to"
+msgstr "Envía tu horario preferido e idioma a"
+
+msgid "and we'll do our best to match you with a tutor."
+msgstr "y haremos lo posible para encontrarte un tutor."
+
 #~ msgid "Step 1"
 #~ msgstr "Paso 1"
 

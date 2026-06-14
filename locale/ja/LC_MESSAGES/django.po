@@ -477,6 +477,15 @@ msgstr ""
 msgid "To add a teaching language, an interview is required. Please email your available times to"
 msgstr "担当言語を追加する場合は面接が必要です。空いている日時を以下のメールアドレスまでお知らせください："
 
+msgid "No tutors available at your preferred time?"
+msgstr "希望の時間帯に講師がいない場合は？"
+
+msgid "Please send your preferred time slot and language to"
+msgstr "希望の時間帯と話したい言語を"
+
+msgid "and we'll do our best to match you with a tutor."
+msgstr "までお送りください。できる限り講師をご用意します。"
+
 #~ msgid "Step 1"
 #~ msgstr "ステップ1"
 
