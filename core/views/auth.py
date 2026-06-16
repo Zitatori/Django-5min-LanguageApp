@@ -1,7 +1,7 @@
 from django.contrib.auth import login
-from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import redirect, render
 
+from core.forms import SignupForm
 from core.models import StudentProfile, TutorProfile
 from core.models import PointBalance, PointTransaction
 
@@ -10,7 +10,7 @@ SIGNUP_BONUS_POINTS = 10
 
 def signup(request):
     if request.method == "POST":
-        form = UserCreationForm(request.POST)
+        form = SignupForm(request.POST)
 
         if form.is_valid():
             user = form.save()
@@ -35,7 +35,7 @@ def signup(request):
             login(request, user)
             return redirect("home")
     else:
-        form = UserCreationForm()
+        form = SignupForm()
 
     return render(request, "registration/signup.html", {
         "form": form,

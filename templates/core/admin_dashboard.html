@@ -76,6 +76,7 @@
     <thead>
       <tr>
         <th>Username</th>
+        <th>Email</th>
         <th>Role</th>
         <th>Points</th>
         <th>Gold</th>
@@ -88,6 +89,7 @@
       {% for u in users %}
       <tr data-username="{{ u.username|lower }}">
         <td>{{ u.username }}</td>
+        <td style="font-size:12px; color:#6b7280; max-width:160px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ u.email|default:"—" }}</td>
         <td>
           {% if u.is_staff %}
             <span class="role-admin">Admin</span>
