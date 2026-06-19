@@ -23,9 +23,14 @@
   </div>
 
   {# ── タイマー（上部オーバーレイ） ── #}
-  <div class="lr-timer-overlay">
+  <div class="lr-timer-overlay" id="timer-overlay">
     <span class="lr-timer-dot" id="timer-dot"></span>
     <span class="lr-timer-text" id="timer-display">--:--</span>
+  </div>
+
+  {# ── 残り5秒カウントダウン ── #}
+  <div class="lr-final-countdown" id="final-countdown" style="display:none;">
+    <span id="final-number"></span>
   </div>
 
   {# ── セッション情報（左上） ── #}
@@ -175,7 +180,8 @@
     flex-shrink: 0;
     transition: background 0.5s;
   }
-  .lr-timer-dot.red { background: #ef4444; animation: td-blink 1s ease-in-out infinite; }
+  .lr-timer-dot.yellow { background: #f59e0b; }
+  .lr-timer-dot.red    { background: #ef4444; animation: td-blink 0.8s ease-in-out infinite; }
   @keyframes td-blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
   .lr-timer-text {
     font-size: 22px; font-weight: 700;
@@ -183,6 +189,32 @@
     color: #f4f4f5;
     letter-spacing: 0.03em;
     min-width: 60px; text-align: center;
+    transition: color 0.4s;
+  }
+  .lr-timer-text.yellow { color: #fbbf24; }
+  .lr-timer-text.red    { color: #f87171; }
+  #timer-overlay.yellow { border-color: rgba(251,191,36,0.4); background: rgba(30,20,0,0.65); }
+  #timer-overlay.red    { border-color: rgba(239,68,68,0.4);  background: rgba(30,0,0,0.65); }
+
+  /* 残り5秒の大カウントダウン */
+  .lr-final-countdown {
+    position: absolute;
+    inset: 0;
+    z-index: 20;
+    display: flex; align-items: center; justify-content: center;
+    pointer-events: none;
+  }
+  .lr-final-countdown span {
+    font-size: 180px; font-weight: 900;
+    color: rgba(248,113,113,0.9);
+    font-family: 'Space Grotesk', monospace;
+    text-shadow: 0 0 60px rgba(239,68,68,0.6), 0 0 120px rgba(239,68,68,0.3);
+    animation: fc-pop 0.25s cubic-bezier(0.34,1.56,0.64,1) both;
+    line-height: 1;
+  }
+  @keyframes fc-pop {
+    from { transform: scale(0.6); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
   }
 
   /* セッション情報（左上） */
@@ -333,15 +365,52 @@
   display.textContent = "Waiting…";
 
   // ── タイマー ──
+  const timerOverlay   = document.getElementById("timer-overlay");
+  const finalCountdown = document.getElementById("final-countdown");
+  const finalNumber    = document.getElementById("final-number");
+
   function format(sec) {
     return Math.floor(sec / 60) + ":" + String(sec % 60).padStart(2, "0");
   }
+
+  function setTimerState(remaining) {
+    if (remaining <= 10) {
+      // 赤
+      timerDot.className     = "lr-timer-dot red";
+      display.className      = "lr-timer-text red";
+      timerOverlay.className = "lr-timer-overlay red";
+    } else if (remaining <= 30) {
+      // 黄
+      timerDot.className     = "lr-timer-dot yellow";
+      display.className      = "lr-timer-text yellow";
+      timerOverlay.className = "lr-timer-overlay yellow";
+    } else {
+      timerDot.className     = "lr-timer-dot";
+      display.className      = "lr-timer-text";
+      timerOverlay.className = "lr-timer-overlay";
+    }
+  }
+
+  function showFinalCountdown(n) {
+    if (n <= 0) { finalCountdown.style.display = "none"; return; }
+    finalCountdown.style.display = "flex";
+    // アニメーション再生のためにいったん外して付け直す
+    finalNumber.style.animation = "none";
+    finalNumber.textContent = n;
+    void finalNumber.offsetWidth; // reflow
+    finalNumber.style.animation = "";
+  }
+
   function startTimer(seconds) {
     let remaining = seconds;
-    const progress = document.getElementById("timer-progress");
     function update() {
       display.textContent = format(remaining);
-      if (remaining < 60) timerDot.classList.add("red");
+      setTimerState(remaining);
+      if (remaining <= 5 && remaining > 0) {
+        showFinalCountdown(remaining);
+      } else {
+        finalCountdown.style.display = "none";
+      }
       if (remaining <= 0) { endLesson("timeup"); return; }
       remaining--;
       setTimeout(update, 1000);
