@@ -38,17 +38,25 @@ def lesson_room(request, match_id: int):
 
     now = timezone.now()
 
+    # 各フィールドを個別にアトミック更新（同時入室による上書きを防ぐ）
     if request.user == match.request.student.user and not match.student_joined_at:
-        match.student_joined_at = now
+        QuickLessonMatch.objects.filter(pk=match.pk, student_joined_at__isnull=True).update(
+            student_joined_at=now
+        )
+        match.refresh_from_db()
 
     if request.user == match.tutor.user and not match.tutor_joined_at:
-        match.tutor_joined_at = now
+        QuickLessonMatch.objects.filter(pk=match.pk, tutor_joined_at__isnull=True).update(
+            tutor_joined_at=now
+        )
+        match.refresh_from_db()
 
     if match.student_joined_at and match.tutor_joined_at and not match.started_at:
-        match.started_at = now
-        match.end_at = now + timezone.timedelta(minutes=5)
-
-    match.save()
+        QuickLessonMatch.objects.filter(pk=match.pk, started_at__isnull=True).update(
+            started_at=now,
+            end_at=now + timezone.timedelta(minutes=5),
+        )
+        match.refresh_from_db()
 
     if match.started_at:
         remaining_seconds = max(0, int((match.end_at - now).total_seconds()))

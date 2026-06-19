@@ -354,13 +354,17 @@
     navigator.sendBeacon("{% url 'lesson_end' match.id %}", fd);
   }
 
-  let localStream    = null;
-  let peerConnection = null;
-  let cameraOn       = true;
-  let micOn          = true;
-  let isCaller       = false;
+  let localStream       = null;
+  let localMediaReady   = false;   // Bug#1: getUserMedia完了後にtrueになる
+  let pendingJoinSeen   = false;   // Bug#1: メディア準備前に届いたjoinを記録
+  let peerConnection    = null;
+  let cameraOn          = true;
+  let micOn             = true;
+  let isCaller          = false;
   let pendingCandidates = [];
-  let remoteDescSet  = false;
+  let remoteDescSet     = false;
+  let timerStarted      = false;   // Bug#4: timer_startの二重実行を防ぐ
+  let peerLeftTimer     = null;    // Bug#3: peer_leftのグレース期間タイマー
 
   display.textContent = "Waiting…";
 
@@ -402,6 +406,8 @@
   }
 
   function startTimer(seconds) {
+    if (timerStarted) return;   // Bug#4: 再接続による二重起動を防ぐ
+    timerStarted = true;
     let remaining = seconds;
     function update() {
       display.textContent = format(remaining);
@@ -497,7 +503,13 @@
   socket.onopen = async () => {
     try {
       await startLocalMedia();
+      localMediaReady = true;                        // Bug#1: カメラ準備完了
       sendSignal({ type: "join", sender: userId });
+      // Bug#1: カメラ待機中に届いていたjoinを今処理する
+      if (pendingJoinSeen && !peerConnection) {
+        isCaller = true;
+        await makeOffer();
+      }
     } catch(e) {
       let msg = "{% trans 'Could not access camera/microphone.' %}";
       if (e.name === "NotAllowedError" || e.name === "PermissionDeniedError") {
@@ -525,12 +537,26 @@
   socket.onmessage = async e => {
     const data = JSON.parse(e.data);
     if (data.sender === userId) return;
+
     if (data.type === "timer_start") { startTimer(data.seconds); return; }
-    if (data.type === "join"         && !peerConnection) { isCaller = true; await makeOffer(); }
-    if (data.type === "offer")        await handleOffer(data);
-    if (data.type === "answer")       await handleAnswer(data);
-    if (data.type === "ice-candidate") await handleIceCandidate(data);
-    if (data.type === "peer_left")    endLesson("peer_left");
+
+    if (data.type === "join") {
+      // Bug#3: peer_leftのグレース期間中に再接続してきたらキャンセル
+      if (peerLeftTimer) { clearTimeout(peerLeftTimer); peerLeftTimer = null; }
+      // Bug#1: カメラ未準備なら記録して後回し
+      if (!localMediaReady) { pendingJoinSeen = true; return; }
+      if (!peerConnection) { isCaller = true; await makeOffer(); }
+      return;
+    }
+
+    if (data.type === "offer")         { await handleOffer(data); return; }
+    if (data.type === "answer")        { await handleAnswer(data); return; }
+    if (data.type === "ice-candidate") { await handleIceCandidate(data); return; }
+
+    if (data.type === "peer_left") {
+      // Bug#3: 即終了せず4秒待つ（リフレッシュ後の再接続を許容）
+      peerLeftTimer = setTimeout(() => endLesson("peer_left"), 4000);
+    }
   };
 
   function cleanupCall() {

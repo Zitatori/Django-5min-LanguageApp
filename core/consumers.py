@@ -45,8 +45,12 @@ class VideoCallConsumer(AsyncWebsocketConsumer):
 
         if data.get("type") == "join":
             count_key = f"room_count_{self.match_id}"
-            count = cache.get(count_key, 0) + 1
-            cache.set(count_key, count, timeout=3600)
+            try:
+                count = cache.incr(count_key)   # atomic on Redis/Memcached
+            except ValueError:
+                cache.set(count_key, 1, timeout=3600)
+                count = 1
+            print(f"[ws] match={self.match_id} join count={count} ch={self.channel_name[:8]}")
 
             if count >= 2:
                 # 2人揃った → タイマー開始
@@ -58,6 +62,7 @@ class VideoCallConsumer(AsyncWebsocketConsumer):
                         "sender_channel_name": "",
                     }
                 )
+                print(f"[ws] match={self.match_id} → timer_start sent")
                 # 60秒後にポイント処理（このインスタンスが担当、二重防止はcacheロック）
                 asyncio.ensure_future(self._schedule_points())
 
