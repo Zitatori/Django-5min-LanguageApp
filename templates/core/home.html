@@ -93,44 +93,6 @@
 </div>
 {% endif %}
 
-{# ── ❹ Upcoming Sessions ── #}
-{% if upcoming_sessions %}
-<div class="card" style="margin-top:20px;">
-  <h3 class="card-title" style="margin-bottom:16px;">📅 {% trans "Upcoming Sessions" %}</h3>
-  <div class="hs-session-list">
-    {% for s in upcoming_sessions %}
-    <div class="hs-session-row">
-      <div class="hs-session-left">
-        <div class="hs-session-date">{{ s.jst_start|date:"D j M" }}</div>
-        <div class="hs-session-time-sm">
-          {{ s.jst_start|date:"H:i" }}–{{ s.jst_end|date:"H:i" }}
-          <span class="hs-tz-badge-sm">JST</span>
-        </div>
-        <div class="hs-session-time-sm hs-cet-row">
-          {{ s.cet_start|date:"H:i" }}–{{ s.cet_end|date:"H:i" }}
-          <span class="hs-tz-badge-sm hs-tz-cet">{{ s.cet_abbrev }}</span>
-        </div>
-      </div>
-      <div class="hs-session-right">
-        <div class="hs-session-lang-chips">
-          {% for code, name, count in s.obj.language_counts %}
-            <span class="hs-lang-chip-sm">
-              {% if code == 'en' %}<span class="fi fi-gb hs-fi-sm"></span>
-              {% elif code == 'fr' %}<span class="fi fi-fr hs-fi-sm"></span>
-              {% elif code == 'es' %}<span class="fi fi-es hs-fi-sm"></span>
-              {% elif code == 'ja' %}<span class="fi fi-jp hs-fi-sm"></span>
-              {% endif %}
-              {{ name }} × {{ count }}
-            </span>
-          {% endfor %}
-        </div>
-        {% if s.obj.note %}<div class="hs-session-note">{{ s.obj.note }}</div>{% endif %}
-      </div>
-    </div>
-    {% endfor %}
-  </div>
-</div>
-{% endif %}
 </div>{# /hs-bottom-grid #}
 
 <style>
