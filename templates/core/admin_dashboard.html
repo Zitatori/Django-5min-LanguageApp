@@ -127,8 +127,30 @@
       <div style="display:grid; gap:12px;">
         <div>
           <label style="font-size:13px; font-weight:600; display:block; margin-bottom:4px;">Date (JST)</label>
-          <input type="date" name="date" id="sf-date" required
-            style="width:100%; padding:8px; border:1px solid #e5e7eb; border-radius:8px; font-size:14px; box-sizing:border-box;">
+          <input type="hidden" name="date" id="sf-date" required>
+          <div id="sf-cal-trigger"
+               onclick="calToggle()"
+               style="width:100%; padding:8px 12px; border:1px solid #e5e7eb; border-radius:8px;
+                      font-size:14px; box-sizing:border-box; cursor:pointer; background:#fff;
+                      display:flex; align-items:center; justify-content:space-between; user-select:none;">
+            <span id="sf-cal-label" style="color:#9ca3af;">日付を選択</span>
+            <span style="color:#9ca3af;">▼</span>
+          </div>
+          <div id="sf-cal-popup" style="display:none; margin-top:6px; border:1px solid #e5e7eb;
+               border-radius:12px; overflow:hidden; background:#fff; box-shadow:0 4px 16px rgba(0,0,0,0.1);">
+            <div style="display:flex; align-items:center; justify-content:space-between;
+                        padding:10px 14px; background:#6366f1; color:#fff;">
+              <button type="button" onclick="calPrev()" style="background:none;border:none;color:#fff;font-size:18px;cursor:pointer;padding:0 4px;">‹</button>
+              <span id="sf-cal-month" style="font-size:14px; font-weight:700;"></span>
+              <button type="button" onclick="calNext()" style="background:none;border:none;color:#fff;font-size:18px;cursor:pointer;padding:0 4px;">›</button>
+            </div>
+            <div style="display:grid; grid-template-columns:repeat(7,1fr); text-align:center;
+                        padding:8px 6px 4px; gap:0;">
+              {% for d in "SMTWTFS" %}<span style="font-size:11px;font-weight:700;color:#9ca3af;padding:4px 0;">{{ d }}</span>{% endfor %}
+            </div>
+            <div id="sf-cal-days" style="display:grid; grid-template-columns:repeat(7,1fr);
+                 text-align:center; padding:0 6px 10px; gap:2px;"></div>
+          </div>
         </div>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
           <div>
@@ -547,6 +569,73 @@
 <script>
   const CREATE_URL = "{% url 'session_create' %}";
 
+  /* ── カレンダー ── */
+  const DAY_NAMES = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  let calYear, calMonth, calSelected = null;
+
+  function calInit(dateStr) {
+    const today = new Date();
+    if (dateStr) {
+      const [y,m,d] = dateStr.split('-').map(Number);
+      calYear = y; calMonth = m - 1; calSelected = dateStr;
+    } else {
+      calYear = today.getFullYear(); calMonth = today.getMonth(); calSelected = null;
+    }
+    calRender();
+  }
+
+  function calRender() {
+    const label = document.getElementById('sf-cal-month');
+    label.textContent = new Date(calYear, calMonth, 1)
+      .toLocaleDateString('en-US', {year:'numeric', month:'long'});
+
+    const grid  = document.getElementById('sf-cal-days');
+    const first = new Date(calYear, calMonth, 1).getDay();
+    const days  = new Date(calYear, calMonth + 1, 0).getDate();
+    let html = '';
+    for (let i = 0; i < first; i++) html += '<span></span>';
+    for (let d = 1; d <= days; d++) {
+      const pad  = String(d).padStart(2,'0');
+      const mp   = String(calMonth + 1).padStart(2,'0');
+      const val  = `${calYear}-${mp}-${pad}`;
+      const dow  = (first + d - 1) % 7;
+      const isSel = val === calSelected;
+      const color = dow === 0 ? '#ef4444' : dow === 6 ? '#6366f1' : '#111827';
+      const bg    = isSel ? '#6366f1' : 'transparent';
+      const fc    = isSel ? '#fff' : color;
+      html += `<button type="button" onclick="calPick('${val}')"
+        style="background:${bg};color:${fc};border:none;border-radius:50%;
+               width:32px;height:32px;font-size:13px;font-weight:${isSel?700:400};
+               cursor:pointer;margin:1px auto;display:flex;align-items:center;justify-content:center;"
+        onmouseover="if('${val}'!==calSelected)this.style.background='#ede9fe'"
+        onmouseout="if('${val}'!==calSelected)this.style.background='transparent'"
+      >${d}</button>`;
+    }
+    grid.innerHTML = html;
+  }
+
+  function calPrev() { calMonth--; if (calMonth < 0) { calMonth = 11; calYear--; } calRender(); }
+  function calNext() { calMonth++; if (calMonth > 11) { calMonth = 0;  calYear++; } calRender(); }
+
+  function calPick(val) {
+    calSelected = val;
+    document.getElementById('sf-date').value = val;
+    const [y,m,d] = val.split('-').map(Number);
+    const dt = new Date(y, m-1, d);
+    document.getElementById('sf-cal-label').textContent =
+      dt.toLocaleDateString('ja-JP', {year:'numeric', month:'long', day:'numeric', weekday:'short'});
+    document.getElementById('sf-cal-label').style.color = '#111827';
+    calRender();
+    document.getElementById('sf-cal-popup').style.display = 'none';
+  }
+
+  function calToggle() {
+    const popup = document.getElementById('sf-cal-popup');
+    if (popup.style.display === 'none') { popup.style.display = 'block'; }
+    else { popup.style.display = 'none'; }
+  }
+
+  /* ── セッションモーダル ── */
   function openSessionModal(data) {
     const modal = document.getElementById('session-modal');
     const form  = document.getElementById('session-form');
@@ -556,6 +645,14 @@
       title.textContent = 'Edit Session';
       form.action = `/admin-dashboard/sessions/${data.id}/edit/`;
       document.getElementById('sf-date').value  = data.date;
+      // カレンダーラベル更新
+      if (data.date) {
+        const [y,m,d] = data.date.split('-').map(Number);
+        const dt = new Date(y, m-1, d);
+        document.getElementById('sf-cal-label').textContent =
+          dt.toLocaleDateString('ja-JP', {year:'numeric', month:'long', day:'numeric', weekday:'short'});
+        document.getElementById('sf-cal-label').style.color = '#111827';
+      }
       document.getElementById('sf-start').value = data.start_time;
       document.getElementById('sf-end').value   = data.end_time;
       document.getElementById('sf-en').value    = data.english_count;
@@ -564,16 +661,22 @@
       document.getElementById('sf-ja').value    = data.japanese_count;
       document.getElementById('sf-note').value  = data.note;
       document.getElementById('sf-published').checked = data.is_published;
+      calInit(data.date);
     } else {
       title.textContent = 'Add Session';
       form.action = CREATE_URL;
       form.reset();
+      document.getElementById('sf-cal-label').textContent = '日付を選択';
+      document.getElementById('sf-cal-label').style.color = '#9ca3af';
+      document.getElementById('sf-cal-popup').style.display = 'none';
+      calInit(null);
     }
     modal.style.display = 'flex';
   }
 
   function closeSessionModal() {
     document.getElementById('session-modal').style.display = 'none';
+    document.getElementById('sf-cal-popup').style.display = 'none';
   }
 
   document.getElementById('session-modal').addEventListener('click', function(e) {
