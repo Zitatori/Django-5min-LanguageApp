@@ -38,7 +38,7 @@ def home(request):
 
     return render(request, "core/home.html", {
         'next_session':      sessions[0] if sessions else None,
-        'upcoming_sessions': sessions,
+        'other_sessions':    sessions[1:],
     })
 
 

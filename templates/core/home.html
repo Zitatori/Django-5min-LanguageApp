@@ -72,6 +72,40 @@
 </div>
 {% endif %}
 
+{# ── ❹ Other Sessions ── #}
+{% if other_sessions %}
+<div class="card hs-other-card" style="margin-top:12px;">
+  {% for s in other_sessions %}
+  <div class="hs-other-row">
+    <div class="hs-other-left">
+      {% trans "l, j F" as short_date_fmt %}
+      <div class="hs-other-date">{{ s.jst_date|date:short_date_fmt }}</div>
+      <div class="hs-other-time">
+        {{ s.jst_time }}–{{ s.jst_end_time }}
+        <span class="hs-other-tz">{% trans "Japan Time" %}</span>
+      </div>
+      <div class="hs-other-time hs-other-cet">
+        {{ s.cet_time }}–{{ s.cet_end_time }}
+        <span class="hs-other-tz hs-other-tz-cet">{% trans "European Time" %}</span>
+      </div>
+    </div>
+    <div class="hs-other-chips">
+      {% for code, name, count in s.obj.language_counts %}
+        <span class="hs-other-chip">
+          {% if code == 'en' %}<span class="fi fi-gb" style="width:14px;height:10px;border-radius:2px;flex-shrink:0;"></span>
+          {% elif code == 'fr' %}<span class="fi fi-fr" style="width:14px;height:10px;border-radius:2px;flex-shrink:0;"></span>
+          {% elif code == 'es' %}<span class="fi fi-es" style="width:14px;height:10px;border-radius:2px;flex-shrink:0;"></span>
+          {% elif code == 'ja' %}<span class="fi fi-jp" style="width:14px;height:10px;border-radius:2px;flex-shrink:0;"></span>
+          {% endif %}
+          {{ name }} × {{ count }}
+        </span>
+      {% endfor %}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
 </div>{# /hs-bottom-grid #}
 
 <style>
@@ -197,7 +231,45 @@
     border-left: 2px solid #e5e7eb; padding-left: 8px; margin-top: 4px;
   }
 
-  /* PC: Next Session + Upcoming を横並び */
+  /* ── Other Sessions (2件目以降) ── */
+  .hs-other-card {
+    background: #fafafa;
+    border: 1px solid #f0f0f0;
+    padding: 4px 0;
+  }
+  .hs-other-row {
+    display: flex; align-items: flex-start; gap: 14px;
+    padding: 10px 16px;
+    border-bottom: 1px solid #f3f4f6;
+  }
+  .hs-other-row:last-child { border-bottom: none; }
+  .hs-other-left { flex-shrink: 0; min-width: 130px; }
+  .hs-other-date {
+    font-size: 11px; font-weight: 700; color: #6b7280;
+    margin-bottom: 3px; letter-spacing: 0.01em;
+  }
+  .hs-other-time {
+    font-size: 13px; font-weight: 700; color: #111827;
+    display: flex; align-items: center; gap: 5px; margin-bottom: 2px;
+  }
+  .hs-other-cet { color: #6b7280; font-weight: 500; font-size: 12px; }
+  .hs-other-tz {
+    font-size: 10px; font-weight: 700;
+    background: #ede9fe; color: #6d28d9;
+    padding: 1px 6px; border-radius: 99px;
+  }
+  .hs-other-tz-cet { background: #f0fdf4; color: #166534; }
+  .hs-other-chips {
+    flex: 1; display: flex; flex-wrap: wrap; gap: 5px; align-items: flex-start; padding-top: 2px;
+  }
+  .hs-other-chip {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: #f3f4f6; border: 1px solid #e5e7eb;
+    color: #374151; font-size: 11px; font-weight: 600;
+    padding: 2px 8px; border-radius: 99px;
+  }
+
+  /* PC: ヒーロー左 + セッション右 */
   @media (min-width: 900px) {
     .hs-bottom-grid {
       display: grid;
@@ -206,6 +278,7 @@
       align-items: start;
     }
     .hs-bottom-grid > .card { margin-top: 0 !important; }
+    .hs-other-card { margin-top: 12px !important; }
   }
 </style>
 
