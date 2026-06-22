@@ -3,10 +3,7 @@
 
 {% block content %}
 
-<div class="home-grid">
-
-  {# ── ❶ ヒーローカード ── #}
-  <div class="card home-hero-card">
+<div class="card home-hero-card">
     <div class="home-hero-tag">&#9889; {% trans "5-minute lesson" %}</div>
     <h2 class="card-title" style="font-size:22px; margin:10px 0 8px;">{% trans "5-Minute Online Lessons" %}</h2>
     <p class="card-subtitle" style="margin-bottom:20px; line-height:1.6;">
@@ -34,10 +31,7 @@
     {% endif %}
   </div>
 
-
-</div>
-
-<div class="hs-bottom-grid">
+<div class="hs-bottom-grid" style="margin-top:20px;">
 {# ── ❸ Next Session ── #}
 {% if next_session %}
 <div class="card hs-next-card" style="margin-top:20px;">
