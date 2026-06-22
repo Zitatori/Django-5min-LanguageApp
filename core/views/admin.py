@@ -1,5 +1,6 @@
 import json
 from collections import defaultdict
+from zoneinfo import ZoneInfo
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
@@ -12,7 +13,10 @@ from django.db.models import Case, When, Value, IntegerField, Count
 from core.models import TutorProfile, QuickLessonMatch, LessonLanguage
 from core.models import PointBalance, PointTransaction, WithdrawalRequest
 from core.models import GoldMembership, GoldSubscriptionRequest
-from datetime import timedelta
+from core.models import UpcomingSession
+from datetime import timedelta, datetime
+
+JST = ZoneInfo('Asia/Tokyo')
 
 INITIAL_BONUS = 10
 
@@ -77,10 +81,16 @@ def admin_dashboard(request):
     gold_requests = GoldSubscriptionRequest.objects.select_related('user').filter(
         status=GoldSubscriptionRequest.STATUS_PENDING
     )
+    all_sessions = UpcomingSession.objects.order_by('start_time')
+    sessions_display = []
+    for s in all_sessions:
+        jst_start = s.start_time.astimezone(JST)
+        jst_end   = s.end_time.astimezone(JST)
+        sessions_display.append({'obj': s, 'jst_start': jst_start, 'jst_end': jst_end})
 
     return render(request, 'core/admin_dashboard.html', {
         'users':               users,
-        'users_count': users.count(),
+        'users_count':         users.count(),
         'tutors':              tutors,
         'matches':             matches,
         'languages':           languages,
@@ -88,6 +98,7 @@ def admin_dashboard(request):
         'no_balance_count':    no_balance_count,
         'withdrawal_requests': withdrawal_requests,
         'gold_requests':       gold_requests,
+        'sessions_display':    sessions_display,
     })
 
 @staff_or_admin_role_required
@@ -215,4 +226,64 @@ def grant_gold(request, user_id):
             processed_at=now,
         )
 
+    return redirect('admin_dashboard')
+
+
+def _parse_jst_to_utc(date_str, time_str):
+    """'YYYY-MM-DD' + 'HH:MM' (JST) → UTC-aware datetime"""
+    naive = datetime.strptime(f"{date_str} {time_str}", "%Y-%m-%d %H:%M")
+    jst_dt = naive.replace(tzinfo=JST)
+    return jst_dt.astimezone(ZoneInfo('UTC'))
+
+
+@staff_or_admin_role_required
+def session_create(request):
+    if request.method == 'POST':
+        date_str  = request.POST.get('date', '')
+        start_str = request.POST.get('start_time', '')
+        end_str   = request.POST.get('end_time', '')
+        try:
+            start_utc = _parse_jst_to_utc(date_str, start_str)
+            end_utc   = _parse_jst_to_utc(date_str, end_str)
+        except ValueError:
+            return redirect('admin_dashboard')
+        UpcomingSession.objects.create(
+            start_time     = start_utc,
+            end_time       = end_utc,
+            english_count  = int(request.POST.get('english_count',  0) or 0),
+            french_count   = int(request.POST.get('french_count',   0) or 0),
+            spanish_count  = int(request.POST.get('spanish_count',  0) or 0),
+            japanese_count = int(request.POST.get('japanese_count', 0) or 0),
+            note           = request.POST.get('note', '').strip(),
+            is_published   = request.POST.get('is_published') == 'on',
+        )
+    return redirect('admin_dashboard')
+
+
+@staff_or_admin_role_required
+def session_edit(request, session_id):
+    if request.method == 'POST':
+        s = get_object_or_404(UpcomingSession, id=session_id)
+        date_str  = request.POST.get('date', '')
+        start_str = request.POST.get('start_time', '')
+        end_str   = request.POST.get('end_time', '')
+        try:
+            s.start_time = _parse_jst_to_utc(date_str, start_str)
+            s.end_time   = _parse_jst_to_utc(date_str, end_str)
+        except ValueError:
+            return redirect('admin_dashboard')
+        s.english_count  = int(request.POST.get('english_count',  0) or 0)
+        s.french_count   = int(request.POST.get('french_count',   0) or 0)
+        s.spanish_count  = int(request.POST.get('spanish_count',  0) or 0)
+        s.japanese_count = int(request.POST.get('japanese_count', 0) or 0)
+        s.note           = request.POST.get('note', '').strip()
+        s.is_published   = request.POST.get('is_published') == 'on'
+        s.save()
+    return redirect('admin_dashboard')
+
+
+@staff_or_admin_role_required
+def session_delete(request, session_id):
+    if request.method == 'POST':
+        get_object_or_404(UpcomingSession, id=session_id).delete()
     return redirect('admin_dashboard')

@@ -65,24 +65,26 @@
 <div class="card hs-next-card" style="margin-top:20px;">
   <div class="hs-next-eyebrow">⚡ {% trans "Next Session" %}</div>
   <div class="hs-next-body">
-    <div class="hs-next-date">
-      {{ next_session.local_dt|date:"l j F" }}
-    </div>
+    <div class="hs-next-date">{{ next_session.jst_start|date:"l j F" }}</div>
     <div class="hs-next-time">
-      {{ next_session.local_dt|date:"H:i" }}
-      <span class="hs-tz-badge">{{ next_session.tz_abbrev }}</span>
+      {{ next_session.jst_start|date:"H:i" }}–{{ next_session.jst_end|date:"H:i" }}
+      <span class="hs-tz-badge">JST</span>
     </div>
-    <div class="hs-next-meta">
-      {% with lang=next_session.obj.language %}
-        {% if lang == 'en' %}<span class="fi fi-gb hs-fi"></span> English
-        {% elif lang == 'fr' %}<span class="fi fi-fr hs-fi"></span> French
-        {% elif lang == 'es' %}<span class="fi fi-es hs-fi"></span> Spanish
-        {% elif lang == 'ja' %}<span class="fi fi-jp hs-fi"></span> Japanese
-        {% endif %}
-      {% endwith %}
+    <div class="hs-next-time-cet">
+      {{ next_session.cet_start|date:"H:i" }}–{{ next_session.cet_end|date:"H:i" }}
+      <span class="hs-tz-badge-cet">{{ next_session.cet_abbrev }}</span>
     </div>
-    <div class="hs-tutor-count">
-      👩‍🏫 {{ next_session.obj.tutor_count }} {% trans "tutors available" %}
+    <div class="hs-lang-chips">
+      {% for code, name, count in next_session.obj.language_counts %}
+        <span class="hs-lang-chip">
+          {% if code == 'en' %}<span class="fi fi-gb hs-fi"></span>
+          {% elif code == 'fr' %}<span class="fi fi-fr hs-fi"></span>
+          {% elif code == 'es' %}<span class="fi fi-es hs-fi"></span>
+          {% elif code == 'ja' %}<span class="fi fi-jp hs-fi"></span>
+          {% endif %}
+          {{ name }} × {{ count }}
+        </span>
+      {% endfor %}
     </div>
     {% if next_session.obj.note %}
     <div class="hs-note">{{ next_session.obj.note }}</div>
@@ -99,23 +101,29 @@
     {% for s in upcoming_sessions %}
     <div class="hs-session-row">
       <div class="hs-session-left">
-        <div class="hs-session-date">{{ s.local_dt|date:"D j M" }}</div>
-        <div class="hs-session-time">
-          {{ s.local_dt|date:"H:i" }}
-          <span class="hs-tz-badge-sm">{{ s.tz_abbrev }}</span>
+        <div class="hs-session-date">{{ s.jst_start|date:"D j M" }}</div>
+        <div class="hs-session-time-sm">
+          {{ s.jst_start|date:"H:i" }}–{{ s.jst_end|date:"H:i" }}
+          <span class="hs-tz-badge-sm">JST</span>
+        </div>
+        <div class="hs-session-time-sm hs-cet-row">
+          {{ s.cet_start|date:"H:i" }}–{{ s.cet_end|date:"H:i" }}
+          <span class="hs-tz-badge-sm hs-tz-cet">{{ s.cet_abbrev }}</span>
         </div>
       </div>
       <div class="hs-session-right">
-        <div class="hs-session-lang">
-          {% with lang=s.obj.language %}
-            {% if lang == 'en' %}<span class="fi fi-gb hs-fi-sm"></span>English
-            {% elif lang == 'fr' %}<span class="fi fi-fr hs-fi-sm"></span>French
-            {% elif lang == 'es' %}<span class="fi fi-es hs-fi-sm"></span>Spanish
-            {% elif lang == 'ja' %}<span class="fi fi-jp hs-fi-sm"></span>Japanese
-            {% endif %}
-          {% endwith %}
+        <div class="hs-session-lang-chips">
+          {% for code, name, count in s.obj.language_counts %}
+            <span class="hs-lang-chip-sm">
+              {% if code == 'en' %}<span class="fi fi-gb hs-fi-sm"></span>
+              {% elif code == 'fr' %}<span class="fi fi-fr hs-fi-sm"></span>
+              {% elif code == 'es' %}<span class="fi fi-es hs-fi-sm"></span>
+              {% elif code == 'ja' %}<span class="fi fi-jp hs-fi-sm"></span>
+              {% endif %}
+              {{ name }} × {{ count }}
+            </span>
+          {% endfor %}
         </div>
-        <div class="hs-session-tutors">{{ s.obj.tutor_count }} {% trans "tutors" %}</div>
         {% if s.obj.note %}<div class="hs-session-note">{{ s.obj.note }}</div>{% endif %}
       </div>
     </div>
@@ -168,72 +176,81 @@
   }
   .hs-next-eyebrow {
     font-size: 11px; font-weight: 700; letter-spacing: 0.07em;
-    color: #a5b4fc;
-    margin-bottom: 12px;
-    text-transform: uppercase;
+    color: #a5b4fc; margin-bottom: 12px; text-transform: uppercase;
   }
   .hs-next-date {
-    font-size: 18px; font-weight: 700; color: #e0e7ff;
-    margin-bottom: 4px;
+    font-size: 18px; font-weight: 700; color: #e0e7ff; margin-bottom: 6px;
   }
   .hs-next-time {
-    font-size: 36px; font-weight: 900; color: #fff;
+    font-size: 30px; font-weight: 900; color: #fff;
     display: flex; align-items: center; gap: 10px;
-    line-height: 1.1; margin-bottom: 14px;
+    line-height: 1.1; margin-bottom: 4px;
+  }
+  .hs-next-time-cet {
+    font-size: 16px; font-weight: 600; color: #a5b4fc;
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 14px;
   }
   .hs-tz-badge {
-    font-size: 13px; font-weight: 700;
+    font-size: 12px; font-weight: 700;
     background: rgba(255,255,255,0.15);
     border: 1px solid rgba(255,255,255,0.2);
     color: #c7d2fe; padding: 3px 10px; border-radius: 99px;
   }
-  .hs-next-meta {
-    display: flex; align-items: center; gap: 7px;
-    font-size: 15px; font-weight: 600; color: #c7d2fe;
-    margin-bottom: 8px;
+  .hs-tz-badge-cet {
+    font-size: 11px; font-weight: 700;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #818cf8; padding: 2px 8px; border-radius: 99px;
   }
-  .hs-tutor-count {
-    font-size: 13px; color: #a5b4fc; margin-bottom: 6px;
+  .hs-lang-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+  .hs-lang-chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #e0e7ff; font-size: 13px; font-weight: 600;
+    padding: 4px 12px; border-radius: 99px;
   }
   .hs-note {
     font-size: 12px; color: #818cf8;
     border-left: 2px solid rgba(129,140,248,0.4);
     padding-left: 10px; margin-top: 8px;
   }
-  .hs-fi { width: 22px; height: 16px; border-radius: 3px; flex-shrink: 0; }
+  .hs-fi { width: 20px; height: 14px; border-radius: 2px; flex-shrink: 0; }
 
   /* ── Upcoming Sessions list ── */
   .hs-session-list { display: flex; flex-direction: column; gap: 0; }
   .hs-session-row {
     display: flex; align-items: flex-start; gap: 16px;
-    padding: 12px 0;
-    border-bottom: 1px solid #f3f4f6;
+    padding: 12px 0; border-bottom: 1px solid #f3f4f6;
   }
   .hs-session-row:last-child { border-bottom: none; padding-bottom: 0; }
-  .hs-session-left { flex-shrink: 0; width: 90px; }
+  .hs-session-left { flex-shrink: 0; width: 110px; }
   .hs-session-date {
-    font-size: 12px; font-weight: 600; color: #6b7280;
-    margin-bottom: 2px;
+    font-size: 11px; font-weight: 600; color: #6b7280; margin-bottom: 3px;
   }
-  .hs-session-time {
-    font-size: 20px; font-weight: 800; color: #111827;
-    display: flex; align-items: center; gap: 5px;
+  .hs-session-time-sm {
+    font-size: 14px; font-weight: 700; color: #111827;
+    display: flex; align-items: center; gap: 5px; margin-bottom: 2px;
   }
+  .hs-cet-row { color: #6b7280; font-size: 13px; font-weight: 500; }
   .hs-tz-badge-sm {
     font-size: 10px; font-weight: 700;
     background: #ede9fe; color: #6d28d9;
     padding: 2px 6px; border-radius: 99px;
   }
+  .hs-tz-cet {
+    background: #f0fdf4; color: #166534;
+  }
   .hs-session-right { flex: 1; padding-top: 2px; }
-  .hs-session-lang {
-    font-size: 14px; font-weight: 600; color: #374151;
-    display: flex; align-items: center; gap: 6px;
-    margin-bottom: 3px;
+  .hs-session-lang-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 4px; }
+  .hs-lang-chip-sm {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: #f3f4f6; border: 1px solid #e5e7eb;
+    color: #374151; font-size: 12px; font-weight: 600;
+    padding: 3px 9px; border-radius: 99px;
   }
-  .hs-fi-sm { width: 18px; height: 13px; border-radius: 2px; flex-shrink: 0; }
-  .hs-session-tutors {
-    font-size: 12px; color: #6b7280; margin-bottom: 2px;
-  }
+  .hs-fi-sm { width: 16px; height: 12px; border-radius: 2px; flex-shrink: 0; }
   .hs-session-note {
     font-size: 12px; color: #9ca3af;
     border-left: 2px solid #e5e7eb; padding-left: 8px; margin-top: 4px;

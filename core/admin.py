@@ -42,8 +42,7 @@ class QuickLessonMatchAdmin(admin.ModelAdmin):
 
 @admin.register(UpcomingSession)
 class UpcomingSessionAdmin(admin.ModelAdmin):
-    list_display  = ("title", "language", "start_time", "timezone", "tutor_count", "is_published")
-    list_filter   = ("is_published", "language", "timezone")
+    list_display  = ("__str__", "english_count", "french_count", "spanish_count", "japanese_count", "is_published")
+    list_filter   = ("is_published",)
     list_editable = ("is_published",)
     ordering      = ("start_time",)
-    search_fields = ("title", "note")

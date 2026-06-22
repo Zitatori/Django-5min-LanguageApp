@@ -1,7 +1,7 @@
 from django.urls import path
 from . import views
 from .views import VideoRoomView
-from core.views.admin import admin_dashboard, update_tutor_languages, update_user_languages, delete_user, update_user_points, grant_initial_points_all, process_withdrawal, grant_gold
+from core.views.admin import admin_dashboard, update_tutor_languages, update_user_languages, delete_user, update_user_points, grant_initial_points_all, process_withdrawal, grant_gold, session_create, session_edit, session_delete
 from core.views.profile import profile, purchase_points, request_withdrawal, request_gold
 
 
@@ -44,4 +44,9 @@ urlpatterns = [
     # Gold メンバーシップ
     path('gold/request/', request_gold, name='request_gold'),
     path('admin-dashboard/user/<int:user_id>/grant-gold/', grant_gold, name='grant_gold'),
+
+    # Upcoming Sessions CRUD
+    path('admin-dashboard/sessions/create/', session_create, name='session_create'),
+    path('admin-dashboard/sessions/<int:session_id>/edit/', session_edit, name='session_edit'),
+    path('admin-dashboard/sessions/<int:session_id>/delete/', session_delete, name='session_delete'),
 ]
