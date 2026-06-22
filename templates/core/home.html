@@ -44,13 +44,13 @@
   <div class="hs-next-eyebrow">⚡ {% trans "Next Session" %}</div>
   <div class="hs-next-body">
     {% trans "l, j F Y" as date_fmt %}
-    <div class="hs-next-date">{{ next_session.jst_start|date:date_fmt }}</div>
+    <div class="hs-next-date">{{ next_session.jst_date|date:date_fmt }}</div>
     <div class="hs-next-time">
-      {{ next_session.jst_start|date:"H:i" }}–{{ next_session.jst_end|date:"H:i" }}
+      {{ next_session.jst_time }}–{{ next_session.jst_end_time }}
       <span class="hs-tz-badge">{% trans "Japan Time" %}</span>
     </div>
     <div class="hs-next-time-cet">
-      {{ next_session.cet_start|date:"H:i" }}–{{ next_session.cet_end|date:"H:i" }}
+      {{ next_session.cet_time }}–{{ next_session.cet_end_time }}
       <span class="hs-tz-badge-cet">{% trans "European Time" %}</span>
     </div>
     <div class="hs-lang-chips">

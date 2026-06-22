@@ -16,11 +16,13 @@ def _session_display(s):
     cet_end   = s.end_time.astimezone(CET)
     return {
         'obj': s,
-        'jst_start': jst_start,
-        'jst_end':   jst_end,
-        'cet_start': cet_start,
-        'cet_end':   cet_end,
-        'cet_abbrev': cet_start.strftime('%Z'),  # CET / CEST
+        # datetime.date オブジェクト（タイムゾーン変換なし）→ テンプレートの date フィルタで曜日・月名を i18n 表示
+        'jst_date':     jst_start.date(),
+        # 時刻は strftime で事前フォーマット（テンプレートフィルタが CET に変換するのを防ぐ）
+        'jst_time':     jst_start.strftime('%H:%M'),
+        'jst_end_time': jst_end.strftime('%H:%M'),
+        'cet_time':     cet_start.strftime('%H:%M'),
+        'cet_end_time': cet_end.strftime('%H:%M'),
     }
 
 
