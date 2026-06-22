@@ -82,11 +82,12 @@ def admin_dashboard(request):
         status=GoldSubscriptionRequest.STATUS_PENDING
     )
     all_sessions = UpcomingSession.objects.order_by('start_time')
+    CET = ZoneInfo('Europe/Zurich')
     sessions_display = []
     for s in all_sessions:
-        jst_start = s.start_time.astimezone(JST)
-        jst_end   = s.end_time.astimezone(JST)
-        sessions_display.append({'obj': s, 'jst_start': jst_start, 'jst_end': jst_end})
+        cet_start = s.start_time.astimezone(CET)
+        cet_end   = s.end_time.astimezone(CET)
+        sessions_display.append({'obj': s, 'cet_start': cet_start, 'cet_end': cet_end})
 
     return render(request, 'core/admin_dashboard.html', {
         'users':               users,
@@ -229,11 +230,11 @@ def grant_gold(request, user_id):
     return redirect('admin_dashboard')
 
 
-def _parse_jst_to_utc(date_str, time_str):
-    """'YYYY-MM-DD' + 'HH:MM' (JST) → UTC-aware datetime"""
+def _parse_cet_to_utc(date_str, time_str):
+    """'YYYY-MM-DD' + 'HH:MM' (Europe/Zurich) → UTC-aware datetime"""
     naive = datetime.strptime(f"{date_str} {time_str}", "%Y-%m-%d %H:%M")
-    jst_dt = naive.replace(tzinfo=JST)
-    return jst_dt.astimezone(ZoneInfo('UTC'))
+    cet_dt = naive.replace(tzinfo=ZoneInfo('Europe/Zurich'))
+    return cet_dt.astimezone(ZoneInfo('UTC'))
 
 
 @staff_or_admin_role_required
@@ -243,8 +244,8 @@ def session_create(request):
         start_str = request.POST.get('start_time', '')
         end_str   = request.POST.get('end_time', '')
         try:
-            start_utc = _parse_jst_to_utc(date_str, start_str)
-            end_utc   = _parse_jst_to_utc(date_str, end_str)
+            start_utc = _parse_cet_to_utc(date_str, start_str)
+            end_utc   = _parse_cet_to_utc(date_str, end_str)
         except ValueError:
             return redirect('admin_dashboard')
         UpcomingSession.objects.create(
@@ -268,8 +269,8 @@ def session_edit(request, session_id):
         start_str = request.POST.get('start_time', '')
         end_str   = request.POST.get('end_time', '')
         try:
-            s.start_time = _parse_jst_to_utc(date_str, start_str)
-            s.end_time   = _parse_jst_to_utc(date_str, end_str)
+            s.start_time = _parse_cet_to_utc(date_str, start_str)
+            s.end_time   = _parse_cet_to_utc(date_str, end_str)
         except ValueError:
             return redirect('admin_dashboard')
         s.english_count  = int(request.POST.get('english_count',  0) or 0)

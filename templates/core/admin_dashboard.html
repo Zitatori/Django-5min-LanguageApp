@@ -62,8 +62,8 @@
   <table class="table">
     <thead>
       <tr>
-        <th>Date (JST)</th>
-        <th>Time (JST)</th>
+        <th>Date (CET/CEST)</th>
+        <th>Time (CET/CEST)</th>
         <th>Languages / Tutors</th>
         <th>Note</th>
         <th>Published</th>
@@ -73,8 +73,8 @@
     <tbody>
       {% for sd in sessions_display %}
       <tr>
-        <td style="font-size:13px; font-weight:600;">{{ sd.jst_start|date:"Y-m-d" }}</td>
-        <td style="font-size:13px;">{{ sd.jst_start|date:"H:i" }} – {{ sd.jst_end|date:"H:i" }}</td>
+        <td style="font-size:13px; font-weight:600;">{{ sd.cet_start|date:"Y-m-d" }}</td>
+        <td style="font-size:13px;">{{ sd.cet_start|date:"H:i" }} – {{ sd.cet_end|date:"H:i" }}</td>
         <td style="font-size:12px;">
           {% if sd.obj.english_count  > 0 %}<span style="margin-right:6px;">🇬🇧 EN×{{ sd.obj.english_count }}</span>{% endif %}
           {% if sd.obj.french_count   > 0 %}<span style="margin-right:6px;">🇫🇷 FR×{{ sd.obj.french_count }}</span>{% endif %}
@@ -93,9 +93,9 @@
           <button class="edit-btn" style="font-size:12px; margin-right:4px;"
             onclick="openSessionModal({
               id: {{ sd.obj.id }},
-              date: '{{ sd.jst_start|date:"Y-m-d" }}',
-              start_time: '{{ sd.jst_start|date:"H:i" }}',
-              end_time: '{{ sd.jst_end|date:"H:i" }}',
+              date: '{{ sd.cet_start|date:"Y-m-d" }}',
+              start_time: '{{ sd.cet_start|date:"H:i" }}',
+              end_time: '{{ sd.cet_end|date:"H:i" }}',
               english_count: {{ sd.obj.english_count }},
               french_count: {{ sd.obj.french_count }},
               spanish_count: {{ sd.obj.spanish_count }},
@@ -126,7 +126,7 @@
       {% csrf_token %}
       <div style="display:grid; gap:12px;">
         <div>
-          <label style="font-size:13px; font-weight:600; display:block; margin-bottom:4px;">Date (JST)</label>
+          <label style="font-size:13px; font-weight:600; display:block; margin-bottom:4px;">Date (CET/CEST)</label>
           <input type="hidden" name="date" id="sf-date" required>
           <div id="sf-cal-trigger"
                onclick="calToggle()"
@@ -154,12 +154,12 @@
         </div>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
           <div>
-            <label style="font-size:13px; font-weight:600; display:block; margin-bottom:4px;">Start time (JST)</label>
+            <label style="font-size:13px; font-weight:600; display:block; margin-bottom:4px;">Start time (CET/CEST)</label>
             <input type="time" name="start_time" id="sf-start" required
               style="width:100%; padding:8px; border:1px solid #e5e7eb; border-radius:8px; font-size:14px; box-sizing:border-box;">
           </div>
           <div>
-            <label style="font-size:13px; font-weight:600; display:block; margin-bottom:4px;">End time (JST)</label>
+            <label style="font-size:13px; font-weight:600; display:block; margin-bottom:4px;">End time (CET/CEST)</label>
             <input type="time" name="end_time" id="sf-end" required
               style="width:100%; padding:8px; border:1px solid #e5e7eb; border-radius:8px; font-size:14px; box-sizing:border-box;">
           </div>
