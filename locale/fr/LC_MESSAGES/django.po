@@ -495,6 +495,18 @@ msgstr "Envoyez vos créneaux préférés et la langue souhaitée à"
 msgid "and we'll do our best to match you with a tutor."
 msgstr "et nous ferons de notre mieux pour vous trouver un tuteur."
 
+msgid "Next Session"
+msgstr "Prochaine session"
+
+msgid "Japan Time"
+msgstr "Heure du Japon"
+
+msgid "European Time"
+msgstr "Heure européenne"
+
+msgid "l, j F Y"
+msgstr "l j F Y"
+
 #~ msgid "Step 1"
 #~ msgstr "Étape 1"
 

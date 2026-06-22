@@ -1271,3 +1271,15 @@ msgstr ""
 #: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:248
 msgid "Connect, get help, or contribute"
 msgstr ""
+
+msgid "Next Session"
+msgstr "Next Session"
+
+msgid "Japan Time"
+msgstr "Japan Time"
+
+msgid "European Time"
+msgstr "European Time"
+
+msgid "l, j F Y"
+msgstr "l, j F Y"

@@ -486,6 +486,18 @@ msgstr "希望の時間帯と話したい言語を"
 msgid "and we'll do our best to match you with a tutor."
 msgstr "までお送りください。できる限り講師をご用意します。"
 
+msgid "Next Session"
+msgstr "次のセッション"
+
+msgid "Japan Time"
+msgstr "日本時間"
+
+msgid "European Time"
+msgstr "ヨーロッパ時間"
+
+msgid "l, j F Y"
+msgstr "Y年n月j日（D）"
+
 #~ msgid "Step 1"
 #~ msgstr "ステップ1"
 
