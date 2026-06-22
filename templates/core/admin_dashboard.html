@@ -221,7 +221,14 @@
 
 <div class="card admin-section">
   <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:14px;">
-    <h2 style="margin:0;">All users ({{ users_count }})</h2>
+    <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+      <h2 style="margin:0;">All users ({{ users_count }})</h2>
+      {% if older_users %}
+      <button class="edit-btn" id="toggle-older-users-btn" style="font-size:12px; padding:4px 12px;" onclick="toggleOlderUsers(this)">
+        Show all ({{ older_users|length }} more)
+      </button>
+      {% endif %}
+    </div>
     <input type="text" id="user-search" placeholder="🔍 Search by username…"
            oninput="filterUsers(this.value)"
            style="padding:7px 14px; border:1.5px solid #e5e7eb; border-radius:99px;
@@ -254,7 +261,7 @@
       </tr>
     </thead>
     <tbody>
-      {% for u in users %}
+      {% for u in recent_users %}
       <tr data-username="{{ u.username|lower }}">
         <td>{{ u.username }}</td>
         <td style="font-size:12px; color:#6b7280; max-width:160px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ u.email|default:"—" }}</td>
@@ -320,6 +327,58 @@
           {% if u != request.user %}
             <form method="post" action="{% url 'delete_user' u.id %}" style="display:inline;"
                   onsubmit="return confirm('Delete {{ u.username }}? This cannot be undone.')">
+              {% csrf_token %}
+              <button type="submit" class="delete-btn">Delete</button>
+            </form>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+      {% for u in older_users %}
+      <tr class="older-user" data-username="{{ u.username|lower }}" style="display:none;">
+        <td>{{ u.username }}</td>
+        <td style="font-size:12px; color:#6b7280; max-width:160px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ u.email|default:"—" }}</td>
+        <td>
+          {% if u.is_staff %}<span class="role-admin">Admin</span>
+          {% elif u.tutorprofile %}<span class="role-tutor">Tutor</span>
+          {% else %}<span class="role-student">Student</span>{% endif %}
+        </td>
+        <td>
+          {% if u.point_balance %}<span class="pt-badge">{{ u.point_balance.balance }} pt</span>
+          {% else %}<span class="pt-none">—</span>{% endif %}
+        </td>
+        <td>
+          {% if u.gold_membership.is_active %}<span style="font-size:13px; font-weight:700; color:#b45309;">&#x1F451; {{ u.gold_membership.expires_at|date:"m/d" }}まで</span>
+          {% elif u.gold_membership %}<span style="font-size:12px; color:#9ca3af;">期限切れ</span>
+          {% else %}<span class="pt-none">—</span>{% endif %}
+        </td>
+        <td>
+          {% if u.tutorprofile %}
+            {% if u.tutorprofile.is_online %}<span class="badge-online">Online</span>
+            {% else %}<span class="badge-offline">Offline</span>{% endif %}
+          {% else %}—{% endif %}
+        </td>
+        <td>
+          {% if u.tutorprofile %}
+            {% for lang in u.tutorprofile.languages.all %}
+              {% if lang.name == 'English' %}<span class="lang-tag tag-en">{{ lang.name }}</span>
+              {% elif lang.name == 'French' %}<span class="lang-tag tag-fr">{{ lang.name }}</span>
+              {% elif lang.name == 'Spanish' %}<span class="lang-tag tag-es">{{ lang.name }}</span>
+              {% elif lang.name == 'Japanese' %}<span class="lang-tag tag-ja">{{ lang.name }}</span>
+              {% else %}<span class="lang-tag tag-default">{{ lang.name }}</span>{% endif %}
+            {% endfor %}
+          {% else %}—{% endif %}
+        </td>
+        <td style="white-space:nowrap;">
+          <button class="edit-btn" onclick="openModal({{ u.id }}, '{{ u.username }}', [{% if u.tutorprofile %}{% for l in u.tutorprofile.languages.all %}{{ l.id }},{% endfor %}{% endif %}])">Edit</button>
+          <button class="history-btn" onclick="openHistoryModal({{ u.id }}, '{{ u.username }}')">History</button>
+          <button class="points-btn" onclick="openPointsModal({{ u.id }}, '{{ u.username }}', {{ u.point_balance.balance|default:0 }})">Pts</button>
+          <form method="post" action="{% url 'grant_gold' u.id %}" style="display:inline;" onsubmit="return confirm('Grant Gold 30 days to {{ u.username }}?')">
+            {% csrf_token %}
+            <button type="submit" class="edit-btn" style="border-color:#f59e0b;color:#b45309;" title="Grant Gold 30 days">&#x1F451;</button>
+          </form>
+          {% if u != request.user %}
+            <form method="post" action="{% url 'delete_user' u.id %}" style="display:inline;" onsubmit="return confirm('Delete {{ u.username }}? This cannot be undone.')">
               {% csrf_token %}
               <button type="submit" class="delete-btn">Delete</button>
             </form>
@@ -637,6 +696,13 @@
     const hidden = rows[0] && rows[0].style.display === 'none';
     rows.forEach(r => r.style.display = hidden ? '' : 'none');
     btn.textContent = hidden ? 'Hide older' : `Show all (${rows.length} more)`;
+  }
+
+  function toggleOlderUsers(btn) {
+    const rows = document.querySelectorAll('.older-user');
+    const hidden = rows[0] && rows[0].style.display === 'none';
+    rows.forEach(r => r.style.display = hidden ? '' : 'none');
+    btn.textContent = hidden ? 'Show less' : `Show all (${rows.length} more)`;
   }
 </script>
 

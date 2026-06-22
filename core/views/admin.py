@@ -42,8 +42,11 @@ def admin_dashboard(request):
             ),
             lesson_count=Count('tutorprofile__quicklessonmatch', distinct=True),
         )
-        .order_by('date_joined')
+        .order_by('-date_joined')
     )
+    users_list    = list(users)
+    recent_users  = users_list[:15]
+    older_users   = users_list[15:]
     tutors = TutorProfile.objects.select_related('user').prefetch_related('languages').all()
     all_matches = QuickLessonMatch.objects.filter(
         student_joined_at__isnull=False,
@@ -98,7 +101,9 @@ def admin_dashboard(request):
 
     return render(request, 'core/admin_dashboard.html', {
         'users':               users,
-        'users_count':         users.count(),
+        'users_count':         len(users_list),
+        'recent_users':        recent_users,
+        'older_users':         older_users,
         'tutors':              tutors,
         'live_matches':        live_matches,
         'recent_matches':      recent_matches,
