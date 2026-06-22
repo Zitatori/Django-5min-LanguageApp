@@ -59,6 +59,72 @@
 
 </div>
 
+<div class="hs-bottom-grid">
+{# ── ❸ Next Session ── #}
+{% if next_session %}
+<div class="card hs-next-card" style="margin-top:20px;">
+  <div class="hs-next-eyebrow">⚡ {% trans "Next Session" %}</div>
+  <div class="hs-next-body">
+    <div class="hs-next-date">
+      {{ next_session.local_dt|date:"l j F" }}
+    </div>
+    <div class="hs-next-time">
+      {{ next_session.local_dt|date:"H:i" }}
+      <span class="hs-tz-badge">{{ next_session.tz_abbrev }}</span>
+    </div>
+    <div class="hs-next-meta">
+      {% with lang=next_session.obj.language %}
+        {% if lang == 'en' %}<span class="fi fi-gb hs-fi"></span> English
+        {% elif lang == 'fr' %}<span class="fi fi-fr hs-fi"></span> French
+        {% elif lang == 'es' %}<span class="fi fi-es hs-fi"></span> Spanish
+        {% elif lang == 'ja' %}<span class="fi fi-jp hs-fi"></span> Japanese
+        {% endif %}
+      {% endwith %}
+    </div>
+    <div class="hs-tutor-count">
+      👩‍🏫 {{ next_session.obj.tutor_count }} {% trans "tutors available" %}
+    </div>
+    {% if next_session.obj.note %}
+    <div class="hs-note">{{ next_session.obj.note }}</div>
+    {% endif %}
+  </div>
+</div>
+{% endif %}
+
+{# ── ❹ Upcoming Sessions ── #}
+{% if upcoming_sessions %}
+<div class="card" style="margin-top:20px;">
+  <h3 class="card-title" style="margin-bottom:16px;">📅 {% trans "Upcoming Sessions" %}</h3>
+  <div class="hs-session-list">
+    {% for s in upcoming_sessions %}
+    <div class="hs-session-row">
+      <div class="hs-session-left">
+        <div class="hs-session-date">{{ s.local_dt|date:"D j M" }}</div>
+        <div class="hs-session-time">
+          {{ s.local_dt|date:"H:i" }}
+          <span class="hs-tz-badge-sm">{{ s.tz_abbrev }}</span>
+        </div>
+      </div>
+      <div class="hs-session-right">
+        <div class="hs-session-lang">
+          {% with lang=s.obj.language %}
+            {% if lang == 'en' %}<span class="fi fi-gb hs-fi-sm"></span>English
+            {% elif lang == 'fr' %}<span class="fi fi-fr hs-fi-sm"></span>French
+            {% elif lang == 'es' %}<span class="fi fi-es hs-fi-sm"></span>Spanish
+            {% elif lang == 'ja' %}<span class="fi fi-jp hs-fi-sm"></span>Japanese
+            {% endif %}
+          {% endwith %}
+        </div>
+        <div class="hs-session-tutors">{{ s.obj.tutor_count }} {% trans "tutors" %}</div>
+        {% if s.obj.note %}<div class="hs-session-note">{{ s.obj.note }}</div>{% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+</div>{# /hs-bottom-grid #}
+
 <style>
   /* ── ステップリスト ── */
   .home-steps { display: flex; flex-direction: column; gap: 14px; }
@@ -93,6 +159,95 @@
     }
     .home-grid > .card { margin-bottom: 0; }
     .home-hero-card { padding: 28px; }
+  }
+
+  /* ── Next Session card ── */
+  .hs-next-card {
+    background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+    border: none;
+  }
+  .hs-next-eyebrow {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.07em;
+    color: #a5b4fc;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+  .hs-next-date {
+    font-size: 18px; font-weight: 700; color: #e0e7ff;
+    margin-bottom: 4px;
+  }
+  .hs-next-time {
+    font-size: 36px; font-weight: 900; color: #fff;
+    display: flex; align-items: center; gap: 10px;
+    line-height: 1.1; margin-bottom: 14px;
+  }
+  .hs-tz-badge {
+    font-size: 13px; font-weight: 700;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #c7d2fe; padding: 3px 10px; border-radius: 99px;
+  }
+  .hs-next-meta {
+    display: flex; align-items: center; gap: 7px;
+    font-size: 15px; font-weight: 600; color: #c7d2fe;
+    margin-bottom: 8px;
+  }
+  .hs-tutor-count {
+    font-size: 13px; color: #a5b4fc; margin-bottom: 6px;
+  }
+  .hs-note {
+    font-size: 12px; color: #818cf8;
+    border-left: 2px solid rgba(129,140,248,0.4);
+    padding-left: 10px; margin-top: 8px;
+  }
+  .hs-fi { width: 22px; height: 16px; border-radius: 3px; flex-shrink: 0; }
+
+  /* ── Upcoming Sessions list ── */
+  .hs-session-list { display: flex; flex-direction: column; gap: 0; }
+  .hs-session-row {
+    display: flex; align-items: flex-start; gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid #f3f4f6;
+  }
+  .hs-session-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .hs-session-left { flex-shrink: 0; width: 90px; }
+  .hs-session-date {
+    font-size: 12px; font-weight: 600; color: #6b7280;
+    margin-bottom: 2px;
+  }
+  .hs-session-time {
+    font-size: 20px; font-weight: 800; color: #111827;
+    display: flex; align-items: center; gap: 5px;
+  }
+  .hs-tz-badge-sm {
+    font-size: 10px; font-weight: 700;
+    background: #ede9fe; color: #6d28d9;
+    padding: 2px 6px; border-radius: 99px;
+  }
+  .hs-session-right { flex: 1; padding-top: 2px; }
+  .hs-session-lang {
+    font-size: 14px; font-weight: 600; color: #374151;
+    display: flex; align-items: center; gap: 6px;
+    margin-bottom: 3px;
+  }
+  .hs-fi-sm { width: 18px; height: 13px; border-radius: 2px; flex-shrink: 0; }
+  .hs-session-tutors {
+    font-size: 12px; color: #6b7280; margin-bottom: 2px;
+  }
+  .hs-session-note {
+    font-size: 12px; color: #9ca3af;
+    border-left: 2px solid #e5e7eb; padding-left: 8px; margin-top: 4px;
+  }
+
+  /* PC: Next Session + Upcoming を横並び */
+  @media (min-width: 900px) {
+    .hs-bottom-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+    .hs-bottom-grid > .card { margin-top: 0 !important; }
   }
 </style>
 

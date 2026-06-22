@@ -5,6 +5,7 @@ from .models import (
     StudentProfile,
     QuickLessonRequest,
     QuickLessonMatch,
+    UpcomingSession,
 )
 
 
@@ -37,3 +38,12 @@ class QuickLessonRequestAdmin(admin.ModelAdmin):
 class QuickLessonMatchAdmin(admin.ModelAdmin):
     list_display = ("id", "student_name", "tutor_name", "started_at", "end_at", "price")
     search_fields = ("request__student__user__username", "tutor__user__username")
+
+
+@admin.register(UpcomingSession)
+class UpcomingSessionAdmin(admin.ModelAdmin):
+    list_display  = ("title", "language", "start_time", "timezone", "tutor_count", "is_published")
+    list_filter   = ("is_published", "language", "timezone")
+    list_editable = ("is_published",)
+    ordering      = ("start_time",)
+    search_fields = ("title", "note")
