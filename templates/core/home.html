@@ -65,14 +65,14 @@
 <div class="card hs-next-card" style="margin-top:20px;">
   <div class="hs-next-eyebrow">⚡ {% trans "Next Session" %}</div>
   <div class="hs-next-body">
-    <div class="hs-next-date">{{ next_session.jst_start|date:"l j F" }}</div>
+    <div class="hs-next-date">{{ next_session.jst_start|date:"Y年n月j日（D）" }}</div>
     <div class="hs-next-time">
       {{ next_session.jst_start|date:"H:i" }}–{{ next_session.jst_end|date:"H:i" }}
-      <span class="hs-tz-badge">JST</span>
+      <span class="hs-tz-badge">日本時間</span>
     </div>
     <div class="hs-next-time-cet">
       {{ next_session.cet_start|date:"H:i" }}–{{ next_session.cet_end|date:"H:i" }}
-      <span class="hs-tz-badge-cet">{{ next_session.cet_abbrev }}</span>
+      <span class="hs-tz-badge-cet">ヨーロッパ時間</span>
     </div>
     <div class="hs-lang-chips">
       {% for code, name, count in next_session.obj.language_counts %}
