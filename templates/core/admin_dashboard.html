@@ -32,6 +32,18 @@
   .cancel-btn { margin-top:8px; width:100%; padding:10px; background:white; color:#6b7280; border:1.5px solid #e5e7eb; border-radius:10px; font-size:14px; cursor:pointer; }
   .match-status-active { background:#dcfce7; color:#166534; border:1.5px solid #86efac; border-radius:99px; padding:2px 10px; font-size:12px; }
   .match-status-done { background:#f3f4f6; color:#6b7280; border:1.5px solid #e5e7eb; border-radius:99px; padding:2px 10px; font-size:12px; }
+  .live-dot {
+    width:10px; height:10px; border-radius:50%;
+    background:#22c55e;
+    box-shadow:0 0 0 0 rgba(34,197,94,0.5);
+    animation:live-ping 1.4s ease-in-out infinite;
+    flex-shrink:0;
+  }
+  @keyframes live-ping {
+    0%   { box-shadow:0 0 0 0 rgba(34,197,94,0.5); }
+    70%  { box-shadow:0 0 0 8px rgba(34,197,94,0); }
+    100% { box-shadow:0 0 0 0 rgba(34,197,94,0); }
+  }
   .points-btn { font-size:12px; padding:4px 12px; border-radius:8px; border:1.5px solid #f59e0b; color:#b45309; background:white; cursor:pointer; margin-left:6px; }
   .points-btn:hover { background:#fffbeb; }
   .pt-badge { font-size:13px; font-weight:600; color:#6366f1; }
@@ -319,20 +331,62 @@
   </table>
 </div>
 
-<div class="card admin-section">
-  <h2 class="card-title">🤝 Match History</h2>
+<!-- Live Now -->
+<div class="card admin-section" style="border:2px solid {% if live_matches %}#86efac{% else %}#e5e7eb{% endif %};">
+  <div style="display:flex; align-items:center; gap:10px; margin-bottom:{% if live_matches %}14px{% else %}0{% endif %};">
+    {% if live_matches %}
+      <span class="live-dot"></span>
+      <h2 style="margin:0; color:#166534;">Live Now — {{ live_matches|length }} session{{ live_matches|length|pluralize }}</h2>
+    {% else %}
+      <h2 style="margin:0; color:#9ca3af; font-size:15px;">🔴 Live Now — No active sessions</h2>
+    {% endif %}
+  </div>
+  {% if live_matches %}
   <table class="table">
     <thead>
-      <tr>
-        <th>Student</th>
-        <th>Tutor</th>
-        <th>Language</th>
-        <th>Date</th>
-        <th>Status</th>
-      </tr>
+      <tr><th>Student</th><th>Tutor</th><th>Language</th><th>Started</th><th>Ends</th></tr>
     </thead>
     <tbody>
-      {% for match in matches %}
+      {% for match in live_matches %}
+      <tr style="background:#f0fdf4;">
+        <td><strong>{{ match.request.student.user.username }}</strong></td>
+        <td><strong>{{ match.tutor.user.username }}</strong></td>
+        <td>
+          {% with lang=match.request.language %}
+            {% if lang.name == 'English' %}<span class="lang-tag tag-en">{{ lang.name }}</span>
+            {% elif lang.name == 'French' %}<span class="lang-tag tag-fr">{{ lang.name }}</span>
+            {% elif lang.name == 'Spanish' %}<span class="lang-tag tag-es">{{ lang.name }}</span>
+            {% elif lang.name == 'Japanese' %}<span class="lang-tag tag-ja">{{ lang.name }}</span>
+            {% else %}<span class="lang-tag tag-default">{{ lang.name }}</span>
+            {% endif %}
+          {% endwith %}
+        </td>
+        <td style="font-size:12px;">{{ match.started_at|date:"H:i" }}</td>
+        <td style="font-size:12px; color:#16a34a; font-weight:600;">{{ match.end_at|date:"H:i" }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+</div>
+
+<!-- Match History -->
+<div class="card admin-section">
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
+    <h2 class="card-title" style="margin:0;">🤝 Match History</h2>
+    {% if older_matches %}
+    <button class="edit-btn" style="font-size:12px; padding:4px 12px;" onclick="toggleOlderMatches(this)">
+      Show all ({{ older_matches|length }} more)
+    </button>
+    {% endif %}
+  </div>
+  {% if recent_matches %}
+  <table class="table">
+    <thead>
+      <tr><th>Student</th><th>Tutor</th><th>Language</th><th>Date</th></tr>
+    </thead>
+    <tbody>
+      {% for match in recent_matches %}
       <tr>
         <td>{{ match.request.student.user.username }}</td>
         <td>{{ match.tutor.user.username }}</td>
@@ -346,18 +400,31 @@
             {% endif %}
           {% endwith %}
         </td>
-        <td>{{ match.started_at|date:"Y-m-d H:i" }}</td>
+        <td style="font-size:12px; color:#6b7280;">{{ match.started_at|date:"Y-m-d H:i" }}</td>
+      </tr>
+      {% endfor %}
+      {% for match in older_matches %}
+      <tr class="older-match" style="display:none;">
+        <td>{{ match.request.student.user.username }}</td>
+        <td>{{ match.tutor.user.username }}</td>
         <td>
-          {% if match.request.status == 'matched' %}
-            <span class="match-status-active">Active</span>
-          {% else %}
-            <span class="match-status-done">Done</span>
-          {% endif %}
+          {% with lang=match.request.language %}
+            {% if lang.name == 'English' %}<span class="lang-tag tag-en">{{ lang.name }}</span>
+            {% elif lang.name == 'French' %}<span class="lang-tag tag-fr">{{ lang.name }}</span>
+            {% elif lang.name == 'Spanish' %}<span class="lang-tag tag-es">{{ lang.name }}</span>
+            {% elif lang.name == 'Japanese' %}<span class="lang-tag tag-ja">{{ lang.name }}</span>
+            {% else %}<span class="lang-tag tag-default">{{ lang.name }}</span>
+            {% endif %}
+          {% endwith %}
         </td>
+        <td style="font-size:12px; color:#6b7280;">{{ match.started_at|date:"Y-m-d H:i" }}</td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
+  {% else %}
+    <p style="color:#9ca3af; text-align:center; padding:1.5rem 0;">No match history yet.</p>
+  {% endif %}
 </div>
 
 <div class="card admin-section">
@@ -563,6 +630,13 @@
 
   function closeHistoryModal() {
     document.getElementById('history-modal').classList.remove('open');
+  }
+
+  function toggleOlderMatches(btn) {
+    const rows = document.querySelectorAll('.older-match');
+    const hidden = rows[0] && rows[0].style.display === 'none';
+    rows.forEach(r => r.style.display = hidden ? '' : 'none');
+    btn.textContent = hidden ? 'Hide older' : `Show all (${rows.length} more)`;
   }
 </script>
 

@@ -45,13 +45,20 @@ def admin_dashboard(request):
         .order_by('date_joined')
     )
     tutors = TutorProfile.objects.select_related('user').prefetch_related('languages').all()
-    matches = QuickLessonMatch.objects.filter(
-        student_joined_at__isnull=False,  # 実際に通話したものだけ
+    all_matches = QuickLessonMatch.objects.filter(
+        student_joined_at__isnull=False,
     ).select_related(
         'request__student__user',
         'request__language',
         'tutor__user',
     ).order_by('-started_at')
+
+    now_dt = timezone.now()
+    live_matches   = [m for m in all_matches if m.end_at and m.end_at > now_dt]
+    past_matches   = [m for m in all_matches if not (m.end_at and m.end_at > now_dt)]
+    recent_matches = past_matches[:15]
+    older_matches  = past_matches[15:]
+    matches = all_matches  # user_matches_dict 用に全件保持
 
     languages = LessonLanguage.objects.all()
 
@@ -93,7 +100,9 @@ def admin_dashboard(request):
         'users':               users,
         'users_count':         users.count(),
         'tutors':              tutors,
-        'matches':             matches,
+        'live_matches':        live_matches,
+        'recent_matches':      recent_matches,
+        'older_matches':       older_matches,
         'languages':           languages,
         'user_matches_json':   user_matches_json,
         'no_balance_count':    no_balance_count,
