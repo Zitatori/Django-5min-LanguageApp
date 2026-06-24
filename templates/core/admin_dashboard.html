@@ -85,8 +85,8 @@
     <tbody>
       {% for sd in sessions_display %}
       <tr>
-        <td style="font-size:13px; font-weight:600;">{{ sd.cet_start|date:"Y-m-d" }}</td>
-        <td style="font-size:13px;">{{ sd.cet_start|date:"H:i" }} – {{ sd.cet_end|date:"H:i" }}</td>
+        <td style="font-size:13px; font-weight:600;">{{ sd.date_str }}</td>
+        <td style="font-size:13px;">{{ sd.start_str }} – {{ sd.end_str }}</td>
         <td style="font-size:12px;">
           {% if sd.obj.english_count  > 0 %}<span style="margin-right:6px;">🇬🇧 EN×{{ sd.obj.english_count }}</span>{% endif %}
           {% if sd.obj.french_count   > 0 %}<span style="margin-right:6px;">🇫🇷 FR×{{ sd.obj.french_count }}</span>{% endif %}
@@ -103,18 +103,17 @@
         </td>
         <td style="white-space:nowrap;">
           <button class="edit-btn" style="font-size:12px; margin-right:4px;"
-            onclick="openSessionModal({
-              id: {{ sd.obj.id }},
-              date: '{{ sd.cet_start|date:"Y-m-d" }}',
-              start_time: '{{ sd.cet_start|date:"H:i" }}',
-              end_time: '{{ sd.cet_end|date:"H:i" }}',
-              english_count: {{ sd.obj.english_count }},
-              french_count: {{ sd.obj.french_count }},
-              spanish_count: {{ sd.obj.spanish_count }},
-              japanese_count: {{ sd.obj.japanese_count }},
-              note: '{{ sd.obj.note|escapejs }}',
-              is_published: {{ sd.obj.is_published|yesno:"true,false" }}
-            })">Edit</button>
+            data-edit-url="{% url 'session_edit' sd.obj.id %}"
+            data-session-date="{{ sd.date_str }}"
+            data-session-start="{{ sd.start_str }}"
+            data-session-end="{{ sd.end_str }}"
+            data-session-en="{{ sd.obj.english_count }}"
+            data-session-fr="{{ sd.obj.french_count }}"
+            data-session-es="{{ sd.obj.spanish_count }}"
+            data-session-ja="{{ sd.obj.japanese_count }}"
+            data-session-note="{{ sd.obj.note|escapejs }}"
+            data-session-published="{{ sd.obj.is_published|yesno:'true,false' }}"
+            onclick="openSessionModal(this)">Edit</button>
           <form method="post" action="{% url 'session_delete' sd.obj.id %}" style="display:inline;"
                 onsubmit="return confirm('Delete this session?')">
             {% csrf_token %}
@@ -776,32 +775,37 @@
   }
 
   /* ── セッションモーダル ── */
-  function openSessionModal(data) {
+  function openSessionModal(btnOrNull) {
     const modal = document.getElementById('session-modal');
     const form  = document.getElementById('session-form');
     const title = document.getElementById('session-modal-title');
 
-    if (data) {
+    if (btnOrNull) {
+      const btn = btnOrNull;
+      const date       = btn.dataset.sessionDate;
+      const start_time = btn.dataset.sessionStart;
+      const end_time   = btn.dataset.sessionEnd;
+
       title.textContent = 'Edit Session';
-      form.action = `/admin-dashboard/sessions/${data.id}/edit/`;
-      document.getElementById('sf-date').value  = data.date;
-      // カレンダーラベル更新
-      if (data.date) {
-        const [y,m,d] = data.date.split('-').map(Number);
+      form.action = btn.dataset.editUrl;   // Django {% url %} で生成済み
+
+      document.getElementById('sf-date').value  = date;
+      if (date) {
+        const [y,m,d] = date.split('-').map(Number);
         const dt = new Date(y, m-1, d);
         document.getElementById('sf-cal-label').textContent =
           dt.toLocaleDateString('ja-JP', {year:'numeric', month:'long', day:'numeric', weekday:'short'});
         document.getElementById('sf-cal-label').style.color = '#111827';
       }
-      document.getElementById('sf-start').value = data.start_time;
-      document.getElementById('sf-end').value   = data.end_time;
-      document.getElementById('sf-en').value    = data.english_count;
-      document.getElementById('sf-fr').value    = data.french_count;
-      document.getElementById('sf-es').value    = data.spanish_count;
-      document.getElementById('sf-ja').value    = data.japanese_count;
-      document.getElementById('sf-note').value  = data.note;
-      document.getElementById('sf-published').checked = data.is_published;
-      calInit(data.date);
+      document.getElementById('sf-start').value = start_time;
+      document.getElementById('sf-end').value   = end_time;
+      document.getElementById('sf-en').value    = btn.dataset.sessionEn;
+      document.getElementById('sf-fr').value    = btn.dataset.sessionFr;
+      document.getElementById('sf-es').value    = btn.dataset.sessionEs;
+      document.getElementById('sf-ja').value    = btn.dataset.sessionJa;
+      document.getElementById('sf-note').value  = btn.dataset.sessionNote;
+      document.getElementById('sf-published').checked = (btn.dataset.sessionPublished === 'true');
+      calInit(date);
     } else {
       title.textContent = 'Add Session';
       form.action = CREATE_URL;

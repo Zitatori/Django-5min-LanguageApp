@@ -97,7 +97,15 @@ def admin_dashboard(request):
     for s in all_sessions:
         cet_start = s.start_time.astimezone(CET)
         cet_end   = s.end_time.astimezone(CET)
-        sessions_display.append({'obj': s, 'cet_start': cet_start, 'cet_end': cet_end})
+        sessions_display.append({
+            'obj':       s,
+            'cet_start': cet_start,
+            'cet_end':   cet_end,
+            # Pre-formatted strings to avoid Django template filter TZ conversion
+            'date_str':  cet_start.strftime('%Y-%m-%d'),
+            'start_str': cet_start.strftime('%H:%M'),
+            'end_str':   cet_end.strftime('%H:%M'),
+        })
 
     return render(request, 'core/admin_dashboard.html', {
         'users':               users,
