@@ -9,7 +9,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from functools import wraps
 from django.http import JsonResponse
 from django.utils import timezone
-from django.db.models import Case, When, Value, IntegerField, Count
+from django.db.models import Case, When, Value, IntegerField, Count, Q
 from core.models import TutorProfile, QuickLessonMatch, LessonLanguage, QuickLessonRequest
 from core.models import PointBalance, PointTransaction, WithdrawalRequest
 from core.models import GoldMembership, GoldSubscriptionRequest
@@ -86,10 +86,16 @@ def admin_dashboard(request):
         })
     user_matches_json = json.dumps(dict(user_matches_dict))
 
-    # 言語別オンライン講師
+    # 言語別オンライン講師（30分以内にpingがあるものだけ）
+    ping_cutoff = timezone.now() - timedelta(seconds=1800)
     online_tutors = (
         TutorProfile.objects
-        .filter(is_online=True)
+        .filter(
+            is_online=True,
+        )
+        .filter(
+            Q(last_ping_at__isnull=True) | Q(last_ping_at__gte=ping_cutoff)
+        )
         .select_related('user')
         .prefetch_related('languages')
         .order_by('user__username')
