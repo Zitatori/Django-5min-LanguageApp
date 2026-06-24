@@ -787,7 +787,7 @@
       const end_time   = btn.dataset.sessionEnd;
 
       title.textContent = 'Edit Session';
-      form.action = btn.dataset.editUrl;   // Django {% url %} で生成済み
+      form.action = btn.dataset.editUrl;   // URL is pre-rendered by Django url tag in data-edit-url
 
       document.getElementById('sf-date').value  = date;
       if (date) {
