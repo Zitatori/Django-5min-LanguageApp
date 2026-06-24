@@ -217,7 +217,8 @@ def create_request(request):
     languages = LessonLanguage.objects.all()
     matches = QuickLessonMatch.objects.filter(
         request__student__user=request.user,
-        student_joined_at__isnull=False,  # 実際に通話したものだけ
+        student_joined_at__isnull=False,
+        tutor_joined_at__isnull=False,  # 両者が入室したものだけ
     ).select_related(
         "request",
         "request__language",
@@ -228,11 +229,12 @@ def create_request(request):
     # 表示用（オンラインカウント）: 猶予期間中のみ除外
     consecutive_exclude = _get_display_exclude_ids(student_profile)
 
-    # 言語別の受講済みレッスン数（通話成立分のみ）
+    # 言語別の受講済みレッスン数（両者が入室したものだけ）
     lang_lesson_counts = dict(
         QuickLessonMatch.objects.filter(
             request__student=student_profile,
             student_joined_at__isnull=False,
+            tutor_joined_at__isnull=False,
         )
         .values("request__language_id")
         .annotate(cnt=Count("id"))
