@@ -3,7 +3,8 @@
 
 {% block content %}
 
-<div class="card home-hero-card">
+<div class="home-grid">
+  <div class="card home-hero-card">
     <div class="home-hero-tag">&#9889; {% trans "5-minute lesson" %}</div>
     <h2 class="card-title" style="font-size:22px; margin:10px 0 8px;">{% trans "5-Minute Online Lessons" %}</h2>
     <p class="card-subtitle" style="margin-bottom:20px; line-height:1.6;">
@@ -31,44 +32,45 @@
     {% endif %}
   </div>
 
-<div class="hs-bottom-grid" style="margin-top:20px;">
-{# ── ❸ Next Session ── #}
-{% if next_session %}
-<div class="card hs-next-card" style="margin-top:20px;">
-  <div class="hs-next-eyebrow">⚡ {% trans "Next Session" %}</div>
-  <div class="hs-next-body">
-    {% trans "l, j F Y" as date_fmt %}
-    <div class="hs-next-date">{{ next_session.jst_date|date:date_fmt }}</div>
-    <div class="hs-next-time">
-      {{ next_session.jst_time }}–{{ next_session.jst_end_time }}
-      <span class="hs-tz-badge">{% trans "Japan Time" %}</span>
+  {# ── Next Session (right column on desktop) ── #}
+  {% if next_session %}
+  <div class="card hs-next-card">
+    <div class="hs-next-eyebrow">⚡ {% trans "Next Session" %}</div>
+    <div class="hs-next-body">
+      {% trans "l, j F Y" as date_fmt %}
+      <div class="hs-next-date">{{ next_session.jst_date|date:date_fmt }}</div>
+      <div class="hs-next-time">
+        {{ next_session.jst_time }}–{{ next_session.jst_end_time }}
+        <span class="hs-tz-badge">{% trans "Japan Time" %}</span>
+      </div>
+      <div class="hs-next-time-cet">
+        {{ next_session.cet_time }}–{{ next_session.cet_end_time }}
+        <span class="hs-tz-badge-cet">{% trans "European Time" %}</span>
+      </div>
+      <div class="hs-lang-chips">
+        {% for code, name, count in next_session.obj.language_counts %}
+          <span class="hs-lang-chip">
+            {% if code == 'en' %}<span class="fi fi-gb hs-fi"></span>
+            {% elif code == 'fr' %}<span class="fi fi-fr hs-fi"></span>
+            {% elif code == 'es' %}<span class="fi fi-es hs-fi"></span>
+            {% elif code == 'ja' %}<span class="fi fi-jp hs-fi"></span>
+            {% endif %}
+            {{ name }} × {{ count }}
+          </span>
+        {% endfor %}
+      </div>
+      {% if next_session.obj.note %}
+      <div class="hs-note">{{ next_session.obj.note }}</div>
+      {% endif %}
     </div>
-    <div class="hs-next-time-cet">
-      {{ next_session.cet_time }}–{{ next_session.cet_end_time }}
-      <span class="hs-tz-badge-cet">{% trans "European Time" %}</span>
-    </div>
-    <div class="hs-lang-chips">
-      {% for code, name, count in next_session.obj.language_counts %}
-        <span class="hs-lang-chip">
-          {% if code == 'en' %}<span class="fi fi-gb hs-fi"></span>
-          {% elif code == 'fr' %}<span class="fi fi-fr hs-fi"></span>
-          {% elif code == 'es' %}<span class="fi fi-es hs-fi"></span>
-          {% elif code == 'ja' %}<span class="fi fi-jp hs-fi"></span>
-          {% endif %}
-          {{ name }} × {{ count }}
-        </span>
-      {% endfor %}
-    </div>
-    {% if next_session.obj.note %}
-    <div class="hs-note">{{ next_session.obj.note }}</div>
-    {% endif %}
   </div>
-</div>
-{% endif %}
+  {% endif %}
 
-{# ── ❹ Other Sessions ── #}
+</div>{# /home-grid #}
+
+{# ── Other Sessions (below the main grid, compact) ── #}
 {% if other_sessions %}
-<div class="card hs-other-card" style="margin-top:12px;">
+<div class="card hs-other-card" style="margin-top:20px;">
   {% for s in other_sessions %}
   <div class="hs-other-row">
     <div class="hs-other-left">
@@ -100,8 +102,6 @@
 </div>
 {% endif %}
 
-</div>{# /hs-bottom-grid #}
-
 <style>
   /* ── ステップリスト ── */
   .home-steps { display: flex; flex-direction: column; gap: 14px; }
@@ -126,7 +126,7 @@
     margin-bottom: 4px;
   }
 
-  /* ── PC 2カラムグリッド ── */
+  /* ── PC 2カラムグリッド: ヒーロー左 + 次のセッション右 ── */
   @media (min-width: 900px) {
     .home-grid {
       display: grid;
@@ -135,6 +135,10 @@
       align-items: start;
     }
     .home-grid > .card { margin-bottom: 0; }
+    /* 次のセッションがないときはヒーローを全幅に */
+    .home-grid:not(:has(.hs-next-card)) .home-hero-card {
+      grid-column: 1 / -1;
+    }
     .home-hero-card { padding: 28px; }
   }
 
@@ -263,17 +267,6 @@
     padding: 2px 8px; border-radius: 99px;
   }
 
-  /* PC: ヒーロー左 + セッション右 */
-  @media (min-width: 900px) {
-    .hs-bottom-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 28px;
-      align-items: start;
-    }
-    .hs-bottom-grid > .card { margin-top: 0 !important; }
-    .hs-other-card { margin-top: 12px !important; }
-  }
 </style>
 
 {% endblock %}

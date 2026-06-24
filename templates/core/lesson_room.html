@@ -327,6 +327,16 @@
 </style>
 
 <script>
+// Warn before language switch (causes page reload which ends the call)
+document.addEventListener('submit', function(e) {
+  if (e.target.action && e.target.action.indexOf('setlang') !== -1) {
+    var ok = confirm("{% trans 'Changing language during a call will disconnect you. Continue?' %}");
+    if (!ok) e.preventDefault();
+  }
+});
+</script>
+
+<script>
 (function () {
   const localVideo   = document.getElementById("localVideo");
   const remoteVideo  = document.getElementById("remoteVideo");

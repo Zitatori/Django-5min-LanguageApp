@@ -498,6 +498,9 @@ msgstr "ヨーロッパ時間"
 msgid "l, j F Y"
 msgstr "Y年n月j日（D）"
 
+msgid "Changing language during a call will disconnect you. Continue?"
+msgstr "通話中に言語を変更すると通話が切断されます。続けますか？"
+
 #~ msgid "Step 1"
 #~ msgstr "ステップ1"
 

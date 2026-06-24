@@ -507,6 +507,9 @@ msgstr "Heure européenne"
 msgid "l, j F Y"
 msgstr "l j F Y"
 
+msgid "Changing language during a call will disconnect you. Continue?"
+msgstr "Changer de langue pendant un appel vous déconnectera. Continuer ?"
+
 #~ msgid "Step 1"
 #~ msgstr "Étape 1"
 
