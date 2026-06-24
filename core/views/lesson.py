@@ -33,7 +33,7 @@ def lesson_room(request, match_id: int):
 
         if not is_gold:
             balance = PointBalance.objects.filter(user=request.user).first()
-            if not balance or balance.balance < 1:
+            if not balance or balance.student_balance < 1:
                 return redirect('purchase_points')
 
     now = timezone.now()

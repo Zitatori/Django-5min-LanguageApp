@@ -49,7 +49,7 @@
             {% endif %}
           </span>
           <a href="{% url 'profile' %}" class="header-points-link">
-            💰{% if nav_points is not None %} {{ nav_points }}pt{% else %} {% trans "My Point" %}{% endif %}
+            💰{% if nav_points == '∞' %} ∞{% elif nav_points is not None %} {{ nav_points }}pt{% else %} {% trans "My Point" %}{% endif %}
           </a>
           <a href="{% url 'create_request' %}">{% trans "Student" %}</a>
           <a href="{% url 'tutor_dashboard' %}">{% trans "Tutor" %}</a>
@@ -87,7 +87,7 @@
           {% endif %}
         </span>
         <a href="{% url 'profile' %}" class="header-points-link">
-          💰{% if nav_points is not None %} {{ nav_points }}pt{% else %} {% trans "My Point" %}{% endif %}
+          💰{% if nav_points == '∞' %} ∞{% elif nav_points is not None %} {{ nav_points }}pt{% else %} {% trans "My Point" %}{% endif %}
         </a>
         <a href="{% url 'create_request' %}">{% trans "Student" %}</a>
         <a href="{% url 'tutor_dashboard' %}">{% trans "Tutor" %}</a>

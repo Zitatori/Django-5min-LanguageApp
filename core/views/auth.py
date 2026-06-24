@@ -24,7 +24,7 @@ def signup(request):
                 # 言語はサインアップ後に管理者が設定
 
             # 新規ユーザーにサインアップボーナスを付与
-            PointBalance.objects.create(user=user, balance=SIGNUP_BONUS_POINTS)
+            PointBalance.objects.create(user=user, student_balance=SIGNUP_BONUS_POINTS)
             PointTransaction.objects.create(
                 user=user,
                 amount=SIGNUP_BONUS_POINTS,

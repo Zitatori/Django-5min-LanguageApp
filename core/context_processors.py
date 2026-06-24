@@ -11,10 +11,13 @@ def gold_status(request):
     except Exception:
         active = False
 
-    try:
-        nav_points = request.user.point_balance.balance
-    except Exception:
-        nav_points = None
+    if active:
+        nav_points = '∞'
+    else:
+        try:
+            nav_points = request.user.point_balance.student_balance
+        except Exception:
+            nav_points = None
 
     return {
         'is_gold': active,

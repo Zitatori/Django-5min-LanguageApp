@@ -194,13 +194,19 @@
 <div class="point-hero">
   <p class="label">📖 {% trans "Student Points" %}</p>
   <div>
-    <span class="amount">{{ balance.student_balance }}</span>
-    <span class="unit">pt</span>
+    {% if is_gold %}
+      <span class="amount" style="font-size:52px;">∞</span>
+    {% else %}
+      <span class="amount">{{ balance.student_balance }}</span>
+      <span class="unit">pt</span>
+    {% endif %}
   </div>
   {% if is_gold %}
-    <p class="earned">👑 {% trans "Gold: lessons are free" %}</p>
+    <p class="earned">👑 {% trans "Gold: unlimited lessons" %}</p>
   {% endif %}
-  <a href="{% url 'purchase_points' %}" class="btn-buy">＋ {% trans "Buy Points" %}</a>
+  {% if not is_gold %}
+    <a href="{% url 'purchase_points' %}" class="btn-buy">＋ {% trans "Buy Points" %}</a>
+  {% endif %}
 </div>
 
 {% if request.user.tutorprofile %}
