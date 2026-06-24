@@ -2,7 +2,7 @@ from django.urls import path
 from . import views
 from .views import VideoRoomView
 from core.views.admin import admin_dashboard, update_tutor_languages, update_user_languages, delete_user, update_user_points, grant_initial_points_all, process_withdrawal, grant_gold, session_create, session_edit, session_delete
-from core.views.profile import profile, purchase_points, request_withdrawal, request_gold
+from core.views.profile import profile, purchase_points, request_withdrawal, transfer_points, request_gold
 
 
 
@@ -37,6 +37,7 @@ urlpatterns = [
     path('profile/', profile, name='profile'),
     path('points/purchase/', purchase_points, name='purchase_points'),
     path('points/withdraw/', request_withdrawal, name='request_withdrawal'),
+    path('points/transfer/', transfer_points, name='transfer_points'),
 
     # 引き出し申請処理（admin用）
     path('admin-dashboard/withdrawal/<int:withdrawal_id>/', process_withdrawal, name='process_withdrawal'),

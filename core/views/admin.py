@@ -162,9 +162,9 @@ def update_user_points(request, user_id):
             return redirect('admin_dashboard')
 
         balance_obj, _ = PointBalance.objects.get_or_create(user=user)
-        diff = new_balance - balance_obj.balance
+        diff = new_balance - balance_obj.student_balance
         if diff != 0:
-            balance_obj.balance = new_balance
+            balance_obj.student_balance = new_balance
             balance_obj.save()
             PointTransaction.objects.create(
                 user=user,
@@ -192,16 +192,15 @@ def process_withdrawal(request, withdrawal_id):
             wr.admin_note = request.POST.get('admin_note', '')
             wr.processed_at = timezone.now()
             wr.save()
-            # ポイントを返却
+            # 講師ポイントを返却
             balance, _ = PointBalance.objects.get_or_create(user=wr.user)
-            balance.balance        += wr.points
-            balance.earned_balance += wr.points
+            balance.teacher_balance += wr.points
             balance.save()
             PointTransaction.objects.create(
                 user=wr.user,
                 amount=wr.points,
                 transaction_type=PointTransaction.TYPE_SIGNUP_BONUS,
-                note=f"Withdrawal rejected — points returned",
+                note=f"Withdrawal rejected — points returned to teacher balance",
             )
     return redirect('admin_dashboard')
 
@@ -212,7 +211,7 @@ def grant_initial_points_all(request):
     if request.method == 'POST':
         users_without_balance = User.objects.filter(point_balance__isnull=True)
         for user in users_without_balance:
-            PointBalance.objects.create(user=user, balance=INITIAL_BONUS)
+            PointBalance.objects.create(user=user, student_balance=INITIAL_BONUS)
             PointTransaction.objects.create(
                 user=user,
                 amount=INITIAL_BONUS,

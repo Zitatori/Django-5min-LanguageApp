@@ -6,12 +6,16 @@ class PointBalance(models.Model):
     user = models.OneToOneField(
         User, on_delete=models.CASCADE, related_name='point_balance'
     )
-    balance = models.IntegerField(default=0)
-    # earned_balance: lesson_taught で稼いだ分のみ（引き出し可能額）
-    earned_balance = models.IntegerField(default=0)
+    student_balance = models.IntegerField(default=0)  # 生徒ポイント: 購入・ボーナス
+    teacher_balance = models.IntegerField(default=0)  # 講師ポイント: 授業で稼いだ分（出金可）
+
+    @property
+    def balance(self):
+        """合計ポイント（表示用・後方互換）"""
+        return self.student_balance + self.teacher_balance
 
     def __str__(self):
-        return f"{self.user.username}: {self.balance}pt"
+        return f"{self.user.username}: {self.student_balance}pt(student) + {self.teacher_balance}pt(teacher)"
 
 
 class PointTransaction(models.Model):
@@ -20,6 +24,7 @@ class PointTransaction(models.Model):
     TYPE_LESSON_TAUGHT = 'lesson_taught'
     TYPE_PURCHASE      = 'purchase'
     TYPE_WITHDRAWAL    = 'withdrawal'
+    TYPE_TRANSFER      = 'transfer'   # 講師ポイント → 生徒ポイント
 
     TRANSACTION_TYPES = [
         (TYPE_SIGNUP_BONUS,  'Signup Bonus'),
@@ -27,6 +32,7 @@ class PointTransaction(models.Model):
         (TYPE_LESSON_TAUGHT, 'Lesson Taught'),
         (TYPE_PURCHASE,      'Purchase'),
         (TYPE_WITHDRAWAL,    'Withdrawal'),
+        (TYPE_TRANSFER,      'Transfer'),
     ]
 
     user             = models.ForeignKey(User, on_delete=models.CASCADE, related_name='point_transactions')

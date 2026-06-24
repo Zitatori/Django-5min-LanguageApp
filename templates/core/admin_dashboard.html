@@ -275,7 +275,7 @@
         </td>
         <td>
           {% if u.point_balance %}
-            <span class="pt-badge">{{ u.point_balance.balance }} pt</span>
+            <span class="pt-badge" title="Student: {{ u.point_balance.student_balance }}pt / Teacher: {{ u.point_balance.teacher_balance }}pt">{{ u.point_balance.balance }} pt</span>
           {% else %}
             <span class="pt-none">—</span>
           {% endif %}
@@ -317,7 +317,7 @@
         <td style="white-space:nowrap;">
           <button class="edit-btn" onclick="openModal({{ u.id }}, '{{ u.username }}', [{% if u.tutorprofile %}{% for l in u.tutorprofile.languages.all %}{{ l.id }},{% endfor %}{% endif %}])">Edit</button>
           <button class="history-btn" onclick="openHistoryModal({{ u.id }}, '{{ u.username }}')">History</button>
-          <button class="points-btn" onclick="openPointsModal({{ u.id }}, '{{ u.username }}', {{ u.point_balance.balance|default:0 }})">Pts</button>
+          <button class="points-btn" onclick="openPointsModal({{ u.id }}, '{{ u.username }}', {{ u.point_balance.student_balance|default:0 }}, {{ u.point_balance.teacher_balance|default:0 }})">Pts</button>
           <form method="post" action="{% url 'grant_gold' u.id %}" style="display:inline;"
                 onsubmit="return confirm('Grant Gold 30 days to {{ u.username }}?')">
             {% csrf_token %}
@@ -343,7 +343,7 @@
           {% else %}<span class="role-student">Student</span>{% endif %}
         </td>
         <td>
-          {% if u.point_balance %}<span class="pt-badge">{{ u.point_balance.balance }} pt</span>
+          {% if u.point_balance %}<span class="pt-badge" title="Student: {{ u.point_balance.student_balance }}pt / Teacher: {{ u.point_balance.teacher_balance }}pt">{{ u.point_balance.balance }} pt</span>
           {% else %}<span class="pt-none">—</span>{% endif %}
         </td>
         <td>
@@ -371,7 +371,7 @@
         <td style="white-space:nowrap;">
           <button class="edit-btn" onclick="openModal({{ u.id }}, '{{ u.username }}', [{% if u.tutorprofile %}{% for l in u.tutorprofile.languages.all %}{{ l.id }},{% endfor %}{% endif %}])">Edit</button>
           <button class="history-btn" onclick="openHistoryModal({{ u.id }}, '{{ u.username }}')">History</button>
-          <button class="points-btn" onclick="openPointsModal({{ u.id }}, '{{ u.username }}', {{ u.point_balance.balance|default:0 }})">Pts</button>
+          <button class="points-btn" onclick="openPointsModal({{ u.id }}, '{{ u.username }}', {{ u.point_balance.student_balance|default:0 }}, {{ u.point_balance.teacher_balance|default:0 }})">Pts</button>
           <form method="post" action="{% url 'grant_gold' u.id %}" style="display:inline;" onsubmit="return confirm('Grant Gold 30 days to {{ u.username }}?')">
             {% csrf_token %}
             <button type="submit" class="edit-btn" style="border-color:#f59e0b;color:#b45309;" title="Grant Gold 30 days">&#x1F451;</button>
@@ -615,10 +615,13 @@
 <div class="modal-overlay" id="points-modal">
   <div class="modal">
     <h3>✏️ Edit points: <span id="pts-modal-username"></span></h3>
-    <p style="font-size:13px; color:#6b7280; margin-bottom:12px;">Current: <strong id="pts-current"></strong> pt</p>
+    <p style="font-size:13px; color:#6b7280; margin-bottom:4px;">
+      Student: <strong id="pts-student-current"></strong> pt　Teacher: <strong id="pts-teacher-current"></strong> pt
+    </p>
+    <p style="font-size:12px; color:#9ca3af; margin-bottom:12px;">※ 生徒ポイントのみ変更できます（講師ポイントは授業で増減）</p>
     <form method="post" id="points-form" action="">
       {% csrf_token %}
-      <label style="font-size:14px; font-weight:500; display:block; margin-bottom:6px;">New Balance</label>
+      <label style="font-size:14px; font-weight:500; display:block; margin-bottom:6px;">New Student Balance</label>
       <input type="number" name="balance" id="pts-input" min="0"
              style="width:100%; padding:10px; border:1.5px solid #e5e7eb; border-radius:10px; font-size:16px; box-sizing:border-box;">
       <button type="submit" class="save-btn" style="background:#f59e0b;">Save</button>
@@ -640,10 +643,11 @@
     document.getElementById('modal').classList.remove('open');
   }
 
-  function openPointsModal(userId, username, currentBalance) {
+  function openPointsModal(userId, username, studentBalance, teacherBalance) {
     document.getElementById('pts-modal-username').textContent = username;
-    document.getElementById('pts-current').textContent = currentBalance;
-    document.getElementById('pts-input').value = currentBalance;
+    document.getElementById('pts-student-current').textContent = studentBalance;
+    document.getElementById('pts-teacher-current').textContent = teacherBalance;
+    document.getElementById('pts-input').value = studentBalance;
     document.getElementById('points-form').action = `/admin-dashboard/user/${userId}/points/`;
     document.getElementById('points-modal').classList.add('open');
   }

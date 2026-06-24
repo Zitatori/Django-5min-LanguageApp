@@ -4,13 +4,13 @@ from django.utils import timezone
 from core.models import PointBalance, PointTransaction, WithdrawalRequest
 from core.models import GoldMembership, GoldSubscriptionRequest
 
-MIN_WITHDRAWAL_PTS = 20  # 最低引き出しポイント
+MIN_WITHDRAWAL_PTS = 20  # 最低出金ポイント
 FEE_THRESHOLD      = 50  # これ以上は手数料無料
 WITHDRAWAL_FEE     = 5   # 手数料
 
 
 def _get_or_create_balance(user):
-    balance, _ = PointBalance.objects.get_or_create(user=user, defaults={'balance': 0})
+    balance, _ = PointBalance.objects.get_or_create(user=user)
     return balance
 
 
@@ -26,18 +26,15 @@ def profile(request):
         user=request.user, status=WithdrawalRequest.STATUS_PENDING
     ).first()
 
-    # 引き出し可能額 = 講師として稼いだ分 と 総残高 の小さい方
-    withdrawable = min(balance.earned_balance, balance.balance)
-    is_tutor     = hasattr(request.user, 'tutorprofile')
+    is_tutor = hasattr(request.user, 'tutorprofile')
 
-    # Gold 申請中かどうか
+    # Gold 会員チェック
     gold_request_pending = GoldSubscriptionRequest.objects.filter(
         user=request.user, status=GoldSubscriptionRequest.STATUS_PENDING
     ).exists()
 
     return render(request, 'core/profile.html', {
         'balance':            balance,
-        'withdrawable':       withdrawable,
         'transactions':       transactions,
         'pending_withdrawal': pending_withdrawal,
         'min_withdrawal':     MIN_WITHDRAWAL_PTS,
@@ -45,7 +42,7 @@ def profile(request):
         'withdrawal_fee':     WITHDRAWAL_FEE,
         'can_withdraw':       (
             is_tutor
-            and withdrawable >= MIN_WITHDRAWAL_PTS
+            and balance.teacher_balance >= MIN_WITHDRAWAL_PTS
             and not pending_withdrawal
         ),
         'withdrawal_currencies': WithdrawalRequest.CURRENCY_CHOICES,
@@ -66,14 +63,11 @@ def request_withdrawal(request):
     except ValueError:
         return redirect('profile')
 
-    # バリデーション（引き出し可能額 = earned と balance の小さい方）
-    withdrawable = min(balance.earned_balance, balance.balance)
-    if (points < MIN_WITHDRAWAL_PTS
-            or withdrawable < points
-            or not hasattr(request.user, 'tutorprofile')):
+    if (not hasattr(request.user, 'tutorprofile')
+            or points < MIN_WITHDRAWAL_PTS
+            or points > balance.teacher_balance):
         return redirect('profile')
 
-    # 既に申請中なら重複させない
     if WithdrawalRequest.objects.filter(
         user=request.user, status=WithdrawalRequest.STATUS_PENDING
     ).exists():
@@ -81,9 +75,7 @@ def request_withdrawal(request):
 
     fee = calc_withdrawal_fee(points)
 
-    # ポイントを予約（earned_balance & balance 両方から引く）
-    balance.earned_balance -= points
-    balance.balance        -= points
+    balance.teacher_balance -= points
     balance.save()
 
     PointTransaction.objects.create(
@@ -106,6 +98,36 @@ def request_withdrawal(request):
 
 
 @login_required
+def transfer_points(request):
+    """講師ポイント → 生徒ポイント への振り替え"""
+    if request.method != 'POST':
+        return redirect('profile')
+
+    balance = _get_or_create_balance(request.user)
+
+    try:
+        pts = int(request.POST.get('points', 0))
+    except ValueError:
+        return redirect('profile')
+
+    if pts < 1 or pts > balance.teacher_balance:
+        return redirect('profile')
+
+    balance.teacher_balance -= pts
+    balance.student_balance += pts
+    balance.save()
+
+    PointTransaction.objects.create(
+        user=request.user,
+        amount=pts,
+        transaction_type=PointTransaction.TYPE_TRANSFER,
+        note=f"Transfer: {pts}pt teacher → student",
+    )
+
+    return redirect('profile')
+
+
+@login_required
 def purchase_points(request):
     TIERS = [
         {'points': 10,  'price_jpy': 1000},
@@ -121,11 +143,9 @@ def purchase_points(request):
 
 @login_required
 def request_gold(request):
-    """ゴールド会員申請（重複防止、申請中は再送不可）"""
     if request.method != 'POST':
         return redirect('profile')
 
-    # 既にアクティブな Gold メンバーなら不要
     try:
         membership = request.user.gold_membership
         if membership.is_active:
@@ -133,7 +153,6 @@ def request_gold(request):
     except Exception:
         pass
 
-    # 申請中なら重複させない
     if GoldSubscriptionRequest.objects.filter(
         user=request.user, status=GoldSubscriptionRequest.STATUS_PENDING
     ).exists():

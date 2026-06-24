@@ -119,8 +119,8 @@ class VideoCallConsumer(AsyncWebsocketConsumer):
 
             if not student_is_gold:
                 s_bal, _ = PointBalance.objects.get_or_create(user=student_user)
-                if s_bal.balance >= 1:
-                    s_bal.balance -= 1
+                if s_bal.student_balance >= 1:
+                    s_bal.student_balance -= 1
                     s_bal.save()
                     PointTransaction.objects.create(
                         user=student_user,
@@ -129,10 +129,9 @@ class VideoCallConsumer(AsyncWebsocketConsumer):
                         reference_id=int(self.match_id),
                     )
 
-            # 講師: +1pt（引き出し可能額にも加算）
+            # 講師: +1pt を講師ポイントに加算
             t_bal, _ = PointBalance.objects.get_or_create(user=tutor_user)
-            t_bal.balance         += 1
-            t_bal.earned_balance  += 1
+            t_bal.teacher_balance += 1
             t_bal.save()
             PointTransaction.objects.create(
                 user=tutor_user,
