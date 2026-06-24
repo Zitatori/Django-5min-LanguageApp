@@ -10,7 +10,7 @@ from functools import wraps
 from django.http import JsonResponse
 from django.utils import timezone
 from django.db.models import Case, When, Value, IntegerField, Count
-from core.models import TutorProfile, QuickLessonMatch, LessonLanguage
+from core.models import TutorProfile, QuickLessonMatch, LessonLanguage, QuickLessonRequest
 from core.models import PointBalance, PointTransaction, WithdrawalRequest
 from core.models import GoldMembership, GoldSubscriptionRequest
 from core.models import UpcomingSession
@@ -86,6 +86,22 @@ def admin_dashboard(request):
         })
     user_matches_json = json.dumps(dict(user_matches_dict))
 
+    # 言語別待機中リクエスト（直近15分以内）
+    waiting_cutoff = timezone.now() - timedelta(minutes=15)
+    waiting_qs = (
+        QuickLessonRequest.objects
+        .filter(status='waiting', created_at__gte=waiting_cutoff)
+        .select_related('student__user', 'language')
+        .order_by('language__name', 'created_at')
+    )
+    waiting_by_language = defaultdict(list)
+    for req in waiting_qs:
+        waiting_by_language[req.language.name].append(req)
+    waiting_by_language_list = [
+        (lang_name, reqs)
+        for lang_name, reqs in sorted(waiting_by_language.items())
+    ]
+
     no_balance_count = User.objects.filter(point_balance__isnull=True).count()
     withdrawal_requests = WithdrawalRequest.objects.select_related('user').order_by('-created_at')
     gold_requests = GoldSubscriptionRequest.objects.select_related('user').filter(
@@ -120,8 +136,9 @@ def admin_dashboard(request):
         'user_matches_json':   user_matches_json,
         'no_balance_count':    no_balance_count,
         'withdrawal_requests': withdrawal_requests,
-        'gold_requests':       gold_requests,
-        'sessions_display':    sessions_display,
+        'gold_requests':            gold_requests,
+        'sessions_display':         sessions_display,
+        'waiting_by_language_list': waiting_by_language_list,
     })
 
 @staff_or_admin_role_required
