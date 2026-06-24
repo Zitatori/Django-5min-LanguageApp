@@ -492,7 +492,9 @@
     <thead>
       <tr>
         <th>Tutor</th>
-        <th>Points</th>
+        <th>Gross</th>
+        <th>Fee</th>
+        <th>Net Payout</th>
         <th>Currency</th>
         <th>Method</th>
         <th>Payment Details</th>
@@ -505,7 +507,9 @@
       {% for wr in withdrawal_requests %}
       <tr>
         <td><strong>{{ wr.user.username }}</strong></td>
-        <td>{{ wr.points }} pt</td>
+        <td style="color:#6b7280;">{{ wr.points }} pt</td>
+        <td style="color:#d97706;">{% if wr.fee %}-{{ wr.fee }} pt{% else %}—{% endif %}</td>
+        <td><strong style="color:#16a34a;">{{ wr.net_points }} pt</strong></td>
         <td>{{ wr.currency }}</td>
         <td>{{ wr.get_payment_method_display }}</td>
         <td style="font-size:12px; color:#374151; max-width:180px; word-break:break-all;">{{ wr.payment_details }}</td>

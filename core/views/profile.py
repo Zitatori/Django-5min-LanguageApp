@@ -4,12 +4,18 @@ from django.utils import timezone
 from core.models import PointBalance, PointTransaction, WithdrawalRequest
 from core.models import GoldMembership, GoldSubscriptionRequest
 
-MIN_WITHDRAWAL_PTS = 50  # 最低引き出しポイント
+MIN_WITHDRAWAL_PTS = 20  # 最低引き出しポイント
+FEE_THRESHOLD      = 50  # これ以上は手数料無料
+WITHDRAWAL_FEE     = 5   # 手数料
 
 
 def _get_or_create_balance(user):
     balance, _ = PointBalance.objects.get_or_create(user=user, defaults={'balance': 0})
     return balance
+
+
+def calc_withdrawal_fee(points):
+    return 0 if points >= FEE_THRESHOLD else WITHDRAWAL_FEE
 
 
 @login_required
@@ -22,6 +28,7 @@ def profile(request):
 
     # 引き出し可能額 = 講師として稼いだ分 と 総残高 の小さい方
     withdrawable = min(balance.earned_balance, balance.balance)
+    is_tutor     = hasattr(request.user, 'tutorprofile')
 
     # Gold 申請中かどうか
     gold_request_pending = GoldSubscriptionRequest.objects.filter(
@@ -34,8 +41,10 @@ def profile(request):
         'transactions':       transactions,
         'pending_withdrawal': pending_withdrawal,
         'min_withdrawal':     MIN_WITHDRAWAL_PTS,
+        'fee_threshold':      FEE_THRESHOLD,
+        'withdrawal_fee':     WITHDRAWAL_FEE,
         'can_withdraw':       (
-            hasattr(request.user, 'tutorprofile')
+            is_tutor
             and withdrawable >= MIN_WITHDRAWAL_PTS
             and not pending_withdrawal
         ),
@@ -70,6 +79,8 @@ def request_withdrawal(request):
     ).exists():
         return redirect('profile')
 
+    fee = calc_withdrawal_fee(points)
+
     # ポイントを予約（earned_balance & balance 両方から引く）
     balance.earned_balance -= points
     balance.balance        -= points
@@ -79,12 +90,13 @@ def request_withdrawal(request):
         user=request.user,
         amount=-points,
         transaction_type=PointTransaction.TYPE_WITHDRAWAL,
-        note="Withdrawal request submitted",
+        note=f"Withdrawal request submitted (fee: {fee}pt, net: {points - fee}pt)",
     )
 
     WithdrawalRequest.objects.create(
         user=request.user,
         points=points,
+        fee=fee,
         currency=request.POST.get('currency', 'EUR'),
         payment_method=request.POST.get('payment_method', 'wise'),
         payment_details=request.POST.get('payment_details', ''),

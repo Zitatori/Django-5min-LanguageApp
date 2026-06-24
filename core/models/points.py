@@ -64,7 +64,8 @@ class WithdrawalRequest(models.Model):
     ]
 
     user            = models.ForeignKey(User, on_delete=models.CASCADE, related_name='withdrawal_requests')
-    points          = models.PositiveIntegerField()          # 引き出すポイント数
+    points          = models.PositiveIntegerField()          # 引き出すポイント数（総額）
+    fee             = models.PositiveIntegerField(default=0) # 手数料
     currency        = models.CharField(max_length=3, choices=CURRENCY_CHOICES)
     payment_method  = models.CharField(max_length=20, choices=METHOD_CHOICES)
     payment_details = models.TextField(help_text="口座番号・PayPalメール・WiseメールなどをテキストでOK")
@@ -75,6 +76,10 @@ class WithdrawalRequest(models.Model):
 
     class Meta:
         ordering = ['-created_at']
+
+    @property
+    def net_points(self):
+        return self.points - self.fee
 
     def __str__(self):
         return f"{self.user.username} {self.points}pt → {self.currency} ({self.status})"
