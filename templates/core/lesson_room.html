@@ -549,25 +549,30 @@ document.addEventListener('submit', function(e) {
     log('PC', `adding ${tracks.length} local track(s):`, tracks.map(t => t.kind).join(', '));
     tracks.forEach(t => peerConnection.addTrack(t, localStream));
 
-    // ── ontrack: 別ストリームのときだけsrcObjectを更新 ──
+    // ── ontrack ──
     peerConnection.ontrack = e => {
-      const remoteStream = e.streams[0];
-      const vTracks = remoteStream ? remoteStream.getVideoTracks().length : 0;
-      const aTracks = remoteStream ? remoteStream.getAudioTracks().length : 0;
-      log('ontrack', `kind=${e.track.kind}  streams=${e.streams.length}  videoTracks=${vTracks}  audioTracks=${aTracks}  muted=${e.track.muted}`);
+      log('ontrack', `kind=${e.track.kind}  streams=${e.streams.length}  muted=${e.track.muted}`);
 
-      if (!remoteStream) {
-        log('ontrack', 'WARNING: e.streams[0] undefined — skipping');
-        return;
-      }
-      if (remoteVideo.srcObject !== remoteStream) {
+      // e.streams[0] が undefined の場合は手動でMediaStreamを組み立てる
+      let stream = e.streams[0];
+      if (!stream) {
+        log('ontrack', 'e.streams[0] undefined — building stream manually');
+        if (!(remoteVideo.srcObject instanceof MediaStream)) {
+          remoteVideo.srcObject = new MediaStream();
+        }
+        stream = remoteVideo.srcObject;
+        if (!stream.getTrackById(e.track.id)) {
+          stream.addTrack(e.track);
+        }
+      } else if (remoteVideo.srcObject !== stream) {
         log('ontrack', 'setting remoteVideo.srcObject');
-        remoteVideo.srcObject = remoteStream;
+        remoteVideo.srcObject = stream;
+        remoteVideo.play().catch(err => log('ontrack', 'play() error:', err.message));
       }
 
       const revealVideo = () => {
         if (!remoteStreamReady) {
-          log('ontrack', `reveal — videoTracks=${remoteStream.getVideoTracks().length}`);
+          log('ontrack', `reveal — videoTracks=${stream.getVideoTracks().length}`);
           placeholder.classList.add("hidden");
           remoteStreamReady = true;
           reconnectAttempts = 0;
@@ -583,10 +588,10 @@ document.addEventListener('submit', function(e) {
       // srcObjectが失われた場合の2秒ごとチェック
       if (!srcObjectGuard) {
         srcObjectGuard = setInterval(() => {
-          if (remoteStream.active && remoteVideo.srcObject !== remoteStream) {
+          if (stream.active && remoteVideo.srcObject !== stream) {
             log('ontrack', 'srcObject lost — restoring');
-            remoteVideo.srcObject = remoteStream;
-          } else if (!remoteStream.active) {
+            remoteVideo.srcObject = stream;
+          } else if (!stream.active) {
             clearInterval(srcObjectGuard); srcObjectGuard = null;
           }
         }, 2000);
@@ -614,6 +619,16 @@ document.addEventListener('submit', function(e) {
 
       if (state === 'connected') {
         if (reconnectTimer) { clearTimeout(reconnectTimer); reconnectTimer = null; }
+        // Fallback: srcObjectがセットされているのにrevealVideoが呼ばれなかった場合
+        if (!remoteStreamReady) {
+          setTimeout(() => {
+            if (!remoteStreamReady && remoteVideo.srcObject) {
+              log('PC state', 'fallback: revealing placeholder after 5s connected');
+              placeholder.classList.add("hidden");
+              remoteStreamReady = true;
+            }
+          }, 5000);
+        }
       }
       if (state === 'disconnected') {
         if (reconnectTimer) clearTimeout(reconnectTimer);
