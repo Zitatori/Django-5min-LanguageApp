@@ -387,6 +387,7 @@ document.addEventListener('submit', function(e) {
   let srcObjectGuard      = null;  // srcObject消失チェック用インターバル
   let reconnectAttempts   = 0;     // 再接続試行回数
   const MAX_RECONNECT     = 3;     // 最大再接続回数
+  let calleeJoinTimer     = null;  // Callee側: Offerが来なければjoin返送
 
   display.textContent = "Waiting…";
 
@@ -678,6 +679,7 @@ document.addEventListener('submit', function(e) {
 
   async function handleOffer(data) {
     log('Offer', `received from ${data.sender}`);
+    if (calleeJoinTimer) { clearTimeout(calleeJoinTimer); calleeJoinTimer = null; }
     // PCがない or closedなら再生成
     if (!peerConnection || peerConnection.signalingState === 'closed') {
       createPeerConnection();
@@ -784,13 +786,27 @@ document.addEventListener('submit', function(e) {
       isCaller = shouldBeCaller(data.sender);
       log('WS', `role: ${isCaller ? 'CALLER' : 'CALLEE'}`);
       if (isCaller) {
+        if (calleeJoinTimer) { clearTimeout(calleeJoinTimer); calleeJoinTimer = null; }
         createPeerConnection();
         await makeOffer();
-      } else if (peerConnection) {
-        peerConnection.close();
-        peerConnection = null;
-        remoteDescSet = false;
-        pendingCandidates = [];
+      } else {
+        // Callee: 既存PCを閉じる
+        if (peerConnection) {
+          peerConnection.close();
+          peerConnection = null;
+          remoteDescSet = false;
+          pendingCandidates = [];
+        }
+        // Callerがこちらの"join"を受け取れていない可能性がある（タイミングの問題）
+        // 2秒以内にOfferが来なければ"join"を返してCallerにOfferを促す
+        if (calleeJoinTimer) clearTimeout(calleeJoinTimer);
+        calleeJoinTimer = setTimeout(() => {
+          calleeJoinTimer = null;
+          if (!remoteDescSet && !peerConnection) {
+            log('WS', 'no offer in 2s — sending join back to prompt caller');
+            sendSignal({ type: "join", sender: userId });
+          }
+        }, 2000);
       }
       return;
     }
@@ -808,6 +824,7 @@ document.addEventListener('submit', function(e) {
   function cleanupCall() {
     log('Cleanup', 'cleaning up all resources');
     if (reconnectTimer)  { clearTimeout(reconnectTimer);   reconnectTimer = null; }
+    if (calleeJoinTimer) { clearTimeout(calleeJoinTimer);  calleeJoinTimer = null; }
     if (srcObjectGuard)  { clearInterval(srcObjectGuard);  srcObjectGuard = null; }
     if (localStream)     { localStream.getTracks().forEach(t => t.stop()); localStream = null; }
     if (peerConnection)  { peerConnection.close(); peerConnection = null; }
