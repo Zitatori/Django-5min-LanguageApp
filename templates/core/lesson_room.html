@@ -382,10 +382,13 @@ document.addEventListener('submit', function(e) {
   let remoteDescSet     = false;
   let timerStarted      = false;
   let peerLeftTimer     = null;
-  let remoteStreamTimer = null;  // 5秒でリモート映像なければ再接続
-  let reconnectTimer    = null;  // disconnected後のグレース期間
-  let remoteStreamReady = false; // ontrackでvideo trackを受信済みか
-  let srcObjectGuard    = null;  // srcObject消失チェック用インターバル
+  let remoteStreamTimer   = null;  // 5秒でリモート映像なければ再接続
+  let reconnectTimer      = null;  // disconnected後のグレース期間
+  let remoteStreamReady   = false; // ontrackでvideo trackを受信済みか
+  let srcObjectGuard      = null;  // srcObject消失チェック用インターバル
+  let reconnectAttempts   = 0;     // 再接続試行回数
+  const MAX_RECONNECT     = 2;     // 最大再接続回数（これを超えたらあきらめる）
+  let streamTimerStarted  = false; // 現在のPC生成後にタイマーを1回だけ起動するフラグ
 
   display.textContent = "Waiting…";
 
@@ -475,11 +478,13 @@ document.addEventListener('submit', function(e) {
     log('getUserMedia', 'OK — tracks:', localStream.getTracks().map(t => `${t.kind}(${t.label.slice(0,30)})`).join(', '));
   }
 
-  // ── 5秒タイムアウト: リモート映像が来なければ再接続 ──
+  // ── 5秒タイムアウト: リモート映像が来なければ再接続（1PC生成につき1回のみ）──
   function clearRemoteStreamTimer() {
     if (remoteStreamTimer) { clearTimeout(remoteStreamTimer); remoteStreamTimer = null; }
   }
   function startRemoteStreamTimer() {
+    if (streamTimerStarted || remoteStreamReady) return;  // 1PC生成内で1回だけ
+    streamTimerStarted = true;
     clearRemoteStreamTimer();
     log('Timer', '5s remote-stream timeout started');
     remoteStreamTimer = setTimeout(() => {
@@ -490,12 +495,18 @@ document.addEventListener('submit', function(e) {
     }, 5000);
   }
 
-  // ── 再接続 ──
+  // ── 再接続（最大MAX_RECONNECT回まで）──
   function triggerReconnect() {
     clearRemoteStreamTimer();
     if (reconnectTimer) { clearTimeout(reconnectTimer); reconnectTimer = null; }
+
+    if (reconnectAttempts >= MAX_RECONNECT) {
+      log('Reconnect', `max attempts (${MAX_RECONNECT}) reached — giving up`);
+      return;
+    }
+    reconnectAttempts++;
     const pcState = peerConnection ? peerConnection.connectionState : 'null';
-    log('Reconnect', `role=${isCaller ? 'caller' : 'callee'}  pcState=${pcState}`);
+    log('Reconnect', `attempt ${reconnectAttempts}/${MAX_RECONNECT}  role=${isCaller ? 'caller' : 'callee'}  pcState=${pcState}`);
 
     if (isCaller) {
       // Caller: まずICE restart試行、失敗したらフルPC再生成
@@ -506,7 +517,7 @@ document.addEventListener('submit', function(e) {
           .then(() => {
             sendSignal({ type: "offer", offer: peerConnection.localDescription, sender: userId });
             log('Reconnect', 'ICE restart offer sent');
-            startRemoteStreamTimer();
+            // タイマーは再起動しない — ICE再接続後の 'connected' ハンドラが担当
           })
           .catch(err => {
             log('Reconnect', 'ICE restart failed:', err.message, '— full reconnect');
@@ -549,9 +560,10 @@ document.addEventListener('submit', function(e) {
       log('PC', 'ERROR: localStream is null — cannot create PeerConnection');
       return;
     }
-    remoteDescSet     = false;
-    pendingCandidates = [];
-    remoteStreamReady = false;
+    remoteDescSet      = false;
+    pendingCandidates  = [];
+    remoteStreamReady  = false;
+    streamTimerStarted = false;  // 新しいPCではタイマーを1回使えるようにリセット
     clearRemoteStreamTimer();
     if (srcObjectGuard) { clearInterval(srcObjectGuard); srcObjectGuard = null; }
 
@@ -583,7 +595,8 @@ document.addEventListener('submit', function(e) {
           log('ontrack', `reveal — videoTracks=${remoteStream.getVideoTracks().length}`);
           placeholder.classList.add("hidden");
           clearRemoteStreamTimer();
-          remoteStreamReady = true;
+          remoteStreamReady   = true;
+          reconnectAttempts   = 0;  // 映像受信成功 → 再接続カウンターをリセット
         }
       };
 
@@ -635,21 +648,9 @@ document.addEventListener('submit', function(e) {
         }, 3000);
       }
       if (state === 'failed') {
-        log('ICE state', 'FAILED — reconnecting');
+        log('ICE state', 'FAILED — triggering reconnect');
         if (reconnectTimer) { clearTimeout(reconnectTimer); reconnectTimer = null; }
-        if (isCaller && peerConnection && peerConnection.signalingState !== 'closed') {
-          try {
-            const offer = await peerConnection.createOffer({ iceRestart: true });
-            await peerConnection.setLocalDescription(offer);
-            sendSignal({ type: "offer", offer, sender: userId });
-            log('ICE state', 'ICE restart offer sent');
-          } catch(err) {
-            log('ICE state', 'ICE restart error:', err.message, '— full reconnect');
-            fullReconnect();
-          }
-        } else {
-          fullReconnect();
-        }
+        triggerReconnect();
       }
     };
 
