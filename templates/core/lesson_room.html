@@ -349,11 +349,16 @@ document.addEventListener('submit', function(e) {
   const timerDot     = document.getElementById("timer-dot");
   const leaveBtn     = document.getElementById("leave-btn");
 
-  const matchId  = "{{ match.id }}";
-  const userId   = "{{ request.user.id }}";
-  const isTutor  = (userId === "{{ match.tutor.user.id }}");
+  const matchId = "{{ match.id }}";
+  const userId  = "{{ request.user.id }}";
 
-  // レッスン終了: end_at を今に更新 + チューターオフライン化
+  // ── デバッグログ ──
+  function log(tag, ...args) {
+    const ts = new Date().toISOString().substr(11, 12);
+    console.log(`[${ts}][${tag}]`, ...args);
+  }
+
+  // ── レッスン終了 ──
   function getCsrf() {
     const m = document.cookie.match(/csrftoken=([^;]+)/);
     return m ? m[1] : '';
@@ -364,6 +369,7 @@ document.addEventListener('submit', function(e) {
     navigator.sendBeacon("{% url 'lesson_end' match.id %}", fd);
   }
 
+  // ── 状態変数 ──
   let localStream       = null;
   let localMediaReady   = false;
   let pendingJoinSeen   = false;
@@ -375,7 +381,11 @@ document.addEventListener('submit', function(e) {
   let pendingCandidates = [];
   let remoteDescSet     = false;
   let timerStarted      = false;
-  let peerLeftTimer     = null;    // Bug#3: peer_leftのグレース期間タイマー
+  let peerLeftTimer     = null;
+  let remoteStreamTimer = null;  // 5秒でリモート映像なければ再接続
+  let reconnectTimer    = null;  // disconnected後のグレース期間
+  let remoteStreamReady = false; // ontrackでvideo trackを受信済みか
+  let srcObjectGuard    = null;  // srcObject消失チェック用インターバル
 
   display.textContent = "Waiting…";
 
@@ -387,15 +397,12 @@ document.addEventListener('submit', function(e) {
   function format(sec) {
     return Math.floor(sec / 60) + ":" + String(sec % 60).padStart(2, "0");
   }
-
   function setTimerState(remaining) {
     if (remaining <= 10) {
-      // 赤
       timerDot.className     = "lr-timer-dot red";
       display.className      = "lr-timer-text red";
       timerOverlay.className = "lr-timer-overlay red";
     } else if (remaining <= 30) {
-      // 黄
       timerDot.className     = "lr-timer-dot yellow";
       display.className      = "lr-timer-text yellow";
       timerOverlay.className = "lr-timer-overlay yellow";
@@ -405,29 +412,23 @@ document.addEventListener('submit', function(e) {
       timerOverlay.className = "lr-timer-overlay";
     }
   }
-
   function showFinalCountdown(n) {
     if (n <= 0) { finalCountdown.style.display = "none"; return; }
     finalCountdown.style.display = "flex";
-    // アニメーション再生のためにいったん外して付け直す
     finalNumber.style.animation = "none";
     finalNumber.textContent = n;
-    void finalNumber.offsetWidth; // reflow
+    void finalNumber.offsetWidth;
     finalNumber.style.animation = "";
   }
-
   function startTimer(seconds) {
-    if (timerStarted) return;   // Bug#4: 再接続による二重起動を防ぐ
+    if (timerStarted) return;
     timerStarted = true;
     let remaining = seconds;
     function update() {
       display.textContent = format(remaining);
       setTimerState(remaining);
-      if (remaining <= 5 && remaining > 0) {
-        showFinalCountdown(remaining);
-      } else {
-        finalCountdown.style.display = "none";
-      }
+      if (remaining <= 5 && remaining > 0) showFinalCountdown(remaining);
+      else finalCountdown.style.display = "none";
       if (remaining <= 0) { endLesson("timeup"); return; }
       remaining--;
       setTimeout(update, 1000);
@@ -437,12 +438,12 @@ document.addEventListener('submit', function(e) {
   window.onTimerStart = startTimer;
 
   function endLesson(reason) {
+    log('Lesson', 'ending:', reason);
     sendEndLessonBeacon();
-    if (typeof cleanupCall === "function") cleanupCall();
+    cleanupCall();
     window.location.href = "{% url 'home' %}";
   }
   leaveBtn.addEventListener("click", () => endLesson("manual"));
-  // ページを閉じたり離脱したときも end_at を今に更新する
   window.addEventListener('pagehide', sendEndLessonBeacon);
 
   // ── WebRTC ──
@@ -458,111 +459,329 @@ document.addEventListener('submit', function(e) {
           "stun:stun3.l.google.com:19302",
         ]
       },
-      { urls: "turn:openrelay.metered.ca:80",             username: "openrelayproject", credential: "openrelayproject" },
-      { urls: "turn:openrelay.metered.ca:443",            username: "openrelayproject", credential: "openrelayproject" },
+      { urls: "turn:openrelay.metered.ca:80",                username: "openrelayproject", credential: "openrelayproject" },
+      { urls: "turn:openrelay.metered.ca:443",               username: "openrelayproject", credential: "openrelayproject" },
       { urls: "turn:openrelay.metered.ca:443?transport=tcp", username: "openrelayproject", credential: "openrelayproject" },
     ]
   };
 
-  function shouldBeCaller(peerId) {
-    return userId > peerId;
-  }
+  function shouldBeCaller(peerId) { return userId > peerId; }
 
+  // ── getUserMedia ──
   async function startLocalMedia() {
+    log('getUserMedia', 'requesting camera + microphone…');
     localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
     localVideo.srcObject = localStream;
+    log('getUserMedia', 'OK — tracks:', localStream.getTracks().map(t => `${t.kind}(${t.label.slice(0,30)})`).join(', '));
   }
 
+  // ── 5秒タイムアウト: リモート映像が来なければ再接続 ──
+  function clearRemoteStreamTimer() {
+    if (remoteStreamTimer) { clearTimeout(remoteStreamTimer); remoteStreamTimer = null; }
+  }
+  function startRemoteStreamTimer() {
+    clearRemoteStreamTimer();
+    log('Timer', '5s remote-stream timeout started');
+    remoteStreamTimer = setTimeout(() => {
+      if (!remoteStreamReady) {
+        log('Timer', '5s elapsed — no remote video, triggering reconnect');
+        triggerReconnect();
+      }
+    }, 5000);
+  }
+
+  // ── 再接続 ──
+  function triggerReconnect() {
+    clearRemoteStreamTimer();
+    if (reconnectTimer) { clearTimeout(reconnectTimer); reconnectTimer = null; }
+    const pcState = peerConnection ? peerConnection.connectionState : 'null';
+    log('Reconnect', `role=${isCaller ? 'caller' : 'callee'}  pcState=${pcState}`);
+
+    if (isCaller) {
+      // Caller: まずICE restart試行、失敗したらフルPC再生成
+      if (peerConnection && peerConnection.signalingState !== 'closed') {
+        log('Reconnect', 'attempting ICE restart');
+        peerConnection.createOffer({ iceRestart: true })
+          .then(offer => peerConnection.setLocalDescription(offer))
+          .then(() => {
+            sendSignal({ type: "offer", offer: peerConnection.localDescription, sender: userId });
+            log('Reconnect', 'ICE restart offer sent');
+            startRemoteStreamTimer();
+          })
+          .catch(err => {
+            log('Reconnect', 'ICE restart failed:', err.message, '— full reconnect');
+            fullReconnect();
+          });
+      } else {
+        fullReconnect();
+      }
+    } else {
+      // Callee: PC閉じてjoin再送 → callerが新しいofferを送ってくる
+      fullReconnect();
+    }
+  }
+
+  function fullReconnect() {
+    log('Reconnect', 'full PC recreation');
+    if (peerConnection) { peerConnection.close(); peerConnection = null; }
+    remoteDescSet     = false;
+    pendingCandidates = [];
+    remoteStreamReady = false;
+    if (srcObjectGuard) { clearInterval(srcObjectGuard); srcObjectGuard = null; }
+
+    if (isCaller) {
+      createPeerConnection();
+      makeOffer().catch(err => log('Reconnect', 'makeOffer error:', err.message));
+    } else {
+      log('Reconnect', 'callee re-sending join to prompt new offer');
+      sendSignal({ type: "join", sender: userId });
+    }
+  }
+
+  // ── PeerConnection生成 ──
   function createPeerConnection() {
     if (peerConnection) {
+      log('PC', 'closing existing PC');
       peerConnection.close();
       peerConnection = null;
     }
-    remoteDescSet = false;
+    if (!localStream) {
+      log('PC', 'ERROR: localStream is null — cannot create PeerConnection');
+      return;
+    }
+    remoteDescSet     = false;
     pendingCandidates = [];
+    remoteStreamReady = false;
+    clearRemoteStreamTimer();
+    if (srcObjectGuard) { clearInterval(srcObjectGuard); srcObjectGuard = null; }
 
+    log('PC', 'creating RTCPeerConnection');
     peerConnection = new RTCPeerConnection(config);
-    localStream.getTracks().forEach(t => peerConnection.addTrack(t, localStream));
 
+    const tracks = localStream.getTracks();
+    log('PC', `adding ${tracks.length} local track(s):`, tracks.map(t => t.kind).join(', '));
+    tracks.forEach(t => peerConnection.addTrack(t, localStream));
+
+    // ── ontrack: 別ストリームのときだけsrcObjectを更新 ──
     peerConnection.ontrack = e => {
-      remoteVideo.srcObject = e.streams[0];
-      const revealVideo = () => placeholder.classList.add("hidden");
-      if (e.streams[0] && e.streams[0].getVideoTracks().length > 0) revealVideo();
-      e.track.onunmute = revealVideo;
+      const remoteStream = e.streams[0];
+      const vTracks = remoteStream ? remoteStream.getVideoTracks().length : 0;
+      const aTracks = remoteStream ? remoteStream.getAudioTracks().length : 0;
+      log('ontrack', `kind=${e.track.kind}  streams=${e.streams.length}  videoTracks=${vTracks}  audioTracks=${aTracks}  muted=${e.track.muted}`);
+
+      if (!remoteStream) {
+        log('ontrack', 'WARNING: e.streams[0] undefined — skipping');
+        return;
+      }
+      if (remoteVideo.srcObject !== remoteStream) {
+        log('ontrack', 'setting remoteVideo.srcObject');
+        remoteVideo.srcObject = remoteStream;
+      }
+
+      const revealVideo = () => {
+        if (!remoteStreamReady) {
+          log('ontrack', `reveal — videoTracks=${remoteStream.getVideoTracks().length}`);
+          placeholder.classList.add("hidden");
+          clearRemoteStreamTimer();
+          remoteStreamReady = true;
+        }
+      };
+
+      if (remoteStream.getVideoTracks().length > 0 && !e.track.muted) revealVideo();
+      e.track.onunmute = () => {
+        log('ontrack', `unmuted: ${e.track.kind}`);
+        if (e.track.kind === 'video') revealVideo();
+      };
+
+      // srcObjectが失われた場合の2秒ごとチェック
+      if (!srcObjectGuard) {
+        srcObjectGuard = setInterval(() => {
+          if (remoteStream.active && remoteVideo.srcObject !== remoteStream) {
+            log('ontrack', 'srcObject lost — restoring');
+            remoteVideo.srcObject = remoteStream;
+          } else if (!remoteStream.active) {
+            clearInterval(srcObjectGuard); srcObjectGuard = null;
+          }
+        }, 2000);
+      }
     };
 
     peerConnection.onicecandidate = e => {
-      if (e.candidate) sendSignal({ type: "ice-candidate", candidate: e.candidate, sender: userId });
+      if (e.candidate) {
+        log('ICE', `sending: ${e.candidate.type} ${e.candidate.protocol}`);
+        sendSignal({ type: "ice-candidate", candidate: e.candidate, sender: userId });
+      } else {
+        log('ICE', 'gathering complete');
+      }
     };
 
     peerConnection.oniceconnectionstatechange = async () => {
       if (!peerConnection) return;
       const state = peerConnection.iceConnectionState;
-      console.log('[ICE]', state);
+      log('ICE state', state);
+
       if (state === 'connected' || state === 'completed') {
         placeholder.classList.add("hidden");
+        if (!remoteStreamReady) startRemoteStreamTimer();
       }
-      if (state === 'failed' && isCaller && peerConnection) {
-        try {
-          const offer = await peerConnection.createOffer({ iceRestart: true });
-          await peerConnection.setLocalDescription(offer);
-          sendSignal({ type: "offer", offer, sender: userId });
-        } catch(err) { console.error('[ICE restart]', err); }
+      if (state === 'disconnected') {
+        log('ICE state', 'disconnected — 3s grace before reconnect');
+        if (reconnectTimer) clearTimeout(reconnectTimer);
+        reconnectTimer = setTimeout(() => {
+          if (peerConnection && peerConnection.iceConnectionState === 'disconnected') {
+            log('ICE state', 'still disconnected after 3s — reconnecting');
+            triggerReconnect();
+          }
+        }, 3000);
+      }
+      if (state === 'failed') {
+        log('ICE state', 'FAILED — reconnecting');
+        if (reconnectTimer) { clearTimeout(reconnectTimer); reconnectTimer = null; }
+        if (isCaller && peerConnection && peerConnection.signalingState !== 'closed') {
+          try {
+            const offer = await peerConnection.createOffer({ iceRestart: true });
+            await peerConnection.setLocalDescription(offer);
+            sendSignal({ type: "offer", offer, sender: userId });
+            log('ICE state', 'ICE restart offer sent');
+          } catch(err) {
+            log('ICE state', 'ICE restart error:', err.message, '— full reconnect');
+            fullReconnect();
+          }
+        } else {
+          fullReconnect();
+        }
       }
     };
 
     peerConnection.onconnectionstatechange = () => {
-      if (peerConnection) console.log('[PC]', peerConnection.connectionState);
+      if (!peerConnection) return;
+      const state = peerConnection.connectionState;
+      log('PC state', `${state}  signalingState=${peerConnection.signalingState}`);
+
+      if (state === 'connected') {
+        if (!remoteStreamReady) startRemoteStreamTimer();
+      }
+      if (state === 'failed') {
+        log('PC state', 'FAILED — full reconnect');
+        if (reconnectTimer) { clearTimeout(reconnectTimer); reconnectTimer = null; }
+        fullReconnect();
+      }
+      if (state === 'disconnected') {
+        log('PC state', 'disconnected — 3s grace');
+        if (reconnectTimer) clearTimeout(reconnectTimer);
+        reconnectTimer = setTimeout(() => {
+          if (peerConnection && peerConnection.connectionState === 'disconnected') {
+            log('PC state', 'still disconnected — reconnecting');
+            triggerReconnect();
+          }
+        }, 3000);
+      }
     };
+
+    peerConnection.onsignalingstatechange = () => {
+      if (peerConnection) log('PC', `signalingState → ${peerConnection.signalingState}`);
+    };
+
+    log('PC', 'RTCPeerConnection created OK');
   }
 
   function sendSignal(data) {
-    if (socket.readyState === WebSocket.OPEN) socket.send(JSON.stringify(data));
+    if (socket.readyState === WebSocket.OPEN) {
+      socket.send(JSON.stringify(data));
+    } else {
+      log('Signal', `WARN: socket not open (state=${socket.readyState}), dropping ${data.type}`);
+    }
   }
 
   async function makeOffer() {
     if (!peerConnection) createPeerConnection();
-    const offer = await peerConnection.createOffer();
-    await peerConnection.setLocalDescription(offer);
-    sendSignal({ type: "offer", offer, sender: userId });
+    if (!peerConnection) { log('Offer', 'ERROR: no PC after createPeerConnection()'); return; }
+    log('Offer', 'creating…');
+    try {
+      const offer = await peerConnection.createOffer();
+      await peerConnection.setLocalDescription(offer);
+      log('Offer', `created (signalingState=${peerConnection.signalingState})`);
+      sendSignal({ type: "offer", offer, sender: userId });
+    } catch(err) {
+      log('Offer', 'ERROR:', err.message);
+      throw err;
+    }
   }
 
   async function handleOffer(data) {
-    if (!peerConnection) createPeerConnection();
-    await peerConnection.setRemoteDescription(new RTCSessionDescription(data.offer));
-    remoteDescSet = true;
-    for (const c of pendingCandidates) await peerConnection.addIceCandidate(c);
-    pendingCandidates = [];
-    const answer = await peerConnection.createAnswer();
-    await peerConnection.setLocalDescription(answer);
-    sendSignal({ type: "answer", answer, sender: userId });
+    log('Offer', `received from ${data.sender}`);
+    // PCがない or closedなら再生成
+    if (!peerConnection || peerConnection.signalingState === 'closed') {
+      createPeerConnection();
+    }
+    if (!peerConnection) { log('Offer', 'ERROR: no PC'); return; }
+    try {
+      await peerConnection.setRemoteDescription(new RTCSessionDescription(data.offer));
+      remoteDescSet = true;
+      log('Offer', `remoteDesc set — flushing ${pendingCandidates.length} queued candidates`);
+      for (const c of pendingCandidates) {
+        try { await peerConnection.addIceCandidate(c); } catch(e) { log('ICE', 'queued candidate error:', e.message); }
+      }
+      pendingCandidates = [];
+      const answer = await peerConnection.createAnswer();
+      await peerConnection.setLocalDescription(answer);
+      log('Answer', `created (signalingState=${peerConnection.signalingState})`);
+      sendSignal({ type: "answer", answer, sender: userId });
+      if (!remoteStreamReady) startRemoteStreamTimer();
+    } catch(err) {
+      log('Offer', 'handleOffer ERROR:', err.message);
+    }
   }
 
   async function handleAnswer(data) {
-    if (!peerConnection) return;
-    await peerConnection.setRemoteDescription(new RTCSessionDescription(data.answer));
-    remoteDescSet = true;
-    for (const c of pendingCandidates) await peerConnection.addIceCandidate(c);
-    pendingCandidates = [];
+    log('Answer', `received from ${data.sender}`);
+    if (!peerConnection) { log('Answer', 'no PC — ignoring'); return; }
+    try {
+      await peerConnection.setRemoteDescription(new RTCSessionDescription(data.answer));
+      remoteDescSet = true;
+      log('Answer', `remoteDesc set — flushing ${pendingCandidates.length} queued candidates`);
+      for (const c of pendingCandidates) {
+        try { await peerConnection.addIceCandidate(c); } catch(e) { log('ICE', 'queued candidate error:', e.message); }
+      }
+      pendingCandidates = [];
+    } catch(err) {
+      log('Answer', 'ERROR:', err.message);
+    }
   }
 
   async function handleIceCandidate(data) {
-    if (!peerConnection) return;
+    if (!peerConnection) { log('ICE', 'no PC — dropping candidate'); return; }
     const candidate = new RTCIceCandidate(data.candidate);
-    if (!remoteDescSet) { pendingCandidates.push(candidate); return; }
-    try { await peerConnection.addIceCandidate(candidate); } catch(e) {}
+    log('ICE', `received: ${data.candidate.type || '?'} ${data.candidate.protocol || '?'} from ${data.sender}`);
+    if (!remoteDescSet) {
+      log('ICE', 'queuing (remoteDesc not set yet)');
+      pendingCandidates.push(candidate);
+      return;
+    }
+    try {
+      await peerConnection.addIceCandidate(candidate);
+      log('ICE', 'added OK');
+    } catch(e) {
+      log('ICE', 'addIceCandidate error:', e.message);
+    }
   }
 
+  // ── WebSocket ──
   socket.onopen = async () => {
+    log('WS', 'connected');
     try {
       await startLocalMedia();
       localMediaReady = true;
+      log('WS', 'sending join');
       sendSignal({ type: "join", sender: userId });
       if (pendingJoinSeen && peerIdSeen) {
+        log('WS', 'processing pending join from', peerIdSeen);
         isCaller = shouldBeCaller(peerIdSeen);
+        log('WS', `role: ${isCaller ? 'CALLER' : 'CALLEE'}`);
         if (isCaller) { createPeerConnection(); await makeOffer(); }
       }
     } catch(e) {
+      log('getUserMedia', 'FAILED:', e.name, e.message);
       let msg = "{% trans 'Could not access camera/microphone.' %}";
       if (e.name === "NotAllowedError" || e.name === "PermissionDeniedError") {
         msg = "{% trans 'Camera/microphone permission was denied. Please allow access in your browser settings and reload.' %}";
@@ -573,7 +792,6 @@ document.addEventListener('submit', function(e) {
       } else if (e.name === "OverconstrainedError") {
         msg = "{% trans 'Camera does not meet requirements. Please try a different device.' %}";
       }
-      // エラー内容を画面にも表示する
       const placeholder = document.getElementById("remote-placeholder");
       if (placeholder) {
         const errEl = document.createElement("p");
@@ -581,7 +799,6 @@ document.addEventListener('submit', function(e) {
         errEl.textContent = "⚠ " + msg;
         placeholder.appendChild(errEl);
       }
-      console.error("Camera error:", e.name, e.message);
       alert(msg);
     }
   };
@@ -593,15 +810,16 @@ document.addEventListener('submit', function(e) {
     if (data.type === "timer_start") { startTimer(data.seconds); return; }
 
     if (data.type === "join") {
+      log('WS', `join from ${data.sender}  localMediaReady=${localMediaReady}`);
       if (peerLeftTimer) { clearTimeout(peerLeftTimer); peerLeftTimer = null; }
       if (!localMediaReady) { pendingJoinSeen = true; peerIdSeen = data.sender; return; }
       peerIdSeen = data.sender;
       isCaller = shouldBeCaller(data.sender);
+      log('WS', `role: ${isCaller ? 'CALLER' : 'CALLEE'}`);
       if (isCaller) {
         createPeerConnection();
         await makeOffer();
       } else if (peerConnection) {
-        // calleeとして旧PCをクリーンアップし、新しいofferを待つ
         peerConnection.close();
         peerConnection = null;
         remoteDescSet = false;
@@ -615,12 +833,16 @@ document.addEventListener('submit', function(e) {
     if (data.type === "ice-candidate") { await handleIceCandidate(data); return; }
 
     if (data.type === "peer_left") {
-      // Bug#3: 即終了せず4秒待つ（リフレッシュ後の再接続を許容）
+      log('WS', 'peer_left — 4s grace before ending');
       peerLeftTimer = setTimeout(() => endLesson("peer_left"), 4000);
     }
   };
 
   function cleanupCall() {
+    log('Cleanup', 'cleaning up all resources');
+    clearRemoteStreamTimer();
+    if (reconnectTimer)  { clearTimeout(reconnectTimer);   reconnectTimer = null; }
+    if (srcObjectGuard)  { clearInterval(srcObjectGuard);  srcObjectGuard = null; }
     if (localStream)     { localStream.getTracks().forEach(t => t.stop()); localStream = null; }
     if (peerConnection)  { peerConnection.close(); peerConnection = null; }
     if (socket.readyState === WebSocket.OPEN) socket.close();
