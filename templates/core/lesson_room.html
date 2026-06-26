@@ -486,10 +486,10 @@ document.addEventListener('submit', function(e) {
     if (streamTimerStarted || remoteStreamReady) return;  // 1PC生成内で1回だけ
     streamTimerStarted = true;
     clearRemoteStreamTimer();
-    log('Timer', '5s remote-stream timeout started');
+    log('Timer', '12s remote-stream timeout started');
     remoteStreamTimer = setTimeout(() => {
       if (!remoteStreamReady) {
-        log('Timer', '5s elapsed — no remote video, triggering reconnect');
+        log('Timer', '12s elapsed — no remote video, triggering reconnect');
         triggerReconnect();
       }
     }, 5000);
@@ -538,6 +538,7 @@ document.addEventListener('submit', function(e) {
     remoteDescSet     = false;
     pendingCandidates = [];
     remoteStreamReady = false;
+    placeholder.classList.remove("hidden");  // プレースホルダーを復元（黒画面防止）
     if (srcObjectGuard) { clearInterval(srcObjectGuard); srcObjectGuard = null; }
 
     if (isCaller) {
@@ -600,7 +601,7 @@ document.addEventListener('submit', function(e) {
         }
       };
 
-      if (remoteStream.getVideoTracks().length > 0 && !e.track.muted) revealVideo();
+      if (e.track.kind === 'video') revealVideo();
       e.track.onunmute = () => {
         log('ontrack', `unmuted: ${e.track.kind}`);
         if (e.track.kind === 'video') revealVideo();
@@ -634,7 +635,6 @@ document.addEventListener('submit', function(e) {
       log('ICE state', state);
 
       if (state === 'connected' || state === 'completed') {
-        placeholder.classList.add("hidden");
         if (!remoteStreamReady) startRemoteStreamTimer();
       }
       if (state === 'disconnected') {
