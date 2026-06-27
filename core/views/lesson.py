@@ -85,6 +85,7 @@ def lesson_room(request, match_id: int):
     context = {
         "match": match,
         "remaining_seconds": remaining_seconds,
+        "timer_end_at": match.end_at if match.student_joined_at and match.tutor_joined_at else None,
         "partner_name": partner_name,
         "partner_initial": partner_name[0].upper() if partner_name else "?",
         "partner_badge": partner_badge,

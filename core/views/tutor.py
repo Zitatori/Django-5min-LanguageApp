@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.shortcuts import render
 from django.utils import timezone
 from django.views.decorators.http import require_POST
@@ -34,7 +34,8 @@ def tutor_dashboard(request):
 
     active_matches = QuickLessonMatch.objects.filter(
         tutor=tutor_profile,
-        end_at__gt=timezone.now()
+    ).filter(
+        Q(started_at__isnull=True) | Q(end_at__gt=timezone.now())
     ).select_related(
         "request",
         "request__student",
@@ -83,7 +84,8 @@ def tutor_match_status(request):
     # マッチ中かどうかを先に確認する（is_online の上書きより前）
     active_match = QuickLessonMatch.objects.filter(
         tutor=tutor_profile,
-        end_at__gt=now
+    ).filter(
+        Q(started_at__isnull=True) | Q(end_at__gt=now)
     ).first()
 
     if active_match:

@@ -11,6 +11,9 @@ class VideoCallConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.match_id = self.scope["url_route"]["kwargs"]["match_id"]
         self.room_group_name = f"lesson_{self.match_id}"
+        user = self.scope.get("user")
+        self.user_id = str(user.id) if user and user.is_authenticated else self.channel_name
+        self.has_joined = False
 
         await self.channel_layer.group_add(
             self.room_group_name,
@@ -24,11 +27,13 @@ class VideoCallConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
 
-        # 退室時にカウントを減らす
-        count_key = f"room_count_{self.match_id}"
-        count = cache.get(count_key, 0)
-        count = max(0, count - 1)
-        cache.set(count_key, count, timeout=3600)
+        # 退室時にユニークな入室ユーザーから外す。
+        # 再接続やjoin再送で人数カウントがずれないよう、単純なjoin回数では数えない。
+        users_key = f"room_users_{self.match_id}"
+        users = set(cache.get(users_key, []))
+        if self.has_joined:
+            users.discard(self.user_id)
+            cache.set(users_key, list(users), timeout=3600)
 
         # 相手に「退室した」シグナルを送る
         await self.channel_layer.group_send(
@@ -44,21 +49,22 @@ class VideoCallConsumer(AsyncWebsocketConsumer):
         data = json.loads(text_data)
 
         if data.get("type") == "join":
-            count_key = f"room_count_{self.match_id}"
-            try:
-                count = cache.incr(count_key)   # atomic on Redis/Memcached
-            except ValueError:
-                cache.set(count_key, 1, timeout=3600)
-                count = 1
-            print(f"[ws] match={self.match_id} join count={count} ch={self.channel_name[:8]}")
+            users_key = f"room_users_{self.match_id}"
+            users = set(cache.get(users_key, []))
+            users.add(self.user_id)
+            self.has_joined = True
+            cache.set(users_key, list(users), timeout=3600)
+            count = len(users)
+            print(f"[ws] match={self.match_id} join users={count} ch={self.channel_name[:8]}")
 
-            if count >= 2:
-                # 2人揃った → タイマー開始
+            timer_message = await self._timer_start_message()
+            if timer_message:
+                # 2人ともレッスンルームに入室済み → タイマー開始
                 await self.channel_layer.group_send(
                     self.room_group_name,
                     {
                         "type": "send_signal",
-                        "message": {"type": "timer_start", "seconds": 300},
+                        "message": timer_message,
                         "sender_channel_name": "",
                     }
                 )
@@ -87,6 +93,34 @@ class VideoCallConsumer(AsyncWebsocketConsumer):
     async def _schedule_points(self):
         await asyncio.sleep(POINTS_DELAY_SECONDS)
         await self._process_lesson_points()
+
+    @database_sync_to_async
+    def _timer_start_message(self):
+        from core.models import QuickLessonMatch
+        from django.utils import timezone
+
+        match = QuickLessonMatch.objects.filter(
+            id=self.match_id,
+            student_joined_at__isnull=False,
+            tutor_joined_at__isnull=False,
+        ).first()
+        if not match:
+            return None
+
+        if not match.started_at or not match.end_at:
+            now = timezone.now()
+            QuickLessonMatch.objects.filter(pk=match.pk, started_at__isnull=True).update(
+                started_at=now,
+                end_at=now + timezone.timedelta(minutes=5),
+            )
+            match.refresh_from_db()
+
+        seconds = max(0, int((match.end_at - timezone.now()).total_seconds()))
+        return {
+            "type": "timer_start",
+            "seconds": seconds,
+            "end_at": match.end_at.isoformat(),
+        }
 
     @database_sync_to_async
     def _process_lesson_points(self):

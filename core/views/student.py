@@ -85,7 +85,7 @@ def _get_display_exclude_ids(student_profile):
         .order_by("-started_at")
         .first()
     )
-    if last and last.end_at > hide_until_cutoff:
+    if last and last.end_at and last.end_at > hide_until_cutoff:
         exclude_ids.add(last.tutor_id)
 
     # チューター側: 直前マッチがこの生徒で猶予期間内なら除外
@@ -154,12 +154,9 @@ def create_request(request):
             )
             tutor_profile, _ = TutorProfile.objects.get_or_create(user=demo_user)
 
-            now = timezone.now()
             QuickLessonMatch.objects.create(
                 request=qlr,
                 tutor=tutor_profile,
-                started_at=now,
-                end_at=now + timedelta(minutes=5),
                 price=5.0,
             )
 
@@ -198,12 +195,9 @@ def create_request(request):
             # Optimistic locking: is_online=True の場合のみ更新（同時リクエストでの二重マッチ防止）
             claimed = TutorProfile.objects.filter(pk=tutor.pk, is_online=True).update(is_online=False)
             if claimed == 1:
-                now = timezone.now()
                 QuickLessonMatch.objects.create(
                     request=qlr,
                     tutor=tutor,
-                    started_at=now,
-                    end_at=now + timedelta(minutes=5),
                     price=5.0,
                 )
                 qlr.status = "matched"
@@ -284,12 +278,9 @@ def request_detail(request, request_id: int):
             # Optimistic locking: 同時リクエストで同じ講師への二重マッチを防ぐ
             claimed = TutorProfile.objects.filter(pk=tutor.pk, is_online=True).update(is_online=False)
             if claimed == 1:
-                now = timezone.now()
                 match = QuickLessonMatch.objects.create(
                     request=qlr,
                     tutor=tutor,
-                    started_at=now,
-                    end_at=now + timedelta(minutes=5),
                     meeting_url="https://example.com/dummy-room",
                     price=5.0,
                 )
@@ -328,13 +319,9 @@ def create_interview_request(request):
 
         if tutors_qs.exists():
             tutor = random.choice(list(tutors_qs))
-            now = timezone.now()
-
             QuickLessonMatch.objects.create(
                 request=qlr,
                 tutor=tutor,
-                started_at=now,
-                end_at=now + timedelta(minutes=5),
                 meeting_url="https://example.com/dummy-room/interview",
                 price=0.0,
             )

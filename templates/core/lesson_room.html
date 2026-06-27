@@ -350,7 +350,8 @@ document.addEventListener('submit', function(e) {
   const leaveBtn     = document.getElementById("leave-btn");
 
   const matchId = "{{ match.id }}";
-  const userId  = "{{ request.user.id }}";
+  const userId  = Number("{{ request.user.id }}");
+  const initialTimerEndAt = "{{ timer_end_at|date:'c' }}";
 
   // ── デバッグログ ──
   function log(tag, ...args) {
@@ -422,22 +423,23 @@ document.addEventListener('submit', function(e) {
     void finalNumber.offsetWidth;
     finalNumber.style.animation = "";
   }
-  function startTimer(seconds) {
+  function startTimer(seconds, endAt) {
     if (timerStarted) return;
     timerStarted = true;
-    let remaining = seconds;
+    const targetTime = endAt ? Date.parse(endAt) : Date.now() + (seconds * 1000);
     function update() {
+      const remaining = Math.max(0, Math.ceil((targetTime - Date.now()) / 1000));
       display.textContent = format(remaining);
       setTimerState(remaining);
       if (remaining <= 5 && remaining > 0) showFinalCountdown(remaining);
       else finalCountdown.style.display = "none";
       if (remaining <= 0) { endLesson("timeup"); return; }
-      remaining--;
       setTimeout(update, 1000);
     }
     update();
   }
   window.onTimerStart = startTimer;
+  if (initialTimerEndAt) startTimer(null, initialTimerEndAt);
 
   function endLesson(reason) {
     log('Lesson', 'ending:', reason);
@@ -467,7 +469,7 @@ document.addEventListener('submit', function(e) {
     ]
   };
 
-  function shouldBeCaller(peerId) { return userId > peerId; }
+  function shouldBeCaller(peerId) { return userId > Number(peerId); }
 
   // ── getUserMedia ──
   async function startLocalMedia() {
@@ -776,7 +778,7 @@ document.addEventListener('submit', function(e) {
     const data = JSON.parse(e.data);
     if (data.sender === userId) return;
 
-    if (data.type === "timer_start") { startTimer(data.seconds); return; }
+    if (data.type === "timer_start") { startTimer(data.seconds, data.end_at); return; }
 
     if (data.type === "join") {
       log('WS', `join from ${data.sender}  localMediaReady=${localMediaReady}`);
