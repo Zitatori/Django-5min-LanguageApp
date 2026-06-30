@@ -1,4 +1,4 @@
-# 🚀 ５０ Active Users Reached! 🚀
+# 🚀 60 Active Users Reached! 🚀
 
 🚀 **12 Users Connected at the Same Time!** 🚀
 
