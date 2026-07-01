@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="card" style="max-width:520px;margin:32px auto;text-align:center;">
+  <h2 class="card-title" style="margin-bottom:8px;">Rate this lesson</h2>
+  <p class="card-subtitle" style="margin-bottom:18px;">
+    {{ match.tutor.user.username }} · {% trans match.request.language.name %}
+  </p>
+
+  {% if match.student_rating %}
+    <div style="font-size:34px;color:#f59e0b;margin:18px 0;">
+      {% for i in "12345" %}
+        {% if forloop.counter <= match.student_rating %}★{% else %}☆{% endif %}
+      {% endfor %}
+    </div>
+    <p style="color:#6b7280;">Thanks for your rating.</p>
+    <a class="btn" href="{% url 'home' %}" style="margin-top:16px;display:inline-block;">Back to Home</a>
+  {% else %}
+    <form method="post">
+      {% csrf_token %}
+      <div class="rating-stars" role="radiogroup" aria-label="Lesson rating">
+        {% for value in "54321" %}
+          <input type="radio" id="star{{ value }}" name="rating" value="{{ value }}" required>
+          <label for="star{{ value }}" title="{{ value }} stars">★</label>
+        {% endfor %}
+      </div>
+      <button type="submit" class="btn" style="margin-top:22px;width:100%;">Submit rating</button>
+      <a href="{% url 'home' %}" style="display:inline-block;margin-top:14px;color:#6b7280;font-size:14px;text-decoration:none;">Skip</a>
+    </form>
+  {% endif %}
+</div>
+
+<style>
+  .rating-stars {
+    display: inline-flex;
+    flex-direction: row-reverse;
+    gap: 6px;
+  }
+  .rating-stars input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .rating-stars label {
+    cursor: pointer;
+    color: #d1d5db;
+    font-size: 46px;
+    line-height: 1;
+    transition: color 0.12s ease, transform 0.12s ease;
+  }
+  .rating-stars label:hover,
+  .rating-stars label:hover ~ label,
+  .rating-stars input:checked ~ label {
+    color: #f59e0b;
+  }
+  .rating-stars label:hover {
+    transform: translateY(-2px);
+  }
+</style>
+{% endblock %}

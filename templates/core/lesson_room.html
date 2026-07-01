@@ -352,6 +352,7 @@ document.addEventListener('submit', function(e) {
   const matchId = "{{ match.id }}";
   const userId  = Number("{{ request.user.id }}");
   const initialTimerEndAt = "{{ timer_end_at|date:'c' }}";
+  const afterLessonUrl = "{% if after_lesson_url == 'lesson_rating' %}{% url 'lesson_rating' match.id %}{% else %}{% url 'home' %}{% endif %}";
 
   // ── デバッグログ ──
   function log(tag, ...args) {
@@ -446,7 +447,7 @@ document.addEventListener('submit', function(e) {
     log('Lesson', 'ending:', reason);
     sendEndLessonBeacon();
     cleanupCall();
-    window.location.href = "{% url 'home' %}";
+    window.location.href = afterLessonUrl;
   }
   leaveBtn.addEventListener("click", () => endLesson("manual"));
   window.addEventListener('pagehide', sendEndLessonBeacon);

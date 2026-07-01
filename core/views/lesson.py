@@ -86,6 +86,7 @@ def lesson_room(request, match_id: int):
         "match": match,
         "remaining_seconds": remaining_seconds,
         "timer_end_at": match.end_at if match.student_joined_at and match.tutor_joined_at else None,
+        "after_lesson_url": "lesson_rating" if is_student else "home",
         "partner_name": partner_name,
         "partner_initial": partner_name[0].upper() if partner_name else "?",
         "partner_badge": partner_badge,
@@ -111,3 +112,31 @@ def lesson_end(request, match_id: int):
     TutorProfile.objects.filter(pk=match.tutor.pk).update(is_online=False)
 
     return JsonResponse({"ok": True})
+
+
+@login_required
+def lesson_rating(request, match_id: int):
+    match = get_object_or_404(
+        QuickLessonMatch.objects.select_related(
+            "request__student__user",
+            "request__language",
+            "tutor__user",
+        ),
+        id=match_id,
+        request__student__user=request.user,
+    )
+
+    if request.method == "POST":
+        try:
+            rating = int(request.POST.get("rating", 0))
+        except ValueError:
+            rating = 0
+
+        if 1 <= rating <= 5:
+            QuickLessonMatch.objects.filter(pk=match.pk).update(
+                student_rating=rating,
+                student_rated_at=timezone.now(),
+            )
+            return redirect("home")
+
+    return render(request, "core/lesson_rating.html", {"match": match})

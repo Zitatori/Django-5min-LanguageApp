@@ -24,6 +24,7 @@ urlpatterns = [
     # レッスンルーム
     path("lesson/room/<int:match_id>/", views.lesson_room, name="lesson_room"),
     path("lesson/room/<int:match_id>/end/", views.lesson_end, name="lesson_end"),
+    path("lesson/room/<int:match_id>/rating/", views.lesson_rating, name="lesson_rating"),
 
     #アドミンページ
     path('admin-dashboard/', admin_dashboard, name='admin_dashboard'),

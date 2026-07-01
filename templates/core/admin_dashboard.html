@@ -502,7 +502,7 @@
   {% if recent_matches %}
   <table class="table">
     <thead>
-      <tr><th>Student</th><th>Tutor</th><th>Language</th><th>Date</th></tr>
+      <tr><th>Student</th><th>Tutor</th><th>Language</th><th>Rating</th><th>Date</th></tr>
     </thead>
     <tbody>
       {% for match in recent_matches %}
@@ -518,6 +518,13 @@
             {% else %}<span class="lang-tag tag-default">{{ lang.name }}</span>
             {% endif %}
           {% endwith %}
+        </td>
+        <td style="font-size:13px;">
+          {% if match.student_rating %}
+            <span style="color:#f59e0b;font-weight:700;">{{ match.student_rating }} ★</span>
+          {% else %}
+            <span class="pt-none">—</span>
+          {% endif %}
         </td>
         <td style="font-size:12px; color:#6b7280;">{{ match.started_at|date:"Y-m-d H:i" }}</td>
       </tr>
@@ -535,6 +542,13 @@
             {% else %}<span class="lang-tag tag-default">{{ lang.name }}</span>
             {% endif %}
           {% endwith %}
+        </td>
+        <td style="font-size:13px;">
+          {% if match.student_rating %}
+            <span style="color:#f59e0b;font-weight:700;">{{ match.student_rating }} ★</span>
+          {% else %}
+            <span class="pt-none">—</span>
+          {% endif %}
         </td>
         <td style="font-size:12px; color:#6b7280;">{{ match.started_at|date:"Y-m-d H:i" }}</td>
       </tr>

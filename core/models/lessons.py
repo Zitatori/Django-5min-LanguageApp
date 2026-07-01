@@ -43,6 +43,8 @@ class QuickLessonMatch(models.Model):
 
     started_at = models.DateTimeField(null=True, blank=True)
     end_at = models.DateTimeField(null=True, blank=True)
+    student_rating = models.PositiveSmallIntegerField(null=True, blank=True)
+    student_rated_at = models.DateTimeField(null=True, blank=True)
 
     meeting_url = models.URLField(blank=True)
     price = models.DecimalField(max_digits=8, decimal_places=2, default=0)
