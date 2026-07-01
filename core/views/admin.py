@@ -50,6 +50,8 @@ def admin_dashboard(request):
     tutors = TutorProfile.objects.select_related('user').prefetch_related('languages').all()
     all_matches = QuickLessonMatch.objects.filter(
         student_joined_at__isnull=False,
+        tutor_joined_at__isnull=False,
+        started_at__isnull=False,
     ).select_related(
         'request__student__user',
         'request__language',
