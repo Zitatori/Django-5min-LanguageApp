@@ -517,10 +517,8 @@ msgid "Matches will appear here automatically."
 msgstr "マッチすると自動でここに表示されます"
 
 #: templates/registration/login.html:26
-#, fuzzy
-#| msgid "Create an account"
 msgid "Don't have an account?"
-msgstr "アカウントを作成"
+msgstr "アカウントをお持ちでないですか？"
 
 #: templates/registration/login.html:27 templates/registration/signup.html:6
 msgid "Create an account"
@@ -535,14 +533,12 @@ msgid "Sign up"
 msgstr "登録する"
 
 #: templates/registration/signup.html:39
-#, fuzzy
-#| msgid "Create an account"
 msgid "Already have an account?"
-msgstr "アカウントを作成"
+msgstr "すでにアカウントをお持ちですか？"
 
 #: templates/registration/signup.html:40
 msgid "Log in here"
-msgstr ""
+msgstr "こちらからログイン"
 
 msgid "To add a teaching language, an interview is required. Please email your available times to"
 msgstr "担当言語を追加する場合は面接が必要です。空いている日時を以下のメールアドレスまでお知らせください："

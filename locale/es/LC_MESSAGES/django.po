@@ -520,10 +520,8 @@ msgid "Matches will appear here automatically."
 msgstr "Las conexiones aparecerán aquí automáticamente."
 
 #: templates/registration/login.html:26
-#, fuzzy
-#| msgid "Create an account"
 msgid "Don't have an account?"
-msgstr "Crear una cuenta"
+msgstr "¿No tienes una cuenta?"
 
 #: templates/registration/login.html:27 templates/registration/signup.html:6
 msgid "Create an account"
@@ -538,14 +536,12 @@ msgid "Sign up"
 msgstr "Registrarse"
 
 #: templates/registration/signup.html:39
-#, fuzzy
-#| msgid "Create an account"
 msgid "Already have an account?"
-msgstr "Crear una cuenta"
+msgstr "¿Ya tienes una cuenta?"
 
 #: templates/registration/signup.html:40
 msgid "Log in here"
-msgstr ""
+msgstr "Inicia sesión aquí"
 
 msgid "To add a teaching language, an interview is required. Please email your available times to"
 msgstr "Para agregar un idioma de enseñanza, se requiere una entrevista. Por favor envía tus horarios disponibles a"
