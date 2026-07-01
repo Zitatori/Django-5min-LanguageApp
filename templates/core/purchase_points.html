@@ -127,7 +127,9 @@
     </div>
     {% trans "You can pay by bank transfer or PayPal." %}<br>
     {% trans "For payment details, please email" %} <a href="mailto:zitatori@gmail.com?subject=QuickLesson%20points%20purchase">zitatori@gmail.com</a>.<br>
-    {% trans "Please include how many points you want to purchase." %}<br>
+    {% blocktrans trimmed with username=request.user.username %}
+      Please include your username ({{ username }}) and how many points you want to purchase.
+    {% endblocktrans %}<br>
     {% trans "After payment is confirmed, Admin will add student points." %}
   </div>
 

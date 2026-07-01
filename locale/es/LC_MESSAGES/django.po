@@ -369,6 +369,11 @@ msgid "Please include how many points you want to purchase."
 msgstr "Incluye cuántos puntos quieres comprar."
 
 #: templates/core/purchase_points.html
+#, python-format
+msgid "Please include your username (%(username)s) and how many points you want to purchase."
+msgstr "Incluye tu nombre de usuario (%(username)s) y cuántos puntos quieres comprar."
+
+#: templates/core/purchase_points.html
 msgid "After payment is confirmed, Admin will add student points."
 msgstr "Después de confirmar el pago, Admin añadirá los puntos de estudiante."
 
