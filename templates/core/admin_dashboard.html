@@ -324,11 +324,19 @@
           <button class="edit-btn" onclick="openModal({{ u.id }}, '{{ u.username }}', [{% if u.tutorprofile %}{% for l in u.tutorprofile.languages.all %}{{ l.id }},{% endfor %}{% endif %}])">Edit</button>
           <button class="history-btn" onclick="openHistoryModal({{ u.id }}, '{{ u.username }}')">History</button>
           <button class="points-btn" onclick="openPointsModal({{ u.id }}, '{{ u.username }}', {{ u.point_balance.student_balance|default:0 }}, {{ u.point_balance.teacher_balance|default:0 }})">Pts</button>
-          <form method="post" action="{% url 'grant_gold' u.id %}" style="display:inline;"
-                onsubmit="return confirm('Grant Gold 30 days to {{ u.username }}?')">
-            {% csrf_token %}
-            <button type="submit" class="edit-btn" style="border-color:#f59e0b;color:#b45309;" title="Grant Gold 30 days">&#x1F451;</button>
-          </form>
+          {% if u.gold_membership.is_active %}
+            <form method="post" action="{% url 'revoke_gold' u.id %}" style="display:inline;"
+                  onsubmit="return confirm('Revoke Gold from {{ u.username }} now?')">
+              {% csrf_token %}
+              <button type="submit" class="delete-btn" title="Revoke Gold">Gold off</button>
+            </form>
+          {% else %}
+            <form method="post" action="{% url 'grant_gold' u.id %}" style="display:inline;"
+                  onsubmit="return confirm('Grant Gold 30 days to {{ u.username }}?')">
+              {% csrf_token %}
+              <button type="submit" class="edit-btn" style="border-color:#f59e0b;color:#b45309;" title="Grant Gold 30 days">&#x1F451;</button>
+            </form>
+          {% endif %}
           {% if u != request.user %}
             <form method="post" action="{% url 'delete_user' u.id %}" style="display:inline;"
                   onsubmit="return confirm('Delete {{ u.username }}? This cannot be undone.')">
@@ -382,10 +390,17 @@
           <button class="edit-btn" onclick="openModal({{ u.id }}, '{{ u.username }}', [{% if u.tutorprofile %}{% for l in u.tutorprofile.languages.all %}{{ l.id }},{% endfor %}{% endif %}])">Edit</button>
           <button class="history-btn" onclick="openHistoryModal({{ u.id }}, '{{ u.username }}')">History</button>
           <button class="points-btn" onclick="openPointsModal({{ u.id }}, '{{ u.username }}', {{ u.point_balance.student_balance|default:0 }}, {{ u.point_balance.teacher_balance|default:0 }})">Pts</button>
-          <form method="post" action="{% url 'grant_gold' u.id %}" style="display:inline;" onsubmit="return confirm('Grant Gold 30 days to {{ u.username }}?')">
-            {% csrf_token %}
-            <button type="submit" class="edit-btn" style="border-color:#f59e0b;color:#b45309;" title="Grant Gold 30 days">&#x1F451;</button>
-          </form>
+          {% if u.gold_membership.is_active %}
+            <form method="post" action="{% url 'revoke_gold' u.id %}" style="display:inline;" onsubmit="return confirm('Revoke Gold from {{ u.username }} now?')">
+              {% csrf_token %}
+              <button type="submit" class="delete-btn" title="Revoke Gold">Gold off</button>
+            </form>
+          {% else %}
+            <form method="post" action="{% url 'grant_gold' u.id %}" style="display:inline;" onsubmit="return confirm('Grant Gold 30 days to {{ u.username }}?')">
+              {% csrf_token %}
+              <button type="submit" class="edit-btn" style="border-color:#f59e0b;color:#b45309;" title="Grant Gold 30 days">&#x1F451;</button>
+            </form>
+          {% endif %}
           {% if u != request.user %}
             <form method="post" action="{% url 'delete_user' u.id %}" style="display:inline;" onsubmit="return confirm('Delete {{ u.username }}? This cannot be undone.')">
               {% csrf_token %}

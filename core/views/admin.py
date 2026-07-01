@@ -279,6 +279,24 @@ def grant_gold(request, user_id):
     return redirect('admin_dashboard')
 
 
+@staff_or_admin_role_required
+def revoke_gold(request, user_id):
+    """ユーザーの Gold メンバーシップを即時失効する"""
+    if request.method == 'POST':
+        user = get_object_or_404(User, id=user_id)
+        now = timezone.now()
+
+        GoldMembership.objects.filter(user=user).update(expires_at=now)
+        GoldSubscriptionRequest.objects.filter(
+            user=user, status=GoldSubscriptionRequest.STATUS_PENDING
+        ).update(
+            status=GoldSubscriptionRequest.STATUS_REJECTED,
+            processed_at=now,
+        )
+
+    return redirect('admin_dashboard')
+
+
 def _parse_cet_to_utc(date_str, time_str):
     """'YYYY-MM-DD' + 'HH:MM' (Europe/Zurich) → UTC-aware datetime"""
     naive = datetime.strptime(f"{date_str} {time_str}", "%Y-%m-%d %H:%M")
