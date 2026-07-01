@@ -17,14 +17,18 @@
     <p style="color:#6b7280;">Thanks for your rating.</p>
     <a class="btn" href="{% url 'home' %}" style="margin-top:16px;display:inline-block;">Back to Home</a>
   {% else %}
-    <form method="post">
+    <form method="post" id="rating-form">
       {% csrf_token %}
-      <div class="rating-stars" role="radiogroup" aria-label="Lesson rating">
-        {% for value in "54321" %}
-          <input type="radio" id="star{{ value }}" name="rating" value="{{ value }}" required>
-          <label for="star{{ value }}" title="{{ value }} stars">★</label>
+      <div class="rating-options" role="radiogroup" aria-label="Lesson rating">
+        {% for value in "12345" %}
+          <label class="rating-option" for="star{{ value }}" data-value="{{ value }}">
+            <input type="radio" id="star{{ value }}" name="rating" value="{{ value }}" required>
+            <span class="rating-option-number">{{ value }}</span>
+            <span class="rating-option-star">★</span>
+          </label>
         {% endfor %}
       </div>
+      <div class="rating-helper" id="rating-helper">Choose 1 to 5 stars</div>
       <button type="submit" class="btn rating-submit">Submit rating</button>
       <a href="{% url 'home' %}" class="rating-skip">Skip</a>
     </form>
@@ -44,35 +48,62 @@
   .rating-subtitle {
     margin-bottom: 18px;
   }
-  .rating-stars {
-    display: inline-flex;
-    flex-direction: row-reverse;
-    gap: 2px;
-    padding: 6px 10px 2px;
-    border-radius: 14px;
+  .rating-options {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    max-width: 330px;
+    margin: 8px auto 0;
   }
-  .rating-stars input {
+  .rating-option {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    min-height: 58px;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 14px;
+    background: #f9fafb;
+    color: #9ca3af;
+    cursor: pointer;
+    transition: background 0.14s ease, border-color 0.14s ease, color 0.14s ease, transform 0.12s ease, box-shadow 0.14s ease;
+  }
+  .rating-option input {
     position: absolute;
     opacity: 0;
     pointer-events: none;
   }
-  .rating-stars label {
-    cursor: pointer;
-    color: #d1d5db;
-    font-size: 34px;
+  .rating-option-number {
+    font-size: 12px;
+    font-weight: 800;
+  }
+  .rating-option-star {
+    font-size: 21px;
     line-height: 1;
-    padding: 4px 5px;
-    text-shadow: none;
-    transition: color 0.12s ease, transform 0.12s ease, filter 0.12s ease;
   }
-  .rating-stars label:hover,
-  .rating-stars label:hover ~ label,
-  .rating-stars input:checked ~ label {
-    color: #f59e0b;
-    filter: drop-shadow(0 2px 3px rgba(245,158,11,.22));
-  }
-  .rating-stars label:hover {
+  .rating-option:hover {
     transform: translateY(-1px);
+    border-color: #c7d2fe;
+    background: #eef2ff;
+    color: #6366f1;
+  }
+  .rating-option.selected {
+    background: #fff7ed;
+    border-color: #f59e0b;
+    color: #f59e0b;
+    box-shadow: 0 8px 20px rgba(245,158,11,.16);
+  }
+  .rating-option.selected .rating-option-number {
+    color: #92400e;
+  }
+  .rating-helper {
+    min-height: 20px;
+    margin-top: 10px;
+    color: #6b7280;
+    font-size: 13px;
+    font-weight: 600;
   }
   .rating-submit {
     display: block;
@@ -95,10 +126,38 @@
       margin: 20px auto;
       padding: 24px 18px;
     }
-    .rating-stars label {
-      font-size: 30px;
-      padding: 4px;
+    .rating-options {
+      gap: 6px;
+    }
+    .rating-option {
+      min-height: 52px;
+      border-radius: 12px;
+    }
+    .rating-option-star {
+      font-size: 18px;
     }
   }
 </style>
+
+<script>
+  const ratingLabels = document.querySelectorAll('.rating-option');
+  const ratingHelper = document.getElementById('rating-helper');
+  const ratingText = {
+    1: '1 star',
+    2: '2 stars',
+    3: '3 stars',
+    4: '4 stars',
+    5: '5 stars'
+  };
+
+  ratingLabels.forEach(label => {
+    label.addEventListener('click', () => {
+      const selectedValue = Number(label.dataset.value);
+      ratingLabels.forEach(item => {
+        item.classList.toggle('selected', Number(item.dataset.value) <= selectedValue);
+      });
+      ratingHelper.textContent = ratingText[selectedValue];
+    });
+  });
+</script>
 {% endblock %}
