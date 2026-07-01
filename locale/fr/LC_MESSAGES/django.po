@@ -53,8 +53,6 @@ msgid "Log In"
 msgstr "Connexion"
 
 #: templates/base.html:56 templates/base.html:91 templates/core/home.html:31
-#, fuzzy
-#| msgid "Sign up"
 msgid "Sign Up"
 msgstr "S'inscrire"
 
