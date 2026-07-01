@@ -74,8 +74,7 @@
   {% for s in other_sessions %}
   <div class="hs-other-row">
     <div class="hs-other-left">
-      {% trans "l, j F" as short_date_fmt %}
-      <div class="hs-other-date">{{ s.jst_date|date:short_date_fmt }}</div>
+      <div class="hs-other-date">{{ s.jst_date|date:"n月j日（D）" }}</div>
       <div class="hs-other-time">
         {{ s.jst_time }}–{{ s.jst_end_time }}
         <span class="hs-other-tz">{% trans "Japan Time" %}</span>
