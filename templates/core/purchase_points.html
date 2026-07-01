@@ -42,11 +42,41 @@
   .tier-card .price { font-size: 18px; font-weight: 600; color: #1f2937; margin-top: 8px; }
   .tier-card .per  { font-size: 12px; color: #9ca3af; margin-top: 2px; }
 
-  .stripe-note {
+  .manual-note {
     text-align: center;
-    color: #9ca3af;
+    color: #6b7280;
     font-size: 13px;
     margin-top: 1.5rem;
+  }
+  .manual-box {
+    display: none;
+    margin-top: 1.25rem;
+    padding: 16px 18px;
+    border-radius: 16px;
+    background: #f8fafc;
+    border: 1.5px solid #e5e7eb;
+    color: #374151;
+    font-size: 14px;
+    line-height: 1.7;
+  }
+  .manual-box.open { display: block; }
+  .manual-box strong { color: #111827; }
+  .manual-methods {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 10px 0;
+  }
+  .manual-method {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    background: #eef2ff;
+    color: #4338ca;
+    border: 1px solid #c7d2fe;
+    padding: 3px 10px;
+    font-size: 12px;
+    font-weight: 700;
   }
   .btn-purchase {
     display: block; width: 100%; padding: 14px;
@@ -80,11 +110,21 @@
   </div>
 
   <button id="purchase-btn" class="btn-purchase">
-    {% trans "Proceed to Payment" %}
+    購入リクエストを送る
   </button>
 
-  <p class="stripe-note">
-    🔒 {% trans "Secure payment via Stripe — coming soon" %}
+  <div id="manual-payment-box" class="manual-box">
+    <strong id="manual-selected">選択したポイント</strong>
+    <div class="manual-methods">
+      <span class="manual-method">銀行振込</span>
+      <span class="manual-method">PayPal</span>
+    </div>
+    支払い確認後、Adminが生徒ポイントを付与します。<br>
+    支払い時または連絡時に、ユーザー名 <strong>{{ request.user.username }}</strong> を添えてください。
+  </div>
+
+  <p class="manual-note">
+    銀行振込・PayPalで対応中。支払い確認後にポイントを付与します。
   </p>
 </div>
 
@@ -94,13 +134,24 @@
 
 <script>
 let selectedPoints = null;
+let selectedPrice = null;
 function selectTier(el, points, price) {
   document.querySelectorAll('.tier-card').forEach(c => c.classList.remove('selected'));
   el.classList.add('selected');
   selectedPoints = points;
+  selectedPrice = price;
   const btn = document.getElementById('purchase-btn');
   btn.classList.add('active');
-  btn.textContent = `{% trans "Proceed to Payment" %} (${points} pt)`;
+  btn.textContent = `購入リクエストを送る (${points} pt)`;
 }
+
+document.getElementById('purchase-btn').addEventListener('click', () => {
+  if (!selectedPoints) return;
+  const box = document.getElementById('manual-payment-box');
+  const selected = document.getElementById('manual-selected');
+  selected.textContent = `${selectedPoints} pt / ¥${selectedPrice}`;
+  box.classList.add('open');
+  box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+});
 </script>
 {% endblock %}
