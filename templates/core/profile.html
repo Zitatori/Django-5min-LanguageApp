@@ -272,9 +272,9 @@
          {% if balance.teacher_balance >= fee_threshold %}background:#f0fdf4; color:#15803d; border:1px solid #bbf7d0;
          {% else %}background:#fffbeb; color:#92400e; border:1px solid #fde68a;{% endif %}">
       {% if balance.teacher_balance >= fee_threshold %}
-        {% trans "出金可能です。50pt以上の出金は手数料無料です。" %}
+        {% trans "You can withdraw. Withdrawals of 50 pt or more have no fee." %}
       {% else %}
-        {% trans "出金可能です。50pt未満の出金には5ptの手数料がかかります。" %}
+        {% trans "You can withdraw. Withdrawals under 50 pt have a 5 pt fee." %}
       {% endif %}
     </div>
 
@@ -288,7 +288,7 @@
 
       <div id="wd-summary" style="display:flex; gap:1.2rem; margin:.5rem 0 .9rem; font-size:13px; color:#374151;">
         <span>{% trans "Fee" %}: <strong id="wd-fee-val">--</strong></span>
-        <span>{% trans "受取予定" %}: <strong id="wd-net-val" style="color:#4f46e5;">--</strong></span>
+        <span>{% trans "Estimated payout" %}: <strong id="wd-net-val" style="color:#4f46e5;">--</strong></span>
       </div>
 
       <label class="withdraw-label">{% trans "Currency" %}</label>
@@ -328,10 +328,10 @@
         netEl.textContent = (pts - fee) + 'pt';
         if (fee === 0) {
           noticeEl.style.background = '#f0fdf4'; noticeEl.style.color = '#15803d'; noticeEl.style.borderColor = '#bbf7d0';
-          noticeEl.textContent = '{% trans "出金可能です。50pt以上の出金は手数料無料です。" %}';
+          noticeEl.textContent = '{% trans "You can withdraw. Withdrawals of 50 pt or more have no fee." %}';
         } else {
           noticeEl.style.background = '#fffbeb'; noticeEl.style.color = '#92400e'; noticeEl.style.borderColor = '#fde68a';
-          noticeEl.textContent = '{% trans "出金可能です。50pt未満の出金には5ptの手数料がかかります。" %}';
+          noticeEl.textContent = '{% trans "You can withdraw. Withdrawals under 50 pt have a 5 pt fee." %}';
         }
       }
       input.addEventListener('input', update);
@@ -341,7 +341,9 @@
 
   {% else %}
     <p style="font-size:14px; color:#9ca3af; padding:.5rem 0;">
-      {% trans "出金には最低" %} {{ min_withdrawal }} pt {% trans "必要です" %}（{% trans "現在" %}: {{ balance.teacher_balance }} pt）
+      {% blocktrans trimmed with min_withdrawal=min_withdrawal current=balance.teacher_balance %}
+        You need at least {{ min_withdrawal }} pt to withdraw. Current: {{ current }} pt
+      {% endblocktrans %}
     </p>
   {% endif %}
 </div>
@@ -354,15 +356,19 @@
   {% if gold_request_pending %}
     <span class="gold-pending-sm">&#x23F3; {% trans "Request pending — we'll activate it shortly." %}</span>
     <p class="gold-mail-note">
-      見逃し防止のため、Gold希望の方は
+      {% trans "To avoid missed requests, please email" %}
       <a href="mailto:zitatori@gmail.com?subject=QuickLesson%20Gold%20membership">zitatori@gmail.com</a>
-      までユーザー名 <strong>{{ request.user.username }}</strong> を添えて連絡してください。
+      {% blocktrans trimmed with username=request.user.username %}
+        with your username ({{ username }}) for Gold.
+      {% endblocktrans %}
     </p>
   {% else %}
-    <a class="btn-gold-full" href="mailto:zitatori@gmail.com?subject=QuickLesson%20Gold%20membership">&#x1F451; Goldについてメールする</a>
+    <a class="btn-gold-full" href="mailto:zitatori@gmail.com?subject=QuickLesson%20Gold%20membership">&#x1F451; {% trans "Email us about Gold" %}</a>
     <p class="gold-mail-note">
-      銀行振込・PayPalで対応中。支払い先はメールでご案内します。<br>
-      連絡時に、ユーザー名 <strong>{{ request.user.username }}</strong> を添えてください。
+      {% trans "Bank transfer and PayPal are available. Payment details are sent by email." %}<br>
+      {% blocktrans trimmed with username=request.user.username %}
+        Please include your username ({{ username }}) when you contact us.
+      {% endblocktrans %}
     </p>
   {% endif %}
 </div>

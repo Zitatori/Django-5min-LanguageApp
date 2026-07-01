@@ -271,6 +271,23 @@ msgstr "pt de ganancias de clases para retirar."
 msgid "Current"
 msgstr "Actual"
 
+#: templates/core/profile.html
+msgid "You can withdraw. Withdrawals of 50 pt or more have no fee."
+msgstr "Puedes retirar. Los retiros de 50 pt o más no tienen comisión."
+
+#: templates/core/profile.html
+msgid "You can withdraw. Withdrawals under 50 pt have a 5 pt fee."
+msgstr "Puedes retirar. Los retiros de menos de 50 pt tienen una comisión de 5 pt."
+
+#: templates/core/profile.html
+msgid "Estimated payout"
+msgstr "Pago estimado"
+
+#: templates/core/profile.html
+#, python-format
+msgid "You need at least %(min_withdrawal)s pt to withdraw. Current: %(current)s pt"
+msgstr "Necesitas al menos %(min_withdrawal)s pt para retirar. Actual: %(current)s pt"
+
 #: templates/core/profile.html:249
 msgid "Membership"
 msgstr "Membresía"
@@ -290,6 +307,24 @@ msgstr "Solicitud pendiente — la activaremos en breve."
 #: templates/core/profile.html:256
 msgid "Subscribe to Gold"
 msgstr "Suscribirse a Gold"
+
+#: templates/core/profile.html
+msgid "To avoid missed requests, please email"
+msgstr "Para evitar que se pierda tu solicitud, escribe a"
+
+#: templates/core/profile.html
+#, python-format
+msgid "with your username (%(username)s) for Gold."
+msgstr "con tu nombre de usuario (%(username)s) para Gold."
+
+#: templates/core/profile.html
+msgid "Email us about Gold"
+msgstr "Escríbenos sobre Gold"
+
+#: templates/core/profile.html
+#, python-format
+msgid "Please include your username (%(username)s) when you contact us."
+msgstr "Incluye tu nombre de usuario (%(username)s) cuando nos contactes."
 
 #: templates/core/profile.html:265
 msgid "Transaction History"

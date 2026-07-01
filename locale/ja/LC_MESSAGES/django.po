@@ -268,6 +268,23 @@ msgstr "ptのレッスン収益が必要です。"
 msgid "Current"
 msgstr "現在"
 
+#: templates/core/profile.html
+msgid "You can withdraw. Withdrawals of 50 pt or more have no fee."
+msgstr "出金可能です。50pt以上の出金は手数料無料です。"
+
+#: templates/core/profile.html
+msgid "You can withdraw. Withdrawals under 50 pt have a 5 pt fee."
+msgstr "出金可能です。50pt未満の出金には5ptの手数料がかかります。"
+
+#: templates/core/profile.html
+msgid "Estimated payout"
+msgstr "受取予定"
+
+#: templates/core/profile.html
+#, python-format
+msgid "You need at least %(min_withdrawal)s pt to withdraw. Current: %(current)s pt"
+msgstr "出金には最低 %(min_withdrawal)s pt 必要です（現在: %(current)s pt）"
+
 #: templates/core/profile.html:249
 msgid "Membership"
 msgstr "メンバーシップ"
@@ -287,6 +304,24 @@ msgstr "リクエスト受付中 — 間もなく有効化します。"
 #: templates/core/profile.html:256
 msgid "Subscribe to Gold"
 msgstr "Goldに加入する"
+
+#: templates/core/profile.html
+msgid "To avoid missed requests, please email"
+msgstr "見逃し防止のため、"
+
+#: templates/core/profile.html
+#, python-format
+msgid "with your username (%(username)s) for Gold."
+msgstr "までユーザー名（%(username)s）を添えてGold希望の連絡をしてください。"
+
+#: templates/core/profile.html
+msgid "Email us about Gold"
+msgstr "Goldについてメールする"
+
+#: templates/core/profile.html
+#, python-format
+msgid "Please include your username (%(username)s) when you contact us."
+msgstr "連絡時に、ユーザー名（%(username)s）を添えてください。"
 
 #: templates/core/profile.html:265
 msgid "Transaction History"

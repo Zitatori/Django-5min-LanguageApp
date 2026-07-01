@@ -364,6 +364,41 @@ msgstr ""
 msgid "Email address"
 msgstr ""
 
+#: templates/core/profile.html
+msgid "You can withdraw. Withdrawals of 50 pt or more have no fee."
+msgstr "You can withdraw. Withdrawals of 50 pt or more have no fee."
+
+#: templates/core/profile.html
+msgid "You can withdraw. Withdrawals under 50 pt have a 5 pt fee."
+msgstr "You can withdraw. Withdrawals under 50 pt have a 5 pt fee."
+
+#: templates/core/profile.html
+msgid "Estimated payout"
+msgstr "Estimated payout"
+
+#: templates/core/profile.html
+#, python-format
+msgid "You need at least %(min_withdrawal)s pt to withdraw. Current: %(current)s pt"
+msgstr "You need at least %(min_withdrawal)s pt to withdraw. Current: %(current)s pt"
+
+#: templates/core/profile.html
+msgid "To avoid missed requests, please email"
+msgstr "To avoid missed requests, please email"
+
+#: templates/core/profile.html
+#, python-format
+msgid "with your username (%(username)s) for Gold."
+msgstr "with your username (%(username)s) for Gold."
+
+#: templates/core/profile.html
+msgid "Email us about Gold"
+msgstr "Email us about Gold"
+
+#: templates/core/profile.html
+#, python-format
+msgid "Please include your username (%(username)s) when you contact us."
+msgstr "Please include your username (%(username)s) when you contact us."
+
 #: templates/core/purchase_points.html
 msgid "Use points to take lessons with a tutor."
 msgstr "Use points to take lessons with a tutor."
