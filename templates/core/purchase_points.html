@@ -61,6 +61,8 @@
   }
   .manual-box.open { display: block; }
   .manual-box strong { color: #111827; }
+  .manual-box a { color: #4f46e5; font-weight: 700; text-decoration: none; }
+  .manual-box a:hover { text-decoration: underline; }
   .manual-methods {
     display: flex;
     flex-wrap: wrap;
@@ -110,7 +112,7 @@
   </div>
 
   <button id="purchase-btn" class="btn-purchase">
-    購入リクエストを送る
+    支払い方法を見る
   </button>
 
   <div id="manual-payment-box" class="manual-box">
@@ -119,12 +121,14 @@
       <span class="manual-method">銀行振込</span>
       <span class="manual-method">PayPal</span>
     </div>
-    支払い確認後、Adminが生徒ポイントを付与します。<br>
-    支払い時または連絡時に、ユーザー名 <strong>{{ request.user.username }}</strong> を添えてください。
+    銀行振込またはPayPalで支払えます。<br>
+    支払い先の案内は <a href="mailto:zitatori@gmail.com?subject=QuickLesson%20points%20purchase">zitatori@gmail.com</a> まで連絡してください。<br>
+    連絡時に、ユーザー名 <strong>{{ request.user.username }}</strong> と購入したいポイント数を添えてください。<br>
+    支払い確認後、Adminが生徒ポイントを付与します。
   </div>
 
   <p class="manual-note">
-    銀行振込・PayPalで対応中。支払い確認後にポイントを付与します。
+    銀行振込・PayPalで対応中。支払い先はメールでご案内します。
   </p>
 </div>
 
@@ -142,7 +146,7 @@ function selectTier(el, points, price) {
   selectedPrice = price;
   const btn = document.getElementById('purchase-btn');
   btn.classList.add('active');
-  btn.textContent = `購入リクエストを送る (${points} pt)`;
+  btn.textContent = `支払い方法を見る (${points} pt)`;
 }
 
 document.getElementById('purchase-btn').addEventListener('click', () => {
