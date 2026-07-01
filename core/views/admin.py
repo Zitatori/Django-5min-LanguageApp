@@ -180,25 +180,26 @@ def delete_user(request, user_id):
 
 @staff_or_admin_role_required
 def update_user_points(request, user_id):
-    """管理者がユーザーのポイント残高を直接セットする"""
+    """管理者がユーザーの生徒ポイントを加算・減算する"""
     if request.method == 'POST':
         user = get_object_or_404(User, id=user_id)
         try:
-            new_balance = int(request.POST.get('balance', 0))
+            delta = int(request.POST.get('student_points_delta', 0))
         except ValueError:
             return redirect('admin_dashboard')
 
+        if delta == 0:
+            return redirect('admin_dashboard')
+
         balance_obj, _ = PointBalance.objects.get_or_create(user=user)
-        diff = new_balance - balance_obj.student_balance
-        if diff != 0:
-            balance_obj.student_balance = new_balance
-            balance_obj.save()
-            PointTransaction.objects.create(
-                user=user,
-                amount=diff,
-                transaction_type=PointTransaction.TYPE_PURCHASE if diff > 0 else PointTransaction.TYPE_WITHDRAWAL,
-                note=f"Admin adjustment by {request.user.username}",
-            )
+        balance_obj.student_balance = max(0, balance_obj.student_balance + delta)
+        balance_obj.save()
+        PointTransaction.objects.create(
+            user=user,
+            amount=delta,
+            transaction_type=PointTransaction.TYPE_PURCHASE if delta > 0 else PointTransaction.TYPE_WITHDRAWAL,
+            note=f"Admin student-point adjustment by {request.user.username}",
+        )
     return redirect('admin_dashboard')
 
 @staff_or_admin_role_required

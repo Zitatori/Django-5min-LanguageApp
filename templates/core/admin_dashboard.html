@@ -46,7 +46,10 @@
   }
   .points-btn { font-size:12px; padding:4px 12px; border-radius:8px; border:1.5px solid #f59e0b; color:#b45309; background:white; cursor:pointer; margin-left:6px; }
   .points-btn:hover { background:#fffbeb; }
-  .pt-badge { font-size:13px; font-weight:600; color:#6366f1; }
+  .pt-stack { display:flex; flex-direction:column; gap:3px; min-width:92px; }
+  .pt-badge { display:inline-flex; align-items:center; gap:4px; width:max-content; font-size:12px; font-weight:700; border-radius:99px; padding:2px 8px; }
+  .pt-student { background:#eef2ff; color:#4338ca; border:1px solid #c7d2fe; }
+  .pt-teacher { background:#ecfdf5; color:#047857; border:1px solid #a7f3d0; }
   .pt-none  { font-size:12px; color:#d1d5db; }
   .grant-banner { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;
     background:#fffbeb; border:1.5px solid #fde68a; border-radius:12px; padding:12px 16px; margin-bottom:1.2rem; font-size:14px; color:#92400e; }
@@ -275,7 +278,10 @@
         </td>
         <td>
           {% if u.point_balance %}
-            <span class="pt-badge" title="Student: {{ u.point_balance.student_balance }}pt / Teacher: {{ u.point_balance.teacher_balance }}pt">{{ u.point_balance.balance }} pt</span>
+            <span class="pt-stack" title="Student points are used for lessons. Teacher points are earned by teaching.">
+              <span class="pt-badge pt-student">Student {{ u.point_balance.student_balance }} pt</span>
+              <span class="pt-badge pt-teacher">Teacher {{ u.point_balance.teacher_balance }} pt</span>
+            </span>
           {% else %}
             <span class="pt-none">—</span>
           {% endif %}
@@ -343,7 +349,11 @@
           {% else %}<span class="role-student">Student</span>{% endif %}
         </td>
         <td>
-          {% if u.point_balance %}<span class="pt-badge" title="Student: {{ u.point_balance.student_balance }}pt / Teacher: {{ u.point_balance.teacher_balance }}pt">{{ u.point_balance.balance }} pt</span>
+          {% if u.point_balance %}
+            <span class="pt-stack" title="Student points are used for lessons. Teacher points are earned by teaching.">
+              <span class="pt-badge pt-student">Student {{ u.point_balance.student_balance }} pt</span>
+              <span class="pt-badge pt-teacher">Teacher {{ u.point_balance.teacher_balance }} pt</span>
+            </span>
           {% else %}<span class="pt-none">—</span>{% endif %}
         </td>
         <td>
@@ -650,17 +660,21 @@
 <!-- Points Edit Modal -->
 <div class="modal-overlay" id="points-modal">
   <div class="modal">
-    <h3>✏️ Edit points: <span id="pts-modal-username"></span></h3>
+    <h3>➕ Add student points: <span id="pts-modal-username"></span></h3>
     <p style="font-size:13px; color:#6b7280; margin-bottom:4px;">
       Student: <strong id="pts-student-current"></strong> pt　Teacher: <strong id="pts-teacher-current"></strong> pt
     </p>
-    <p style="font-size:12px; color:#9ca3af; margin-bottom:12px;">※ 生徒ポイントのみ変更できます（講師ポイントは授業で増減）</p>
+    <p style="font-size:12px; color:#9ca3af; margin-bottom:12px;">Only student points are adjusted here. Teacher points stay unchanged.</p>
     <form method="post" id="points-form" action="">
       {% csrf_token %}
-      <label style="font-size:14px; font-weight:500; display:block; margin-bottom:6px;">New Student Balance</label>
-      <input type="number" name="balance" id="pts-input" min="0"
+      <label style="font-size:14px; font-weight:500; display:block; margin-bottom:6px;">Points to add</label>
+      <input type="number" name="student_points_delta" id="pts-input" min="1" step="1" value="10"
+             oninput="updatePointsPreview()"
              style="width:100%; padding:10px; border:1.5px solid #e5e7eb; border-radius:10px; font-size:16px; box-sizing:border-box;">
-      <button type="submit" class="save-btn" style="background:#f59e0b;">Save</button>
+      <p style="font-size:13px; color:#374151; margin:10px 0 0;">
+        New student balance: <strong id="pts-student-after"></strong> pt
+      </p>
+      <button type="submit" class="save-btn" style="background:#f59e0b;">Add Points</button>
     </form>
     <button class="cancel-btn" onclick="closePointsModal()">Cancel</button>
   </div>
@@ -679,11 +693,20 @@
     document.getElementById('modal').classList.remove('open');
   }
 
+  let currentStudentPoints = 0;
+
+  function updatePointsPreview() {
+    const amount = parseInt(document.getElementById('pts-input').value || '0', 10);
+    document.getElementById('pts-student-after').textContent = currentStudentPoints + Math.max(0, amount);
+  }
+
   function openPointsModal(userId, username, studentBalance, teacherBalance) {
+    currentStudentPoints = studentBalance;
     document.getElementById('pts-modal-username').textContent = username;
     document.getElementById('pts-student-current').textContent = studentBalance;
     document.getElementById('pts-teacher-current').textContent = teacherBalance;
-    document.getElementById('pts-input').value = studentBalance;
+    document.getElementById('pts-input').value = 10;
+    updatePointsPreview();
     document.getElementById('points-form').action = `/admin-dashboard/user/${userId}/points/`;
     document.getElementById('points-modal').classList.add('open');
   }
