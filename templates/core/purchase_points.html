@@ -111,24 +111,28 @@
     {% endfor %}
   </div>
 
-  <button id="purchase-btn" class="btn-purchase">
-    支払い方法を見る
+  <button
+    id="purchase-btn"
+    class="btn-purchase"
+    data-label="{% trans 'View payment instructions' %}"
+  >
+    {% trans "View payment instructions" %}
   </button>
 
   <div id="manual-payment-box" class="manual-box">
-    <strong id="manual-selected">選択したポイント</strong>
+    <strong id="manual-selected">{% trans "Selected points" %}</strong>
     <div class="manual-methods">
-      <span class="manual-method">銀行振込</span>
+      <span class="manual-method">{% trans "Bank transfer" %}</span>
       <span class="manual-method">PayPal</span>
     </div>
-    銀行振込またはPayPalで支払えます。<br>
-    支払い先の案内は <a href="mailto:zitatori@gmail.com?subject=QuickLesson%20points%20purchase">zitatori@gmail.com</a> まで連絡してください。<br>
-    連絡時に、ユーザー名 <strong>{{ request.user.username }}</strong> と購入したいポイント数を添えてください。<br>
-    支払い確認後、Adminが生徒ポイントを付与します。
+    {% trans "You can pay by bank transfer or PayPal." %}<br>
+    {% trans "For payment details, please email" %} <a href="mailto:zitatori@gmail.com?subject=QuickLesson%20points%20purchase">zitatori@gmail.com</a>.<br>
+    {% trans "Please include how many points you want to purchase." %}<br>
+    {% trans "After payment is confirmed, Admin will add student points." %}
   </div>
 
   <p class="manual-note">
-    銀行振込・PayPalで対応中。支払い先はメールでご案内します。
+    {% trans "Bank transfer and PayPal are available. Payment details are sent by email." %}
   </p>
 </div>
 
@@ -146,7 +150,7 @@ function selectTier(el, points, price) {
   selectedPrice = price;
   const btn = document.getElementById('purchase-btn');
   btn.classList.add('active');
-  btn.textContent = `支払い方法を見る (${points} pt)`;
+  btn.textContent = `${btn.dataset.label} (${points} pt)`;
 }
 
 document.getElementById('purchase-btn').addEventListener('click', () => {

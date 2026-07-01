@@ -364,6 +364,54 @@ msgstr ""
 msgid "Email address"
 msgstr ""
 
+#: templates/core/purchase_points.html
+msgid "Use points to take lessons with a tutor."
+msgstr "Use points to take lessons with a tutor."
+
+#: templates/core/purchase_points.html
+msgid "Current Balance"
+msgstr "Current Balance"
+
+#: templates/core/purchase_points.html
+msgid "View payment instructions"
+msgstr "View payment instructions"
+
+#: templates/core/purchase_points.html
+msgid "Selected points"
+msgstr "Selected points"
+
+#: templates/core/purchase_points.html
+msgid "Bank transfer"
+msgstr "Bank transfer"
+
+#: templates/core/purchase_points.html
+msgid "You can pay by bank transfer or PayPal."
+msgstr "You can pay by bank transfer or PayPal."
+
+#: templates/core/purchase_points.html
+msgid "Please email <a href=\"mailto:zitatori@gmail.com?subject=QuickLesson%20points%20purchase\">zitatori@gmail.com</a> for payment details."
+msgstr "Please email <a href=\"mailto:zitatori@gmail.com?subject=QuickLesson%20points%20purchase\">zitatori@gmail.com</a> for payment details."
+
+#: templates/core/purchase_points.html
+msgid "For payment details, please email"
+msgstr "For payment details, please email"
+
+#: templates/core/purchase_points.html
+msgid "Please include how many points you want to purchase."
+msgstr "Please include how many points you want to purchase."
+
+#: templates/core/purchase_points.html
+msgid "After payment is confirmed, Admin will add student points."
+msgstr "After payment is confirmed, Admin will add student points."
+
+#: templates/core/purchase_points.html
+msgid "Bank transfer and PayPal are available. Payment details are sent by email."
+msgstr "Bank transfer and PayPal are available. Payment details are sent by email."
+
+#: templates/core/purchase_points.html
+msgid "Back to Profile"
+msgstr "Back to Profile"
+
 #: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1870
 msgid "File path"
 msgstr ""

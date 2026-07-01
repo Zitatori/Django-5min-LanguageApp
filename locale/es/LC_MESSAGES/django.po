@@ -321,13 +321,11 @@ msgstr "Aún no hay transacciones."
 
 #: templates/core/purchase_points.html:68
 msgid "Use points to take lessons with a tutor."
-msgstr ""
+msgstr "Usa puntos para tomar clases con un tutor."
 
 #: templates/core/purchase_points.html:69
-#, fuzzy
-#| msgid "Current"
 msgid "Current Balance"
-msgstr "Actual"
+msgstr "Saldo actual"
 
 #: templates/core/purchase_points.html:83
 #: templates/core/purchase_points.html:103
@@ -339,10 +337,44 @@ msgid "Secure payment via Stripe — coming soon"
 msgstr ""
 
 #: templates/core/purchase_points.html:92
-#, fuzzy
-#| msgid "Back to Home"
 msgid "Back to Profile"
-msgstr "Volver al inicio"
+msgstr "Volver al perfil"
+
+#: templates/core/purchase_points.html
+msgid "View payment instructions"
+msgstr "Ver instrucciones de pago"
+
+#: templates/core/purchase_points.html
+msgid "Selected points"
+msgstr "Puntos seleccionados"
+
+#: templates/core/purchase_points.html
+msgid "Bank transfer"
+msgstr "Transferencia bancaria"
+
+#: templates/core/purchase_points.html
+msgid "You can pay by bank transfer or PayPal."
+msgstr "Puedes pagar por transferencia bancaria o PayPal."
+
+#: templates/core/purchase_points.html
+msgid "Please email <a href=\"mailto:zitatori@gmail.com?subject=QuickLesson%20points%20purchase\">zitatori@gmail.com</a> for payment details."
+msgstr "Escribe a <a href=\"mailto:zitatori@gmail.com?subject=QuickLesson%20points%20purchase\">zitatori@gmail.com</a> para recibir los datos de pago."
+
+#: templates/core/purchase_points.html
+msgid "For payment details, please email"
+msgstr "Para recibir los datos de pago, escribe a"
+
+#: templates/core/purchase_points.html
+msgid "Please include how many points you want to purchase."
+msgstr "Incluye cuántos puntos quieres comprar."
+
+#: templates/core/purchase_points.html
+msgid "After payment is confirmed, Admin will add student points."
+msgstr "Después de confirmar el pago, Admin añadirá los puntos de estudiante."
+
+#: templates/core/purchase_points.html
+msgid "Bank transfer and PayPal are available. Payment details are sent by email."
+msgstr "Aceptamos transferencia bancaria y PayPal. Los datos de pago se envían por email."
 
 #: templates/core/request_detail.html:8
 msgid "Matching Result"

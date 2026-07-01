@@ -321,13 +321,11 @@ msgstr "Aucune transaction pour l'instant."
 
 #: templates/core/purchase_points.html:68
 msgid "Use points to take lessons with a tutor."
-msgstr ""
+msgstr "Utilisez des points pour prendre des leçons avec un tuteur."
 
 #: templates/core/purchase_points.html:69
-#, fuzzy
-#| msgid "Current"
 msgid "Current Balance"
-msgstr "Actuel"
+msgstr "Solde actuel"
 
 #: templates/core/purchase_points.html:83
 #: templates/core/purchase_points.html:103
@@ -339,10 +337,44 @@ msgid "Secure payment via Stripe — coming soon"
 msgstr ""
 
 #: templates/core/purchase_points.html:92
-#, fuzzy
-#| msgid "Back to Home"
 msgid "Back to Profile"
-msgstr "Retour à l’accueil"
+msgstr "Retour au profil"
+
+#: templates/core/purchase_points.html
+msgid "View payment instructions"
+msgstr "Voir les instructions de paiement"
+
+#: templates/core/purchase_points.html
+msgid "Selected points"
+msgstr "Points sélectionnés"
+
+#: templates/core/purchase_points.html
+msgid "Bank transfer"
+msgstr "Virement bancaire"
+
+#: templates/core/purchase_points.html
+msgid "You can pay by bank transfer or PayPal."
+msgstr "Vous pouvez payer par virement bancaire ou PayPal."
+
+#: templates/core/purchase_points.html
+msgid "Please email <a href=\"mailto:zitatori@gmail.com?subject=QuickLesson%20points%20purchase\">zitatori@gmail.com</a> for payment details."
+msgstr "Envoyez un e-mail à <a href=\"mailto:zitatori@gmail.com?subject=QuickLesson%20points%20purchase\">zitatori@gmail.com</a> pour recevoir les informations de paiement."
+
+#: templates/core/purchase_points.html
+msgid "For payment details, please email"
+msgstr "Pour recevoir les informations de paiement, envoyez un e-mail à"
+
+#: templates/core/purchase_points.html
+msgid "Please include how many points you want to purchase."
+msgstr "Indiquez le nombre de points que vous souhaitez acheter."
+
+#: templates/core/purchase_points.html
+msgid "After payment is confirmed, Admin will add student points."
+msgstr "Après confirmation du paiement, Admin ajoutera les points étudiant."
+
+#: templates/core/purchase_points.html
+msgid "Bank transfer and PayPal are available. Payment details are sent by email."
+msgstr "Le virement bancaire et PayPal sont disponibles. Les informations de paiement sont envoyées par e-mail."
 
 #: templates/core/request_detail.html:8
 msgid "Matching Result"
