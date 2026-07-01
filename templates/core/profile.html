@@ -151,6 +151,18 @@
   }
   .btn-gold-full:hover { opacity: .88; transform: translateY(-1px); }
   .btn-gold-full:active { transform: scale(0.97); }
+  .gold-mail-note {
+    font-size: 12px;
+    color: #92400e;
+    line-height: 1.6;
+    margin: 10px 0 0;
+  }
+  .gold-mail-note a {
+    color: #78350f;
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .gold-mail-note a:hover { text-decoration: underline; }
 
   /* ── PC レイアウト ── */
   @media (min-width: 900px) {
@@ -341,11 +353,17 @@
   <p class="gold-sub-desc">¥10,000/{% trans "month" %} — {% trans "Unlimited lessons, no points needed" %}</p>
   {% if gold_request_pending %}
     <span class="gold-pending-sm">&#x23F3; {% trans "Request pending — we'll activate it shortly." %}</span>
+    <p class="gold-mail-note">
+      見逃し防止のため、Gold希望の方は
+      <a href="mailto:zitatori@gmail.com?subject=QuickLesson%20Gold%20membership">zitatori@gmail.com</a>
+      までユーザー名 <strong>{{ request.user.username }}</strong> を添えて連絡してください。
+    </p>
   {% else %}
-    <form method="post" action="{% url 'request_gold' %}" style="margin:0;">
-      {% csrf_token %}
-      <button type="submit" class="btn-gold-full">&#x1F451; {% trans "Subscribe to Gold" %}</button>
-    </form>
+    <a class="btn-gold-full" href="mailto:zitatori@gmail.com?subject=QuickLesson%20Gold%20membership">&#x1F451; Goldについてメールする</a>
+    <p class="gold-mail-note">
+      銀行振込・PayPalで対応中。支払い先はメールでご案内します。<br>
+      連絡時に、ユーザー名 <strong>{{ request.user.username }}</strong> を添えてください。
+    </p>
   {% endif %}
 </div>
 {% endif %}
