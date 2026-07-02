@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
+from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.http import require_POST
 from django.views.generic import TemplateView
@@ -89,7 +90,7 @@ def lesson_room(request, match_id: int):
         "match": match,
         "remaining_seconds": remaining_seconds,
         "timer_end_at": match.end_at if match.student_joined_at and match.tutor_joined_at else None,
-        "after_lesson_url": "lesson_rating" if is_student else "home",
+        "after_lesson_url": reverse('create_request') if is_student else reverse('tutor_dashboard'),
         "partner_name": partner_name,
         "partner_initial": partner_name[0].upper() if partner_name else "?",
         "partner_badge": partner_badge,
@@ -140,6 +141,6 @@ def lesson_rating(request, match_id: int):
                 student_rating=rating,
                 student_rated_at=timezone.now(),
             )
-            return redirect("home")
+            return redirect("create_request")
 
     return render(request, "core/lesson_rating.html", {"match": match})

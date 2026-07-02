@@ -352,7 +352,7 @@ document.addEventListener('submit', function(e) {
   const matchId = "{{ match.id }}";
   const userId  = Number("{{ request.user.id }}");
   const initialTimerEndAt = "{{ timer_end_at|date:'c' }}";
-  const afterLessonUrl = "{% if after_lesson_url == 'lesson_rating' %}{% url 'lesson_rating' match.id %}{% else %}{% url 'home' %}{% endif %}";
+  const afterLessonUrl = "{{ after_lesson_url }}";
 
   // ── デバッグログ ──
   function log(tag, ...args) {
