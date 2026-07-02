@@ -15,7 +15,8 @@ def tutor_dashboard(request):
         action = request.POST.get("action")
 
         if action == "go_online":
-            tutor_profile.is_online = True
+            # 通話中/入室待ちのマッチがある間は、手動操作でも待機状態に戻さない。
+            tutor_profile.is_online = _active_match_for_tutor(tutor_profile) is None
             tutor_profile.last_ping_at = timezone.now()  # オンライン時は即座にping時刻を設定
         elif action == "go_offline":
             tutor_profile.is_online = False
@@ -74,6 +75,15 @@ def tutor_dashboard(request):
 ONLINE_TIMEOUT_SECONDS = 1800  # 30分以内の ping がないとオフライン扱い（スマホスリープ対策）
 
 
+def _active_match_for_tutor(tutor_profile, now=None):
+    now = now or timezone.now()
+    return QuickLessonMatch.objects.filter(
+        tutor=tutor_profile,
+    ).filter(
+        Q(started_at__isnull=True) | Q(end_at__gt=now)
+    ).first()
+
+
 @login_required
 def tutor_match_status(request):
     """ポーリング兼ハートビート。呼ばれるたびに last_ping_at を更新。"""
@@ -82,11 +92,7 @@ def tutor_match_status(request):
     tutor_profile = TutorProfile.objects.get(user=request.user)
 
     # マッチ中かどうかを先に確認する（is_online の上書きより前）
-    active_match = QuickLessonMatch.objects.filter(
-        tutor=tutor_profile,
-    ).filter(
-        Q(started_at__isnull=True) | Q(end_at__gt=now)
-    ).first()
+    active_match = _active_match_for_tutor(tutor_profile, now=now)
 
     if active_match:
         # レッスン中: is_online=False のまま維持し、last_ping_at だけ更新

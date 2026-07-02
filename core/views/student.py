@@ -120,14 +120,31 @@ def _get_display_exclude_ids(student_profile):
 def active_tutors_qs(language=None):
     """実際にオンライン中（5分以内に ping あり）のチュータークエリセット。
     last_ping_at が未設定（None）の場合は ping タイムアウトを適用しない。
+    すでに進行中/入室待ちのマッチを持つチューターは、is_online=True が残っていても除外する。
     """
-    cutoff = timezone.now() - timedelta(seconds=ONLINE_TIMEOUT_SECONDS)
+    now = timezone.now()
+    cutoff = now - timedelta(seconds=ONLINE_TIMEOUT_SECONDS)
+    busy_tutor_ids = QuickLessonMatch.objects.filter(
+        Q(started_at__isnull=True) | Q(end_at__gt=now)
+    ).values("tutor_id")
     qs = TutorProfile.objects.filter(is_online=True).filter(
         Q(last_ping_at__isnull=True) | Q(last_ping_at__gte=cutoff)
-    )
+    ).exclude(pk__in=busy_tutor_ids)
     if language:
         qs = qs.filter(languages=language)
     return qs.distinct()
+
+
+def _claim_tutor_for_match(tutor):
+    """オンライン候補を1人だけ確保する。通話中なら確保しない。"""
+    now = timezone.now()
+    busy_tutor_ids = QuickLessonMatch.objects.filter(
+        Q(started_at__isnull=True) | Q(end_at__gt=now)
+    ).values("tutor_id")
+    return TutorProfile.objects.filter(
+        pk=tutor.pk,
+        is_online=True,
+    ).exclude(pk__in=busy_tutor_ids).update(is_online=False) == 1
 
 
 @login_required
@@ -192,9 +209,8 @@ def create_request(request):
         if tutors_qs.exists():
             tutor = random.choice(list(tutors_qs))
 
-            # Optimistic locking: is_online=True の場合のみ更新（同時リクエストでの二重マッチ防止）
-            claimed = TutorProfile.objects.filter(pk=tutor.pk, is_online=True).update(is_online=False)
-            if claimed == 1:
+            # Optimistic locking: オンラインかつ通話中でない場合のみ確保
+            if _claim_tutor_for_match(tutor):
                 QuickLessonMatch.objects.create(
                     request=qlr,
                     tutor=tutor,
@@ -275,9 +291,8 @@ def request_detail(request, request_id: int):
         if tutors_qs.exists():
             tutor = random.choice(list(tutors_qs))
 
-            # Optimistic locking: 同時リクエストで同じ講師への二重マッチを防ぐ
-            claimed = TutorProfile.objects.filter(pk=tutor.pk, is_online=True).update(is_online=False)
-            if claimed == 1:
+            # Optimistic locking: オンラインかつ通話中でない場合のみ確保
+            if _claim_tutor_for_match(tutor):
                 match = QuickLessonMatch.objects.create(
                     request=qlr,
                     tutor=tutor,
@@ -311,26 +326,22 @@ def create_interview_request(request):
             purpose="interview",
         )
 
-        tutors_qs = TutorProfile.objects.filter(
-            is_online=True,
+        tutors_qs = active_tutors_qs(language=language).filter(
             can_interview=True,
-            languages=language,
         ).distinct()
 
         if tutors_qs.exists():
             tutor = random.choice(list(tutors_qs))
-            QuickLessonMatch.objects.create(
-                request=qlr,
-                tutor=tutor,
-                meeting_url="https://example.com/dummy-room/interview",
-                price=0.0,
-            )
+            if _claim_tutor_for_match(tutor):
+                QuickLessonMatch.objects.create(
+                    request=qlr,
+                    tutor=tutor,
+                    meeting_url="https://example.com/dummy-room/interview",
+                    price=0.0,
+                )
 
-            qlr.status = "matched"
-            qlr.save()
-
-            tutor.is_online = False
-            tutor.save()
+                qlr.status = "matched"
+                qlr.save()
 
         return redirect("request_detail", request_id=qlr.id)
 

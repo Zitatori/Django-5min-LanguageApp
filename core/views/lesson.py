@@ -46,10 +46,13 @@ def lesson_room(request, match_id: int):
         match.refresh_from_db()
 
     if request.user == match.tutor.user and not match.tutor_joined_at:
+        TutorProfile.objects.filter(pk=match.tutor.pk).update(is_online=False)
         QuickLessonMatch.objects.filter(pk=match.pk, tutor_joined_at__isnull=True).update(
             tutor_joined_at=now
         )
         match.refresh_from_db()
+    elif request.user == match.tutor.user:
+        TutorProfile.objects.filter(pk=match.tutor.pk).update(is_online=False)
 
     if match.student_joined_at and match.tutor_joined_at and not match.started_at:
         QuickLessonMatch.objects.filter(pk=match.pk, started_at__isnull=True).update(
