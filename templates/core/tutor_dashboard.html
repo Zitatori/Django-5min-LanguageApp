@@ -433,6 +433,25 @@
     }, 200);
   }
 
+  function showMatchedRedirectNotice() {
+    const notice = document.createElement("div");
+    notice.textContent = "{% trans 'Matched. Moving to the lesson room…' %}";
+    notice.style.cssText = [
+      "position:fixed",
+      "left:50%",
+      "top:24px",
+      "transform:translateX(-50%)",
+      "z-index:10000",
+      "background:#111827",
+      "color:#fff",
+      "padding:12px 18px",
+      "border-radius:999px",
+      "font-weight:700",
+      "box-shadow:0 12px 30px rgba(15,23,42,.25)"
+    ].join(";");
+    document.body.appendChild(notice);
+  }
+
   function startPolling() {
     if (pollInterval) return;
     pollInterval = setInterval(async () => {
@@ -443,8 +462,15 @@
           clearInterval(pollInterval);
           playMatchSound();
           flashScreen();
+          showMatchedRedirectNotice();
           document.title = "🔔 " + document.title;
-          setTimeout(() => window.location.reload(), 1500);
+          setTimeout(() => {
+            if (data.room_url) {
+              window.location.href = data.room_url;
+            } else {
+              window.location.reload();
+            }
+          }, 900);
         }
       } catch (e) { console.error("Polling error:", e); }
     }, 3000);

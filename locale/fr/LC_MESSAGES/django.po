@@ -525,6 +525,10 @@ msgstr "Aucun matching actif pour l'instant."
 msgid "Matches will appear here automatically."
 msgstr "Les matchings apparaîtront ici automatiquement."
 
+#: templates/core/tutor_dashboard.html
+msgid "Matched. Moving to the lesson room…"
+msgstr "Matching trouvé. Redirection vers la salle…"
+
 #: templates/registration/login.html:26
 msgid "Don't have an account?"
 msgstr "Vous n'avez pas de compte ?"

@@ -399,6 +399,10 @@ msgstr "Email us about Gold"
 msgid "Please include your username (%(username)s) when you contact us."
 msgstr "Please include your username (%(username)s) when you contact us."
 
+#: templates/core/tutor_dashboard.html
+msgid "Matched. Moving to the lesson room…"
+msgstr "Matched. Moving to the lesson room…"
+
 #: templates/core/purchase_points.html
 msgid "Use points to take lessons with a tutor."
 msgstr "Use points to take lessons with a tutor."

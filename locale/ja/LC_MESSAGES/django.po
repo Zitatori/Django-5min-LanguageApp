@@ -516,6 +516,10 @@ msgstr "まだアクティブなマッチはありません"
 msgid "Matches will appear here automatically."
 msgstr "マッチすると自動でここに表示されます"
 
+#: templates/core/tutor_dashboard.html
+msgid "Matched. Moving to the lesson room…"
+msgstr "マッチしました。レッスンルームへ移動します…"
+
 #: templates/registration/login.html:26
 msgid "Don't have an account?"
 msgstr "アカウントをお持ちでないですか？"
