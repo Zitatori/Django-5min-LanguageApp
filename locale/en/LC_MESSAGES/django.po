@@ -403,6 +403,46 @@ msgstr "Please include your username (%(username)s) when you contact us."
 msgid "Matched. Moving to the lesson room…"
 msgstr "Matched. Moving to the lesson room…"
 
+#: templates/core/lesson_rating.html
+msgid "Rate this lesson"
+msgstr "Rate this lesson"
+
+#: templates/core/lesson_rating.html
+msgid "Thanks for your rating."
+msgstr "Thanks for your rating."
+
+#: templates/core/lesson_rating.html
+msgid "Tap a star to rate the lesson"
+msgstr "Tap a star to rate the lesson"
+
+#: templates/core/lesson_rating.html
+msgid "Submit rating"
+msgstr "Submit rating"
+
+#: templates/core/lesson_rating.html
+msgid "Skip"
+msgstr "Skip"
+
+#: templates/core/lesson_rating.html
+msgid "1 star"
+msgstr "1 star"
+
+#: templates/core/lesson_rating.html
+msgid "2 stars"
+msgstr "2 stars"
+
+#: templates/core/lesson_rating.html
+msgid "3 stars"
+msgstr "3 stars"
+
+#: templates/core/lesson_rating.html
+msgid "4 stars"
+msgstr "4 stars"
+
+#: templates/core/lesson_rating.html
+msgid "5 stars"
+msgstr "5 stars"
+
 #: templates/core/purchase_points.html
 msgid "Use points to take lessons with a tutor."
 msgstr "Use points to take lessons with a tutor."

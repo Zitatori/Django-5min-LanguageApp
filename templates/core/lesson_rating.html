@@ -3,19 +3,19 @@
 
 {% block content %}
 <div class="card rating-card">
-  <h2 class="card-title rating-title">Rate this lesson</h2>
+  <h2 class="card-title rating-title">{% trans "Rate this lesson" %}</h2>
   <p class="card-subtitle rating-subtitle">
     {{ match.tutor.user.username }} · {% trans match.request.language.name %}
   </p>
 
   {% if match.student_rating %}
-    <div style="font-size:34px;color:#f59e0b;margin:18px 0;">
+    <div class="rating-result-stars">
       {% for i in "12345" %}
         {% if forloop.counter <= match.student_rating %}★{% else %}☆{% endif %}
       {% endfor %}
     </div>
-    <p style="color:#6b7280;">Thanks for your rating.</p>
-    <a class="btn" href="{% url 'home' %}" style="margin-top:16px;display:inline-block;">Back to Home</a>
+    <p class="rating-thanks">{% trans "Thanks for your rating." %}</p>
+    <a class="btn" href="{% url 'home' %}" style="margin-top:16px;display:inline-block;">{% trans "Back to Home" %}</a>
   {% else %}
     <form method="post" id="rating-form">
       {% csrf_token %}
@@ -23,14 +23,13 @@
         {% for value in "12345" %}
           <label class="rating-option" for="star{{ value }}" data-value="{{ value }}">
             <input type="radio" id="star{{ value }}" name="rating" value="{{ value }}" required>
-            <span class="rating-option-number">{{ value }}</span>
             <span class="rating-option-star">★</span>
           </label>
         {% endfor %}
       </div>
-      <div class="rating-helper" id="rating-helper">Choose 1 to 5 stars</div>
-      <button type="submit" class="btn rating-submit">Submit rating</button>
-      <a href="{% url 'home' %}" class="rating-skip">Skip</a>
+      <div class="rating-helper" id="rating-helper">{% trans "Tap a star to rate the lesson" %}</div>
+      <button type="submit" class="btn rating-submit" disabled>{% trans "Submit rating" %}</button>
+      <a href="{% url 'home' %}" class="rating-skip">{% trans "Skip" %}</a>
     </form>
   {% endif %}
 </div>
@@ -48,59 +47,56 @@
   .rating-subtitle {
     margin-bottom: 18px;
   }
+  .rating-result-stars {
+    font-size: 44px;
+    line-height: 1;
+    color: #f59e0b;
+    margin: 22px 0 12px;
+    letter-spacing: 0;
+  }
+  .rating-thanks {
+    color: #6b7280;
+    margin: 0;
+  }
   .rating-options {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 8px;
-    max-width: 330px;
-    margin: 8px auto 0;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    max-width: 380px;
+    margin: 10px auto 0;
   }
   .rating-option {
     position: relative;
-    display: flex;
-    flex-direction: column;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 2px;
-    min-height: 58px;
-    border: 1.5px solid #e5e7eb;
-    border-radius: 14px;
-    background: #f9fafb;
-    color: #9ca3af;
+    width: 54px;
+    height: 58px;
+    color: #d1d5db;
     cursor: pointer;
-    transition: background 0.14s ease, border-color 0.14s ease, color 0.14s ease, transform 0.12s ease, box-shadow 0.14s ease;
+    transition: color 0.14s ease, transform 0.12s ease, filter 0.14s ease;
   }
   .rating-option input {
     position: absolute;
     opacity: 0;
     pointer-events: none;
   }
-  .rating-option-number {
-    font-size: 12px;
-    font-weight: 800;
-  }
   .rating-option-star {
-    font-size: 21px;
+    font-size: 52px;
     line-height: 1;
+    text-shadow: 0 2px 6px rgba(15, 23, 42, .08);
   }
   .rating-option:hover {
-    transform: translateY(-1px);
-    border-color: #c7d2fe;
-    background: #eef2ff;
-    color: #6366f1;
+    transform: translateY(-2px) scale(1.04);
+    color: #fbbf24;
   }
-  .rating-option.selected {
-    background: #fff7ed;
-    border-color: #f59e0b;
+  .rating-option.filled {
     color: #f59e0b;
-    box-shadow: 0 8px 20px rgba(245,158,11,.16);
-  }
-  .rating-option.selected .rating-option-number {
-    color: #92400e;
+    filter: drop-shadow(0 7px 10px rgba(245, 158, 11, .22));
   }
   .rating-helper {
     min-height: 20px;
-    margin-top: 10px;
+    margin-top: 14px;
     color: #6b7280;
     font-size: 13px;
     font-weight: 600;
@@ -110,6 +106,10 @@
     width: 100%;
     max-width: 340px;
     margin: 20px auto 0;
+  }
+  .rating-submit:disabled {
+    opacity: .45;
+    cursor: not-allowed;
   }
   .rating-skip {
     display: inline-block;
@@ -127,14 +127,14 @@
       padding: 24px 18px;
     }
     .rating-options {
-      gap: 6px;
+      gap: 4px;
     }
     .rating-option {
-      min-height: 52px;
-      border-radius: 12px;
+      width: 44px;
+      height: 50px;
     }
     .rating-option-star {
-      font-size: 18px;
+      font-size: 42px;
     }
   }
 </style>
@@ -142,22 +142,39 @@
 <script>
   const ratingLabels = document.querySelectorAll('.rating-option');
   const ratingHelper = document.getElementById('rating-helper');
+  const ratingSubmit = document.querySelector('.rating-submit');
   const ratingText = {
-    1: '1 star',
-    2: '2 stars',
-    3: '3 stars',
-    4: '4 stars',
-    5: '5 stars'
+    1: '{% trans "1 star" %}',
+    2: '{% trans "2 stars" %}',
+    3: '{% trans "3 stars" %}',
+    4: '{% trans "4 stars" %}',
+    5: '{% trans "5 stars" %}'
   };
 
+  function paintStars(value) {
+    ratingLabels.forEach(item => {
+      item.classList.toggle('filled', Number(item.dataset.value) <= value);
+    });
+  }
+
   ratingLabels.forEach(label => {
+    label.addEventListener('mouseenter', () => {
+      paintStars(Number(label.dataset.value));
+    });
+    label.addEventListener('focusin', () => {
+      paintStars(Number(label.dataset.value));
+    });
     label.addEventListener('click', () => {
       const selectedValue = Number(label.dataset.value);
-      ratingLabels.forEach(item => {
-        item.classList.toggle('selected', Number(item.dataset.value) <= selectedValue);
-      });
+      paintStars(selectedValue);
       ratingHelper.textContent = ratingText[selectedValue];
+      ratingSubmit.disabled = false;
     });
+  });
+
+  document.querySelector('.rating-options').addEventListener('mouseleave', () => {
+    const checked = document.querySelector('input[name="rating"]:checked');
+    paintStars(checked ? Number(checked.value) : 0);
   });
 </script>
 {% endblock %}
