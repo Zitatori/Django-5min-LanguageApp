@@ -443,6 +443,38 @@ msgstr "4 stars"
 msgid "5 stars"
 msgstr "5 stars"
 
+#: templates/core/profile.html
+msgid "Student Points"
+msgstr "Student Points"
+
+#: templates/core/profile.html
+msgid "Gold: unlimited lessons"
+msgstr "Gold: unlimited lessons"
+
+#: templates/core/profile.html
+msgid "Teacher Points"
+msgstr "Teacher Points"
+
+#: templates/core/profile.html
+msgid "Earned from teaching. Withdraw as cash or move to Student Points."
+msgstr "Earned from teaching. Withdraw as cash or move to Student Points."
+
+#: templates/core/profile.html
+msgid "Move to Student Points"
+msgstr "Move to Student Points"
+
+#: templates/core/profile.html
+msgid "Transfer"
+msgstr "Transfer"
+
+#: templates/core/profile.html
+msgid "Teach a lesson to earn teacher points."
+msgstr "Teach a lesson to earn teacher points."
+
+#: templates/core/profile.html
+msgid "Transfer (Teacher→Student)"
+msgstr "Transfer (Teacher→Student)"
+
 #: templates/core/purchase_points.html
 msgid "Use points to take lessons with a tutor."
 msgstr "Use points to take lessons with a tutor."

@@ -221,6 +221,38 @@ msgstr "Retirable"
 msgid "Buy Points"
 msgstr "Comprar puntos"
 
+#: templates/core/profile.html
+msgid "Student Points"
+msgstr "Puntos de estudiante"
+
+#: templates/core/profile.html
+msgid "Gold: unlimited lessons"
+msgstr "Gold: clases ilimitadas"
+
+#: templates/core/profile.html
+msgid "Teacher Points"
+msgstr "Puntos de tutor"
+
+#: templates/core/profile.html
+msgid "Earned from teaching. Withdraw as cash or move to Student Points."
+msgstr "Puntos ganados enseñando. Puedes retirarlos en efectivo o moverlos a puntos de estudiante."
+
+#: templates/core/profile.html
+msgid "Move to Student Points"
+msgstr "Mover a puntos de estudiante"
+
+#: templates/core/profile.html
+msgid "Transfer"
+msgstr "Transferir"
+
+#: templates/core/profile.html
+msgid "Teach a lesson to earn teacher points."
+msgstr "Enseña una clase para ganar puntos de tutor."
+
+#: templates/core/profile.html
+msgid "Transfer (Teacher→Student)"
+msgstr "Transferencia (Tutor→Estudiante)"
+
 #: templates/core/profile.html:199
 msgid "Withdraw Points"
 msgstr "Retirar puntos"

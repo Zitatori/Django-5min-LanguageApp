@@ -218,6 +218,38 @@ msgstr "引き出し可能"
 msgid "Buy Points"
 msgstr "ポイントを購入"
 
+#: templates/core/profile.html
+msgid "Student Points"
+msgstr "生徒ポイント"
+
+#: templates/core/profile.html
+msgid "Gold: unlimited lessons"
+msgstr "Gold: レッスン無制限"
+
+#: templates/core/profile.html
+msgid "Teacher Points"
+msgstr "講師ポイント"
+
+#: templates/core/profile.html
+msgid "Earned from teaching. Withdraw as cash or move to Student Points."
+msgstr "レッスンで獲得したポイントです。現金で出金するか、生徒ポイントへ移動できます。"
+
+#: templates/core/profile.html
+msgid "Move to Student Points"
+msgstr "生徒ポイントへ移動"
+
+#: templates/core/profile.html
+msgid "Transfer"
+msgstr "移動する"
+
+#: templates/core/profile.html
+msgid "Teach a lesson to earn teacher points."
+msgstr "レッスンを担当すると講師ポイントを獲得できます。"
+
+#: templates/core/profile.html
+msgid "Transfer (Teacher→Student)"
+msgstr "移動（講師→生徒）"
+
 #: templates/core/profile.html:199
 msgid "Withdraw Points"
 msgstr "ポイントを引き出す"
