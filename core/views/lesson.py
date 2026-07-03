@@ -90,7 +90,7 @@ def lesson_room(request, match_id: int):
         "match": match,
         "remaining_seconds": remaining_seconds,
         "timer_end_at": match.end_at if match.student_joined_at and match.tutor_joined_at else None,
-        "after_lesson_url": reverse('create_request') if is_student else reverse('tutor_dashboard'),
+        "after_lesson_url": reverse('lesson_rating', args=[match.id]) if is_student else reverse('tutor_dashboard'),
         "partner_name": partner_name,
         "partner_initial": partner_name[0].upper() if partner_name else "?",
         "partner_badge": partner_badge,
