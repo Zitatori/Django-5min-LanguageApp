@@ -99,6 +99,10 @@ def lesson_end(request, match_id: int):
     match = get_object_or_404(QuickLessonMatch, id=match_id)
     now = timezone.now()
 
+    # started_at が未設定なら今に設定（WSが繋がらなかった場合の保険）
+    if not match.started_at:
+        QuickLessonMatch.objects.filter(pk=match.pk, started_at__isnull=True).update(started_at=now)
+
     # end_at をまだ迎えていない場合のみ今に更新（延長はしない）
     if match.end_at is None or match.end_at > now:
         QuickLessonMatch.objects.filter(pk=match.pk).update(end_at=now)

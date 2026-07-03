@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Q
 from django.shortcuts import render
+from datetime import timedelta
 from django.utils import timezone
 from django.views.decorators.http import require_POST
 from core.models import LessonLanguage, TutorProfile, QuickLessonMatch
@@ -33,10 +34,13 @@ def tutor_dashboard(request):
         "request__language",
     ).order_by("-started_at")
 
+    _cutoff = timezone.now() - timedelta(minutes=15)
     active_matches = QuickLessonMatch.objects.filter(
         tutor=tutor_profile,
     ).filter(
-        Q(started_at__isnull=True) | Q(end_at__gt=timezone.now())
+        Q(end_at__gt=timezone.now()) |
+        Q(started_at__isnull=True, tutor_joined_at__isnull=True) |
+        Q(started_at__isnull=True, tutor_joined_at__gt=_cutoff)
     ).select_related(
         "request",
         "request__student",
@@ -77,10 +81,13 @@ ONLINE_TIMEOUT_SECONDS = 1800  # 30分以内の ping がないとオフライン
 
 def _active_match_for_tutor(tutor_profile, now=None):
     now = now or timezone.now()
+    cutoff = now - timedelta(minutes=15)
     return QuickLessonMatch.objects.filter(
         tutor=tutor_profile,
     ).filter(
-        Q(started_at__isnull=True) | Q(end_at__gt=now)
+        Q(end_at__gt=now) |
+        Q(started_at__isnull=True, tutor_joined_at__isnull=True) |
+        Q(started_at__isnull=True, tutor_joined_at__gt=cutoff)
     ).first()
 
 
