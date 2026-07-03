@@ -138,6 +138,13 @@ class VideoCallConsumer(AsyncWebsocketConsumer):
                 'tutor__user',
             ).get(id=self.match_id)
 
+            # 1分未満の会話はポイント変動なし
+            if match.started_at and match.end_at:
+                duration = (match.end_at - match.started_at).total_seconds()
+                if duration < 60:
+                    print(f"[points] match {self.match_id}: duration {duration:.0f}s < 60s, skipping")
+                    return
+
             student_user = match.request.student.user
             tutor_user   = match.tutor.user
 
