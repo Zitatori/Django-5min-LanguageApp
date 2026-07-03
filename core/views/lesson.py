@@ -55,17 +55,8 @@ def lesson_room(request, match_id: int):
     elif request.user == match.tutor.user:
         TutorProfile.objects.filter(pk=match.tutor.pk).update(is_online=False)
 
-    if match.student_joined_at and match.tutor_joined_at and not match.started_at:
-        QuickLessonMatch.objects.filter(pk=match.pk, started_at__isnull=True).update(
-            started_at=now,
-            end_at=now + timezone.timedelta(minutes=5),
-        )
-        match.refresh_from_db()
-
-    if match.started_at:
-        remaining_seconds = max(0, int((match.end_at - now).total_seconds()))
-    else:
-        remaining_seconds = None
+    # started_at/end_at はWebSocketコンシューマーが設定する（WSで実際に両者が繋がった瞬間が基準）
+    remaining_seconds = None
 
     if request.user == match.request.student.user:
         partner_user = match.tutor.user
@@ -89,7 +80,7 @@ def lesson_room(request, match_id: int):
     context = {
         "match": match,
         "remaining_seconds": remaining_seconds,
-        "timer_end_at": match.end_at if match.student_joined_at and match.tutor_joined_at else None,
+        "timer_end_at": match.end_at,  # mid-lesson reload用; WSから上書きされるため初期値のみ
         "after_lesson_url": reverse('lesson_rating', args=[match.id]) if is_student else reverse('tutor_dashboard'),
         "partner_name": partner_name,
         "partner_initial": partner_name[0].upper() if partner_name else "?",

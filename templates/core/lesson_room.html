@@ -351,7 +351,6 @@ document.addEventListener('submit', function(e) {
 
   const matchId = "{{ match.id }}";
   const userId  = Number("{{ request.user.id }}");
-  const initialTimerEndAt = "{{ timer_end_at|date:'c' }}";
   const afterLessonUrl = "{{ after_lesson_url }}";
 
   // ── デバッグログ ──
@@ -441,7 +440,6 @@ document.addEventListener('submit', function(e) {
     update();
   }
   window.onTimerStart = startTimer;
-  if (initialTimerEndAt) startTimer(null, initialTimerEndAt);
 
   function endLesson(reason) {
     log('Lesson', 'ending:', reason);
