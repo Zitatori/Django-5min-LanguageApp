@@ -16,9 +16,19 @@ def tutor_dashboard(request):
         action = request.POST.get("action")
 
         if action == "go_online":
-            # 通話中/入室待ちのマッチがある間は、手動操作でも待機状態に戻さない。
-            tutor_profile.is_online = _active_match_for_tutor(tutor_profile) is None
-            tutor_profile.last_ping_at = timezone.now()  # オンライン時は即座にping時刻を設定
+            # 講師が自分でオンラインを押した = レッスンは終了済みと判断し、
+            # stuck なアクティブマッチを強制終了してからオンラインにする。
+            now_go = timezone.now()
+            _active_match_for_tutor(tutor_profile, now=now_go) and                 QuickLessonMatch.objects.filter(
+                    tutor=tutor_profile,
+                ).filter(
+                    Q(end_at__gt=now_go) | Q(started_at__isnull=True)
+                ).update(
+                    started_at=now_go,
+                    end_at=now_go,
+                )
+            tutor_profile.is_online = True
+            tutor_profile.last_ping_at = now_go
         elif action == "go_offline":
             tutor_profile.is_online = False
 

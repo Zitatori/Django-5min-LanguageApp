@@ -643,6 +643,12 @@ msgstr "Y年n月j日（D）"
 msgid "Changing language during a call will disconnect you. Continue?"
 msgstr "通話中に言語を変更すると通話が切断されます。続けますか？"
 
+msgid "Withdrawal requests are processed within 3 business days."
+msgstr "出金申請は3営業日以内に処理されます。"
+
+msgid "Today's earnings"
+msgstr "本日追加分"
+
 #~ msgid "Step 1"
 #~ msgstr "ステップ1"
 

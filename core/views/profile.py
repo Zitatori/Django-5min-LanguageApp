@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.db.models import Sum
 from django.shortcuts import render, redirect
 from django.utils import timezone
 from core.models import PointBalance, PointTransaction, WithdrawalRequest
@@ -28,6 +29,13 @@ def profile(request):
 
     is_tutor = hasattr(request.user, 'tutorprofile')
 
+    today = timezone.now().date()
+    today_earned = PointTransaction.objects.filter(
+        user=request.user,
+        transaction_type=PointTransaction.TYPE_LESSON_TAUGHT,
+        created_at__date=today,
+    ).aggregate(total=Sum('amount'))['total'] or 0
+
     # Gold 会員チェック
     gold_request_pending = GoldSubscriptionRequest.objects.filter(
         user=request.user, status=GoldSubscriptionRequest.STATUS_PENDING
@@ -48,6 +56,7 @@ def profile(request):
         'withdrawal_currencies': WithdrawalRequest.CURRENCY_CHOICES,
         'withdrawal_methods':    WithdrawalRequest.METHOD_CHOICES,
         'gold_request_pending':  gold_request_pending,
+        'today_earned':          today_earned,
     })
 
 
