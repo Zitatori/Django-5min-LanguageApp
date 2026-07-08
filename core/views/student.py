@@ -117,6 +117,28 @@ def _get_display_exclude_ids(student_profile):
     return exclude_ids
 
 
+def _in_lesson_info(language, now=None):
+    """その言語を担当できる講師のうち、現在レッスン中の人数と最短終了時刻（分）を返す。"""
+    now = now or timezone.now()
+    busy_tutor_pks = QuickLessonMatch.objects.filter(
+        end_at__gt=now,
+        started_at__isnull=False,
+    ).values_list('tutor_id', flat=True)
+    in_lesson_qs = TutorProfile.objects.filter(pk__in=busy_tutor_pks, languages=language)
+    count = in_lesson_qs.count()
+    if count == 0:
+        return 0, None
+    soonest_end = (
+        QuickLessonMatch.objects
+        .filter(tutor__in=in_lesson_qs, end_at__gt=now, started_at__isnull=False)
+        .order_by('end_at')
+        .values_list('end_at', flat=True)
+        .first()
+    )
+    minutes = max(1, int((soonest_end - now).total_seconds() / 60) + 1) if soonest_end else None
+    return count, minutes
+
+
 def active_tutors_qs(language=None):
     """実際にオンライン中（5分以内に ping あり）のチュータークエリセット。
     last_ping_at が未設定（None）の場合は ping タイムアウトを適用しない。
@@ -253,12 +275,14 @@ def create_request(request):
 
     languages_with_count = []
     for lang in languages:
+        now = timezone.now()
         qs = active_tutors_qs(language=lang)
         if consecutive_exclude:
             qs = qs.exclude(pk__in=consecutive_exclude)
         online_count = qs.count()
         lesson_count = lang_lesson_counts.get(lang.id, 0)
-        languages_with_count.append((lang, online_count, lesson_count))
+        in_lesson_count, soonest_minutes = _in_lesson_info(lang, now)
+        languages_with_count.append((lang, online_count, lesson_count, in_lesson_count, soonest_minutes))
 
     total_lessons = sum(lang_lesson_counts.values())
 
@@ -358,10 +382,16 @@ def student_online_counts(request):
     languages = LessonLanguage.objects.all()
     data = {}
     for lang in languages:
+        now = timezone.now()
         qs = active_tutors_qs(language=lang)
         if display_exclude:
             qs = qs.exclude(pk__in=display_exclude)
-        data[str(lang.id)] = qs.count()
+        in_lesson_count, soonest_minutes = _in_lesson_info(lang, now)
+        data[str(lang.id)] = {
+            'online': qs.count(),
+            'in_lesson': in_lesson_count,
+            'soonest_minutes': soonest_minutes,
+        }
     return JsonResponse(data)
 
 

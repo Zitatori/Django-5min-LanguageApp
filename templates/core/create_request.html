@@ -149,6 +149,15 @@
     animation: cr-pulse 1.5s ease-in-out infinite;
   }
   .cr-dot-off { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.4); flex-shrink: 0; }
+  .cr-status-busy {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: rgba(251,191,36,0.25); color: #fef3c7;
+    font-size: 11px; font-weight: 600;
+    padding: 3px 8px; border-radius: 99px;
+    position: relative; z-index: 1;
+  }
+  .cr-dot-busy { width: 6px; height: 6px; border-radius: 50%; background: #fbbf24; flex-shrink: 0;
+    animation: cr-pulse 1.5s ease-in-out infinite; }
   @keyframes cr-pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
 
   /* ── Buttons ── */
@@ -258,7 +267,7 @@
     <input type="hidden" name="language_id" id="selected-lang-id" value="{{ languages_with_count.0.0.id }}">
 
     <div class="cr-lang-grid">
-      {% for lang, count, lesson_count in languages_with_count %}
+      {% for lang, count, lesson_count, in_lesson_count, soonest_minutes in languages_with_count %}
       <div class="cr-lang-card {% if forloop.first %}selected{% endif %}
                   {% if lang.name == 'English' %}cr-lang-en
                   {% elif lang.name == 'French' %}cr-lang-fr
@@ -279,6 +288,8 @@
         {% if lesson_count > 0 %}<div class="cr-lesson-stat">📚 {{ lesson_count }}{% trans " lessons" %}</div>{% endif %}
         {% if count > 0 %}
           <div class="cr-status-on"><span class="cr-dot-on"></span>{{ count }} online</div>
+        {% elif in_lesson_count > 0 %}
+          <div class="cr-status-busy"><span class="cr-dot-busy"></span>{{ in_lesson_count }} {% trans "in lesson" %}{% if soonest_minutes %} · ~{{ soonest_minutes }}min{% endif %}</div>
         {% else %}
           <div class="cr-status-off"><span class="cr-dot-off"></span>{% trans "Offline" %}</div>
         {% endif %}
@@ -397,21 +408,27 @@
   }
 
   // ── オンライン人数をリアルタイム更新（5秒ごと） ──
-  const offlineLabel = "{% trans 'Offline' %}";
+  const offlineLabel  = "{% trans 'Offline' %}";
+  const inLessonLabel = "{% trans 'in lesson' %}";
 
   async function refreshOnlineCounts() {
     try {
       const res = await fetch("{% url 'student_online_counts' %}");
       if (!res.ok) return;
       const data = await res.json();
-      for (const [langId, count] of Object.entries(data)) {
+      for (const [langId, info] of Object.entries(data)) {
         const card = document.querySelector('.cr-lang-card[data-id="' + langId + '"]');
         if (!card) continue;
-        const statusEl = card.querySelector('.cr-status-on, .cr-status-off');
+        const statusEl = card.querySelector('.cr-status-on, .cr-status-off, .cr-status-busy');
         if (!statusEl) continue;
-        if (count > 0) {
+        if (info.online > 0) {
           statusEl.className = 'cr-status-on';
-          statusEl.innerHTML = '<span class="cr-dot-on"></span>' + count + ' online';
+          statusEl.innerHTML = '<span class="cr-dot-on"></span>' + info.online + ' online';
+        } else if (info.in_lesson > 0) {
+          statusEl.className = 'cr-status-busy';
+          let text = info.in_lesson + ' ' + inLessonLabel;
+          if (info.soonest_minutes) text += ' · ~' + info.soonest_minutes + 'min';
+          statusEl.innerHTML = '<span class="cr-dot-busy"></span>' + text;
         } else {
           statusEl.className = 'cr-status-off';
           statusEl.innerHTML = '<span class="cr-dot-off"></span>' + offlineLabel;

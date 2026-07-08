@@ -646,6 +646,9 @@ msgstr "l j F Y"
 msgid "Changing language during a call will disconnect you. Continue?"
 msgstr "Cambiar el idioma durante una llamada te desconectará. ¿Continuar?"
 
+msgid "in lesson"
+msgstr "en clase"
+
 msgid "Withdrawal requests are processed within 3 business days."
 msgstr "Las solicitudes de retiro se procesan en un plazo de 3 días hábiles."
 
