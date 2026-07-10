@@ -481,7 +481,6 @@ document.addEventListener('submit', function(e) {
 
   // ── 再接続（最大MAX_RECONNECT回まで）──
   function triggerReconnect() {
-    clearRemoteStreamTimer();
     if (reconnectTimer) { clearTimeout(reconnectTimer); reconnectTimer = null; }
 
     if (reconnectAttempts >= MAX_RECONNECT) {
