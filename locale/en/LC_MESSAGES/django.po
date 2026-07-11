@@ -1454,6 +1454,12 @@ msgstr "Changing language during a call will disconnect you. Continue?"
 msgid "in lesson"
 msgstr "in lesson"
 
+msgid "~%(m)smin free"
+msgstr "free in ~%(m)smin"
+
+msgid "~Xmin free"
+msgstr "free in ~Xmin"
+
 msgid "Withdrawal requests are processed within 3 business days."
 msgstr "Withdrawal requests are processed within 3 business days."
 

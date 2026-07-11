@@ -289,7 +289,7 @@
         {% if count > 0 %}
           <div class="cr-status-on"><span class="cr-dot-on"></span>{{ count }} online</div>
         {% elif in_lesson_count > 0 %}
-          <div class="cr-status-busy"><span class="cr-dot-busy"></span>{{ in_lesson_count }} {% trans "in lesson" %}{% if soonest_minutes %} · ~{{ soonest_minutes }}min{% endif %}</div>
+          <div class="cr-status-busy"><span class="cr-dot-busy"></span>{{ in_lesson_count }} {% trans "in lesson" %}{% if soonest_minutes %} · {% blocktrans with m=soonest_minutes %}~{{ m }}min free{% endblocktrans %}{% endif %}</div>
         {% else %}
           <div class="cr-status-off"><span class="cr-dot-off"></span>{% trans "Offline" %}</div>
         {% endif %}
@@ -410,6 +410,7 @@
   // ── オンライン人数をリアルタイム更新（5秒ごと） ──
   const offlineLabel  = "{% trans 'Offline' %}";
   const inLessonLabel = "{% trans 'in lesson' %}";
+  const freeInTpl     = "{% trans '~Xmin free' %}";
 
   async function refreshOnlineCounts() {
     try {
@@ -427,7 +428,7 @@
         } else if (info.in_lesson > 0) {
           statusEl.className = 'cr-status-busy';
           let text = info.in_lesson + ' ' + inLessonLabel;
-          if (info.soonest_minutes) text += ' · ~' + info.soonest_minutes + 'min';
+          if (info.soonest_minutes) text += ' · ' + freeInTpl.replace('X', info.soonest_minutes);
           statusEl.innerHTML = '<span class="cr-dot-busy"></span>' + text;
         } else {
           statusEl.className = 'cr-status-off';

@@ -655,6 +655,12 @@ msgstr "Changer de langue pendant un appel vous déconnectera. Continuer ?"
 msgid "in lesson"
 msgstr "en cours"
 
+msgid "~%(m)smin free"
+msgstr "libre dans ~%(m)smin"
+
+msgid "~Xmin free"
+msgstr "libre dans ~Xmin"
+
 msgid "Withdrawal requests are processed within 3 business days."
 msgstr "Les demandes de retrait sont traitées dans un délai de 3 jours ouvrables."
 

@@ -646,6 +646,12 @@ msgstr "通話中に言語を変更すると通話が切断されます。続け
 msgid "in lesson"
 msgstr "人対応中"
 
+msgid "~%(m)smin free"
+msgstr "約%(m)s分後に空き"
+
+msgid "~Xmin free"
+msgstr "約X分後に空き"
+
 msgid "Withdrawal requests are processed within 3 business days."
 msgstr "出金申請は3営業日以内に処理されます。"
 
