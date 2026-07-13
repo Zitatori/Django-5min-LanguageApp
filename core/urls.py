@@ -12,6 +12,7 @@ urlpatterns = [
     path("privacy/", views.privacy, name="privacy"),
     path("request/", views.create_request, name="create_request"),
     path("request/online-counts/", views.student_online_counts, name="student_online_counts"),
+    path("request/admin-chat/", views.request_admin_chat, name="request_admin_chat"),
     path("match/<int:request_id>/", views.request_detail, name="request_detail"),
     path("tutor/dashboard/", views.tutor_dashboard, name="tutor_dashboard"),
     path("interview/request/", views.create_interview_request, name="create_interview_request"),

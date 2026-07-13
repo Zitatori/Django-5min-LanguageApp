@@ -375,6 +375,40 @@
 </div>{# /cr-pc-right #}
 </div>{# /cr-pc-grid #}
 
+{# ── 管理者チャットボタン（管理者オンライン時のみ表示） ── #}
+{% if not request.user.is_superuser %}
+<form id="admin-chat-form" method="post" action="{% url 'request_admin_chat' %}">
+  {% csrf_token %}
+</form>
+<button id="admin-chat-btn"
+  onclick="document.getElementById('admin-chat-form').submit()"
+  title="{% trans 'Talk to Admin' %}"
+  style="
+    display: {% if admin_online %}flex{% else %}none{% endif %};
+    position: fixed;
+    bottom: 88px;
+    right: 20px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6366f1 0%, #818cf8 100%);
+    border: none;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 18px rgba(99,102,241,0.55);
+    z-index: 200;
+    transition: transform 0.15s, box-shadow 0.15s;
+  "
+  onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 6px 24px rgba(99,102,241,0.7)'"
+  onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 18px rgba(99,102,241,0.55)'"
+>
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+  </svg>
+</button>
+{% endif %}
+
 <script>
   const cards = document.querySelectorAll('.cr-lang-card');
   const input = document.getElementById('selected-lang-id');
@@ -435,6 +469,8 @@
           statusEl.innerHTML = '<span class="cr-dot-off"></span>' + offlineLabel;
         }
       }
+      const adminBtn = document.getElementById('admin-chat-btn');
+      if (adminBtn) adminBtn.style.display = data.admin_online ? 'flex' : 'none';
     } catch(e) { /* ネットワークエラーは無視 */ }
   }
 

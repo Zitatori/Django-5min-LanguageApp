@@ -3,6 +3,7 @@ from datetime import timedelta
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 from django.contrib.auth.models import User
 from django.db.models import Count, OuterRef, Q, Subquery
 from django.shortcuts import get_object_or_404, redirect, render
@@ -286,10 +287,22 @@ def create_request(request):
 
     total_lessons = sum(lang_lesson_counts.values())
 
+    now = timezone.now()
+    busy_tutor_ids = QuickLessonMatch.objects.filter(
+        Q(started_at__isnull=True) | Q(end_at__gt=now)
+    ).values('tutor_id')
+    admin_online = (
+        not request.user.is_superuser
+        and TutorProfile.objects.filter(
+            user__is_superuser=True, is_online=True,
+        ).exclude(pk__in=busy_tutor_ids).exists()
+    )
+
     return render(request, "core/create_request.html", {
         "languages_with_count": languages_with_count,
         "matches": matches,
         "total_lessons": total_lessons,
+        "admin_online": admin_online,
     })
 
 @login_required
@@ -380,7 +393,15 @@ def student_online_counts(request):
     # 表示用: 猶予期間（60秒）を過ぎたら除外を解除して表示に戻す
     display_exclude = _get_display_exclude_ids(student_profile)
     languages = LessonLanguage.objects.all()
-    data = {}
+    now = timezone.now()
+    busy_tutor_ids = QuickLessonMatch.objects.filter(
+        Q(started_at__isnull=True) | Q(end_at__gt=now)
+    ).values('tutor_id')
+    admin_online = TutorProfile.objects.filter(
+        user__is_superuser=True, is_online=True,
+    ).exclude(pk__in=busy_tutor_ids).exists()
+
+    data = {'admin_online': admin_online}
     for lang in languages:
         now = timezone.now()
         qs = active_tutors_qs(language=lang)
@@ -409,3 +430,44 @@ def student_history(request):
     return render(request, "core/student_history.html", {
         "matches": matches,
     })
+
+
+@login_required
+@require_POST
+def request_admin_chat(request):
+    """管理者と直接話すリクエスト。管理者がオンライン且つ空きがある時のみ成立。"""
+    if request.user.is_superuser:
+        return redirect('create_request')
+
+    student_profile, _ = StudentProfile.objects.get_or_create(user=request.user)
+
+    now = timezone.now()
+    busy_tutor_ids = QuickLessonMatch.objects.filter(
+        Q(started_at__isnull=True) | Q(end_at__gt=now)
+    ).values('tutor_id')
+
+    admin_tutor = TutorProfile.objects.filter(
+        user__is_superuser=True, is_online=True,
+    ).exclude(pk__in=busy_tutor_ids).first()
+
+    if not admin_tutor:
+        return redirect('create_request')
+
+    lang = LessonLanguage.objects.first()
+    if not lang:
+        return redirect('create_request')
+
+    qlr = QuickLessonRequest.objects.create(
+        student=student_profile,
+        language=lang,
+        purpose='lesson',
+    )
+
+    if _claim_tutor_for_match(admin_tutor):
+        QuickLessonMatch.objects.create(request=qlr, tutor=admin_tutor, price=0.0)
+        qlr.status = 'matched'
+        qlr.save()
+        return redirect('request_detail', request_id=qlr.id)
+
+    qlr.delete()
+    return redirect('create_request')
