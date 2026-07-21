@@ -849,15 +849,22 @@ document.addEventListener('submit', function(e) {
     if (data.type === "join") {
       log('WS', `join from ${data.sender}  localMediaReady=${localMediaReady}`);
       if (peerLeftTimer) { clearTimeout(peerLeftTimer); peerLeftTimer = null; }
-      // 両者が揃った → 55秒以内にWebRTC接続しなければ接続失敗として再読み込みを促す
+      // 両者が揃った → 接続中表示に切り替え、20秒で自動リロード（初回）or プロンプト（2回目以降）
       if (!timerStarted) {
+        display.textContent = "{% trans 'Connecting…' %}";
         if (noConnectTimer) clearTimeout(noConnectTimer);
+        const alreadyRetried = sessionStorage.getItem('ql_rtc_retry_{{ match.id }}');
         noConnectTimer = setTimeout(() => {
           if (!timerStarted) {
-            const p = document.getElementById('no-connect-prompt');
-            if (p) p.style.display = 'flex';
+            if (!alreadyRetried) {
+              sessionStorage.setItem('ql_rtc_retry_{{ match.id }}', '1');
+              location.reload();
+            } else {
+              const p = document.getElementById('no-connect-prompt');
+              if (p) p.style.display = 'flex';
+            }
           }
-        }, 55000);
+        }, 20000);
       }
       if (!localMediaReady) { pendingJoinSeen = true; peerIdSeen = data.sender; return; }
       peerIdSeen = data.sender;

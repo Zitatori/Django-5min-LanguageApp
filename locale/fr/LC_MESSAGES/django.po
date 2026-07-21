@@ -207,6 +207,9 @@ msgstr "Connexion échouée. Veuillez recharger la page."
 msgid "Reload"
 msgstr "Recharger"
 
+msgid "Connecting…"
+msgstr "Connexion…"
+
 #: templates/core/profile.html:178
 msgid "Member"
 msgstr "Membre"
