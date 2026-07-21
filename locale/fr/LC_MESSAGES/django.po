@@ -201,6 +201,12 @@ msgstr ""
 msgid "Camera does not meet requirements. Please try a different device."
 msgstr ""
 
+msgid "Connection failed. Please reload and try again."
+msgstr "Connexion échouée. Veuillez recharger la page."
+
+msgid "Reload"
+msgstr "Recharger"
+
 #: templates/core/profile.html:178
 msgid "Member"
 msgstr "Membre"

@@ -198,6 +198,12 @@ msgstr ""
 msgid "Camera does not meet requirements. Please try a different device."
 msgstr ""
 
+msgid "Connection failed. Please reload and try again."
+msgstr "接続に失敗しました。再読み込みしてください。"
+
+msgid "Reload"
+msgstr "再読み込み"
+
 #: templates/core/profile.html:178
 msgid "Member"
 msgstr "メンバー"

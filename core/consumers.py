@@ -57,9 +57,10 @@ class VideoCallConsumer(AsyncWebsocketConsumer):
             count = len(users)
             print(f"[ws] match={self.match_id} join users={count} ch={self.channel_name[:8]}")
 
+        # WebRTC P2P接続が実際に成立したときにタイマーを開始（joinでは開始しない）
+        if data.get("type") == "webrtc_connected":
             timer_message = await self._timer_start_message()
             if timer_message:
-                # 2人ともレッスンルームに入室済み → タイマー開始
                 await self.channel_layer.group_send(
                     self.room_group_name,
                     {
@@ -68,9 +69,9 @@ class VideoCallConsumer(AsyncWebsocketConsumer):
                         "sender_channel_name": "",
                     }
                 )
-                print(f"[ws] match={self.match_id} → timer_start sent")
-                # 60秒後にポイント処理（このインスタンスが担当、二重防止はcacheロック）
+                print(f"[ws] match={self.match_id} → timer_start sent (webrtc_connected)")
                 asyncio.ensure_future(self._schedule_points())
+            return  # クライアントには転送しない
 
         await self.channel_layer.group_send(
             self.room_group_name,
