@@ -57,12 +57,6 @@
     </div>
   </div>
 
-  {# ── 接続失敗時プロンプト ── #}
-  <div id="no-connect-prompt" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.75); z-index:9999; display:none; align-items:center; justify-content:center; flex-direction:column; gap:16px;">
-    <p style="color:#fff; font-size:17px; font-weight:600; text-align:center; margin:0; padding:0 20px;">{% trans "Connection failed. Please reload and try again." %}</p>
-    <button onclick="location.reload()" style="background:#6366f1; color:#fff; border:none; border-radius:10px; padding:12px 28px; font-size:15px; font-weight:600; cursor:pointer;">{% trans "Reload" %}</button>
-  </div>
-
   {# ── 自分の映像（右下PiP） ── #}
   <div class="lr-pip-wrap">
     <video id="localVideo" class="lr-pip" autoplay playsinline muted></video>
@@ -396,7 +390,11 @@ document.addEventListener('submit', function(e) {
   const MAX_RECONNECT     = 3;     // 最大再接続回数
   let calleeJoinTimer     = null;  // Callee側: Offerが来なければjoin返送
   let audioUnlockButton   = null;  // ブラウザが音声付き自動再生を拒否した時の復旧ボタン
-  let noConnectTimer      = null;  // WebRTC未接続タイムアウト
+  // 60秒以内にWebRTC接続しなければ適切なページへリダイレクト
+  const failRedirectUrl = "{% if request.user == match.request.student.user %}{% url 'create_request' %}{% else %}{% url 'tutor_dashboard' %}{% endif %}";
+  let globalRedirectTimer = setTimeout(() => {
+    if (!timerStarted) { window.location.href = failRedirectUrl; }
+  }, 60000);
 
   display.textContent = "Waiting…";
 
@@ -434,7 +432,7 @@ document.addEventListener('submit', function(e) {
   function startTimer(seconds, endAt) {
     if (timerStarted) return;
     timerStarted = true;
-    if (noConnectTimer) { clearTimeout(noConnectTimer); noConnectTimer = null; }
+    if (globalRedirectTimer) { clearTimeout(globalRedirectTimer); globalRedirectTimer = null; }
     const targetTime = endAt ? Date.parse(endAt) : Date.now() + (seconds * 1000);
     function update() {
       const remaining = Math.max(0, Math.ceil((targetTime - Date.now()) / 1000));
@@ -684,7 +682,6 @@ document.addEventListener('submit', function(e) {
 
       if (state === 'connected') {
         if (reconnectTimer) { clearTimeout(reconnectTimer); reconnectTimer = null; }
-        if (noConnectTimer) { clearTimeout(noConnectTimer); noConnectTimer = null; }
         // WebRTC P2P接続成立をサーバーに通知 → サーバーがタイマーを開始する
         sendSignal({ type: "webrtc_connected", sender: userId });
         // Fallback: srcObjectがセットされているのにrevealVideoが呼ばれなかった場合
@@ -849,22 +846,9 @@ document.addEventListener('submit', function(e) {
     if (data.type === "join") {
       log('WS', `join from ${data.sender}  localMediaReady=${localMediaReady}`);
       if (peerLeftTimer) { clearTimeout(peerLeftTimer); peerLeftTimer = null; }
-      // 両者が揃った → 接続中表示に切り替え、20秒で自動リロード（初回）or プロンプト（2回目以降）
+      // 両者が揃った → 接続中表示に切り替え（60秒タイマーはページ読み込み時から動いている）
       if (!timerStarted) {
         display.textContent = "{% trans 'Connecting…' %}";
-        if (noConnectTimer) clearTimeout(noConnectTimer);
-        const alreadyRetried = sessionStorage.getItem('ql_rtc_retry_{{ match.id }}');
-        noConnectTimer = setTimeout(() => {
-          if (!timerStarted) {
-            if (!alreadyRetried) {
-              sessionStorage.setItem('ql_rtc_retry_{{ match.id }}', '1');
-              location.reload();
-            } else {
-              const p = document.getElementById('no-connect-prompt');
-              if (p) p.style.display = 'flex';
-            }
-          }
-        }, 20000);
       }
       if (!localMediaReady) { pendingJoinSeen = true; peerIdSeen = data.sender; return; }
       peerIdSeen = data.sender;
