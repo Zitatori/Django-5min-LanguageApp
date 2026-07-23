@@ -378,6 +378,21 @@
 </div>
 {% endif %}
 
+<div class="card" style="margin-bottom:1.2rem;">
+  <h3 class="card-title" style="margin-bottom:.8rem;">👤 {% trans "Nickname" %}</h3>
+  <p style="font-size:13px; color:#6b7280; margin-bottom:.8rem;">{% trans "Shown to your partner during lessons. Leave blank to use your username." %}</p>
+  <form method="post" action="{% url 'update_display_name' %}">
+    {% csrf_token %}
+    <div style="display:flex; gap:8px; align-items:center;">
+      <input type="text" name="display_name" maxlength="50"
+             value="{{ request.user.first_name }}"
+             placeholder="{{ request.user.username }}"
+             style="flex:1; padding:9px 12px; border:1.5px solid #e5e7eb; border-radius:10px; font-size:15px; box-sizing:border-box;">
+      <button type="submit" class="btn" style="white-space:nowrap; padding:9px 18px;">{% trans "Save" %}</button>
+    </div>
+  </form>
+</div>
+
 <div class="card pf-tx-card">
   <h3 class="card-title" style="margin-bottom:1rem;">{% trans "Transaction History" %}</h3>
 

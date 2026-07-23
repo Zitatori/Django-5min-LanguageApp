@@ -63,7 +63,7 @@ def lesson_room(request, match_id: int):
     else:
         partner_user = match.request.student.user
 
-    partner_name = partner_user.username
+    partner_name = partner_user.first_name or partner_user.username
     if partner_user.is_superuser:
         partner_badge = "dev"
     elif partner_user.is_staff:

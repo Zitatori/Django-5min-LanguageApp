@@ -169,3 +169,13 @@ def request_gold(request):
 
     GoldSubscriptionRequest.objects.create(user=request.user)
     return redirect('profile')
+
+
+@login_required
+def update_display_name(request):
+    if request.method != 'POST':
+        return redirect('profile')
+    name = request.POST.get('display_name', '').strip()[:50]
+    request.user.first_name = name
+    request.user.save(update_fields=['first_name'])
+    return redirect('profile')

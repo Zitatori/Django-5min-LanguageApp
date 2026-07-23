@@ -207,6 +207,21 @@ msgstr "再読み込み"
 msgid "Connecting…"
 msgstr "接続中…"
 
+msgid "Nickname"
+msgstr "ニックネーム"
+
+msgid "Shown to your partner during lessons. Leave blank to use your username."
+msgstr "レッスン中に相手に表示されます。空欄の場合はユーザー名が使われます。"
+
+msgid "Save"
+msgstr "保存"
+
+msgid "Nickname (shown during lessons)"
+msgstr "ニックネーム（レッスン中に表示）"
+
+msgid "Optional. If blank, your username will be used."
+msgstr "任意。空欄の場合はユーザー名が使われます。"
+
 #: templates/core/profile.html:178
 msgid "Member"
 msgstr "メンバー"

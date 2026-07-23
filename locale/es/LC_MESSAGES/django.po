@@ -210,6 +210,21 @@ msgstr "Recargar"
 msgid "Connecting…"
 msgstr "Conectando…"
 
+msgid "Nickname"
+msgstr "Apodo"
+
+msgid "Shown to your partner during lessons. Leave blank to use your username."
+msgstr "Se muestra a tu compañero durante las lecciones. Déjalo en blanco para usar tu nombre de usuario."
+
+msgid "Save"
+msgstr "Guardar"
+
+msgid "Nickname (shown during lessons)"
+msgstr "Apodo (mostrado durante las lecciones)"
+
+msgid "Optional. If blank, your username will be used."
+msgstr "Opcional. Si está en blanco, se usará tu nombre de usuario."
+
 #: templates/core/profile.html:178
 msgid "Member"
 msgstr "Miembro"
