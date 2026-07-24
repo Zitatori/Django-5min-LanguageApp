@@ -48,11 +48,11 @@
     {% for match in active_matches %}
       <div style="padding:12px; border:1px solid #e5e7eb; border-radius:12px; margin-bottom:12px;">
         <p><strong>Student:</strong>
-          {{ match.request.student.user.username }}
-          {% if match.request.student.user.gold_membership.is_active %}<span class="header-badge header-badge-gold">&#x1F451; Gold</span>
-          {% elif match.request.student.user.is_superuser %}<span class="header-badge header-badge-dev">Dev</span>
-          {% elif match.request.student.user.is_staff %}<span class="header-badge header-badge-admin">Admin</span>
-          {% endif %}
+          {% with u=match.request.student.user %}{% if u.first_name %}{{ u.first_name }} <span style="color:#9ca3af; font-size:.85em;">({{ u.username }})</span>{% else %}{{ u.username }}{% endif %}
+          {% if u.gold_membership.is_active %}<span class="header-badge header-badge-gold">&#x1F451; Gold</span>
+          {% elif u.is_superuser %}<span class="header-badge header-badge-dev">Dev</span>
+          {% elif u.is_staff %}<span class="header-badge header-badge-admin">Admin</span>
+          {% endif %}{% endwith %}
         </p>
         <p><strong>Language:</strong> {{ match.request.language.name }}</p>
         <a href="{% url 'lesson_room' match.id %}" class="btn btn-primary" style="margin-top:8px; display:inline-block;">

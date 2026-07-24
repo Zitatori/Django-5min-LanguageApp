@@ -21,7 +21,7 @@
           <tr>
             <td>{{ match.started_at|date:"Y-m-d H:i" }}</td>
             <td>
-              {{ match.tutor.user.username }}
+              {% if match.tutor.user.first_name %}{{ match.tutor.user.first_name }} <span style="color:#9ca3af; font-size:.85em;">({{ match.tutor.user.username }})</span>{% else %}{{ match.tutor.user.username }}{% endif %}
               {% if match.tutor.user.gold_membership.is_active %}<span class="header-badge header-badge-gold">&#x1F451; Gold</span>
               {% elif match.tutor.user.is_superuser %}<span class="header-badge header-badge-dev">Dev</span>
               {% elif match.tutor.user.is_staff %}<span class="header-badge header-badge-admin">Admin</span>

@@ -11,10 +11,10 @@
         <div>
           <div><strong>{{ m.started_at|date:"Y-m-d" }}</strong></div>
           <div class="text-muted" style="margin-top:4px; display:flex; align-items:center; gap:5px;">
-            参加者：{{ m.student_name|default:"非表示" }}
-            {% if m.request.student.user.is_superuser %}<span class="header-badge header-badge-dev">Dev</span>
-            {% elif m.request.student.user.is_staff %}<span class="header-badge header-badge-admin">Admin</span>
-            {% endif %}
+            {% with u=m.request.student.user %}{% if u.first_name %}{{ u.first_name }} <span style="color:#9ca3af; font-size:.85em;">({{ u.username }})</span>{% else %}{{ u.username }}{% endif %}
+            {% if u.is_superuser %}<span class="header-badge header-badge-dev">Dev</span>
+            {% elif u.is_staff %}<span class="header-badge header-badge-admin">Admin</span>
+            {% endif %}{% endwith %}
           </div>
         </div>
         <span class="badge badge-gray">{{ m.request.language.name }}</span>
