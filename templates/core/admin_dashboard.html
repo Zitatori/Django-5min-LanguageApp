@@ -264,8 +264,11 @@
     </thead>
     <tbody>
       {% for u in recent_users %}
-      <tr data-username="{{ u.username|lower }}">
-        <td>{{ u.username }}</td>
+      <tr data-username="{{ u.username|lower }} {{ u.first_name|lower }}">
+        <td>
+          {{ u.username }}
+          {% if u.first_name %}<br><span style="font-size:11px; color:#9ca3af;">{{ u.first_name }}</span>{% endif %}
+        </td>
         <td style="font-size:12px; color:#6b7280; max-width:160px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ u.email|default:"—" }}</td>
         <td>
           {% if u.is_staff %}
@@ -348,8 +351,11 @@
       </tr>
       {% endfor %}
       {% for u in older_users %}
-      <tr class="older-user" data-username="{{ u.username|lower }}" style="display:none;">
-        <td>{{ u.username }}</td>
+      <tr class="older-user" data-username="{{ u.username|lower }} {{ u.first_name|lower }}" style="display:none;">
+        <td>
+          {{ u.username }}
+          {% if u.first_name %}<br><span style="font-size:11px; color:#9ca3af;">{{ u.first_name }}</span>{% endif %}
+        </td>
         <td style="font-size:12px; color:#6b7280; max-width:160px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ u.email|default:"—" }}</td>
         <td>
           {% if u.is_staff %}<span class="role-admin">Admin</span>
