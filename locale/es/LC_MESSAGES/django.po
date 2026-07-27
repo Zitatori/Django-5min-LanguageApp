@@ -210,6 +210,9 @@ msgstr "Recargar"
 msgid "Connecting…"
 msgstr "Conectando…"
 
+msgid "Camera off"
+msgstr "Cámara desactivada"
+
 msgid "Nickname"
 msgstr "Apodo"
 

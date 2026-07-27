@@ -207,6 +207,9 @@ msgstr "再読み込み"
 msgid "Connecting…"
 msgstr "接続中…"
 
+msgid "Camera off"
+msgstr "カメラオフ"
+
 msgid "Nickname"
 msgstr "ニックネーム"
 
