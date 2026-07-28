@@ -58,19 +58,28 @@ class VideoCallConsumer(AsyncWebsocketConsumer):
             print(f"[ws] match={self.match_id} join users={count} ch={self.channel_name[:8]}")
 
         # WebRTC P2P接続が実際に成立したときにタイマーを開始（joinでは開始しない）
+        # 両者ともビデオを確認できた時点で初めてタイマーを開始する
         if data.get("type") == "webrtc_connected":
-            timer_message = await self._timer_start_message()
-            if timer_message:
-                await self.channel_layer.group_send(
-                    self.room_group_name,
-                    {
-                        "type": "send_signal",
-                        "message": timer_message,
-                        "sender_channel_name": "",
-                    }
-                )
-                print(f"[ws] match={self.match_id} → timer_start sent (webrtc_connected)")
-                asyncio.ensure_future(self._schedule_points())
+            connected_key = f"room_connected_{self.match_id}"
+            connected = set(cache.get(connected_key, []))
+            connected.add(self.user_id)
+            cache.set(connected_key, list(connected), timeout=3600)
+            print(f"[ws] match={self.match_id} webrtc_connected from {self.user_id} ({len(connected)}/2 ready)")
+
+            if len(connected) >= 2:
+                # 両者のビデオが確認された → タイマー開始
+                timer_message = await self._timer_start_message()
+                if timer_message:
+                    await self.channel_layer.group_send(
+                        self.room_group_name,
+                        {
+                            "type": "send_signal",
+                            "message": timer_message,
+                            "sender_channel_name": "",
+                        }
+                    )
+                    print(f"[ws] match={self.match_id} → timer_start sent (both sides confirmed video)")
+                    asyncio.ensure_future(self._schedule_points())
             return  # クライアントには転送しない
 
         await self.channel_layer.group_send(
