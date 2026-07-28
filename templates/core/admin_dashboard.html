@@ -57,6 +57,15 @@
   .grant-btn:hover { background:#d97706; }
   .history-btn { font-size:12px; padding:4px 12px; border-radius:8px; border:1.5px solid #10b981; color:#059669; background:white; cursor:pointer; margin-left:6px; }
   .history-btn:hover { background:#ecfdf5; }
+  .notes-btn { font-size:12px; padding:4px 12px; border-radius:8px; border:1.5px solid #8b5cf6; color:#7c3aed; background:white; cursor:pointer; margin-left:6px; }
+  .notes-btn:hover { background:#f5f3ff; }
+  .notes-count { font-size:10px; background:#ede9fe; color:#7c3aed; border-radius:99px; padding:1px 5px; margin-left:3px; font-weight:700; }
+  .notes-modal { background:white; border-radius:16px; padding:1.5rem; width:520px; max-width:92vw; max-height:80vh; display:flex; flex-direction:column; }
+  .notes-item { padding:10px 0; border-bottom:1px solid #f3f4f6; }
+  .notes-item:last-child { border-bottom:none; }
+  .notes-item-meta { font-size:11px; color:#9ca3af; margin-bottom:3px; font-weight:600; }
+  .notes-item-body { font-size:14px; color:#374151; line-height:1.55; white-space:pre-wrap; }
+  .notes-empty { color:#9ca3af; font-size:14px; text-align:center; padding:1.5rem 0; }
   .history-modal { background:white; border-radius:16px; padding:1.5rem; width:480px; max-width:92vw; max-height:80vh; display:flex; flex-direction:column; }
   .history-modal h3 { margin:0 0 1rem; font-size:16px; }
   .history-list { overflow-y:auto; flex:1; }
@@ -326,6 +335,7 @@
         <td style="white-space:nowrap;">
           <button class="edit-btn" onclick="openModal({{ u.id }}, '{{ u.username }}', [{% if u.tutorprofile %}{% for l in u.tutorprofile.languages.all %}{{ l.id }},{% endfor %}{% endif %}])">Edit</button>
           <button class="history-btn" onclick="openHistoryModal({{ u.id }}, '{{ u.username }}')">History</button>
+          <button class="notes-btn" onclick="openStudentNotesModal({{ u.id }}, '{{ u.username }}')">Notes</button>
           <button class="points-btn" onclick="openPointsModal({{ u.id }}, '{{ u.username }}', {{ u.point_balance.student_balance|default:0 }}, {{ u.point_balance.teacher_balance|default:0 }})">Pts</button>
           {% if u.gold_membership.is_active %}
             <form method="post" action="{% url 'revoke_gold' u.id %}" style="display:inline;"
@@ -395,6 +405,7 @@
         <td style="white-space:nowrap;">
           <button class="edit-btn" onclick="openModal({{ u.id }}, '{{ u.username }}', [{% if u.tutorprofile %}{% for l in u.tutorprofile.languages.all %}{{ l.id }},{% endfor %}{% endif %}])">Edit</button>
           <button class="history-btn" onclick="openHistoryModal({{ u.id }}, '{{ u.username }}')">History</button>
+          <button class="notes-btn" onclick="openStudentNotesModal({{ u.id }}, '{{ u.username }}')">Notes</button>
           <button class="points-btn" onclick="openPointsModal({{ u.id }}, '{{ u.username }}', {{ u.point_balance.student_balance|default:0 }}, {{ u.point_balance.teacher_balance|default:0 }})">Pts</button>
           {% if u.gold_membership.is_active %}
             <form method="post" action="{% url 'revoke_gold' u.id %}" style="display:inline;" onsubmit="return confirm('Revoke Gold from {{ u.username }} now?')">
@@ -508,7 +519,7 @@
   {% if recent_matches %}
   <table class="table">
     <thead>
-      <tr><th>Student</th><th>Tutor</th><th>Language</th><th>Rating</th><th>Start</th><th>End</th></tr>
+      <tr><th>Student</th><th>Tutor</th><th>Language</th><th>Rating</th><th>Start</th><th>End</th><th>Notes</th></tr>
     </thead>
     <tbody>
       {% for match in recent_matches %}
@@ -534,6 +545,11 @@
         </td>
         <td style="font-size:12px; color:#6b7280;">{{ match.started_at|date:"Y-m-d H:i" }}</td>
         <td style="font-size:12px; color:#6b7280;">{% if match.end_at %}{{ match.end_at|date:"H:i" }}{% else %}<span class="pt-none">—</span>{% endif %}</td>
+        <td>
+          <button class="notes-btn" onclick="openMatchNotesModal({{ match.id }}, '{{ match.request.student.user.username }} × {{ match.tutor.user.username }}')">
+            📋<span class="notes-count" id="mnc-{{ match.id }}"></span>
+          </button>
+        </td>
       </tr>
       {% endfor %}
       {% for match in older_matches %}
@@ -559,6 +575,11 @@
         </td>
         <td style="font-size:12px; color:#6b7280;">{{ match.started_at|date:"Y-m-d H:i" }}</td>
         <td style="font-size:12px; color:#6b7280;">{% if match.end_at %}{{ match.end_at|date:"H:i" }}{% else %}<span class="pt-none">—</span>{% endif %}</td>
+        <td>
+          <button class="notes-btn" onclick="openMatchNotesModal({{ match.id }}, '{{ match.request.student.user.username }} × {{ match.tutor.user.username }}')">
+            📋<span class="notes-count" id="mnc-{{ match.id }}"></span>
+          </button>
+        </td>
       </tr>
       {% endfor %}
     </tbody>
@@ -676,6 +697,15 @@
   </div>
 </div>
 
+<!-- Conversation Notes Modal -->
+<div class="modal-overlay" id="notes-modal">
+  <div class="notes-modal">
+    <h3>📋 Conversation Notes: <span id="notes-modal-title"></span></h3>
+    <div class="history-list" id="notes-modal-list"></div>
+    <button class="cancel-btn" style="margin-top:1rem;" onclick="closeNotesModal()">Close</button>
+  </div>
+</div>
+
 <!-- Language Edit Modal -->
 <div class="modal-overlay" id="modal">
   <div class="modal">
@@ -760,7 +790,55 @@
     });
   }
 
-  const USER_MATCHES = {{ user_matches_json|safe }};
+  const USER_MATCHES    = {{ user_matches_json|safe }};
+  const MATCH_NOTES    = {{ match_notes_json|safe }};
+  const STUDENT_NOTES  = {{ student_notes_json|safe }};
+
+  // ノートカウントバッジを初期表示
+  (function () {
+    Object.entries(MATCH_NOTES).forEach(([matchId, notes]) => {
+      const el = document.getElementById('mnc-' + matchId);
+      if (el) el.textContent = notes.length;
+    });
+  })();
+
+  function openStudentNotesModal(userId, username) {
+    document.getElementById('notes-modal-title').textContent = username;
+    const list = document.getElementById('notes-modal-list');
+    const entries = STUDENT_NOTES[userId] || [];
+    if (entries.length === 0) {
+      list.innerHTML = '<p class="notes-empty">No notes yet.</p>';
+    } else {
+      list.innerHTML = entries.map(e =>
+        `<div class="notes-item">
+          <div class="notes-item-meta">${e.date}&ensp;·&ensp;Tutor: ${e.tutor}</div>
+          <div class="notes-item-body">${e.note.replace(/</g,'&lt;')}</div>
+        </div>`
+      ).join('');
+    }
+    document.getElementById('notes-modal').classList.add('open');
+  }
+
+  function openMatchNotesModal(matchId, label) {
+    document.getElementById('notes-modal-title').textContent = label;
+    const list = document.getElementById('notes-modal-list');
+    const entries = MATCH_NOTES[matchId] || [];
+    if (entries.length === 0) {
+      list.innerHTML = '<p class="notes-empty">No notes for this session.</p>';
+    } else {
+      list.innerHTML = entries.map(e =>
+        `<div class="notes-item">
+          <div class="notes-item-meta">${e.date}&ensp;·&ensp;Tutor: ${e.tutor}</div>
+          <div class="notes-item-body">${e.note.replace(/</g,'&lt;')}</div>
+        </div>`
+      ).join('');
+    }
+    document.getElementById('notes-modal').classList.add('open');
+  }
+
+  function closeNotesModal() {
+    document.getElementById('notes-modal').classList.remove('open');
+  }
 
   const LANG_CLASS = {
     'English': 'tag-en', 'French': 'tag-fr',

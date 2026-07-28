@@ -13,7 +13,7 @@ from django.db.models import Case, When, Value, IntegerField, Count, Q
 from core.models import TutorProfile, QuickLessonMatch, LessonLanguage, QuickLessonRequest
 from core.models import PointBalance, PointTransaction, WithdrawalRequest
 from core.models import GoldMembership, GoldSubscriptionRequest
-from core.models import UpcomingSession
+from core.models import UpcomingSession, ConversationNote
 from datetime import timedelta, datetime
 
 JST = ZoneInfo('Asia/Tokyo')
@@ -111,6 +111,26 @@ def admin_dashboard(request):
         for lang_name, tutors_list in sorted(online_by_language.items())
     ]
 
+    # Conversation Notes
+    all_notes = ConversationNote.objects.select_related(
+        'student__user', 'tutor__user', 'match'
+    ).order_by('-created_at')
+
+    match_notes_dict = defaultdict(list)
+    student_notes_dict = defaultdict(list)
+    for n in all_notes:
+        entry = {
+            'date': n.created_at.strftime('%Y/%m/%d'),
+            'note': n.note,
+            'tutor': n.tutor.user.first_name or n.tutor.user.username,
+        }
+        if n.match_id:
+            match_notes_dict[n.match_id].append(entry)
+        student_notes_dict[n.student.user_id].append(entry)
+
+    match_notes_json   = json.dumps(dict(match_notes_dict))
+    student_notes_json = json.dumps(dict(student_notes_dict))
+
     no_balance_count = User.objects.filter(point_balance__isnull=True).count()
     withdrawal_requests = WithdrawalRequest.objects.select_related('user').order_by('-created_at')
     gold_requests = GoldSubscriptionRequest.objects.select_related('user').filter(
@@ -149,6 +169,8 @@ def admin_dashboard(request):
         'sessions_display':         sessions_display,
         'online_by_language_list':  online_by_language_list,
         'online_tutors_count':      online_tutors.count(),
+        'match_notes_json':         match_notes_json,
+        'student_notes_json':       student_notes_json,
     })
 
 @staff_or_admin_role_required
