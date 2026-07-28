@@ -67,6 +67,33 @@
     </div>
   </div>
 
+  {# ── Conversation Notes（講師のみ・左上セッションバッジ下） ── #}
+  {% if not is_student %}
+  <div class="lr-notes-wrap" id="lr-notes-wrap">
+    <button class="lr-notes-toggle" id="lr-notes-toggle" type="button">
+      📋 {% trans "Notes" %}
+      <span class="lr-notes-chevron" id="lr-notes-chevron">▾</span>
+    </button>
+    <div class="lr-notes-panel" id="lr-notes-panel" style="display:none;">
+      {% if is_first_session %}
+        <p class="lr-notes-first-label">{% trans "First session — consider asking:" %}</p>
+        <ul class="lr-notes-first-list">
+          <li>Why are you learning this language?</li>
+          <li>How do you study this language?</li>
+        </ul>
+      {% else %}
+        <p class="lr-notes-prev-label">{% trans "Previous Notes" %}</p>
+        {% for note in previous_notes %}
+        <div class="lr-notes-item">
+          <div class="lr-notes-meta">{{ note.created_at|date:"Y/m/d" }}</div>
+          <div class="lr-notes-body">{{ note.note }}</div>
+        </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+  {% endif %}
+
   {# ── 自分の映像（右下PiP） ── #}
   <div class="lr-pip-wrap">
     <video id="localVideo" class="lr-pip" autoplay playsinline muted></video>
@@ -334,7 +361,78 @@
     .lr-ctrl-btn { width: 48px; height: 48px; font-size: 18px; }
     .lr-ctrl-btn.lr-ctrl-end { width: 56px; height: 56px; font-size: 20px; }
   }
+
+  /* ── Conversation Notes（講師専用） ── */
+  .lr-notes-wrap {
+    position: absolute;
+    top: 140px; left: 16px;
+    z-index: 10;
+    width: 220px;
+    max-width: calc(100vw - 32px);
+  }
+  .lr-notes-toggle {
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(0,0,0,0.65);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 10px;
+    padding: 7px 13px;
+    font-size: 13px; font-weight: 700; color: #c4b5fd;
+    cursor: pointer;
+    width: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .lr-notes-chevron { margin-left: auto; font-size: 11px; transition: transform 0.2s; }
+  .lr-notes-chevron.open { transform: rotate(180deg); }
+  .lr-notes-panel {
+    margin-top: 6px;
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 10px;
+    padding: 12px 13px;
+    max-height: 260px;
+    overflow-y: auto;
+  }
+  .lr-notes-first-label {
+    font-size: 11px; font-weight: 700; color: #93c5fd;
+    letter-spacing: 0.05em; text-transform: uppercase;
+    margin-bottom: 7px;
+  }
+  .lr-notes-first-list {
+    margin: 0; padding-left: 16px;
+    color: #bfdbfe; font-size: 13px; line-height: 1.65;
+  }
+  .lr-notes-prev-label {
+    font-size: 11px; font-weight: 700; color: #a78bfa;
+    letter-spacing: 0.05em; text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .lr-notes-item {
+    padding: 7px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .lr-notes-item:last-child { border-bottom: none; }
+  .lr-notes-meta { font-size: 10px; color: #6b7280; margin-bottom: 3px; font-weight: 600; }
+  .lr-notes-body { font-size: 13px; color: #d1d5db; line-height: 1.5; white-space: pre-wrap; }
 </style>
+
+<script>
+// Notes panel toggle（講師専用）
+(function () {
+  const toggle  = document.getElementById("lr-notes-toggle");
+  const panel   = document.getElementById("lr-notes-panel");
+  const chevron = document.getElementById("lr-notes-chevron");
+  if (!toggle) return;
+  toggle.addEventListener("click", () => {
+    const open = panel.style.display === "none";
+    panel.style.display = open ? "block" : "none";
+    chevron.classList.toggle("open", open);
+  });
+})();
+</script>
 
 <script>
 // Warn before language switch (causes page reload which ends the call)

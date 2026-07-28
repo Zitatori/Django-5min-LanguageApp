@@ -6,7 +6,7 @@ from django.utils import timezone
 from django.views.decorators.http import require_POST
 from django.views.generic import TemplateView
 
-from core.models import QuickLessonMatch, TutorProfile, PointBalance, GoldMembership
+from core.models import QuickLessonMatch, TutorProfile, PointBalance, GoldMembership, ConversationNote
 from django.utils import timezone as tz
 
 
@@ -77,14 +77,31 @@ def lesson_room(request, match_id: int):
         except Exception:
             pass
 
+    if is_student:
+        after_lesson_url = reverse('lesson_rating', args=[match.id])
+        previous_notes = []
+        is_first_session = False
+    else:
+        after_lesson_url = reverse('lesson_note', args=[match.id])
+        previous_notes = list(
+            ConversationNote.objects.filter(
+                student=match.request.student,
+                tutor=match.tutor,
+            ).order_by("-created_at")[:5]
+        )
+        is_first_session = len(previous_notes) == 0
+
     context = {
         "match": match,
         "remaining_seconds": remaining_seconds,
-        "timer_end_at": match.end_at,  # mid-lesson reload用; WSから上書きされるため初期値のみ
-        "after_lesson_url": reverse('lesson_rating', args=[match.id]) if is_student else reverse('tutor_dashboard'),
+        "timer_end_at": match.end_at,
+        "after_lesson_url": after_lesson_url,
         "partner_name": partner_name,
         "partner_initial": partner_name[0].upper() if partner_name else "?",
         "partner_badge": partner_badge,
+        "is_student": is_student,
+        "previous_notes": previous_notes,
+        "is_first_session": is_first_session,
     }
 
     return render(request, "core/lesson_room.html", context)
@@ -139,3 +156,41 @@ def lesson_rating(request, match_id: int):
             return redirect("create_request")
 
     return render(request, "core/lesson_rating.html", {"match": match})
+
+
+@login_required
+def lesson_note(request, match_id: int):
+    """講師がレッスン後にConversation Noteを書くページ。"""
+    match = get_object_or_404(
+        QuickLessonMatch.objects.select_related(
+            "request__student__user",
+            "request__student",
+            "request__language",
+            "tutor__user",
+            "tutor",
+        ),
+        id=match_id,
+        tutor__user=request.user,
+    )
+    student = match.request.student
+    tutor = match.tutor
+
+    if request.method == "POST":
+        note_text = request.POST.get("note", "").strip()
+        if note_text:
+            ConversationNote.objects.create(
+                student=student,
+                tutor=tutor,
+                match=match,
+                note=note_text[:500],
+            )
+        return redirect("tutor_dashboard")
+
+    previous_notes = ConversationNote.objects.filter(
+        student=student, tutor=tutor
+    ).order_by("-created_at")[:5]
+
+    return render(request, "core/lesson_note.html", {
+        "match": match,
+        "previous_notes": previous_notes,
+    })

@@ -4,3 +4,4 @@ from .lessons import QuickLessonRequest, QuickLessonMatch
 from .points import PointBalance, PointTransaction, WithdrawalRequest
 from .gold import GoldMembership, GoldSubscriptionRequest
 from .sessions import UpcomingSession
+from .notes import ConversationNote
