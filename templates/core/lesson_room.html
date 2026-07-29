@@ -494,6 +494,7 @@ document.addEventListener('submit', function(e) {
   let reconnectTimer      = null;  // disconnected後のグレース期間
   let remoteStreamReady   = false; // ontrackでvideo trackを受信済みか
   let srcObjectGuard      = null;  // srcObject消失チェック用インターバル
+  let videoRevealTimer    = null;  // videoWidth>0 を待つポーリングタイマー
   let reconnectAttempts   = 0;     // 再接続試行回数
   const MAX_RECONNECT     = 3;     // 最大再接続回数
   let calleeJoinTimer     = null;  // Callee側: Offerが来なければjoin返送
@@ -631,7 +632,8 @@ document.addEventListener('submit', function(e) {
     pendingCandidates = [];
     remoteStreamReady = false;
     placeholder.classList.remove("hidden");  // プレースホルダーを復元（黒画面防止）
-    if (srcObjectGuard) { clearInterval(srcObjectGuard); srcObjectGuard = null; }
+    if (srcObjectGuard)   { clearInterval(srcObjectGuard);   srcObjectGuard = null; }
+    if (videoRevealTimer) { clearInterval(videoRevealTimer); videoRevealTimer = null; }
 
     if (isCaller) {
       createPeerConnection();
@@ -695,6 +697,27 @@ document.addEventListener('submit', function(e) {
     }
   }
 
+  // ── 映像フレーム到着を確認してから reveal ──
+  // videoWidth > 0 = ブラウザが実際にフレームをデコードしている証明
+  function startVideoRevealPolling() {
+    if (videoRevealTimer || remoteStreamReady) return;
+    log('Video', 'start polling for first frame (300ms interval)');
+    videoRevealTimer = setInterval(() => {
+      if (remoteStreamReady) {
+        clearInterval(videoRevealTimer); videoRevealTimer = null;
+        return;
+      }
+      if (remoteVideo.videoWidth > 0) {
+        log('Video', `frame detected ${remoteVideo.videoWidth}×${remoteVideo.videoHeight} — revealing`);
+        clearInterval(videoRevealTimer); videoRevealTimer = null;
+        placeholder.classList.add("hidden");
+        remoteStreamReady = true;
+        reconnectAttempts = 0;
+        sendSignal({ type: "webrtc_connected", sender: userId });
+      }
+    }, 300);
+  }
+
   // ── PeerConnection生成 ──
   function createPeerConnection() {
     if (peerConnection) {
@@ -739,22 +762,12 @@ document.addEventListener('submit', function(e) {
       }
       ensureRemotePlayback(`ontrack ${e.track.kind}`);
 
-      const revealVideo = () => {
-        if (!remoteStreamReady) {
-          log('ontrack', `reveal — videoTracks=${stream.getVideoTracks().length}`);
-          placeholder.classList.add("hidden");
-          remoteStreamReady = true;
-          reconnectAttempts = 0;
-          // 映像が実際に届いた時点でサーバーに通知 → タイマー開始
-          sendSignal({ type: "webrtc_connected", sender: userId });
-        }
-      };
-
-      if (e.track.kind === 'video') revealVideo();
+      // videoトラック受信時 → フレーム確認ポーリング開始（即reveal禁止）
+      if (e.track.kind === 'video') startVideoRevealPolling();
       e.track.onunmute = () => {
         log('ontrack', `unmuted: ${e.track.kind}`);
         ensureRemotePlayback(`unmuted ${e.track.kind}`);
-        if (e.track.kind === 'video') revealVideo();
+        if (e.track.kind === 'video') startVideoRevealPolling();
       };
 
       // srcObjectが失われた場合の2秒ごとチェック
@@ -792,18 +805,12 @@ document.addEventListener('submit', function(e) {
 
       if (state === 'connected') {
         if (reconnectTimer) { clearTimeout(reconnectTimer); reconnectTimer = null; }
-        // Fallback: ontrackが来ているのにrevealVideoが呼ばれなかった場合（srcObjectあり）
-        if (!remoteStreamReady) {
-          setTimeout(() => {
-            if (!remoteStreamReady && remoteVideo.srcObject) {
-              log('PC state', 'fallback: revealing after 5s connected');
-              placeholder.classList.add("hidden");
-              remoteStreamReady = true;
-              sendSignal({ type: "webrtc_connected", sender: userId });
-            }
-            ensureRemotePlayback('connected fallback');
-          }, 5000);
-        }
+        // Fallback: PC connected 後もポーリングが始まっていない場合は開始
+        // placeholder の reveal は videoWidth>0 確認後のみ（即reveal禁止）
+        setTimeout(() => {
+          ensureRemotePlayback('connected fallback');
+          if (!remoteStreamReady) startVideoRevealPolling();
+        }, 3000);
       }
       if (state === 'disconnected') {
         if (reconnectTimer) clearTimeout(reconnectTimer);
@@ -1007,10 +1014,11 @@ document.addEventListener('submit', function(e) {
 
   function cleanupCall() {
     log('Cleanup', 'cleaning up all resources');
-    if (reconnectTimer)  { clearTimeout(reconnectTimer);   reconnectTimer = null; }
-    if (calleeJoinTimer) { clearTimeout(calleeJoinTimer);  calleeJoinTimer = null; }
-    if (srcObjectGuard)  { clearInterval(srcObjectGuard);  srcObjectGuard = null; }
-    if (localStream)     { localStream.getTracks().forEach(t => t.stop()); localStream = null; }
+    if (reconnectTimer)   { clearTimeout(reconnectTimer);   reconnectTimer = null; }
+    if (calleeJoinTimer)  { clearTimeout(calleeJoinTimer);  calleeJoinTimer = null; }
+    if (srcObjectGuard)   { clearInterval(srcObjectGuard);  srcObjectGuard = null; }
+    if (videoRevealTimer) { clearInterval(videoRevealTimer); videoRevealTimer = null; }
+    if (localStream)      { localStream.getTracks().forEach(t => t.stop()); localStream = null; }
     if (peerConnection)  { peerConnection.close(); peerConnection = null; }
     if (socket.readyState === WebSocket.OPEN) socket.close();
   }
