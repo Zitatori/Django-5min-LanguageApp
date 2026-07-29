@@ -726,22 +726,42 @@
 
 <!-- Points Edit Modal -->
 <div class="modal-overlay" id="points-modal">
-  <div class="modal">
-    <h3>➕ Add student points: <span id="pts-modal-username"></span></h3>
-    <p style="font-size:13px; color:#6b7280; margin-bottom:4px;">
-      Student: <strong id="pts-student-current"></strong> pt　Teacher: <strong id="pts-teacher-current"></strong> pt
-    </p>
-    <p style="font-size:12px; color:#9ca3af; margin-bottom:12px;">Only student points are adjusted here. Teacher points stay unchanged.</p>
+  <div class="modal" style="width:400px;">
+    <h3 style="margin-bottom:16px;">✏️ Edit points: <span id="pts-modal-username"></span></h3>
     <form method="post" id="points-form" action="">
       {% csrf_token %}
-      <label style="font-size:14px; font-weight:500; display:block; margin-bottom:6px;">Points to add</label>
-      <input type="number" name="student_points_delta" id="pts-input" min="1" step="1" value="10"
-             oninput="updatePointsPreview()"
-             style="width:100%; padding:10px; border:1.5px solid #e5e7eb; border-radius:10px; font-size:16px; box-sizing:border-box;">
-      <p style="font-size:13px; color:#374151; margin:10px 0 0;">
-        New student balance: <strong id="pts-student-after"></strong> pt
-      </p>
-      <button type="submit" class="save-btn" style="background:#f59e0b;">Add Points</button>
+
+      <!-- Student points -->
+      <div style="margin-bottom:16px; padding:12px; background:#f9fafb; border-radius:10px; border:1px solid #e5e7eb;">
+        <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px;">
+          <label style="font-size:13px; font-weight:700; color:#4338ca;">🎓 Student points</label>
+          <span style="font-size:12px; color:#6b7280;">Current: <strong id="pts-student-current">—</strong> pt</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px;">
+          <input type="number" name="student_points_delta" id="pts-student-input" step="1" value="0"
+                 oninput="updatePointsPreview()"
+                 style="flex:1; padding:9px 12px; border:1.5px solid #c7d2fe; border-radius:8px; font-size:15px; box-sizing:border-box; text-align:center;">
+          <span style="font-size:13px; color:#6b7280; white-space:nowrap;">→ <strong id="pts-student-after" style="color:#4338ca;">—</strong> pt</span>
+        </div>
+        <p style="font-size:11px; color:#9ca3af; margin:5px 0 0;">正の値で加算、負の値で減算（例: -5）</p>
+      </div>
+
+      <!-- Teacher points -->
+      <div style="margin-bottom:16px; padding:12px; background:#f0fdf4; border-radius:10px; border:1px solid #a7f3d0;">
+        <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px;">
+          <label style="font-size:13px; font-weight:700; color:#047857;">👨‍🏫 Teacher points</label>
+          <span style="font-size:12px; color:#6b7280;">Current: <strong id="pts-teacher-current">—</strong> pt</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px;">
+          <input type="number" name="teacher_points_delta" id="pts-teacher-input" step="1" value="0"
+                 oninput="updatePointsPreview()"
+                 style="flex:1; padding:9px 12px; border:1.5px solid #a7f3d0; border-radius:8px; font-size:15px; box-sizing:border-box; text-align:center;">
+          <span style="font-size:13px; color:#6b7280; white-space:nowrap;">→ <strong id="pts-teacher-after" style="color:#047857;">—</strong> pt</span>
+        </div>
+        <p style="font-size:11px; color:#9ca3af; margin:5px 0 0;">正の値で加算、負の値で減算（例: -5）</p>
+      </div>
+
+      <button type="submit" class="save-btn" style="background:#6366f1;">Save</button>
     </form>
     <button class="cancel-btn" onclick="closePointsModal()">Cancel</button>
   </div>
@@ -761,18 +781,23 @@
   }
 
   let currentStudentPoints = 0;
+  let currentTeacherPoints = 0;
 
   function updatePointsPreview() {
-    const amount = parseInt(document.getElementById('pts-input').value || '0', 10);
-    document.getElementById('pts-student-after').textContent = currentStudentPoints + Math.max(0, amount);
+    const sDelta = parseInt(document.getElementById('pts-student-input').value || '0', 10);
+    const tDelta = parseInt(document.getElementById('pts-teacher-input').value || '0', 10);
+    document.getElementById('pts-student-after').textContent = Math.max(0, currentStudentPoints + (isNaN(sDelta) ? 0 : sDelta));
+    document.getElementById('pts-teacher-after').textContent = Math.max(0, currentTeacherPoints + (isNaN(tDelta) ? 0 : tDelta));
   }
 
   function openPointsModal(userId, username, studentBalance, teacherBalance) {
     currentStudentPoints = studentBalance;
+    currentTeacherPoints = teacherBalance;
     document.getElementById('pts-modal-username').textContent = username;
     document.getElementById('pts-student-current').textContent = studentBalance;
     document.getElementById('pts-teacher-current').textContent = teacherBalance;
-    document.getElementById('pts-input').value = 10;
+    document.getElementById('pts-student-input').value = 0;
+    document.getElementById('pts-teacher-input').value = 0;
     updatePointsPreview();
     document.getElementById('points-form').action = `/admin-dashboard/user/${userId}/points/`;
     document.getElementById('points-modal').classList.add('open');

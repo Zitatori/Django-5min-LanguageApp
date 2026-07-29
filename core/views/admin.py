@@ -202,26 +202,42 @@ def delete_user(request, user_id):
 
 @staff_or_admin_role_required
 def update_user_points(request, user_id):
-    """管理者がユーザーの生徒ポイントを加算・減算する"""
+    """管理者がユーザーの生徒ポイント・講師ポイントを加算・減算する"""
     if request.method == 'POST':
         user = get_object_or_404(User, id=user_id)
         try:
-            delta = int(request.POST.get('student_points_delta', 0))
+            student_delta = int(request.POST.get('student_points_delta', 0))
         except ValueError:
-            return redirect('admin_dashboard')
+            student_delta = 0
+        try:
+            teacher_delta = int(request.POST.get('teacher_points_delta', 0))
+        except ValueError:
+            teacher_delta = 0
 
-        if delta == 0:
+        if student_delta == 0 and teacher_delta == 0:
             return redirect('admin_dashboard')
 
         balance_obj, _ = PointBalance.objects.get_or_create(user=user)
-        balance_obj.student_balance = max(0, balance_obj.student_balance + delta)
+
+        if student_delta != 0:
+            balance_obj.student_balance = max(0, balance_obj.student_balance + student_delta)
+            PointTransaction.objects.create(
+                user=user,
+                amount=student_delta,
+                transaction_type=PointTransaction.TYPE_PURCHASE if student_delta > 0 else PointTransaction.TYPE_WITHDRAWAL,
+                note=f"Admin adjustment (student) by {request.user.username}",
+            )
+
+        if teacher_delta != 0:
+            balance_obj.teacher_balance = max(0, balance_obj.teacher_balance + teacher_delta)
+            PointTransaction.objects.create(
+                user=user,
+                amount=teacher_delta,
+                transaction_type=PointTransaction.TYPE_LESSON_TAUGHT if teacher_delta > 0 else PointTransaction.TYPE_WITHDRAWAL,
+                note=f"Admin adjustment (teacher) by {request.user.username}",
+            )
+
         balance_obj.save()
-        PointTransaction.objects.create(
-            user=user,
-            amount=delta,
-            transaction_type=PointTransaction.TYPE_PURCHASE if delta > 0 else PointTransaction.TYPE_WITHDRAWAL,
-            note=f"Admin student-point adjustment by {request.user.username}",
-        )
     return redirect('admin_dashboard')
 
 @staff_or_admin_role_required
