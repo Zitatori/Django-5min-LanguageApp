@@ -223,20 +223,41 @@
   .lang-badge-ja { background: #fee2e2; color: #991b1b; }
   .lang-badge-default { background: #f3f4f6; color: #6b7280; }
 
-  /* ── Tutor selection panel ── */
-  .cr-tutor-label {
-    font-size: 12px; font-weight: 700; color: #6b7280;
-    text-transform: uppercase; letter-spacing: 0.05em;
-    margin-bottom: 8px;
+  /* ── Tutor selection (step 2) ── */
+  .cr-step { transition: opacity 0.18s; }
+  .cr-step.hidden { display: none !important; }
+
+  /* Step 2 header */
+  .cr-step2-header {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 18px;
   }
+  .cr-step2-back {
+    display: flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px; border-radius: 50%;
+    background: #f3f4f6; border: none; cursor: pointer;
+    color: #374151; font-size: 18px; flex-shrink: 0;
+    transition: background 0.12s;
+  }
+  .cr-step2-back:hover { background: #e5e7eb; }
+  .cr-step2-lang-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 13px; font-weight: 700; color: #374151;
+  }
+  .cr-step2-title {
+    font-size: 14px; font-weight: 600; color: #6b7280;
+  }
+
+  /* Tutor cards */
   .cr-tutor-grid {
-    display: flex; flex-wrap: wrap; gap: 8px;
+    display: flex; flex-direction: column; gap: 8px;
+    margin-bottom: 20px;
   }
   .cr-tutor-card {
-    display: flex; align-items: center; gap: 8px;
-    padding: 8px 14px;
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 16px;
     border: 2px solid #e5e7eb;
-    border-radius: 99px;
+    border-radius: 12px;
     cursor: pointer;
     font-size: 14px; font-weight: 600; color: #374151;
     background: #fff;
@@ -249,19 +270,34 @@
     background: #ede9fe;
     color: #4f46e5;
   }
+  .cr-tutor-card .cr-tutor-check {
+    margin-left: auto;
+    color: #6366f1; font-size: 18px;
+    display: none;
+  }
+  .cr-tutor-card.selected .cr-tutor-check { display: block; }
+  .cr-tutor-avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: linear-gradient(135deg, #6366f1, #818cf8);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; color: #fff; flex-shrink: 0;
+  }
   .cr-tutor-none {
-    font-size: 13px; color: #9ca3af;
-    padding: 10px 0;
+    font-size: 14px; color: #9ca3af;
+    padding: 18px 0; text-align: center;
   }
   .cr-btn-start:disabled {
     opacity: 0.45; cursor: not-allowed;
     box-shadow: none;
   }
   @media (prefers-color-scheme: dark) {
+    .cr-step2-back { background: #374151; color: #d1d5db; }
+    .cr-step2-back:hover { background: #4b5563; }
+    .cr-step2-lang-badge { color: #d1d5db; }
+    .cr-step2-title { color: #9ca3af; }
     .cr-tutor-card { background: #1f2937; border-color: #374151; color: #d1d5db; }
-    .cr-tutor-card:hover { border-color: #6366f1; background: #312e81; }
-    .cr-tutor-card.selected { border-color: #818cf8; background: #312e81; color: #c7d2fe; }
-    .cr-tutor-label { color: #9ca3af; }
+    .cr-tutor-card:hover { border-color: #6366f1; background: #1e1b4b; }
+    .cr-tutor-card.selected { border-color: #818cf8; background: #1e1b4b; color: #c7d2fe; }
   }
 
   /* ── PC 2カラムレイアウト ── */
@@ -301,52 +337,61 @@
   {% endif %}
 </div>
 
-{# ── Language select + buttons ── #}
+{# ── Step wizard ── #}
 <div class="card">
-  <form method="post">
+  <form method="post" id="lesson-form">
     {% csrf_token %}
-    <input type="hidden" name="language_id" id="selected-lang-id" value="{{ languages_with_count.0.0.id }}">
-
-    <div class="cr-lang-grid">
-      {% for lang, count, lesson_count, in_lesson_count, soonest_minutes in languages_with_count %}
-      <div class="cr-lang-card {% if forloop.first %}selected{% endif %}
-                  {% if lang.name == 'English' %}cr-lang-en
-                  {% elif lang.name == 'French' %}cr-lang-fr
-                  {% elif lang.name == 'Spanish' %}cr-lang-es
-                  {% elif lang.name == 'Japanese' %}cr-lang-ja{% endif %}"
-           onclick="selectLang(this, '{{ lang.id }}')"
-           data-id="{{ lang.id }}">
-        <div class="cr-bg-photo"></div>
-        <div class="cr-overlay"></div>
-        <div class="cr-flag">
-          {% if lang.name == 'English' %}<span class="fi fi-gb cr-fi"></span>
-          {% elif lang.name == 'French' %}<span class="fi fi-fr cr-fi"></span>
-          {% elif lang.name == 'Spanish' %}<span class="fi fi-es cr-fi"></span>
-          {% elif lang.name == 'Japanese' %}<span class="fi fi-jp cr-fi"></span>
-          {% else %}<span class="fi fi-un cr-fi"></span>{% endif %}
-        </div>
-        <div class="cr-lang-name">{% trans lang.name %}</div>
-        {% if lesson_count > 0 %}<div class="cr-lesson-stat">📚 {{ lesson_count }}{% trans " lessons" %}</div>{% endif %}
-        {% if count > 0 %}
-          <div class="cr-status-on"><span class="cr-dot-on"></span>{{ count }} online</div>
-        {% elif in_lesson_count > 0 %}
-          <div class="cr-status-busy"><span class="cr-dot-busy"></span>{{ in_lesson_count }} {% trans "in lesson" %}{% if soonest_minutes %} · {% blocktrans with m=soonest_minutes %}~{{ m }}min free{% endblocktrans %}{% endif %}</div>
-        {% else %}
-          <div class="cr-status-off"><span class="cr-dot-off"></span>{% trans "Offline" %}</div>
-        {% endif %}
-      </div>
-      {% endfor %}
-    </div>
-
+    <input type="hidden" name="language_id" id="selected-lang-id" value="">
     <input type="hidden" name="preferred_tutor_id" id="preferred-tutor-id" value="">
 
-    {# ── Tutor selection panel ── #}
-    <div id="tutor-select-panel" style="margin-bottom:16px;"></div>
+    {# ── Step 1: Language ── #}
+    <div id="step-lang" class="cr-step">
+      <div class="cr-lang-grid">
+        {% for lang, count, lesson_count, in_lesson_count, soonest_minutes in languages_with_count %}
+        <div class="cr-lang-card
+                    {% if lang.name == 'English' %}cr-lang-en
+                    {% elif lang.name == 'French' %}cr-lang-fr
+                    {% elif lang.name == 'Spanish' %}cr-lang-es
+                    {% elif lang.name == 'Japanese' %}cr-lang-ja{% endif %}"
+             onclick="goToTutors(this, '{{ lang.id }}', '{% trans lang.name %}', '{{ lang.name }}')"
+             data-id="{{ lang.id }}">
+          <div class="cr-bg-photo"></div>
+          <div class="cr-overlay"></div>
+          <div class="cr-flag">
+            {% if lang.name == 'English' %}<span class="fi fi-gb cr-fi"></span>
+            {% elif lang.name == 'French' %}<span class="fi fi-fr cr-fi"></span>
+            {% elif lang.name == 'Spanish' %}<span class="fi fi-es cr-fi"></span>
+            {% elif lang.name == 'Japanese' %}<span class="fi fi-jp cr-fi"></span>
+            {% else %}<span class="fi fi-un cr-fi"></span>{% endif %}
+          </div>
+          <div class="cr-lang-name">{% trans lang.name %}</div>
+          {% if lesson_count > 0 %}<div class="cr-lesson-stat">📚 {{ lesson_count }}{% trans " lessons" %}</div>{% endif %}
+          {% if count > 0 %}
+            <div class="cr-status-on"><span class="cr-dot-on"></span>{{ count }} online</div>
+          {% elif in_lesson_count > 0 %}
+            <div class="cr-status-busy"><span class="cr-dot-busy"></span>{{ in_lesson_count }} {% trans "in lesson" %}{% if soonest_minutes %} · {% blocktrans with m=soonest_minutes %}~{{ m }}min free{% endblocktrans %}{% endif %}</div>
+          {% else %}
+            <div class="cr-status-off"><span class="cr-dot-off"></span>{% trans "Offline" %}</div>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
 
-    <div class="cr-btns">
-      <button type="submit" id="cr-start-btn" class="cr-btn-start" disabled>🎯 {% trans "Start a 5-Minute Lesson" %}</button>
-      <button type="button" class="cr-btn-cancel"
-              onclick="window.location.href='{% url 'home' %}'">✕</button>
+    {# ── Step 2: Tutor selection ── #}
+    <div id="step-tutor" class="cr-step hidden">
+      <div class="cr-step2-header">
+        <button type="button" class="cr-step2-back" onclick="goBackToLang()">&#8592;</button>
+        <div>
+          <div class="cr-step2-lang-badge" id="step2-lang-label"></div>
+          <div class="cr-step2-title">{% trans "Select a tutor" %}</div>
+        </div>
+      </div>
+      <div id="tutor-list" class="cr-tutor-grid"></div>
+      <div class="cr-btns">
+        <button type="submit" id="cr-start-btn" class="cr-btn-start" disabled>🎯 {% trans "Start a 5-Minute Lesson" %}</button>
+        <button type="button" class="cr-btn-cancel" onclick="goBackToLang()">✕</button>
+      </div>
     </div>
   </form>
 </div>
@@ -456,104 +501,85 @@
 {% endif %}
 
 <script>
-  const cards   = document.querySelectorAll('.cr-lang-card');
-  const langInput   = document.getElementById('selected-lang-id');
-  const tutorInput  = document.getElementById('preferred-tutor-id');
-  const startBtn    = document.getElementById('cr-start-btn');
-  const tutorPanel  = document.getElementById('tutor-select-panel');
+  const langInput  = document.getElementById('selected-lang-id');
+  const tutorInput = document.getElementById('preferred-tutor-id');
+  const startBtn   = document.getElementById('cr-start-btn');
+  const stepLang   = document.getElementById('step-lang');
+  const stepTutor  = document.getElementById('step-tutor');
+  const tutorList  = document.getElementById('tutor-list');
+  const step2Label = document.getElementById('step2-lang-label');
 
-  // Tutor data keyed by language id (string)
-  let tutorsByLang = {{ tutors_by_language_json|safe }};
-  let currentLangId = langInput.value || (cards[0] ? cards[0].getAttribute('data-id') : '');
+  let tutorsByLang  = {{ tutors_by_language_json|safe }};
+  let currentLangId = '';
   let selectedTutorId = '';
 
   function badgeHtml(badge) {
-    if (badge === 'dev')   return '<span class="header-badge header-badge-dev" style="font-size:10px;padding:1px 6px;">Dev</span>';
-    if (badge === 'admin') return '<span class="header-badge header-badge-admin" style="font-size:10px;padding:1px 6px;">Admin</span>';
-    if (badge === 'gold')  return '<span class="header-badge header-badge-gold" style="font-size:10px;padding:1px 6px;">&#x1F451; Gold</span>';
+    if (badge === 'dev')   return ' <span class="header-badge header-badge-dev" style="font-size:10px;padding:1px 6px;">Dev</span>';
+    if (badge === 'admin') return ' <span class="header-badge header-badge-admin" style="font-size:10px;padding:1px 6px;">Admin</span>';
+    if (badge === 'gold')  return ' <span class="header-badge header-badge-gold" style="font-size:10px;padding:1px 6px;">&#x1F451; Gold</span>';
     return '';
   }
 
-  function renderTutorPanel(langId) {
+  function renderTutorList(langId) {
     const tutors = tutorsByLang[String(langId)] || [];
+    selectedTutorId = '';
+    tutorInput.value = '';
+    startBtn.disabled = true;
+
     if (tutors.length === 0) {
-      tutorPanel.innerHTML = '<p class="cr-tutor-none">{% trans "No tutors online for this language." %}</p>';
-      tutorInput.value = '';
-      selectedTutorId = '';
-      startBtn.disabled = true;
+      tutorList.innerHTML = '<p class="cr-tutor-none">{% trans "No tutors online for this language." %}</p>';
       return;
     }
 
-    let html = '<div class="cr-tutor-label">{% trans "Select a tutor" %}</div><div class="cr-tutor-grid">';
-    for (const t of tutors) {
-      const sel = String(t.id) === String(selectedTutorId) ? ' selected' : '';
-      html += `<div class="cr-tutor-card${sel}" onclick="selectTutor(this,'${t.id}')">${t.name}${badgeHtml(t.badge)}</div>`;
-    }
-    html += '</div>';
-    tutorPanel.innerHTML = html;
+    tutorList.innerHTML = tutors.map(t => {
+      const initials = t.name.slice(0, 2).toUpperCase();
+      return `<div class="cr-tutor-card" onclick="pickTutor(this,'${t.id}')">
+        <div class="cr-tutor-avatar">${initials}</div>
+        <span>${t.name}${badgeHtml(t.badge)}</span>
+        <span class="cr-tutor-check">✓</span>
+      </div>`;
+    }).join('');
 
-    // Auto-select if only 1 tutor, or re-apply previous selection
-    if (tutors.length === 1 && !selectedTutorId) {
-      const onlyCard = tutorPanel.querySelector('.cr-tutor-card');
-      if (onlyCard) selectTutor(onlyCard, tutors[0].id, false);
-    } else if (selectedTutorId) {
-      const stillExists = tutors.some(t => String(t.id) === String(selectedTutorId));
-      if (!stillExists) {
-        selectedTutorId = '';
-        tutorInput.value = '';
-        startBtn.disabled = true;
-      } else {
-        startBtn.disabled = false;
-      }
-    } else {
-      startBtn.disabled = true;
+    // 講師が1人のみなら自動選択
+    if (tutors.length === 1) {
+      pickTutor(tutorList.querySelector('.cr-tutor-card'), tutors[0].id);
     }
   }
 
-  function selectTutor(el, id, updateState) {
-    tutorPanel.querySelectorAll('.cr-tutor-card').forEach(c => c.classList.remove('selected'));
+  function pickTutor(el, id) {
+    tutorList.querySelectorAll('.cr-tutor-card').forEach(c => c.classList.remove('selected'));
     el.classList.add('selected');
     selectedTutorId = String(id);
     tutorInput.value = id;
     startBtn.disabled = false;
-    if (updateState === false) return; // called from auto-select, no extra work needed
   }
+  window.pickTutor = pickTutor;
 
-  // Override to accept 2 args (el, id) from inline onclick
-  window.selectTutor = function(el, id) { selectTutor(el, id, true); };
-
-  function applyLangSelection(el) {
-    cards.forEach(c => {
-      c.classList.remove('selected');
-      c.querySelectorAll('.cr-select-ring, .cr-select-badge').forEach(n => n.remove());
-    });
-    el.classList.add('selected');
-    const ring = document.createElement('div');
-    ring.className = 'cr-select-ring';
-    el.appendChild(ring);
-    const badge = document.createElement('div');
-    badge.className = 'cr-select-badge';
-    badge.textContent = '✓';
-    el.appendChild(badge);
+  // 言語クリック → Step 2へ
+  function goToTutors(el, langId, langLabel, langName) {
+    currentLangId = String(langId);
+    langInput.value = langId;
+    // Step 2 ヘッダーにフラグ＋言語名をセット
+    const flagMap = {English:'fi-gb', French:'fi-fr', Spanish:'fi-es', Japanese:'fi-jp'};
+    const flagClass = flagMap[langName] || 'fi-un';
+    step2Label.innerHTML = `<span class="fi ${flagClass} cr-fi-sm"></span> ${langLabel}`;
+    renderTutorList(langId);
+    stepLang.classList.add('hidden');
+    stepTutor.classList.remove('hidden');
   }
+  window.goToTutors = goToTutors;
 
-  // 初期選択（最初のカード）
-  if (cards.length > 0) {
-    applyLangSelection(cards[0]);
-    if (!langInput.value) langInput.value = cards[0].getAttribute('data-id');
-    currentLangId = langInput.value;
-    renderTutorPanel(currentLangId);
+  // 戻るボタン → Step 1へ
+  function goBackToLang() {
+    stepTutor.classList.add('hidden');
+    stepLang.classList.remove('hidden');
+    langInput.value = '';
+    tutorInput.value = '';
+    selectedTutorId = '';
+    currentLangId = '';
+    startBtn.disabled = true;
   }
-
-  function selectLang(el, id) {
-    applyLangSelection(el);
-    langInput.value = id;
-    if (id !== currentLangId) {
-      currentLangId = id;
-      selectedTutorId = '';  // reset tutor on language change
-    }
-    renderTutorPanel(id);
-  }
+  window.goBackToLang = goBackToLang;
 
   // ── オンライン人数をリアルタイム更新（5秒ごと） ──
   const offlineLabel  = "{% trans 'Offline' %}";
@@ -576,24 +602,26 @@
               statusEl.innerHTML = '<span class="cr-dot-on"></span>' + info.online + ' online';
             } else if (info.in_lesson > 0) {
               statusEl.className = 'cr-status-busy';
-              let text = info.in_lesson + ' ' + inLessonLabel;
-              if (info.soonest_minutes) text += ' · ' + freeInTpl.replace('X', info.soonest_minutes);
-              statusEl.innerHTML = '<span class="cr-dot-busy"></span>' + text;
+              let txt = info.in_lesson + ' ' + inLessonLabel;
+              if (info.soonest_minutes) txt += ' · ' + freeInTpl.replace('X', info.soonest_minutes);
+              statusEl.innerHTML = '<span class="cr-dot-busy"></span>' + txt;
             } else {
               statusEl.className = 'cr-status-off';
               statusEl.innerHTML = '<span class="cr-dot-off"></span>' + offlineLabel;
             }
           }
         }
-        // Update tutor data cache and re-render if viewing this language
         if (info.tutors !== undefined) {
           tutorsByLang[langId] = info.tutors;
-          if (langId === currentLangId) renderTutorPanel(langId);
+          // Step 2 表示中で同言語なら再描画
+          if (langId === currentLangId && !stepTutor.classList.contains('hidden')) {
+            renderTutorList(langId);
+          }
         }
       }
       const adminBtn = document.getElementById('admin-chat-btn');
       if (adminBtn) adminBtn.style.display = data.admin_online ? 'flex' : 'none';
-    } catch(e) { /* ネットワークエラーは無視 */ }
+    } catch(e) {}
   }
 
   setInterval(refreshOnlineCounts, 5000);
