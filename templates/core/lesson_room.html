@@ -85,7 +85,7 @@
         <p class="lr-notes-prev-label">{% trans "Previous Notes" %}</p>
         {% for note in previous_notes %}
         <div class="lr-notes-item">
-          <div class="lr-notes-meta">{{ note.created_at|date:"Y/m/d" }}</div>
+          <div class="lr-notes-meta">{{ note.created_at|date:"Y/m/d" }}&ensp;·&ensp;{% if note.tutor.user.first_name %}{{ note.tutor.user.first_name }}{% else %}{{ note.tutor.user.username }}{% endif %}</div>
           <div class="lr-notes-body">{{ note.note }}</div>
         </div>
         {% endfor %}

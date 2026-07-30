@@ -86,8 +86,7 @@ def lesson_room(request, match_id: int):
         previous_notes = list(
             ConversationNote.objects.filter(
                 student=match.request.student,
-                tutor=match.tutor,
-            ).order_by("-created_at")[:5]
+            ).select_related('tutor__user').order_by("-created_at")[:5]
         )
         is_first_session = len(previous_notes) == 0
 
@@ -187,8 +186,8 @@ def lesson_note(request, match_id: int):
         return redirect("tutor_dashboard")
 
     previous_notes = ConversationNote.objects.filter(
-        student=student, tutor=tutor
-    ).order_by("-created_at")[:5]
+        student=student,
+    ).select_related('tutor__user').order_by("-created_at")[:10]
 
     return render(request, "core/lesson_note.html", {
         "match": match,

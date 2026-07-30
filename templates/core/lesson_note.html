@@ -19,7 +19,7 @@
       <ul class="note-prev-list">
         {% for n in previous_notes %}
         <li class="note-prev-item">
-          <div class="note-prev-meta">{{ n.created_at|date:"Y/m/d" }}</div>
+          <div class="note-prev-meta">{{ n.created_at|date:"Y/m/d" }}&ensp;·&ensp;{% if n.tutor.user.first_name %}{{ n.tutor.user.first_name }} ({{ n.tutor.user.username }}){% else %}{{ n.tutor.user.username }}{% endif %}</div>
           <div class="note-prev-body">{{ n.note }}</div>
         </li>
         {% endfor %}
