@@ -29,6 +29,12 @@ class QuickLessonRequest(models.Model):
         choices=PURPOSE_CHOICES,
         default="lesson",
     )
+    preferred_tutor = models.ForeignKey(
+        TutorProfile,
+        on_delete=models.SET_NULL,
+        null=True, blank=True,
+        related_name="preferred_requests",
+    )
 
     def __str__(self) -> str:
         return f"Request#{self.id}({self.purpose}) by {self.student.user.username}"

@@ -223,6 +223,47 @@
   .lang-badge-ja { background: #fee2e2; color: #991b1b; }
   .lang-badge-default { background: #f3f4f6; color: #6b7280; }
 
+  /* ── Tutor selection panel ── */
+  .cr-tutor-label {
+    font-size: 12px; font-weight: 700; color: #6b7280;
+    text-transform: uppercase; letter-spacing: 0.05em;
+    margin-bottom: 8px;
+  }
+  .cr-tutor-grid {
+    display: flex; flex-wrap: wrap; gap: 8px;
+  }
+  .cr-tutor-card {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 14px;
+    border: 2px solid #e5e7eb;
+    border-radius: 99px;
+    cursor: pointer;
+    font-size: 14px; font-weight: 600; color: #374151;
+    background: #fff;
+    transition: border-color 0.12s, background 0.12s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .cr-tutor-card:hover { border-color: #6366f1; background: #f5f3ff; }
+  .cr-tutor-card.selected {
+    border-color: #6366f1;
+    background: #ede9fe;
+    color: #4f46e5;
+  }
+  .cr-tutor-none {
+    font-size: 13px; color: #9ca3af;
+    padding: 10px 0;
+  }
+  .cr-btn-start:disabled {
+    opacity: 0.45; cursor: not-allowed;
+    box-shadow: none;
+  }
+  @media (prefers-color-scheme: dark) {
+    .cr-tutor-card { background: #1f2937; border-color: #374151; color: #d1d5db; }
+    .cr-tutor-card:hover { border-color: #6366f1; background: #312e81; }
+    .cr-tutor-card.selected { border-color: #818cf8; background: #312e81; color: #c7d2fe; }
+    .cr-tutor-label { color: #9ca3af; }
+  }
+
   /* ── PC 2カラムレイアウト ── */
   @media (min-width: 900px) {
     .cr-pc-grid {
@@ -254,7 +295,7 @@
 <div class="cr-hero">
   <div class="cr-hero-tag">⚡ {% trans "5-minute lesson" %}</div>
   <h2 class="cr-hero-title">{% trans "Talk for 5 Minutes Now" %}</h2>
-  <p class="cr-hero-sub">{% trans "Select the language you want to practice. If any tutors are online, you will be randomly matched." %}</p>
+  <p class="cr-hero-sub">{% trans "Select the language and tutor you want to practice with." %}</p>
   {% if total_lessons %}
   <div class="cr-hero-stat">📚 {% trans "Total lessons" %}: <span class="cr-hero-stat-num">{{ total_lessons }}</span></div>
   {% endif %}
@@ -297,8 +338,13 @@
       {% endfor %}
     </div>
 
+    <input type="hidden" name="preferred_tutor_id" id="preferred-tutor-id" value="">
+
+    {# ── Tutor selection panel ── #}
+    <div id="tutor-select-panel" style="margin-bottom:16px;"></div>
+
     <div class="cr-btns">
-      <button type="submit" class="cr-btn-start">🎯 {% trans "Start a 5-Minute Lesson" %}</button>
+      <button type="submit" id="cr-start-btn" class="cr-btn-start" disabled>🎯 {% trans "Start a 5-Minute Lesson" %}</button>
       <button type="button" class="cr-btn-cancel"
               onclick="window.location.href='{% url 'home' %}'">✕</button>
     </div>
@@ -410,16 +456,77 @@
 {% endif %}
 
 <script>
-  const cards = document.querySelectorAll('.cr-lang-card');
-  const input = document.getElementById('selected-lang-id');
+  const cards   = document.querySelectorAll('.cr-lang-card');
+  const langInput   = document.getElementById('selected-lang-id');
+  const tutorInput  = document.getElementById('preferred-tutor-id');
+  const startBtn    = document.getElementById('cr-start-btn');
+  const tutorPanel  = document.getElementById('tutor-select-panel');
 
-  function applySelection(el) {
-    // 全カードのリング・バッジを除去
+  // Tutor data keyed by language id (string)
+  let tutorsByLang = {{ tutors_by_language_json|safe }};
+  let currentLangId = langInput.value || (cards[0] ? cards[0].getAttribute('data-id') : '');
+  let selectedTutorId = '';
+
+  function badgeHtml(badge) {
+    if (badge === 'dev')   return '<span class="header-badge header-badge-dev" style="font-size:10px;padding:1px 6px;">Dev</span>';
+    if (badge === 'admin') return '<span class="header-badge header-badge-admin" style="font-size:10px;padding:1px 6px;">Admin</span>';
+    if (badge === 'gold')  return '<span class="header-badge header-badge-gold" style="font-size:10px;padding:1px 6px;">&#x1F451; Gold</span>';
+    return '';
+  }
+
+  function renderTutorPanel(langId) {
+    const tutors = tutorsByLang[String(langId)] || [];
+    if (tutors.length === 0) {
+      tutorPanel.innerHTML = '<p class="cr-tutor-none">{% trans "No tutors online for this language." %}</p>';
+      tutorInput.value = '';
+      selectedTutorId = '';
+      startBtn.disabled = true;
+      return;
+    }
+
+    let html = '<div class="cr-tutor-label">{% trans "Select a tutor" %}</div><div class="cr-tutor-grid">';
+    for (const t of tutors) {
+      const sel = String(t.id) === String(selectedTutorId) ? ' selected' : '';
+      html += `<div class="cr-tutor-card${sel}" onclick="selectTutor(this,'${t.id}')">${t.name}${badgeHtml(t.badge)}</div>`;
+    }
+    html += '</div>';
+    tutorPanel.innerHTML = html;
+
+    // Auto-select if only 1 tutor, or re-apply previous selection
+    if (tutors.length === 1 && !selectedTutorId) {
+      const onlyCard = tutorPanel.querySelector('.cr-tutor-card');
+      if (onlyCard) selectTutor(onlyCard, tutors[0].id, false);
+    } else if (selectedTutorId) {
+      const stillExists = tutors.some(t => String(t.id) === String(selectedTutorId));
+      if (!stillExists) {
+        selectedTutorId = '';
+        tutorInput.value = '';
+        startBtn.disabled = true;
+      } else {
+        startBtn.disabled = false;
+      }
+    } else {
+      startBtn.disabled = true;
+    }
+  }
+
+  function selectTutor(el, id, updateState) {
+    tutorPanel.querySelectorAll('.cr-tutor-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedTutorId = String(id);
+    tutorInput.value = id;
+    startBtn.disabled = false;
+    if (updateState === false) return; // called from auto-select, no extra work needed
+  }
+
+  // Override to accept 2 args (el, id) from inline onclick
+  window.selectTutor = function(el, id) { selectTutor(el, id, true); };
+
+  function applyLangSelection(el) {
     cards.forEach(c => {
       c.classList.remove('selected');
       c.querySelectorAll('.cr-select-ring, .cr-select-badge').forEach(n => n.remove());
     });
-    // 選択カードにリング・バッジを追加
     el.classList.add('selected');
     const ring = document.createElement('div');
     ring.className = 'cr-select-ring';
@@ -432,13 +539,20 @@
 
   // 初期選択（最初のカード）
   if (cards.length > 0) {
-    applySelection(cards[0]);
-    if (!input.value) input.value = cards[0].getAttribute('data-id');
+    applyLangSelection(cards[0]);
+    if (!langInput.value) langInput.value = cards[0].getAttribute('data-id');
+    currentLangId = langInput.value;
+    renderTutorPanel(currentLangId);
   }
 
   function selectLang(el, id) {
-    applySelection(el);
-    input.value = id;
+    applyLangSelection(el);
+    langInput.value = id;
+    if (id !== currentLangId) {
+      currentLangId = id;
+      selectedTutorId = '';  // reset tutor on language change
+    }
+    renderTutorPanel(id);
   }
 
   // ── オンライン人数をリアルタイム更新（5秒ごと） ──
@@ -452,21 +566,29 @@
       if (!res.ok) return;
       const data = await res.json();
       for (const [langId, info] of Object.entries(data)) {
+        if (langId === 'admin_online') continue;
         const card = document.querySelector('.cr-lang-card[data-id="' + langId + '"]');
-        if (!card) continue;
-        const statusEl = card.querySelector('.cr-status-on, .cr-status-off, .cr-status-busy');
-        if (!statusEl) continue;
-        if (info.online > 0) {
-          statusEl.className = 'cr-status-on';
-          statusEl.innerHTML = '<span class="cr-dot-on"></span>' + info.online + ' online';
-        } else if (info.in_lesson > 0) {
-          statusEl.className = 'cr-status-busy';
-          let text = info.in_lesson + ' ' + inLessonLabel;
-          if (info.soonest_minutes) text += ' · ' + freeInTpl.replace('X', info.soonest_minutes);
-          statusEl.innerHTML = '<span class="cr-dot-busy"></span>' + text;
-        } else {
-          statusEl.className = 'cr-status-off';
-          statusEl.innerHTML = '<span class="cr-dot-off"></span>' + offlineLabel;
+        if (card) {
+          const statusEl = card.querySelector('.cr-status-on, .cr-status-off, .cr-status-busy');
+          if (statusEl) {
+            if (info.online > 0) {
+              statusEl.className = 'cr-status-on';
+              statusEl.innerHTML = '<span class="cr-dot-on"></span>' + info.online + ' online';
+            } else if (info.in_lesson > 0) {
+              statusEl.className = 'cr-status-busy';
+              let text = info.in_lesson + ' ' + inLessonLabel;
+              if (info.soonest_minutes) text += ' · ' + freeInTpl.replace('X', info.soonest_minutes);
+              statusEl.innerHTML = '<span class="cr-dot-busy"></span>' + text;
+            } else {
+              statusEl.className = 'cr-status-off';
+              statusEl.innerHTML = '<span class="cr-dot-off"></span>' + offlineLabel;
+            }
+          }
+        }
+        // Update tutor data cache and re-render if viewing this language
+        if (info.tutors !== undefined) {
+          tutorsByLang[langId] = info.tutors;
+          if (langId === currentLangId) renderTutorPanel(langId);
         }
       }
       const adminBtn = document.getElementById('admin-chat-btn');
@@ -474,7 +596,6 @@
     } catch(e) { /* ネットワークエラーは無視 */ }
   }
 
-  // 5秒ごとに更新
   setInterval(refreshOnlineCounts, 5000);
 </script>
 {% endblock %}

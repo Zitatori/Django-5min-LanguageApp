@@ -1,3 +1,4 @@
+import json
 import random
 from datetime import timedelta
 
@@ -180,6 +181,7 @@ def create_request(request):
     if request.method == "POST":
         lang_id = request.POST.get("language_id")
         language = get_object_or_404(LessonLanguage, id=lang_id)
+        preferred_tutor_id = request.POST.get("preferred_tutor_id", "").strip()
 
         qlr = QuickLessonRequest.objects.create(
             student=student_profile,
@@ -205,35 +207,39 @@ def create_request(request):
 
             return redirect("request_detail", request_id=qlr.id)
 
-        tutors_qs = active_tutors_qs(language=language)
+        # 特定の講師が選択されている場合はその講師のみ対象にする
+        if preferred_tutor_id:
+            tutors_qs = active_tutors_qs(language=language).filter(pk=preferred_tutor_id)
+        else:
+            tutors_qs = active_tutors_qs(language=language)
 
-        # 連続マッチ防止（60秒以内の同一ペアのみ除外）
-        exclude_ids = _get_consecutive_exclude_ids(student_profile)
-        if exclude_ids:
-            filtered_qs = tutors_qs.exclude(pk__in=exclude_ids)
-            if filtered_qs.exists():
-                # 別の候補がいる → すぐマッチ
-                tutors_qs = filtered_qs
-            else:
-                # 同一ペアしかいない → 60秒経過していればマッチ許可、でなければ待機
-                last_match = (
-                    QuickLessonMatch.objects
-                    .filter(request__student=student_profile)
-                    .order_by("-end_at")
-                    .first()
-                )
-                elapsed_since_end = (
-                    (timezone.now() - last_match.end_at).total_seconds()
-                    if last_match and last_match.end_at else CONSECUTIVE_WAIT_SECONDS
-                )
-                if elapsed_since_end < CONSECUTIVE_WAIT_SECONDS:
-                    tutors_qs = tutors_qs.none()
+            # 連続マッチ防止（60秒以内の同一ペアのみ除外）
+            exclude_ids = _get_consecutive_exclude_ids(student_profile)
+            if exclude_ids:
+                filtered_qs = tutors_qs.exclude(pk__in=exclude_ids)
+                if filtered_qs.exists():
+                    tutors_qs = filtered_qs
+                else:
+                    last_match = (
+                        QuickLessonMatch.objects
+                        .filter(request__student=student_profile)
+                        .order_by("-end_at")
+                        .first()
+                    )
+                    elapsed_since_end = (
+                        (timezone.now() - last_match.end_at).total_seconds()
+                        if last_match and last_match.end_at else CONSECUTIVE_WAIT_SECONDS
+                    )
+                    if elapsed_since_end < CONSECUTIVE_WAIT_SECONDS:
+                        tutors_qs = tutors_qs.none()
 
         if tutors_qs.exists():
             tutor = random.choice(list(tutors_qs))
 
             # Optimistic locking: オンラインかつ通話中でない場合のみ確保
             if _claim_tutor_for_match(tutor):
+                qlr.preferred_tutor = tutor if preferred_tutor_id else None
+                qlr.save()
                 QuickLessonMatch.objects.create(
                     request=qlr,
                     tutor=tutor,
@@ -298,11 +304,40 @@ def create_request(request):
         ).exclude(pk__in=busy_tutor_ids).exists()
     )
 
+    # 言語別オンライン講師リスト（生徒の講師選択UI用）
+    now_gm = timezone.now()
+    all_online_tutors = (
+        active_tutors_qs()
+        .select_related('user')
+        .prefetch_related('languages', 'user__gold_membership')
+    )
+    tutors_by_language = {}
+    for tutor in all_online_tutors:
+        user = tutor.user
+        display_name = user.first_name or user.username
+        if user.is_superuser:
+            badge = "dev"
+        elif user.is_staff:
+            badge = "admin"
+        else:
+            badge = None
+            try:
+                gm = user.gold_membership
+                if gm.expires_at > now_gm:
+                    badge = "gold"
+            except Exception:
+                pass
+        entry = {"id": tutor.pk, "name": display_name, "badge": badge}
+        for lang in tutor.languages.all():
+            tutors_by_language.setdefault(str(lang.id), []).append(entry)
+    tutors_by_language_json = json.dumps(tutors_by_language)
+
     return render(request, "core/create_request.html", {
         "languages_with_count": languages_with_count,
         "matches": matches,
         "total_lessons": total_lessons,
         "admin_online": admin_online,
+        "tutors_by_language_json": tutors_by_language_json,
     })
 
 @login_required
@@ -390,7 +425,6 @@ def student_online_counts(request):
     """言語ごとのオンライン講師数をJSONで返す（生徒側ポーリング用）"""
     from django.http import JsonResponse
     student_profile, _ = StudentProfile.objects.get_or_create(user=request.user)
-    # 表示用: 猶予期間（60秒）を過ぎたら除外を解除して表示に戻す
     display_exclude = _get_display_exclude_ids(student_profile)
     languages = LessonLanguage.objects.all()
     now = timezone.now()
@@ -408,10 +442,28 @@ def student_online_counts(request):
         if display_exclude:
             qs = qs.exclude(pk__in=display_exclude)
         in_lesson_count, soonest_minutes = _in_lesson_info(lang, now)
+        tutors_for_lang = []
+        for t in qs.select_related('user').prefetch_related('user__gold_membership'):
+            user = t.user
+            display_name = user.first_name or user.username
+            if user.is_superuser:
+                badge = "dev"
+            elif user.is_staff:
+                badge = "admin"
+            else:
+                badge = None
+                try:
+                    gm = user.gold_membership
+                    if gm.expires_at > now:
+                        badge = "gold"
+                except Exception:
+                    pass
+            tutors_for_lang.append({"id": t.pk, "name": display_name, "badge": badge})
         data[str(lang.id)] = {
             'online': qs.count(),
             'in_lesson': in_lesson_count,
             'soonest_minutes': soonest_minutes,
+            'tutors': tutors_for_lang,
         }
     return JsonResponse(data)
 
