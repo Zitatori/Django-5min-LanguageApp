@@ -1,117 +1,97 @@
-# 🚀 200 Active Users Reached! 🚀
+# QuickLesson
 
-🚀 **12 Users Connected at the Same Time!** 🚀
+A web application that makes language speaking practice simple through short, real-time conversations with native speakers.
 
-## 🎯 Goal: 1000 Active Users by the End of This year 💯
-
-A Django-based language exchange platform for quick 5-minute conversations.
-
-Users can:
-- Match with tutors or learners
-- Start short language sessions
-- Practice casually without long commitments
-
-
-## Features
-
-- User registration & login
-- Student / Tutor roles
-- Language selection
-- Quick lesson matching
-- 5-minute session timer
-- Lesson room
-- Lesson history
-- Multilingual UI (JA / EN / ES / FR)
-- 
-**Live demo (development):** https://django-5min-languageapp.onrender.com/
-
-## Screenshots
-
-### Home Page
-
-<img src="Home_new2.png" width="700">
+🌐 Live Demo: https://django-5min-languageapp.onrender.com/
+📄 Status: Active Development
 
 ---
 
-### Tutor Dashboard
+## Overview
 
-<img src="tutor-dashboard2.png" width="700">
+QuickLesson is a language exchange platform designed for learners who want to improve their speaking skills without committing to long lessons.
 
-### Point Page
+Instead of one-hour sessions, users join 5-minute conversations with native speakers whenever they have time.
 
-<img src="point1.png" width="700">
+---
 
+## Features
+
+- 🌍 Multiple languages (Japanese, English, Spanish, French)
+- 🎥 Real-time video calls
+- 👩‍🏫 Native speaker matching
+- ⭐ Tutor ratings
+- 📖 Session history
+- 👤 User profiles
+- 📱 Responsive design
+
+---
 
 ## Tech Stack
 
-- Python
+### Backend
 - Django
-- SQLite
-- HTML / CSS
+- Django REST Framework
+- PostgreSQL
+
+### Frontend
+- HTML
+- CSS
 - JavaScript
-- Render (deployment)
-- WebRTC
 
-
-
-# QuickLesson
-
-## What is QuickLesson?
-
-QuickLesson is a safety-focused language conversation platform built around one idea:
-
-> Talk for 5 minutes. Learn. The session ends.
-
-The platform is designed for short, structured language practice between students and approved tutors.
+### Deployment
+- Render
 
 ---
 
-## Core Principles
+## Screenshots
 
-- Student ↔ Approved Tutor only
-- Strict 5-minute sessions
-- No endless calls or random chatting
-- No dating or social-media style interaction
-- Focused language learning environment
-- Moderation-first design
+| Home | point |
+|------|------------|
+| ![](home_new2.png) | ![](point1.png) |
 
 ---
 
-## Features
+## Project Structure
 
-| Feature | Description |
-|---|---|
-| 5-Minute Talk Room | Timer-controlled sessions with automatic ending |
-| Student & Tutor Modes | Different dashboards depending on user role |
-| Language Selection | Japanese, English, Spanish, and French support |
-| Clean UI | Simple mobile-friendly Bootstrap interface |
-| Quick Matching | Students can instantly request short lessons |
-| Lesson History | Minimal session tracking and history |
-
----
-
-## Why It’s Different
-
-| Typical Language Apps | QuickLesson |
-|---|---|
-| 30–60 minute lessons | Strict 5-minute sessions |
-| Subscription models | Per-session style |
-| Social/SNS atmosphere | Learning-focused only |
-| Long-term commitment | Short and repeatable practice |
-| Complicated tutor onboarding | Simple lightweight approval flow |
-
-
-
-
-```bash
-python manage.py compilemessages
+```
+quicklesson/
+├── accounts/
+├── lessons/
+├── tutors/
+├── chat/
+├── static/
+├── templates/
+└── manage.py
 ```
 
+---
 
-## Quick Start
+## Installation
 
 ```bash
+git clone ...
+cd quicklesson
 pip install -r requirements.txt
 python manage.py migrate
-python manage.py createsuperuser
 python manage.py runserver
+```
+
+---
+
+## Roadmap
+
+- [x] Authentication
+- [x] Video calls
+- [x] Tutor dashboard
+- [ ] AI feedback
+- [ ] Mobile app
+- [ ] Push notifications
+
+---
+
+## About the Project
+
+QuickLesson is a personal project that I continue to develop while collecting feedback from real users.
+
+The goal is to make language speaking practice accessible, flexible, and enjoyable through short conversations.
