@@ -48,7 +48,7 @@ Instead of one-hour sessions, users join 5-minute conversations with native spea
 
 | Home | point |
 |------|------------|
-| ![](home_new2.png) | ![](point1.png) |
+| ![](Home_new2.png) | ![](point1.png) |
 
 ---
 
