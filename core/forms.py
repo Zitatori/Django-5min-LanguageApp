@@ -16,6 +16,13 @@ class SignupForm(UserCreationForm):
         widget=forms.TextInput(attrs={"placeholder": "e.g. Mika, Tom…"}),
         help_text="Optional. If blank, your username will be used.",
     )
+    referral_source = forms.CharField(
+        required=False,
+        max_length=300,
+        label="How did you hear about us?",
+        widget=forms.TextInput(attrs={"placeholder": "e.g. Instagram, friend, Google…"}),
+        help_text="Optional.",
+    )
 
     class Meta:
         model = User

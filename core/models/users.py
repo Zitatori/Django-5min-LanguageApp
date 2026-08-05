@@ -17,6 +17,11 @@ class UserProfile(models.Model):
         choices=UserRole.choices,
         default=UserRole.STUDENT,
     )
+    referral_source = models.CharField(
+        max_length=300,
+        blank=True,
+        default="",
+    )
 
 
 class TutorProfile(models.Model):

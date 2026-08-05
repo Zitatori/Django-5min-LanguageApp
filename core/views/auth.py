@@ -2,7 +2,7 @@ from django.contrib.auth import login
 from django.shortcuts import redirect, render
 
 from core.forms import SignupForm
-from core.models import StudentProfile, TutorProfile
+from core.models import StudentProfile, TutorProfile, UserProfile
 from core.models import PointBalance, PointTransaction
 
 SIGNUP_BONUS_POINTS = 10
@@ -16,6 +16,12 @@ def signup(request):
             user = form.save()
 
             StudentProfile.objects.get_or_create(user=user)
+
+            referral = form.cleaned_data.get("referral_source", "").strip()
+            profile, _ = UserProfile.objects.get_or_create(user=user)
+            if referral:
+                profile.referral_source = referral
+                profile.save()
 
             wants_to_teach = request.POST.get("wants_to_teach")
 

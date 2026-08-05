@@ -277,6 +277,7 @@
         <td>
           {{ u.username }}
           {% if u.first_name %}<br><span style="font-size:11px; color:#9ca3af;">{{ u.first_name }}</span>{% endif %}
+          {% if u.userprofile.referral_source %}<br><span style="font-size:11px; color:#6366f1;" title="{{ u.userprofile.referral_source }}">📍 {{ u.userprofile.referral_source|truncatechars:30 }}</span>{% endif %}
         </td>
         <td style="font-size:12px; color:#6b7280; max-width:160px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ u.email|default:"—" }}</td>
         <td>
@@ -365,6 +366,7 @@
         <td>
           {{ u.username }}
           {% if u.first_name %}<br><span style="font-size:11px; color:#9ca3af;">{{ u.first_name }}</span>{% endif %}
+          {% if u.userprofile.referral_source %}<br><span style="font-size:11px; color:#6366f1;" title="{{ u.userprofile.referral_source }}">📍 {{ u.userprofile.referral_source|truncatechars:30 }}</span>{% endif %}
         </td>
         <td style="font-size:12px; color:#6b7280; max-width:160px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ u.email|default:"—" }}</td>
         <td>
