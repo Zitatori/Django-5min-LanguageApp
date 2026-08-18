@@ -538,9 +538,12 @@
             {% endif %}
           {% endwith %}
         </td>
-        <td style="font-size:13px;">
+        <td style="font-size:13px; max-width:160px;">
           {% if match.student_rating %}
             <span style="color:#f59e0b;font-weight:700;">{{ match.student_rating }} ★</span>
+            {% if match.student_feedback %}
+              <br><span style="font-size:11px; color:#6b7280; font-weight:400;" title="{{ match.student_feedback }}">{{ match.student_feedback|truncatechars:40 }}</span>
+            {% endif %}
           {% else %}
             <span class="pt-none">—</span>
           {% endif %}
@@ -568,9 +571,12 @@
             {% endif %}
           {% endwith %}
         </td>
-        <td style="font-size:13px;">
+        <td style="font-size:13px; max-width:160px;">
           {% if match.student_rating %}
             <span style="color:#f59e0b;font-weight:700;">{{ match.student_rating }} ★</span>
+            {% if match.student_feedback %}
+              <br><span style="font-size:11px; color:#6b7280; font-weight:400;" title="{{ match.student_feedback }}">{{ match.student_feedback|truncatechars:40 }}</span>
+            {% endif %}
           {% else %}
             <span class="pt-none">—</span>
           {% endif %}

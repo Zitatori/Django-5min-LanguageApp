@@ -15,6 +15,9 @@
       {% endfor %}
     </div>
     <p class="rating-thanks">{% trans "Thanks for your rating." %}</p>
+    {% if match.student_feedback %}
+      <p class="rating-feedback-display">{{ match.student_feedback }}</p>
+    {% endif %}
     <a class="btn" href="{% url 'home' %}" style="margin-top:16px;display:inline-block;">{% trans "Back to Home" %}</a>
   {% else %}
     <form method="post" id="rating-form">
@@ -28,6 +31,19 @@
         {% endfor %}
       </div>
       <div class="rating-helper" id="rating-helper">{% trans "Tap a star to rate the lesson" %}</div>
+
+      <div id="feedback-area" class="feedback-area" style="display:none;">
+        <textarea
+          name="feedback"
+          id="feedback-input"
+          class="feedback-textarea"
+          maxlength="500"
+          rows="3"
+          placeholder="{% trans 'Optional: share any comments about this lesson…' %}"
+        ></textarea>
+        <div class="feedback-charcount"><span id="feedback-count">0</span> / 500</div>
+      </div>
+
       <button type="submit" class="btn rating-submit" disabled>{% trans "Submit rating" %}</button>
       <a href="{% url 'home' %}" class="rating-skip">{% trans "Skip" %}</a>
     </form>
@@ -121,6 +137,45 @@
   .rating-skip:hover {
     color: #374151;
   }
+  .feedback-area {
+    margin-top: 18px;
+    text-align: left;
+  }
+  .feedback-textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 10px;
+    font-size: 14px;
+    font-family: inherit;
+    resize: vertical;
+    line-height: 1.55;
+    box-sizing: border-box;
+    transition: border-color 0.15s;
+  }
+  .feedback-textarea:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99,102,241,0.12);
+  }
+  .feedback-charcount {
+    font-size: 12px;
+    color: #9ca3af;
+    text-align: right;
+    margin-top: 4px;
+  }
+  .rating-feedback-display {
+    font-size: 14px;
+    color: #6b7280;
+    margin: 12px auto 0;
+    max-width: 340px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+  }
+  @media (prefers-color-scheme: dark) {
+    .feedback-textarea { background: #1f2937; border-color: #374151; color: #f3f4f6; }
+    .feedback-textarea:focus { border-color: #818cf8; }
+  }
   @media (max-width: 520px) {
     .rating-card {
       margin: 20px auto;
@@ -169,6 +224,7 @@
       paintStars(selectedValue);
       ratingHelper.textContent = ratingText[selectedValue];
       ratingSubmit.disabled = false;
+      document.getElementById('feedback-area').style.display = 'block';
     });
   });
 
@@ -176,5 +232,13 @@
     const checked = document.querySelector('input[name="rating"]:checked');
     paintStars(checked ? Number(checked.value) : 0);
   });
+
+  const feedbackInput = document.getElementById('feedback-input');
+  const feedbackCount = document.getElementById('feedback-count');
+  if (feedbackInput) {
+    feedbackInput.addEventListener('input', () => {
+      feedbackCount.textContent = feedbackInput.value.length;
+    });
+  }
 </script>
 {% endblock %}

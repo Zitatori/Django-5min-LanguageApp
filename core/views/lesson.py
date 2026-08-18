@@ -148,9 +148,11 @@ def lesson_rating(request, match_id: int):
             rating = 0
 
         if 1 <= rating <= 5:
+            feedback = request.POST.get("feedback", "").strip()[:500]
             QuickLessonMatch.objects.filter(pk=match.pk).update(
                 student_rating=rating,
                 student_rated_at=timezone.now(),
+                student_feedback=feedback,
             )
             return redirect("create_request")
 
