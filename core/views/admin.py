@@ -13,7 +13,7 @@ from django.db.models import Case, When, Value, IntegerField, Count, Q
 from core.models import TutorProfile, QuickLessonMatch, LessonLanguage, QuickLessonRequest
 from core.models import PointBalance, PointTransaction, WithdrawalRequest
 from core.models import GoldMembership, GoldSubscriptionRequest
-from core.models import UpcomingSession, ConversationNote
+from core.models import UpcomingSession, ConversationNote, UserProfile
 from datetime import timedelta, datetime
 
 JST = ZoneInfo('Asia/Tokyo')
@@ -392,4 +392,17 @@ def session_edit(request, session_id):
 def session_delete(request, session_id):
     if request.method == 'POST':
         get_object_or_404(UpcomingSession, id=session_id).delete()
+    return redirect('admin_dashboard')
+
+
+@staff_or_admin_role_required
+def toggle_user_star(request, user_id):
+    """ユーザーをスター（お気に入り）にトグルする"""
+    if request.method == 'POST':
+        user = get_object_or_404(User, id=user_id)
+        profile, _ = UserProfile.objects.get_or_create(user=user)
+        profile.is_starred = not profile.is_starred
+        profile.save()
+        from django.http import JsonResponse
+        return JsonResponse({'starred': profile.is_starred})
     return redirect('admin_dashboard')

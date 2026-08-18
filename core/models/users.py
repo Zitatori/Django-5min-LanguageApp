@@ -22,6 +22,7 @@ class UserProfile(models.Model):
         blank=True,
         default="",
     )
+    is_starred = models.BooleanField(default=False)
 
 
 class TutorProfile(models.Model):

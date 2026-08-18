@@ -1,7 +1,7 @@
 from django.urls import path
 from . import views
 from .views import VideoRoomView
-from core.views.admin import admin_dashboard, update_tutor_languages, update_user_languages, delete_user, update_user_points, grant_initial_points_all, process_withdrawal, grant_gold, revoke_gold, session_create, session_edit, session_delete
+from core.views.admin import admin_dashboard, update_tutor_languages, update_user_languages, delete_user, update_user_points, grant_initial_points_all, process_withdrawal, grant_gold, revoke_gold, session_create, session_edit, session_delete, toggle_user_star
 from core.views.profile import profile, purchase_points, request_withdrawal, transfer_points, request_gold, update_display_name
 
 
@@ -50,6 +50,8 @@ urlpatterns = [
     path('gold/request/', request_gold, name='request_gold'),
     path('admin-dashboard/user/<int:user_id>/grant-gold/', grant_gold, name='grant_gold'),
     path('admin-dashboard/user/<int:user_id>/revoke-gold/', revoke_gold, name='revoke_gold'),
+
+    path('admin-dashboard/user/<int:user_id>/star/', toggle_user_star, name='toggle_user_star'),
 
     # Upcoming Sessions CRUD
     path('admin-dashboard/sessions/create/', session_create, name='session_create'),

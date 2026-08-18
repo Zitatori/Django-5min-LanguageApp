@@ -59,6 +59,8 @@
   .history-btn:hover { background:#ecfdf5; }
   .notes-btn { font-size:12px; padding:4px 12px; border-radius:8px; border:1.5px solid #8b5cf6; color:#7c3aed; background:white; cursor:pointer; margin-left:6px; }
   .notes-btn:hover { background:#f5f3ff; }
+  .star-btn { color:#d1d5db; transition:color 0.12s; }
+  .star-btn:hover { color:#f59e0b; }
   .notes-count { font-size:10px; background:#ede9fe; color:#7c3aed; border-radius:99px; padding:1px 5px; margin-left:3px; font-weight:700; }
   .notes-modal { background:white; border-radius:16px; padding:1.5rem; width:520px; max-width:92vw; max-height:80vh; display:flex; flex-direction:column; }
   .notes-item { padding:10px 0; border-bottom:1px solid #f3f4f6; }
@@ -240,11 +242,19 @@
       </button>
       {% endif %}
     </div>
-    <input type="text" id="user-search" placeholder="🔍 Search by username…"
-           oninput="filterUsers(this.value)"
-           style="padding:7px 14px; border:1.5px solid #e5e7eb; border-radius:99px;
-                  font-size:13px; outline:none; width:220px; transition:border-color 0.15s;"
-           onfocus="this.style.borderColor='#6366f1'" onblur="this.style.borderColor='#e5e7eb'">
+    <div style="display:flex; align-items:center; gap:8px;">
+      <button id="star-filter-btn" onclick="toggleStarFilter(this)"
+        style="padding:7px 14px; border:1.5px solid #e5e7eb; border-radius:99px;
+               font-size:13px; background:#fff; cursor:pointer; transition:all 0.15s;
+               color:#6b7280; font-weight:600;">
+        ☆ Starred
+      </button>
+      <input type="text" id="user-search" placeholder="🔍 Search by username…"
+             oninput="filterUsers(this.value)"
+             style="padding:7px 14px; border:1.5px solid #e5e7eb; border-radius:99px;
+                    font-size:13px; outline:none; width:200px; transition:border-color 0.15s;"
+             onfocus="this.style.borderColor='#6366f1'" onblur="this.style.borderColor='#e5e7eb'">
+    </div>
   </div>
 
   {% if no_balance_count > 0 %}
@@ -273,11 +283,13 @@
     </thead>
     <tbody>
       {% for u in recent_users %}
-      <tr data-username="{{ u.username|lower }} {{ u.first_name|lower }}">
+      <tr data-username="{{ u.username|lower }} {{ u.first_name|lower }}" data-starred="{% if u.userprofile.is_starred %}true{% else %}false{% endif %}">
         <td>
-          {{ u.username }}
-          {% if u.first_name %}<br><span style="font-size:11px; color:#9ca3af;">{{ u.first_name }}</span>{% endif %}
-          {% if u.userprofile.referral_source %}<br><span style="font-size:11px; color:#6366f1;" title="{{ u.userprofile.referral_source }}">📍 {{ u.userprofile.referral_source|truncatechars:30 }}</span>{% endif %}
+          <button class="star-btn" id="star-{{ u.id }}" onclick="toggleStar({{ u.id }})"
+            title="{% if u.userprofile.is_starred %}Unstar{% else %}Star{% endif %}"
+            style="background:none; border:none; cursor:pointer; font-size:16px; padding:0 4px 0 0; vertical-align:middle; line-height:1;{% if u.userprofile.is_starred %} color:#f59e0b;{% endif %}">{% if u.userprofile.is_starred %}★{% else %}☆{% endif %}</button>{{ u.username }}
+          {% if u.first_name %}<br><span style="font-size:11px; color:#9ca3af; margin-left:20px;">{{ u.first_name }}</span>{% endif %}
+          {% if u.userprofile.referral_source %}<br><span style="font-size:11px; color:#6366f1; margin-left:20px;" title="{{ u.userprofile.referral_source }}">📍 {{ u.userprofile.referral_source|truncatechars:30 }}</span>{% endif %}
         </td>
         <td style="font-size:12px; color:#6b7280; max-width:160px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ u.email|default:"—" }}</td>
         <td>
@@ -362,11 +374,13 @@
       </tr>
       {% endfor %}
       {% for u in older_users %}
-      <tr class="older-user" data-username="{{ u.username|lower }} {{ u.first_name|lower }}" style="display:none;">
+      <tr class="older-user" data-username="{{ u.username|lower }} {{ u.first_name|lower }}" data-starred="{% if u.userprofile.is_starred %}true{% else %}false{% endif %}" style="display:none;">
         <td>
-          {{ u.username }}
-          {% if u.first_name %}<br><span style="font-size:11px; color:#9ca3af;">{{ u.first_name }}</span>{% endif %}
-          {% if u.userprofile.referral_source %}<br><span style="font-size:11px; color:#6366f1;" title="{{ u.userprofile.referral_source }}">📍 {{ u.userprofile.referral_source|truncatechars:30 }}</span>{% endif %}
+          <button class="star-btn" id="star-{{ u.id }}" onclick="toggleStar({{ u.id }})"
+            title="{% if u.userprofile.is_starred %}Unstar{% else %}Star{% endif %}"
+            style="background:none; border:none; cursor:pointer; font-size:16px; padding:0 4px 0 0; vertical-align:middle; line-height:1;{% if u.userprofile.is_starred %} color:#f59e0b;{% endif %}">{% if u.userprofile.is_starred %}★{% else %}☆{% endif %}</button>{{ u.username }}
+          {% if u.first_name %}<br><span style="font-size:11px; color:#9ca3af; margin-left:20px;">{{ u.first_name }}</span>{% endif %}
+          {% if u.userprofile.referral_source %}<br><span style="font-size:11px; color:#6366f1; margin-left:20px;" title="{{ u.userprofile.referral_source }}">📍 {{ u.userprofile.referral_source|truncatechars:30 }}</span>{% endif %}
         </td>
         <td style="font-size:12px; color:#6b7280; max-width:160px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ u.email|default:"—" }}</td>
         <td>
@@ -816,10 +830,57 @@
 </script>
 
 <script>
-  function filterUsers(query) {
-    const q = query.toLowerCase().trim();
+  let starFilterActive = false;
+
+  function applyUserFilters() {
+    const q = (document.getElementById('user-search').value || '').toLowerCase().trim();
     document.querySelectorAll('tbody tr[data-username]').forEach(row => {
-      row.style.display = row.dataset.username.includes(q) ? '' : 'none';
+      const matchesSearch = !q || row.dataset.username.includes(q);
+      const matchesStar   = !starFilterActive || row.dataset.starred === 'true';
+      // older-user rows are controlled separately by toggleOlderUsers, but we override display here
+      row.style.display = (matchesSearch && matchesStar) ? '' : 'none';
+    });
+  }
+
+  function filterUsers(query) {
+    applyUserFilters();
+  }
+
+  function toggleStarFilter(btn) {
+    starFilterActive = !starFilterActive;
+    if (starFilterActive) {
+      btn.style.background = '#fef9c3';
+      btn.style.borderColor = '#f59e0b';
+      btn.style.color = '#b45309';
+      btn.textContent = '★ Starred';
+      // Show "older" rows too when filtering
+      document.querySelectorAll('.older-user').forEach(r => r.style.display = '');
+    } else {
+      btn.style.background = '#fff';
+      btn.style.borderColor = '#e5e7eb';
+      btn.style.color = '#6b7280';
+      btn.textContent = '☆ Starred';
+      // Restore older-user hidden state
+      document.querySelectorAll('.older-user').forEach(r => r.style.display = 'none');
+    }
+    applyUserFilters();
+  }
+
+  function toggleStar(userId) {
+    const btn = document.getElementById('star-' + userId);
+    const row = btn.closest('tr');
+    fetch(`/admin-dashboard/user/${userId}/star/`, {
+      method: 'POST',
+      headers: {'X-CSRFToken': '{{ csrf_token }}'},
+    })
+    .then(r => r.json())
+    .then(data => {
+      const starred = data.starred;
+      btn.textContent = starred ? '★' : '☆';
+      btn.style.color  = starred ? '#f59e0b' : '';
+      btn.title = starred ? 'Unstar' : 'Star';
+      row.dataset.starred = starred ? 'true' : 'false';
+      if (starFilterActive && !starred) row.style.display = 'none';
     });
   }
 
