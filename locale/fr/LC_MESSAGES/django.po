@@ -773,3 +773,6 @@ msgstr "Gains du jour"
 
 #~ msgid "Languages I can teach"
 #~ msgstr "Langues que je peux enseigner"
+
+msgid "Founder"
+msgstr "Fondateur"

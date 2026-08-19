@@ -50,7 +50,7 @@
         <p><strong>Student:</strong>
           {% with u=match.request.student.user %}{% if u.first_name %}{{ u.first_name }} <span style="color:#9ca3af; font-size:.85em;">({{ u.username }})</span>{% else %}{{ u.username }}{% endif %}
           {% if u.gold_membership.is_active %}<span class="header-badge header-badge-gold">&#x1F451; Gold</span>
-          {% elif u.is_superuser %}<span class="header-badge header-badge-dev">Dev</span>
+          {% elif u.is_superuser %}<span class="header-badge header-badge-dev">🚀 {% trans "Founder" %}</span>
           {% elif u.is_staff %}<span class="header-badge header-badge-admin">Admin</span>
           {% endif %}{% endwith %}
         </p>

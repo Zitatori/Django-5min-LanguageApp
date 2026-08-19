@@ -755,3 +755,6 @@ msgstr "本日追加分"
 
 #~ msgid "Languages I can teach"
 #~ msgstr "担当できる言語"
+
+msgid "Founder"
+msgstr "創設者"

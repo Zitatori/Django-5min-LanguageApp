@@ -1465,3 +1465,6 @@ msgstr "Withdrawal requests are processed within 3 business days."
 
 msgid "Today's earnings"
 msgstr "Today's earnings"
+
+msgid "Founder"
+msgstr "Founder"

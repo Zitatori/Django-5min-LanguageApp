@@ -44,7 +44,7 @@
           <span class="header-username">
             {{ user.username }}
             {% if is_gold %}<span class="header-badge header-badge-gold">&#x1F451; Gold</span>{% endif %}
-            {% if user.is_superuser %}<span class="header-badge header-badge-dev">Dev</span>
+            {% if user.is_superuser %}<span class="header-badge header-badge-dev">🚀 {% trans "Founder" %}</span>
             {% elif user.is_staff %}<span class="header-badge header-badge-admin">Admin</span>
             {% endif %}
           </span>
@@ -82,7 +82,7 @@
         <span class="header-username">
           {{ user.username }}
           {% if is_gold %}<span class="header-badge header-badge-gold">&#x1F451; Gold</span>
-          {% elif user.is_superuser %}<span class="header-badge header-badge-dev">Dev</span>
+          {% elif user.is_superuser %}<span class="header-badge header-badge-dev">🚀 {% trans "Founder" %}</span>
           {% elif user.is_staff %}<span class="header-badge header-badge-admin">Admin</span>
           {% endif %}
         </span>

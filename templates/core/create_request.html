@@ -286,6 +286,24 @@
     font-size: 14px; color: #9ca3af;
     padding: 18px 0; text-align: center;
   }
+  .cr-tutor-card--founder {
+    border-color: transparent;
+    background: linear-gradient(#fff, #fff) padding-box,
+                linear-gradient(135deg, #ec4899, #8b5cf6, #6366f1) border-box;
+    animation: cr-founder-pulse 2.5s ease-in-out infinite;
+  }
+  @keyframes cr-founder-pulse {
+    0%,100% { box-shadow: 0 0 6px rgba(236,72,153,0.35); }
+    50%      { box-shadow: 0 0 14px rgba(99,102,241,0.5); }
+  }
+  .cr-tutor-card--founder:hover {
+    background: linear-gradient(#f5f3ff, #f5f3ff) padding-box,
+                linear-gradient(135deg, #ec4899, #8b5cf6, #6366f1) border-box;
+  }
+  .cr-tutor-card--founder.selected {
+    background: linear-gradient(#ede9fe, #ede9fe) padding-box,
+                linear-gradient(135deg, #ec4899, #8b5cf6, #6366f1) border-box;
+  }
   .cr-btn-start:disabled {
     opacity: 0.45; cursor: not-allowed;
     box-shadow: none;
@@ -298,6 +316,19 @@
     .cr-tutor-card { background: #1f2937; border-color: #374151; color: #d1d5db; }
     .cr-tutor-card:hover { border-color: #6366f1; background: #1e1b4b; }
     .cr-tutor-card.selected { border-color: #818cf8; background: #1e1b4b; color: #c7d2fe; }
+    .cr-tutor-card--founder {
+      background: linear-gradient(#1f2937, #1f2937) padding-box,
+                  linear-gradient(135deg, #ec4899, #8b5cf6, #6366f1) border-box;
+    }
+    .cr-tutor-card--founder:hover {
+      background: linear-gradient(#1e1b4b, #1e1b4b) padding-box,
+                  linear-gradient(135deg, #ec4899, #8b5cf6, #6366f1) border-box;
+    }
+    .cr-tutor-card--founder.selected {
+      background: linear-gradient(#1e1b4b, #1e1b4b) padding-box,
+                  linear-gradient(135deg, #ec4899, #8b5cf6, #6366f1) border-box;
+      color: #c7d2fe;
+    }
   }
 
   /* ── PC 2カラムレイアウト ── */
@@ -435,7 +466,7 @@
         <div class="cr-hist-name" style="display:flex; align-items:center; gap:5px;">
           {{ match.tutor.user.username }}
           {% if match.tutor.user.gold_membership.is_active %}<span class="header-badge header-badge-gold">&#x1F451; Gold</span>
-          {% elif match.tutor.user.is_superuser %}<span class="header-badge header-badge-dev">Dev</span>
+          {% elif match.tutor.user.is_superuser %}<span class="header-badge header-badge-dev">🚀 {% trans "Founder" %}</span>
           {% elif match.tutor.user.is_staff %}<span class="header-badge header-badge-admin">Admin</span>
           {% endif %}
         </div>
@@ -514,7 +545,7 @@
   let selectedTutorId = '';
 
   function badgeHtml(badge) {
-    if (badge === 'dev')   return ' <span class="header-badge header-badge-dev" style="font-size:10px;padding:1px 6px;">Dev</span>';
+    if (badge === 'dev')   return ' <span class="header-badge header-badge-dev" style="font-size:10px;padding:1px 6px;">🚀 {% trans "Founder" %}</span>';
     if (badge === 'admin') return ' <span class="header-badge header-badge-admin" style="font-size:10px;padding:1px 6px;">Admin</span>';
     if (badge === 'gold')  return ' <span class="header-badge header-badge-gold" style="font-size:10px;padding:1px 6px;">&#x1F451; Gold</span>';
     return '';
@@ -533,8 +564,11 @@
 
     tutorList.innerHTML = tutors.map(t => {
       const initials = t.name.slice(0, 2).toUpperCase();
-      return `<div class="cr-tutor-card" onclick="pickTutor(this,'${t.id}')">
-        <div class="cr-tutor-avatar">${initials}</div>
+      const isFounder = t.badge === 'dev';
+      const founderClass = isFounder ? ' cr-tutor-card--founder' : '';
+      const avatarStyle = isFounder ? ' style="background:linear-gradient(135deg,#ec4899,#8b5cf6);"' : '';
+      return `<div class="cr-tutor-card${founderClass}" onclick="pickTutor(this,'${t.id}')">
+        <div class="cr-tutor-avatar"${avatarStyle}>${initials}</div>
         <span>${t.name}${badgeHtml(t.badge)}</span>
         <span class="cr-tutor-check">✓</span>
       </div>`;

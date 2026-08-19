@@ -129,10 +129,17 @@ a:hover {
   text-decoration: none !important;
   pointer-events: none;
 }
+@keyframes founder-glow {
+  0%, 100% { box-shadow: 0 0 6px rgba(236,72,153,0.5), 0 0 12px rgba(99,102,241,0.3); }
+  50%       { box-shadow: 0 0 10px rgba(236,72,153,0.8), 0 0 20px rgba(99,102,241,0.5); }
+}
 .header-badge-dev {
-  background: linear-gradient(135deg, #06b6d4, #8b5cf6);
+  background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 60%, #6366f1 100%);
   color: #fff;
-  box-shadow: 0 0 6px rgba(139,92,246,0.45);
+  font-size: 11px;
+  padding: 2px 9px;
+  animation: founder-glow 2.5s ease-in-out infinite;
+  letter-spacing: 0.05em;
 }
 .header-badge-admin {
   background: #374151;

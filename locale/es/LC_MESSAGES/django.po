@@ -764,3 +764,6 @@ msgstr "Ganancias de hoy"
 
 #~ msgid "Languages I can teach"
 #~ msgstr "Idiomas que puedo enseñar"
+
+msgid "Founder"
+msgstr "Fundador"
