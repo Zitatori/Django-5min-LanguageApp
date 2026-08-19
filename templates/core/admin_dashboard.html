@@ -552,12 +552,10 @@
             {% endif %}
           {% endwith %}
         </td>
-        <td style="font-size:13px; max-width:160px;">
+        <td style="font-size:13px;">
           {% if match.student_rating %}
             <span style="color:#f59e0b;font-weight:700;">{{ match.student_rating }} ★</span>
-            {% if match.student_feedback %}
-              <br><span style="font-size:11px; color:#6b7280; font-weight:400;" title="{{ match.student_feedback }}">{{ match.student_feedback|truncatechars:40 }}</span>
-            {% endif %}
+            {% if match.student_feedback %}<span style="font-size:11px; color:#6b7280; margin-left:4px;">💬</span>{% endif %}
           {% else %}
             <span class="pt-none">—</span>
           {% endif %}
@@ -585,12 +583,10 @@
             {% endif %}
           {% endwith %}
         </td>
-        <td style="font-size:13px; max-width:160px;">
+        <td style="font-size:13px;">
           {% if match.student_rating %}
             <span style="color:#f59e0b;font-weight:700;">{{ match.student_rating }} ★</span>
-            {% if match.student_feedback %}
-              <br><span style="font-size:11px; color:#6b7280; font-weight:400;" title="{{ match.student_feedback }}">{{ match.student_feedback|truncatechars:40 }}</span>
-            {% endif %}
+            {% if match.student_feedback %}<span style="font-size:11px; color:#6b7280; margin-left:4px;">💬</span>{% endif %}
           {% else %}
             <span class="pt-none">—</span>
           {% endif %}
@@ -884,9 +880,10 @@
     });
   }
 
-  const USER_MATCHES    = {{ user_matches_json|safe }};
-  const MATCH_NOTES    = {{ match_notes_json|safe }};
-  const STUDENT_NOTES  = {{ student_notes_json|safe }};
+  const USER_MATCHES     = {{ user_matches_json|safe }};
+  const MATCH_NOTES     = {{ match_notes_json|safe }};
+  const STUDENT_NOTES   = {{ student_notes_json|safe }};
+  const MATCH_FEEDBACK  = {{ match_feedback_json|safe }};
 
   // ノートカウントバッジを初期表示
   (function () {
@@ -916,17 +913,36 @@
   function openMatchNotesModal(matchId, label) {
     document.getElementById('notes-modal-title').textContent = label;
     const list = document.getElementById('notes-modal-list');
+    let html = '';
+
+    // 生徒の評価・感想セクション
+    const fb = MATCH_FEEDBACK[matchId];
+    if (fb) {
+      const stars = fb.rating
+        ? '★'.repeat(fb.rating) + '☆'.repeat(5 - fb.rating)
+        : '—';
+      html += `<div class="notes-item" style="border-left:3px solid #f59e0b;">
+        <div class="notes-item-meta" style="color:#b45309;">⭐ Student rating</div>
+        <div class="notes-item-body" style="font-size:18px; letter-spacing:2px; color:#f59e0b; margin-bottom:${fb.feedback ? '6px' : '0'};">${stars}</div>
+        ${fb.feedback ? `<div class="notes-item-body" style="font-size:13px; color:#374151; white-space:pre-wrap;">${fb.feedback.replace(/</g,'&lt;')}</div>` : ''}
+      </div>`;
+    }
+
+    // チューターのメモセクション
     const entries = MATCH_NOTES[matchId] || [];
-    if (entries.length === 0) {
-      list.innerHTML = '<p class="notes-empty">No notes for this session.</p>';
-    } else {
-      list.innerHTML = entries.map(e =>
+    if (entries.length > 0) {
+      html += entries.map(e =>
         `<div class="notes-item">
           <div class="notes-item-meta">${e.date}&ensp;·&ensp;Tutor: ${e.tutor}</div>
           <div class="notes-item-body">${e.note.replace(/</g,'&lt;')}</div>
         </div>`
       ).join('');
     }
+
+    if (!html) {
+      html = '<p class="notes-empty">No notes for this session.</p>';
+    }
+    list.innerHTML = html;
     document.getElementById('notes-modal').classList.add('open');
   }
 

@@ -131,6 +131,16 @@ def admin_dashboard(request):
     match_notes_json   = json.dumps(dict(match_notes_dict))
     student_notes_json = json.dumps(dict(student_notes_dict))
 
+    # 生徒評価・感想（マッチIDキー）
+    match_feedback_dict = {}
+    for m in all_matches:
+        if m.student_rating or m.student_feedback:
+            match_feedback_dict[m.id] = {
+                'rating': m.student_rating,
+                'feedback': m.student_feedback or '',
+            }
+    match_feedback_json = json.dumps(match_feedback_dict)
+
     no_balance_count = User.objects.filter(point_balance__isnull=True).count()
     withdrawal_requests = WithdrawalRequest.objects.select_related('user').order_by('-created_at')
     gold_requests = GoldSubscriptionRequest.objects.select_related('user').filter(
@@ -171,6 +181,7 @@ def admin_dashboard(request):
         'online_tutors_count':      online_tutors.count(),
         'match_notes_json':         match_notes_json,
         'student_notes_json':       student_notes_json,
+        'match_feedback_json':      match_feedback_json,
     })
 
 @staff_or_admin_role_required
