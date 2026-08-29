@@ -767,3 +767,6 @@ msgstr "Ganancias de hoy"
 
 msgid "Founder"
 msgstr "Fundador"
+
+msgid "30 minutes passed without a match — you have been set offline."
+msgstr "30 minutos sin coincidencia — se le ha puesto fuera de línea."

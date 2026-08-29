@@ -452,6 +452,28 @@
     document.body.appendChild(notice);
   }
 
+  function showAutoOfflineNotice() {
+    const notice = document.createElement("div");
+    notice.textContent = "{% trans '30 minutes passed without a match — you have been set offline.' %}";
+    notice.style.cssText = [
+      "position:fixed",
+      "left:50%",
+      "top:24px",
+      "transform:translateX(-50%)",
+      "z-index:10000",
+      "background:#dc2626",
+      "color:#fff",
+      "padding:12px 22px",
+      "border-radius:999px",
+      "font-weight:700",
+      "box-shadow:0 12px 30px rgba(220,38,38,.35)",
+      "max-width:90vw",
+      "text-align:center"
+    ].join(";");
+    document.body.appendChild(notice);
+    setTimeout(() => notice.remove(), 8000);
+  }
+
   function startPolling() {
     if (pollInterval) return;
     pollInterval = setInterval(async () => {
@@ -471,6 +493,11 @@
               window.location.reload();
             }
           }, 900);
+        } else if (data.auto_offlined) {
+          clearInterval(pollInterval);
+          pollInterval = null;
+          if (toggle) toggle.checked = false;
+          showAutoOfflineNotice();
         }
       } catch (e) { console.error("Polling error:", e); }
     }, 3000);

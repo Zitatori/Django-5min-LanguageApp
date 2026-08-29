@@ -776,3 +776,6 @@ msgstr "Gains du jour"
 
 msgid "Founder"
 msgstr "Fondateur"
+
+msgid "30 minutes passed without a match — you have been set offline."
+msgstr "30 minutes sans correspondance — vous avez été mis hors ligne."

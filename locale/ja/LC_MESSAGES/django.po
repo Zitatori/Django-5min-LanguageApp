@@ -758,3 +758,6 @@ msgstr "本日追加分"
 
 msgid "Founder"
 msgstr "創設者"
+
+msgid "30 minutes passed without a match — you have been set offline."
+msgstr "30分間マッチがなかったため、自動的にオフラインになりました。"

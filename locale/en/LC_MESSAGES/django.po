@@ -1468,3 +1468,6 @@ msgstr "Today's earnings"
 
 msgid "Founder"
 msgstr "Founder"
+
+msgid "30 minutes passed without a match — you have been set offline."
+msgstr "30 minutes passed without a match — you have been set offline."

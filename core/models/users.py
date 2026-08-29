@@ -31,6 +31,7 @@ class TutorProfile(models.Model):
     is_online = models.BooleanField(default=False)
     can_interview = models.BooleanField(default=False)
     last_ping_at = models.DateTimeField(null=True, blank=True)
+    online_since = models.DateTimeField(null=True, blank=True)
 
     def __str__(self) -> str:
         return f"Tutor: {self.user.username}"

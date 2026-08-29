@@ -29,8 +29,10 @@ def tutor_dashboard(request):
                 )
             tutor_profile.is_online = True
             tutor_profile.last_ping_at = now_go
+            tutor_profile.online_since = now_go
         elif action == "go_offline":
             tutor_profile.is_online = False
+            tutor_profile.online_since = None
 
         tutor_profile.save()
 
@@ -120,7 +122,18 @@ def tutor_match_status(request):
             "room_url": reverse("lesson_room", args=[active_match.id])
         })
 
-    # マッチなし: ハートビートで is_online=True を維持（スマホスリープ等からの復旧も兼ねる）
+    # マッチなし: 30分経過していたら自動オフライン
+    tutor_profile.refresh_from_db()
+    if (
+        tutor_profile.online_since is not None
+        and (now - tutor_profile.online_since).total_seconds() >= ONLINE_TIMEOUT_SECONDS
+    ):
+        TutorProfile.objects.filter(pk=tutor_profile.pk).update(
+            is_online=False, online_since=None, last_ping_at=now
+        )
+        return JsonResponse({"matched": False, "auto_offlined": True})
+
+    # ハートビートで is_online=True を維持（スマホスリープ等からの復旧も兼ねる）
     TutorProfile.objects.filter(pk=tutor_profile.pk).update(
         is_online=True, last_ping_at=now
     )
@@ -131,5 +144,5 @@ def tutor_match_status(request):
 @require_POST
 def tutor_set_offline(request):
     """チューターがタブを閉じたときなどに sendBeacon で叩くエンドポイント。"""
-    TutorProfile.objects.filter(user=request.user).update(is_online=False)
+    TutorProfile.objects.filter(user=request.user).update(is_online=False, online_since=None)
     return JsonResponse({"ok": True})
