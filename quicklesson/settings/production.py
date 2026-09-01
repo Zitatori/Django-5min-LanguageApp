@@ -5,6 +5,7 @@ DEBUG = False
 
 ALLOWED_HOSTS = [
     "django-5min-languageapp.onrender.com",
+    "app.quicklesson5min.com",
 ]
 
 RENDER_EXTERNAL_HOSTNAME = os.getenv("RENDER_EXTERNAL_HOSTNAME")
@@ -14,6 +15,7 @@ if RENDER_EXTERNAL_HOSTNAME:
 
 CSRF_TRUSTED_ORIGINS = [
     "https://django-5min-languageapp.onrender.com",
+    "https://app.quicklesson5min.com",
 ]
 
 env_csrf = os.getenv("CSRF_TRUSTED_ORIGINS")
