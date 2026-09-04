@@ -827,3 +827,6 @@ msgstr "Reproducir sonido de prueba"
 
 msgid "Done"
 msgstr "Listo"
+
+msgid "This check is optional. You can start a lesson without completing it."
+msgstr "Esta comprobación es opcional. Puedes iniciar una clase sin completarla."

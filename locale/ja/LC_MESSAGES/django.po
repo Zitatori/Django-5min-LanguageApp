@@ -818,3 +818,6 @@ msgstr "テスト音を再生"
 
 msgid "Done"
 msgstr "チェック完了"
+
+msgid "This check is optional. You can start a lesson without completing it."
+msgstr "このチェックは任意です。チェックしなくてもレッスンを開始できます。"

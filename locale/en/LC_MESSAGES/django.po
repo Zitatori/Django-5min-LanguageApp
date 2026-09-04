@@ -1528,3 +1528,6 @@ msgstr "Play test sound"
 
 msgid "Done"
 msgstr "Done"
+
+msgid "This check is optional. You can start a lesson without completing it."
+msgstr "This check is optional. You can start a lesson without completing it."
