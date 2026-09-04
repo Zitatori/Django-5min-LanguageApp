@@ -779,3 +779,60 @@ msgstr "Fondateur"
 
 msgid "30 minutes passed without a match — you have been set offline."
 msgstr "30 minutes sans correspondance — vous avez été mis hors ligne."
+
+msgid "Check camera and microphone"
+msgstr "Vérifier la caméra et le micro"
+
+msgid "Camera is working"
+msgstr "La caméra fonctionne"
+
+msgid "Waiting for camera permission..."
+msgstr "En attente de l'autorisation caméra..."
+
+msgid "Microphone input detected"
+msgstr "Entrée micro détectée"
+
+msgid "Speak to test your microphone"
+msgstr "Parlez pour tester votre micro"
+
+msgid "Camera or microphone permission was denied. Please allow access in your browser settings and try again."
+msgstr "L'autorisation caméra ou micro a été refusée. Autorisez l'accès dans les réglages du navigateur puis réessayez."
+
+msgid "Camera or microphone was not found. Please connect a device and try again."
+msgstr "Aucune caméra ou aucun micro n'a été trouvé. Connectez un appareil puis réessayez."
+
+msgid "Camera or microphone is already in use by another app. Please close other apps and try again."
+msgstr "La caméra ou le micro est déjà utilisé par une autre application. Fermez les autres applications puis réessayez."
+
+msgid "The selected camera or microphone cannot be used. Please try another device."
+msgstr "La caméra ou le micro sélectionné ne peut pas être utilisé. Essayez un autre appareil."
+
+msgid "This browser does not support camera and microphone checks."
+msgstr "Ce navigateur ne prend pas en charge la vérification caméra et micro."
+
+msgid "Could not start the device check. Please check your browser permissions and connected devices."
+msgstr "Impossible de démarrer la vérification des appareils. Vérifiez les autorisations du navigateur et les appareils connectés."
+
+msgid "Camera and microphone check"
+msgstr "Vérification de la caméra et du micro"
+
+msgid "This check is optional. You can go online without completing it."
+msgstr "Cette vérification est facultative. Vous pouvez passer en ligne sans la terminer."
+
+msgid "Camera"
+msgstr "Caméra"
+
+msgid "Microphone"
+msgstr "Micro"
+
+msgid "Speaker"
+msgstr "Haut-parleur"
+
+msgid "The sound will play from your browser's default output device."
+msgstr "Le son sera lu depuis la sortie par défaut du navigateur."
+
+msgid "Play test sound"
+msgstr "Jouer un son de test"
+
+msgid "Done"
+msgstr "Terminé"

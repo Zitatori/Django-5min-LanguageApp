@@ -770,3 +770,60 @@ msgstr "Fundador"
 
 msgid "30 minutes passed without a match — you have been set offline."
 msgstr "30 minutos sin coincidencia — se le ha puesto fuera de línea."
+
+msgid "Check camera and microphone"
+msgstr "Comprobar cámara y micrófono"
+
+msgid "Camera is working"
+msgstr "La cámara funciona"
+
+msgid "Waiting for camera permission..."
+msgstr "Esperando permiso de cámara..."
+
+msgid "Microphone input detected"
+msgstr "Entrada de micrófono detectada"
+
+msgid "Speak to test your microphone"
+msgstr "Habla para probar el micrófono"
+
+msgid "Camera or microphone permission was denied. Please allow access in your browser settings and try again."
+msgstr "Se rechazó el permiso de cámara o micrófono. Permite el acceso en la configuración del navegador e inténtalo de nuevo."
+
+msgid "Camera or microphone was not found. Please connect a device and try again."
+msgstr "No se encontró cámara o micrófono. Conecta un dispositivo e inténtalo de nuevo."
+
+msgid "Camera or microphone is already in use by another app. Please close other apps and try again."
+msgstr "La cámara o el micrófono ya está en uso por otra aplicación. Cierra otras aplicaciones e inténtalo de nuevo."
+
+msgid "The selected camera or microphone cannot be used. Please try another device."
+msgstr "No se puede usar la cámara o el micrófono seleccionado. Prueba otro dispositivo."
+
+msgid "This browser does not support camera and microphone checks."
+msgstr "Este navegador no admite la comprobación de cámara y micrófono."
+
+msgid "Could not start the device check. Please check your browser permissions and connected devices."
+msgstr "No se pudo iniciar la comprobación de dispositivos. Revisa los permisos del navegador y los dispositivos conectados."
+
+msgid "Camera and microphone check"
+msgstr "Comprobación de cámara y micrófono"
+
+msgid "This check is optional. You can go online without completing it."
+msgstr "Esta comprobación es opcional. Puedes ponerte en línea sin completarla."
+
+msgid "Camera"
+msgstr "Cámara"
+
+msgid "Microphone"
+msgstr "Micrófono"
+
+msgid "Speaker"
+msgstr "Altavoz"
+
+msgid "The sound will play from your browser's default output device."
+msgstr "El sonido se reproducirá desde la salida predeterminada del navegador."
+
+msgid "Play test sound"
+msgstr "Reproducir sonido de prueba"
+
+msgid "Done"
+msgstr "Listo"

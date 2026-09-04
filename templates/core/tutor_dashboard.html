@@ -20,22 +20,86 @@
     {% endif %}
   </div>
 
-  <form method="post" id="online-form" style="margin:0;">
-    {% csrf_token %}
-    {% if tutor.is_online %}
-      <input type="hidden" name="action" value="go_offline">
-    {% else %}
-      <input type="hidden" name="action" value="go_online">
-    {% endif %}
-    <div class="td-toggle-wrap">
-      <span class="td-toggle-label">{% trans "Offline" %}</span>
-      <label class="td-toggle">
-        <input id="online-toggle" type="checkbox" style="display:none;" {% if tutor.is_online %}checked{% endif %}>
-        <span class="td-slider"></span>
-      </label>
-      <span class="td-toggle-label {% if tutor.is_online %}td-toggle-on{% endif %}">{% trans "Online" %}</span>
+  <div class="td-status-actions">
+    <button type="button" class="td-device-check-btn" id="device-check-open">
+      {% trans "Check camera and microphone" %}
+    </button>
+
+    <form method="post" id="online-form" style="margin:0;">
+      {% csrf_token %}
+      {% if tutor.is_online %}
+        <input type="hidden" name="action" value="go_offline">
+      {% else %}
+        <input type="hidden" name="action" value="go_online">
+      {% endif %}
+      <div class="td-toggle-wrap">
+        <span class="td-toggle-label">{% trans "Offline" %}</span>
+        <label class="td-toggle">
+          <input id="online-toggle" type="checkbox" style="display:none;" {% if tutor.is_online %}checked{% endif %}>
+          <span class="td-slider"></span>
+        </label>
+        <span class="td-toggle-label {% if tutor.is_online %}td-toggle-on{% endif %}">{% trans "Online" %}</span>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div
+  class="td-device-modal"
+  id="device-check-modal"
+  aria-hidden="true"
+  data-camera-ok="{% trans 'Camera is working' %}"
+  data-camera-waiting="{% trans 'Waiting for camera permission...' %}"
+  data-mic-ok="{% trans 'Microphone input detected' %}"
+  data-mic-waiting="{% trans 'Speak to test your microphone' %}"
+  data-error-permission="{% trans 'Camera or microphone permission was denied. Please allow access in your browser settings and try again.' %}"
+  data-error-not-found="{% trans 'Camera or microphone was not found. Please connect a device and try again.' %}"
+  data-error-not-readable="{% trans 'Camera or microphone is already in use by another app. Please close other apps and try again.' %}"
+  data-error-overconstrained="{% trans 'The selected camera or microphone cannot be used. Please try another device.' %}"
+  data-error-unsupported="{% trans 'This browser does not support camera and microphone checks.' %}"
+  data-error-generic="{% trans 'Could not start the device check. Please check your browser permissions and connected devices.' %}"
+>
+  <div class="td-device-dialog" role="dialog" aria-modal="true" aria-labelledby="device-check-title">
+    <button type="button" class="td-device-x" data-device-close aria-label="{% trans 'Close' %}">&times;</button>
+    <div class="td-device-head">
+      <h3 id="device-check-title">{% trans "Camera and microphone check" %}</h3>
+      <p>{% trans "This check is optional. You can go online without completing it." %}</p>
     </div>
-  </form>
+
+    <div class="td-device-grid">
+      <section class="td-device-panel">
+        <div class="td-device-panel-head">
+          <strong>{% trans "Camera" %}</strong>
+          <span class="td-device-status" id="device-camera-status">{% trans "Waiting for camera permission..." %}</span>
+        </div>
+        <video class="td-device-preview" id="device-preview" autoplay playsinline muted></video>
+      </section>
+
+      <section class="td-device-panel">
+        <div class="td-device-panel-head">
+          <strong>{% trans "Microphone" %}</strong>
+          <span class="td-device-status" id="device-mic-status">{% trans "Speak to test your microphone" %}</span>
+        </div>
+        <div class="td-mic-meter" aria-hidden="true">
+          <span id="device-mic-fill"></span>
+        </div>
+        <p class="td-device-help" id="device-mic-text">{% trans "Speak to test your microphone" %}</p>
+      </section>
+
+      <section class="td-device-panel td-device-speaker">
+        <div class="td-device-panel-head">
+          <strong>{% trans "Speaker" %}</strong>
+        </div>
+        <p class="td-device-help">{% trans "The sound will play from your browser's default output device." %}</p>
+        <button type="button" class="td-device-secondary" id="speaker-test-btn">
+          {% trans "Play test sound" %}
+        </button>
+      </section>
+    </div>
+
+    <div class="td-device-error" id="device-error" role="alert" hidden></div>
+    <button type="button" class="td-device-done" data-device-close>{% trans "Done" %}</button>
+  </div>
 </div>
 </div>{# /td-item-status #}
 
@@ -191,6 +255,31 @@
     flex-direction: column;
     gap: 8px;
   }
+  .td-status-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .td-device-check-btn {
+    appearance: none;
+    border: 1.5px solid #d7d9ff;
+    background: #fff;
+    color: #4f46e5;
+    font-size: 13px;
+    font-weight: 800;
+    border-radius: 999px;
+    padding: 10px 16px;
+    cursor: pointer;
+    box-shadow: 0 8px 18px rgba(99,102,241,0.12);
+    transition: transform 0.12s, border-color 0.12s, box-shadow 0.12s;
+  }
+  .td-device-check-btn:hover {
+    transform: translateY(-1px);
+    border-color: #818cf8;
+    box-shadow: 0 12px 24px rgba(99,102,241,0.18);
+  }
   .td-online-pill {
     display: inline-flex;
     align-items: center;
@@ -257,6 +346,158 @@
   }
   #online-toggle:checked + .td-slider { background: #22c55e; }
   #online-toggle:checked + .td-slider::before { transform: translateX(24px); }
+
+  /* ── 任意デバイスチェック ── */
+  .td-device-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 10050;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 18px;
+    background: rgba(15, 23, 42, 0.52);
+  }
+  .td-device-modal.is-open { display: flex; }
+  .td-device-dialog {
+    position: relative;
+    width: min(760px, 100%);
+    max-height: min(92vh, 820px);
+    overflow: auto;
+    background: #fff;
+    border-radius: 18px;
+    padding: 26px;
+    box-shadow: 0 24px 70px rgba(15, 23, 42, 0.3);
+  }
+  .td-device-x {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 36px;
+    height: 36px;
+    border: 0;
+    border-radius: 50%;
+    background: #f3f4f6;
+    color: #6b7280;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+  }
+  .td-device-head { padding-right: 36px; margin-bottom: 20px; }
+  .td-device-head h3 {
+    margin: 0 0 6px;
+    font-size: 24px;
+    font-weight: 900;
+    color: #111827;
+  }
+  .td-device-head p {
+    margin: 0;
+    color: #6b7280;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .td-device-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 14px;
+  }
+  .td-device-panel {
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 14px;
+    background: #f8fafc;
+  }
+  .td-device-panel:first-child { grid-row: span 2; }
+  .td-device-panel-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .td-device-panel-head strong {
+    color: #111827;
+    font-size: 15px;
+  }
+  .td-device-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    border-radius: 999px;
+    background: #eef2ff;
+    color: #4f46e5;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 5px 9px;
+    white-space: nowrap;
+  }
+  .td-device-status.is-ok {
+    background: #dcfce7;
+    color: #15803d;
+  }
+  .td-device-status.is-ok::before { content: "✓"; }
+  .td-device-preview {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    display: block;
+    border-radius: 12px;
+    background: #111827;
+    object-fit: cover;
+  }
+  .td-mic-meter {
+    height: 16px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: #e5e7eb;
+  }
+  .td-mic-meter span {
+    display: block;
+    width: 0%;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #22c55e, #6366f1);
+    transition: width 0.08s linear;
+  }
+  .td-device-help {
+    margin: 10px 0 0;
+    color: #6b7280;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .td-device-secondary {
+    width: 100%;
+    margin-top: 12px;
+    border: 1.5px solid #c7d2fe;
+    border-radius: 12px;
+    background: #fff;
+    color: #4f46e5;
+    font-weight: 900;
+    padding: 12px 14px;
+    cursor: pointer;
+  }
+  .td-device-done {
+    width: 100%;
+    margin-top: 16px;
+    border: 0;
+    border-radius: 999px;
+    background: #6366f1;
+    color: #fff;
+    font-weight: 900;
+    padding: 14px 18px;
+    cursor: pointer;
+    box-shadow: 0 12px 28px rgba(99,102,241,0.28);
+  }
+  .td-device-error {
+    margin-top: 14px;
+    border: 1px solid #fecaca;
+    border-radius: 12px;
+    background: #fef2f2;
+    color: #b91c1c;
+    padding: 12px 14px;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.5;
+  }
 
   /* ── レッスン統計カード ── */
   .td-stats-card { padding: 14px 20px; }
@@ -396,14 +637,54 @@
       margin-bottom: 0;
     }
   }
+  @media (max-width: 620px) {
+    .td-status-card,
+    .td-status-actions {
+      align-items: stretch;
+      flex-direction: column;
+    }
+    .td-device-check-btn,
+    .td-status-actions form,
+    .td-toggle-wrap {
+      width: 100%;
+      justify-content: center;
+    }
+    .td-device-dialog {
+      padding: 22px 16px 18px;
+      border-radius: 16px;
+    }
+    .td-device-grid {
+      grid-template-columns: 1fr;
+    }
+    .td-device-panel:first-child { grid-row: auto; }
+    .td-device-panel-head {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+    .td-device-status { white-space: normal; }
+  }
 </style>
 
 <script>
 (function(){
   const form   = document.getElementById("online-form");
   const toggle = document.getElementById("online-toggle");
+  const deviceOpenBtn = document.getElementById("device-check-open");
+  const deviceModal = document.getElementById("device-check-modal");
+  const devicePreview = document.getElementById("device-preview");
+  const cameraStatus = document.getElementById("device-camera-status");
+  const micStatus = document.getElementById("device-mic-status");
+  const micFill = document.getElementById("device-mic-fill");
+  const micText = document.getElementById("device-mic-text");
+  const deviceError = document.getElementById("device-error");
+  const speakerTestBtn = document.getElementById("speaker-test-btn");
 
   let pollInterval = null;
+  let deviceStream = null;
+  let deviceAudioContext = null;
+  let deviceAnalyser = null;
+  let deviceMeterFrame = null;
+  let deviceMicDetected = false;
 
   function playMatchSound() {
     try {
@@ -508,11 +789,180 @@
     pollInterval = null;
   }
 
+  function setDeviceStatus(element, text, ok) {
+    if (!element) return;
+    element.textContent = text;
+    element.classList.toggle("is-ok", !!ok);
+  }
+
+  function resetDeviceCheck() {
+    if (!deviceModal) return;
+    setDeviceStatus(cameraStatus, deviceModal.dataset.cameraWaiting, false);
+    setDeviceStatus(micStatus, deviceModal.dataset.micWaiting, false);
+    if (micText) micText.textContent = deviceModal.dataset.micWaiting;
+    if (micFill) micFill.style.width = "0%";
+    if (deviceError) {
+      deviceError.hidden = true;
+      deviceError.textContent = "";
+    }
+    deviceMicDetected = false;
+  }
+
+  function stopDeviceCheck() {
+    if (deviceMeterFrame) {
+      cancelAnimationFrame(deviceMeterFrame);
+      deviceMeterFrame = null;
+    }
+    if (devicePreview) {
+      devicePreview.pause();
+      devicePreview.srcObject = null;
+    }
+    if (deviceStream) {
+      deviceStream.getTracks().forEach(track => track.stop());
+      deviceStream = null;
+    }
+    if (deviceAudioContext) {
+      deviceAudioContext.close().catch(() => {});
+      deviceAudioContext = null;
+    }
+    deviceAnalyser = null;
+  }
+
+  function deviceErrorMessage(error) {
+    if (!deviceModal) return "";
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      return deviceModal.dataset.errorUnsupported;
+    }
+    if (!error || !error.name) return deviceModal.dataset.errorGeneric;
+    if (error.name === "NotAllowedError" || error.name === "SecurityError") {
+      return deviceModal.dataset.errorPermission;
+    }
+    if (error.name === "NotFoundError" || error.name === "DevicesNotFoundError") {
+      return deviceModal.dataset.errorNotFound;
+    }
+    if (error.name === "NotReadableError" || error.name === "TrackStartError") {
+      return deviceModal.dataset.errorNotReadable;
+    }
+    if (error.name === "OverconstrainedError" || error.name === "ConstraintNotSatisfiedError") {
+      return deviceModal.dataset.errorOverconstrained;
+    }
+    return deviceModal.dataset.errorGeneric;
+  }
+
+  function startMicMeter(stream) {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) return;
+    deviceAudioContext = new AudioCtx();
+    const source = deviceAudioContext.createMediaStreamSource(stream);
+    deviceAnalyser = deviceAudioContext.createAnalyser();
+    deviceAnalyser.fftSize = 256;
+    source.connect(deviceAnalyser);
+    const data = new Uint8Array(deviceAnalyser.frequencyBinCount);
+
+    function drawMeter() {
+      if (!deviceAnalyser) return;
+      deviceAnalyser.getByteTimeDomainData(data);
+      let total = 0;
+      for (let i = 0; i < data.length; i++) {
+        const centered = data[i] - 128;
+        total += centered * centered;
+      }
+      const rms = Math.sqrt(total / data.length);
+      const level = Math.min(100, Math.round(rms * 7));
+      if (micFill) micFill.style.width = level + "%";
+      if (!deviceMicDetected && level > 12) {
+        deviceMicDetected = true;
+        setDeviceStatus(micStatus, deviceModal.dataset.micOk, true);
+        if (micText) micText.textContent = deviceModal.dataset.micOk;
+      }
+      deviceMeterFrame = requestAnimationFrame(drawMeter);
+    }
+
+    drawMeter();
+  }
+
+  async function startDeviceCheck() {
+    resetDeviceCheck();
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      throw new Error("Unsupported");
+    }
+    deviceStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+    if (devicePreview) {
+      devicePreview.srcObject = deviceStream;
+      devicePreview.play().catch(() => {});
+    }
+    const hasVideo = deviceStream.getVideoTracks().some(track => track.readyState === "live");
+    const hasAudio = deviceStream.getAudioTracks().some(track => track.readyState === "live");
+    if (hasVideo) setDeviceStatus(cameraStatus, deviceModal.dataset.cameraOk, true);
+    if (hasAudio) startMicMeter(deviceStream);
+  }
+
+  function openDeviceModal() {
+    if (!deviceModal) return;
+    stopDeviceCheck();
+    resetDeviceCheck();
+    deviceModal.classList.add("is-open");
+    deviceModal.setAttribute("aria-hidden", "false");
+    startDeviceCheck().catch(error => {
+      stopDeviceCheck();
+      if (deviceError) {
+        deviceError.textContent = deviceErrorMessage(error);
+        deviceError.hidden = false;
+      }
+      setDeviceStatus(cameraStatus, deviceModal.dataset.cameraWaiting, false);
+      setDeviceStatus(micStatus, deviceModal.dataset.micWaiting, false);
+    });
+  }
+
+  function closeDeviceModal() {
+    if (!deviceModal) return;
+    stopDeviceCheck();
+    deviceModal.classList.remove("is-open");
+    deviceModal.setAttribute("aria-hidden", "true");
+  }
+
+  function playSpeakerTest() {
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      const ctx = new AudioCtx();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(660, ctx.currentTime);
+      gain.gain.setValueAtTime(0.001, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.25, ctx.currentTime + 0.03);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.45);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.45);
+      osc.onended = () => ctx.close().catch(() => {});
+    } catch (e) {}
+  }
+
   if (toggle && toggle.checked) startPolling();
 
-  form.querySelector(".td-toggle-wrap").addEventListener("click", () => {
-    stopPolling();
-    form.submit();
+  if (form) {
+    form.querySelector(".td-toggle-wrap").addEventListener("click", () => {
+      stopPolling();
+      form.submit();
+    });
+  }
+
+  if (deviceOpenBtn) deviceOpenBtn.addEventListener("click", openDeviceModal);
+  if (speakerTestBtn) speakerTestBtn.addEventListener("click", playSpeakerTest);
+  document.querySelectorAll("[data-device-close]").forEach(btn => {
+    btn.addEventListener("click", closeDeviceModal);
+  });
+  if (deviceModal) {
+    deviceModal.addEventListener("click", event => {
+      if (event.target === deviceModal) closeDeviceModal();
+    });
+  }
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape" && deviceModal && deviceModal.classList.contains("is-open")) {
+      closeDeviceModal();
+    }
   });
 
   // ビーコンは使わない: モバイルで誤発火してオフライン化される問題があるため削除

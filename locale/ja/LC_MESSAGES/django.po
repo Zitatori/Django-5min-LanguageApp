@@ -761,3 +761,60 @@ msgstr "創設者"
 
 msgid "30 minutes passed without a match — you have been set offline."
 msgstr "30分間マッチがなかったため、自動的にオフラインになりました。"
+
+msgid "Check camera and microphone"
+msgstr "カメラ・マイクをチェック"
+
+msgid "Camera is working"
+msgstr "カメラは正常です"
+
+msgid "Waiting for camera permission..."
+msgstr "カメラ権限を待っています..."
+
+msgid "Microphone input detected"
+msgstr "マイク入力を検出しました"
+
+msgid "Speak to test your microphone"
+msgstr "話してマイクをテストしてください"
+
+msgid "Camera or microphone permission was denied. Please allow access in your browser settings and try again."
+msgstr "カメラまたはマイクの権限が拒否されました。ブラウザ設定で許可してから再度お試しください。"
+
+msgid "Camera or microphone was not found. Please connect a device and try again."
+msgstr "カメラまたはマイクが見つかりません。デバイスを接続してから再度お試しください。"
+
+msgid "Camera or microphone is already in use by another app. Please close other apps and try again."
+msgstr "カメラまたはマイクが他のアプリで使用中です。他のアプリを閉じてから再度お試しください。"
+
+msgid "The selected camera or microphone cannot be used. Please try another device."
+msgstr "選択されたカメラまたはマイクを使用できません。別のデバイスをお試しください。"
+
+msgid "This browser does not support camera and microphone checks."
+msgstr "このブラウザはカメラ・マイクチェックに対応していません。"
+
+msgid "Could not start the device check. Please check your browser permissions and connected devices."
+msgstr "デバイスチェックを開始できませんでした。ブラウザの権限と接続済みデバイスを確認してください。"
+
+msgid "Camera and microphone check"
+msgstr "カメラ・マイクチェック"
+
+msgid "This check is optional. You can go online without completing it."
+msgstr "このチェックは任意です。チェックしなくてもオンライン待機できます。"
+
+msgid "Camera"
+msgstr "カメラ"
+
+msgid "Microphone"
+msgstr "マイク"
+
+msgid "Speaker"
+msgstr "スピーカー"
+
+msgid "The sound will play from your browser's default output device."
+msgstr "ブラウザの既定の出力先から音が鳴ります。"
+
+msgid "Play test sound"
+msgstr "テスト音を再生"
+
+msgid "Done"
+msgstr "チェック完了"

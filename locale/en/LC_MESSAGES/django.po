@@ -1471,3 +1471,60 @@ msgstr "Founder"
 
 msgid "30 minutes passed without a match — you have been set offline."
 msgstr "30 minutes passed without a match — you have been set offline."
+
+msgid "Check camera and microphone"
+msgstr "Check camera and microphone"
+
+msgid "Camera is working"
+msgstr "Camera is working"
+
+msgid "Waiting for camera permission..."
+msgstr "Waiting for camera permission..."
+
+msgid "Microphone input detected"
+msgstr "Microphone input detected"
+
+msgid "Speak to test your microphone"
+msgstr "Speak to test your microphone"
+
+msgid "Camera or microphone permission was denied. Please allow access in your browser settings and try again."
+msgstr "Camera or microphone permission was denied. Please allow access in your browser settings and try again."
+
+msgid "Camera or microphone was not found. Please connect a device and try again."
+msgstr "Camera or microphone was not found. Please connect a device and try again."
+
+msgid "Camera or microphone is already in use by another app. Please close other apps and try again."
+msgstr "Camera or microphone is already in use by another app. Please close other apps and try again."
+
+msgid "The selected camera or microphone cannot be used. Please try another device."
+msgstr "The selected camera or microphone cannot be used. Please try another device."
+
+msgid "This browser does not support camera and microphone checks."
+msgstr "This browser does not support camera and microphone checks."
+
+msgid "Could not start the device check. Please check your browser permissions and connected devices."
+msgstr "Could not start the device check. Please check your browser permissions and connected devices."
+
+msgid "Camera and microphone check"
+msgstr "Camera and microphone check"
+
+msgid "This check is optional. You can go online without completing it."
+msgstr "This check is optional. You can go online without completing it."
+
+msgid "Camera"
+msgstr "Camera"
+
+msgid "Microphone"
+msgstr "Microphone"
+
+msgid "Speaker"
+msgstr "Speaker"
+
+msgid "The sound will play from your browser's default output device."
+msgstr "The sound will play from your browser's default output device."
+
+msgid "Play test sound"
+msgstr "Play test sound"
+
+msgid "Done"
+msgstr "Done"
