@@ -1531,3 +1531,27 @@ msgstr "Done"
 
 msgid "This check is optional. You can start a lesson without completing it."
 msgstr "This check is optional. You can start a lesson without completing it."
+
+msgid "First time"
+msgstr "First time"
+
+msgid "Previous conversations: %(count)s"
+msgstr "Previous conversations: %(count)s"
+
+msgid "Learner's level"
+msgstr "Learner's level"
+
+msgid "What we talked about"
+msgstr "What we talked about"
+
+msgid "For the next conversation"
+msgstr "For the next conversation"
+
+msgid "Select level"
+msgstr "Select level"
+
+msgid "Planning a trip to Switzerland. Likes hiking."
+msgstr "Planning a trip to Switzerland. Likes hiking."
+
+msgid "Ask which cities they decided to visit."
+msgstr "Ask which cities they decided to visit."

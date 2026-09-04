@@ -65,3 +65,13 @@ class QuickLessonMatch(models.Model):
     @property
     def tutor_name(self) -> str:
         return self.tutor.user.username
+
+    @property
+    def previous_conversation_count(self) -> int:
+        return QuickLessonMatch.objects.filter(
+            request__student=self.request.student,
+            tutor=self.tutor,
+            student_joined_at__isnull=False,
+            tutor_joined_at__isnull=False,
+            end_at__isnull=False,
+        ).exclude(pk=self.pk).count()

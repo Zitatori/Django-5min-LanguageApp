@@ -20,7 +20,15 @@
         {% for n in previous_notes %}
         <li class="note-prev-item">
           <div class="note-prev-meta">{{ n.created_at|date:"Y/m/d" }}&ensp;·&ensp;{% if n.tutor.user.first_name %}{{ n.tutor.user.first_name }} ({{ n.tutor.user.username }}){% else %}{{ n.tutor.user.username }}{% endif %}</div>
-          <div class="note-prev-body">{{ n.note }}</div>
+          {% if n.learner_level or n.talked_about or n.next_conversation %}
+            <div class="note-prev-structured">
+              {% if n.learner_level %}<p><strong>{% trans "Learner's level" %}:</strong> {{ n.learner_level }}</p>{% endif %}
+              {% if n.talked_about %}<p><strong>{% trans "What we talked about" %}:</strong> {{ n.talked_about }}</p>{% endif %}
+              {% if n.next_conversation %}<p><strong>{% trans "For the next conversation" %}:</strong> {{ n.next_conversation }}</p>{% endif %}
+            </div>
+          {% else %}
+            <div class="note-prev-body">{{ n.note }}</div>
+          {% endif %}
         </li>
         {% endfor %}
       </ul>
@@ -37,16 +45,38 @@
 
     <form method="post" id="note-form">
       {% csrf_token %}
-      <label class="note-label" for="note-input">{% trans "Your note for this session" %}</label>
+
+      <label class="note-label" for="learner-level">{% trans "Learner's level" %}</label>
+      <select id="learner-level" name="learner_level" class="note-select">
+        <option value="">{% trans "Select level" %}</option>
+        <option value="A1">A1</option>
+        <option value="A2">A2</option>
+        <option value="B1">B1</option>
+        <option value="B2">B2</option>
+        <option value="C1">C1</option>
+        <option value="C2">C2</option>
+      </select>
+
+      <label class="note-label" for="talked-about">{% trans "What we talked about" %}</label>
       <textarea
-        id="note-input"
-        name="note"
+        id="talked-about"
+        name="talked_about"
         class="note-textarea"
         maxlength="500"
-        placeholder="{% trans 'Write a short note about today\'s conversation (100–500 characters)…' %}"
-        rows="5"
+        placeholder="{% trans 'Planning a trip to Switzerland. Likes hiking.' %}"
+        rows="3"
       ></textarea>
-      <div class="note-charcount"><span id="note-count">0</span> / 500</div>
+
+      <label class="note-label" for="next-conversation">{% trans "For the next conversation" %}</label>
+      <textarea
+        id="next-conversation"
+        name="next_conversation"
+        class="note-textarea"
+        maxlength="500"
+        placeholder="{% trans 'Ask which cities they decided to visit.' %}"
+        rows="3"
+      ></textarea>
+
       <button type="submit" class="btn note-submit">{% trans "Save Note" %}</button>
     </form>
 
@@ -116,6 +146,15 @@
     line-height: 1.55;
     white-space: pre-wrap;
   }
+  .note-prev-structured {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 14px;
+    color: #374151;
+    line-height: 1.5;
+  }
+  .note-prev-structured p { margin: 0; }
 
   /* First session guide */
   .note-first-session {
@@ -147,19 +186,28 @@
     color: #374151;
     margin-bottom: 6px;
   }
+  .note-select,
   .note-textarea {
     width: 100%;
     padding: 10px 12px;
     border: 1px solid #d1d5db;
     border-radius: 8px;
     font-size: 14px;
-    resize: vertical;
     line-height: 1.55;
     font-family: inherit;
     box-sizing: border-box;
     transition: border-color 0.15s;
   }
-  .note-textarea:focus {
+  .note-select {
+    background: #fff;
+    margin-bottom: 14px;
+  }
+  .note-textarea {
+    resize: vertical;
+    margin-bottom: 14px;
+  }
+  .note-textarea:focus,
+  .note-select:focus {
     outline: none;
     border-color: #6366f1;
     box-shadow: 0 0 0 3px rgba(99,102,241,0.12);
@@ -186,21 +234,23 @@
 
   @media (prefers-color-scheme: dark) {
     .note-prev-item { background: #1f2937; border-color: #374151; }
-    .note-prev-body { color: #d1d5db; }
+    .note-prev-body, .note-prev-structured { color: #d1d5db; }
     .note-first-session { background: #1e3a5f; border-color: #2563eb; }
     .note-first-label { color: #93c5fd; }
     .note-first-questions { color: #bfdbfe; }
     .note-label { color: #d1d5db; }
-    .note-textarea { background: #1f2937; border-color: #374151; color: #f3f4f6; }
-    .note-textarea:focus { border-color: #818cf8; box-shadow: 0 0 0 3px rgba(129,140,248,0.15); }
+    .note-select, .note-textarea { background: #1f2937; border-color: #374151; color: #f3f4f6; }
+    .note-textarea:focus, .note-select:focus { border-color: #818cf8; box-shadow: 0 0 0 3px rgba(129,140,248,0.15); }
   }
 </style>
 
 <script>
   const textarea  = document.getElementById("note-input");
   const countSpan = document.getElementById("note-count");
-  textarea.addEventListener("input", () => {
-    countSpan.textContent = textarea.value.length;
-  });
+  if (textarea && countSpan) {
+    textarea.addEventListener("input", () => {
+      countSpan.textContent = textarea.value.length;
+    });
+  }
 </script>
 {% endblock %}

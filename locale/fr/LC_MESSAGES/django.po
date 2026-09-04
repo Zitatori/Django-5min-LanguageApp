@@ -839,3 +839,27 @@ msgstr "Terminé"
 
 msgid "This check is optional. You can start a lesson without completing it."
 msgstr "Cette vérification est facultative. Vous pouvez démarrer une leçon sans la terminer."
+
+msgid "First time"
+msgstr "Première fois"
+
+msgid "Previous conversations: %(count)s"
+msgstr "Conversations précédentes : %(count)s"
+
+msgid "Learner's level"
+msgstr "Niveau de l'apprenant"
+
+msgid "What we talked about"
+msgstr "Ce dont nous avons parlé"
+
+msgid "For the next conversation"
+msgstr "Pour la prochaine conversation"
+
+msgid "Select level"
+msgstr "Sélectionner le niveau"
+
+msgid "Planning a trip to Switzerland. Likes hiking."
+msgstr "Prépare un voyage en Suisse. Aime la randonnée."
+
+msgid "Ask which cities they decided to visit."
+msgstr "Demander quelles villes il ou elle a décidé de visiter."

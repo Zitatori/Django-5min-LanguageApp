@@ -177,13 +177,31 @@ def lesson_note(request, match_id: int):
     tutor = match.tutor
 
     if request.method == "POST":
-        note_text = request.POST.get("note", "").strip()
-        if note_text:
+        learner_level = request.POST.get("learner_level", "").strip()
+        talked_about = request.POST.get("talked_about", "").strip()[:500]
+        next_conversation = request.POST.get("next_conversation", "").strip()[:500]
+
+        valid_levels = {choice[0] for choice in ConversationNote.LEVEL_CHOICES}
+        if learner_level not in valid_levels:
+            learner_level = ""
+
+        summary_parts = []
+        if learner_level:
+            summary_parts.append(f"Learner's level: {learner_level}")
+        if talked_about:
+            summary_parts.append(f"What we talked about: {talked_about}")
+        if next_conversation:
+            summary_parts.append(f"For the next conversation: {next_conversation}")
+
+        if summary_parts:
             ConversationNote.objects.create(
                 student=student,
                 tutor=tutor,
                 match=match,
-                note=note_text[:500],
+                note="\n".join(summary_parts)[:500],
+                learner_level=learner_level,
+                talked_about=talked_about,
+                next_conversation=next_conversation,
             )
         return redirect("tutor_dashboard")
 

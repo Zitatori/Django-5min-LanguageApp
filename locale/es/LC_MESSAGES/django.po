@@ -830,3 +830,27 @@ msgstr "Listo"
 
 msgid "This check is optional. You can start a lesson without completing it."
 msgstr "Esta comprobación es opcional. Puedes iniciar una clase sin completarla."
+
+msgid "First time"
+msgstr "Primera vez"
+
+msgid "Previous conversations: %(count)s"
+msgstr "Conversaciones anteriores: %(count)s"
+
+msgid "Learner's level"
+msgstr "Nivel del estudiante"
+
+msgid "What we talked about"
+msgstr "De qué hablamos"
+
+msgid "For the next conversation"
+msgstr "Para la próxima conversación"
+
+msgid "Select level"
+msgstr "Seleccionar nivel"
+
+msgid "Planning a trip to Switzerland. Likes hiking."
+msgstr "Planificando un viaje a Suiza. Le gusta el senderismo."
+
+msgid "Ask which cities they decided to visit."
+msgstr "Pregunta qué ciudades decidió visitar."

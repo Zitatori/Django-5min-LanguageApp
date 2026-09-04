@@ -118,6 +118,13 @@
           {% elif u.is_staff %}<span class="header-badge header-badge-admin">Admin</span>
           {% endif %}{% endwith %}
         </p>
+        <p style="font-size:12px; color:#6b7280; margin-top:4px;">
+          {% if match.previous_conversation_count %}
+            {% blocktrans with count=match.previous_conversation_count %}Previous conversations: {{ count }}{% endblocktrans %}
+          {% else %}
+            {% trans "First time" %}
+          {% endif %}
+        </p>
         <p><strong>Language:</strong> {{ match.request.language.name }}</p>
         <a href="{% url 'lesson_room' match.id %}" class="btn btn-primary" style="margin-top:8px; display:inline-block;">
           {% trans "Enter lesson room" %}

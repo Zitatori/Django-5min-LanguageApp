@@ -821,3 +821,27 @@ msgstr "チェック完了"
 
 msgid "This check is optional. You can start a lesson without completing it."
 msgstr "このチェックは任意です。チェックしなくてもレッスンを開始できます。"
+
+msgid "First time"
+msgstr "初めて"
+
+msgid "Previous conversations: %(count)s"
+msgstr "過去の会話回数: %(count)s"
+
+msgid "Learner's level"
+msgstr "学習者のレベル"
+
+msgid "What we talked about"
+msgstr "話した内容"
+
+msgid "For the next conversation"
+msgstr "次の会話に向けて"
+
+msgid "Select level"
+msgstr "レベルを選択"
+
+msgid "Planning a trip to Switzerland. Likes hiking."
+msgstr "スイス旅行の計画。ハイキングが好き。"
+
+msgid "Ask which cities they decided to visit."
+msgstr "どの都市に行くことにしたか聞く。"
