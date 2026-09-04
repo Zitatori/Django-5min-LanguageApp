@@ -863,3 +863,6 @@ msgstr "Prépare un voyage en Suisse. Aime la randonnée."
 
 msgid "Ask which cities they decided to visit."
 msgstr "Demander quelles villes il ou elle a décidé de visiter."
+
+msgid "Previous conversations"
+msgstr "Conversations précédentes"

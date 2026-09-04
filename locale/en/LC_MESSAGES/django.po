@@ -1555,3 +1555,6 @@ msgstr "Planning a trip to Switzerland. Likes hiking."
 
 msgid "Ask which cities they decided to visit."
 msgstr "Ask which cities they decided to visit."
+
+msgid "Previous conversations"
+msgstr "Previous conversations"

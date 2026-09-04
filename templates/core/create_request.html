@@ -299,6 +299,23 @@
     background: #ede9fe;
     color: #4f46e5;
   }
+  .cr-tutor-main {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+  .cr-tutor-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: inherit;
+  }
+  .cr-tutor-history {
+    font-size: 11px;
+    font-weight: 600;
+    color: #9ca3af;
+  }
+  .cr-tutor-card.selected .cr-tutor-history { color: #6d28d9; }
   .cr-tutor-card .cr-tutor-check {
     margin-left: auto;
     color: #6366f1; font-size: 18px;
@@ -651,6 +668,8 @@
 
   function renderTutorList(langId) {
     const tutors = tutorsByLang[String(langId)] || [];
+    const firstTimeLabel = "{% trans 'First time' %}";
+    const previousConversationsLabel = "{% trans 'Previous conversations' %}";
     selectedTutorId = '';
     tutorInput.value = '';
     startBtn.disabled = true;
@@ -665,9 +684,16 @@
       const isFounder = t.badge === 'dev';
       const founderClass = isFounder ? ' cr-tutor-card--founder' : '';
       const avatarStyle = isFounder ? ' style="background:linear-gradient(135deg,#ec4899,#8b5cf6);"' : '';
+      const previousCount = Number(t.previous_count || 0);
+      const historyText = previousCount > 0
+        ? `${previousConversationsLabel}: ${previousCount}`
+        : firstTimeLabel;
       return `<div class="cr-tutor-card${founderClass}" onclick="pickTutor(this,'${t.id}')">
         <div class="cr-tutor-avatar"${avatarStyle}>${initials}</div>
-        <span>${t.name}${badgeHtml(t.badge)}</span>
+        <div class="cr-tutor-main">
+          <span class="cr-tutor-name">${t.name}${badgeHtml(t.badge)}</span>
+          <span class="cr-tutor-history">${historyText}</span>
+        </div>
         <span class="cr-tutor-check">✓</span>
       </div>`;
     }).join('');

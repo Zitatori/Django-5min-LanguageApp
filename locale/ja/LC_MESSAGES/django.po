@@ -845,3 +845,6 @@ msgstr "スイス旅行の計画。ハイキングが好き。"
 
 msgid "Ask which cities they decided to visit."
 msgstr "どの都市に行くことにしたか聞く。"
+
+msgid "Previous conversations"
+msgstr "過去の会話回数"

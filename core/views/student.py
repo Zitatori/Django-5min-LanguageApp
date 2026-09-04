@@ -141,6 +141,16 @@ def _in_lesson_info(language, now=None):
     return count, minutes
 
 
+def _previous_conversation_count(student_profile, tutor_profile):
+    return QuickLessonMatch.objects.filter(
+        request__student=student_profile,
+        tutor=tutor_profile,
+        student_joined_at__isnull=False,
+        tutor_joined_at__isnull=False,
+        end_at__isnull=False,
+    ).count()
+
+
 def active_tutors_qs(language=None):
     """実際にオンライン中（5分以内に ping あり）のチュータークエリセット。
     last_ping_at が未設定（None）の場合は ping タイムアウトを適用しない。
@@ -327,7 +337,12 @@ def create_request(request):
                     badge = "gold"
             except Exception:
                 pass
-        entry = {"id": tutor.pk, "name": display_name, "badge": badge}
+        entry = {
+            "id": tutor.pk,
+            "name": display_name,
+            "badge": badge,
+            "previous_count": _previous_conversation_count(student_profile, tutor),
+        }
         for lang in tutor.languages.all():
             tutors_by_language.setdefault(str(lang.id), []).append(entry)
     tutors_by_language_json = json.dumps(tutors_by_language)
@@ -458,7 +473,12 @@ def student_online_counts(request):
                         badge = "gold"
                 except Exception:
                     pass
-            tutors_for_lang.append({"id": t.pk, "name": display_name, "badge": badge})
+            tutors_for_lang.append({
+                "id": t.pk,
+                "name": display_name,
+                "badge": badge,
+                "previous_count": _previous_conversation_count(student_profile, t),
+            })
         data[str(lang.id)] = {
             'online': qs.count(),
             'in_lesson': in_lesson_count,
