@@ -866,3 +866,18 @@ msgstr "Demander quelles villes il ou elle a décidé de visiter."
 
 msgid "Previous conversations"
 msgstr "Conversations précédentes"
+
+msgid "To add a teaching language, a review and trial are required."
+msgstr "Pour ajouter une langue, une evaluation et un essai sont necessaires."
+
+msgid "English application form"
+msgstr "Formulaire anglais"
+
+msgid "Japanese application form"
+msgstr "Formulaire japonais"
+
+msgid "French application form"
+msgstr "Formulaire francais"
+
+msgid "Spanish application form"
+msgstr "Formulaire espagnol"

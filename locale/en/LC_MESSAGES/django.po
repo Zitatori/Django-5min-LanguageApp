@@ -1558,3 +1558,18 @@ msgstr "Ask which cities they decided to visit."
 
 msgid "Previous conversations"
 msgstr "Previous conversations"
+
+msgid "To add a teaching language, a review and trial are required."
+msgstr "To add a teaching language, a review and trial are required."
+
+msgid "English application form"
+msgstr "English application form"
+
+msgid "Japanese application form"
+msgstr "Japanese application form"
+
+msgid "French application form"
+msgstr "French application form"
+
+msgid "Spanish application form"
+msgstr "Spanish application form"

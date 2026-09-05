@@ -848,3 +848,18 @@ msgstr "どの都市に行くことにしたか聞く。"
 
 msgid "Previous conversations"
 msgstr "過去の会話回数"
+
+msgid "To add a teaching language, a review and trial are required."
+msgstr "担当言語を追加する場合は審査とトライアルが必要です。"
+
+msgid "English application form"
+msgstr "英語フォーム"
+
+msgid "Japanese application form"
+msgstr "日本語フォーム"
+
+msgid "French application form"
+msgstr "フランス語フォーム"
+
+msgid "Spanish application form"
+msgstr "スペイン語フォーム"

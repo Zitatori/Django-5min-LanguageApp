@@ -236,7 +236,15 @@
 {# ── 言語追加案内 ── #}
 <div class="td-lang-notice">
   <span class="td-lang-notice-icon">💬</span>
-  <span>{% trans "To add a teaching language, an interview is required. Please email your available times to" %} <a href="mailto:zitatori@gmail.com" class="td-lang-notice-link">zitatori@gmail.com</a></span>
+  <div class="td-lang-notice-body">
+    <span>{% trans "To add a teaching language, a review and trial are required." %}</span>
+    <div class="td-lang-form-links">
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSdxtlLt0XxDJsjwBzBvvpo5EpFNbG00b0sirsPFXw5R8s9yrg/viewform?usp=dialog" target="_blank" rel="noopener" class="td-lang-notice-link">{% trans "English application form" %}</a>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLScNqEZQsvZqmpH4RzhII00l0OPiAbcJNympRh51-Zl4aoIgDQ/viewform?usp=dialog" target="_blank" rel="noopener" class="td-lang-notice-link">{% trans "Japanese application form" %}</a>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLScwKwyWGtrJojc8TB80NnuSeMl9xGnggJhebn_mGyz5Hlmxhg/viewform?usp=dialog" target="_blank" rel="noopener" class="td-lang-notice-link">{% trans "French application form" %}</a>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSflXPpl_sqJWoOEiLdhGgaizTwVNu4151T9uzi87LWlbvZ2qQ/viewform?usp=dialog" target="_blank" rel="noopener" class="td-lang-notice-link">{% trans "Spanish application form" %}</a>
+    </div>
+  </div>
 </div>
 
 </div>{# /td-col-left #}
@@ -619,7 +627,9 @@
     margin-bottom: 16px;
   }
   .td-lang-notice-icon { flex-shrink: 0; font-size: 15px; }
-  .td-lang-notice-link { color: #6366f1; text-decoration: underline; }
+  .td-lang-notice-body { display: flex; flex-direction: column; gap: 8px; }
+  .td-lang-form-links { display: flex; flex-wrap: wrap; gap: 8px 12px; }
+  .td-lang-notice-link { color: #6366f1; text-decoration: underline; font-weight: 700; }
   .td-lang-notice-link:hover { color: #4f46e5; }
 
   /* ── PC 2カラムレイアウト ── */
