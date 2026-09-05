@@ -881,3 +881,6 @@ msgstr "Formulaire francais"
 
 msgid "Spanish application form"
 msgstr "Formulaire espagnol"
+
+msgid "Application form"
+msgstr "Formulaire de candidature"

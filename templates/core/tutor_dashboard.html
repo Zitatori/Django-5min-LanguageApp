@@ -238,12 +238,15 @@
   <span class="td-lang-notice-icon">💬</span>
   <div class="td-lang-notice-body">
     <span>{% trans "To add a teaching language, a review and trial are required." %}</span>
-    <div class="td-lang-form-links">
-      <a href="https://docs.google.com/forms/d/e/1FAIpQLSdxtlLt0XxDJsjwBzBvvpo5EpFNbG00b0sirsPFXw5R8s9yrg/viewform?usp=dialog" target="_blank" rel="noopener" class="td-lang-notice-link">{% trans "English application form" %}</a>
-      <a href="https://docs.google.com/forms/d/e/1FAIpQLScNqEZQsvZqmpH4RzhII00l0OPiAbcJNympRh51-Zl4aoIgDQ/viewform?usp=dialog" target="_blank" rel="noopener" class="td-lang-notice-link">{% trans "Japanese application form" %}</a>
-      <a href="https://docs.google.com/forms/d/e/1FAIpQLScwKwyWGtrJojc8TB80NnuSeMl9xGnggJhebn_mGyz5Hlmxhg/viewform?usp=dialog" target="_blank" rel="noopener" class="td-lang-notice-link">{% trans "French application form" %}</a>
-      <a href="https://docs.google.com/forms/d/e/1FAIpQLSflXPpl_sqJWoOEiLdhGgaizTwVNu4151T9uzi87LWlbvZ2qQ/viewform?usp=dialog" target="_blank" rel="noopener" class="td-lang-notice-link">{% trans "Spanish application form" %}</a>
-    </div>
+    {% if request.LANGUAGE_CODE == "ja" %}
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLScNqEZQsvZqmpH4RzhII00l0OPiAbcJNympRh51-Zl4aoIgDQ/viewform?usp=dialog" target="_blank" rel="noopener" class="td-lang-notice-link">{% trans "Application form" %}</a>
+    {% elif request.LANGUAGE_CODE == "fr" %}
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLScwKwyWGtrJojc8TB80NnuSeMl9xGnggJhebn_mGyz5Hlmxhg/viewform?usp=dialog" target="_blank" rel="noopener" class="td-lang-notice-link">{% trans "Application form" %}</a>
+    {% elif request.LANGUAGE_CODE == "es" %}
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSflXPpl_sqJWoOEiLdhGgaizTwVNu4151T9uzi87LWlbvZ2qQ/viewform?usp=dialog" target="_blank" rel="noopener" class="td-lang-notice-link">{% trans "Application form" %}</a>
+    {% else %}
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSdxtlLt0XxDJsjwBzBvvpo5EpFNbG00b0sirsPFXw5R8s9yrg/viewform?usp=dialog" target="_blank" rel="noopener" class="td-lang-notice-link">{% trans "Application form" %}</a>
+    {% endif %}
   </div>
 </div>
 

@@ -1573,3 +1573,6 @@ msgstr "French application form"
 
 msgid "Spanish application form"
 msgstr "Spanish application form"
+
+msgid "Application form"
+msgstr "Application form"

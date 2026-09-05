@@ -872,3 +872,6 @@ msgstr "Formulario de frances"
 
 msgid "Spanish application form"
 msgstr "Formulario de espanol"
+
+msgid "Application form"
+msgstr "Formulario de solicitud"

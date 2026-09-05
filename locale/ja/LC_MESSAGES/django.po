@@ -863,3 +863,6 @@ msgstr "フランス語フォーム"
 
 msgid "Spanish application form"
 msgstr "スペイン語フォーム"
+
+msgid "Application form"
+msgstr "申請フォーム"
