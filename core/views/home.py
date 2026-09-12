@@ -31,7 +31,7 @@ def home(request):
     sessions_qs = (
         UpcomingSession.objects
         .filter(is_published=True, end_time__gt=now)
-        .order_by('start_time')[:5]
+        .order_by('start_time')[:10]
     )
 
     sessions = [_session_display(s) for s in sessions_qs]
