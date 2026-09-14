@@ -265,7 +265,7 @@ def create_request(request):
         return redirect("create_request")
 
     languages = LessonLanguage.objects.all()
-    matches = QuickLessonMatch.objects.filter(
+    matches = list(QuickLessonMatch.objects.filter(
         request__student__user=request.user,
         student_joined_at__isnull=False,
         tutor_joined_at__isnull=False,  # 両者が入室したものだけ
@@ -274,7 +274,20 @@ def create_request(request):
         "request__language",
         "tutor",
         "tutor__user",
-    ).order_by("-started_at")
+    ).order_by("-started_at"))
+
+    notes_by_match = {}
+    if matches:
+        for note in (
+            ConversationNote.objects
+            .filter(match__in=matches)
+            .select_related("tutor__user")
+            .order_by("-created_at")
+        ):
+            notes_by_match.setdefault(note.match_id, note)
+
+    for match in matches:
+        match.tutor_comment = notes_by_match.get(match.id)
 
     # 表示用（オンラインカウント）: 猶予期間中のみ除外
     consecutive_exclude = _get_display_exclude_ids(student_profile)

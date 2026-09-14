@@ -222,7 +222,7 @@
     padding: 3px 10px; border-radius: 99px;
   }
   .cr-hist-item {
-    display: flex; align-items: center; gap: 12px;
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
     padding: 10px 0;
     border-bottom: 1px solid #f3f4f6;
   }
@@ -241,6 +241,21 @@
   .cr-hist-name { font-size: 14px; font-weight: 600; color: #111827; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .cr-hist-date { font-size: 11px; color: #9ca3af; margin-top: 2px; }
   .cr-hist-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
+  .cr-hist-note {
+    flex-basis: 100%;
+    margin: 0 0 0 52px;
+    padding: 8px 10px;
+    border-radius: 10px;
+    background: #f9fafb;
+    border: 1px solid #eef2f7;
+    color: #4b5563;
+    font-size: 12px;
+    line-height: 1.45;
+    white-space: pre-wrap;
+  }
+  .cr-hist-note-title { display: block; margin-bottom: 4px; color: #111827; font-weight: 800; }
+  .cr-hist-note div + div { margin-top: 3px; }
+  .cr-hist-note-empty { color: #9ca3af; }
 
   .lang-badge {
     font-size: 11px; font-weight: 700;
@@ -587,6 +602,17 @@
           {% elif match.request.language.name == 'Japanese' %}<span class="fi fi-jp cr-fi-sm"></span>{% endif %}
           {% trans match.request.language.name %}
         </span>
+      </div>
+      <div class="cr-hist-note">
+        <span class="cr-hist-note-title">{% trans "Tutor Comment" %}</span>
+        {% if match.tutor_comment %}
+          {% if match.tutor_comment.learner_level %}<div><strong>{% trans "Learner's level" %}:</strong> {{ match.tutor_comment.learner_level }}</div>{% endif %}
+          {% if match.tutor_comment.talked_about %}<div><strong>{% trans "What we talked about" %}:</strong> {{ match.tutor_comment.talked_about }}</div>{% endif %}
+          {% if match.tutor_comment.next_conversation %}<div><strong>{% trans "For the next conversation" %}:</strong> {{ match.tutor_comment.next_conversation }}</div>{% endif %}
+          {% if match.tutor_comment.note %}<div>{{ match.tutor_comment.note }}</div>{% endif %}
+        {% else %}
+          <span class="cr-hist-note-empty">{% trans "No tutor comment yet." %}</span>
+        {% endif %}
       </div>
     </div>
     {% endfor %}
