@@ -16,6 +16,7 @@ from core.models import (
     TutorProfile,
     QuickLessonRequest,
     QuickLessonMatch,
+    ConversationNote,
 )
 
 ONLINE_TIMEOUT_SECONDS = 1800     # tutor.py と合わせる（30分）スマホスリープ対策
@@ -489,7 +490,7 @@ def student_online_counts(request):
 
 
 def student_history(request):
-    matches = QuickLessonMatch.objects.filter(
+    matches = list(QuickLessonMatch.objects.filter(
         request__student__user=request.user,
         student_joined_at__isnull=False,  # 実際に通話したものだけ
     ).select_related(
@@ -497,7 +498,20 @@ def student_history(request):
         "request__language",
         "tutor",
         "tutor__user",
-    ).order_by("-started_at")
+    ).order_by("-started_at"))
+
+    notes_by_match = {}
+    if matches:
+        for note in (
+            ConversationNote.objects
+            .filter(match__in=matches)
+            .select_related("tutor__user")
+            .order_by("-created_at")
+        ):
+            notes_by_match.setdefault(note.match_id, note)
+
+    for match in matches:
+        match.tutor_comment = notes_by_match.get(match.id)
 
     return render(request, "core/student_history.html", {
         "matches": matches,

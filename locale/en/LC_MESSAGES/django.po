@@ -1576,3 +1576,9 @@ msgstr "Spanish application form"
 
 msgid "Application form"
 msgstr "Application form"
+
+msgid "Tutor Comment"
+msgstr "Tutor Comment"
+
+msgid "No tutor comment yet."
+msgstr "No tutor comment yet."

@@ -866,3 +866,9 @@ msgstr "スペイン語フォーム"
 
 msgid "Application form"
 msgstr "申請フォーム"
+
+msgid "Tutor Comment"
+msgstr "講師コメント"
+
+msgid "No tutor comment yet."
+msgstr "まだ講師コメントはありません。"

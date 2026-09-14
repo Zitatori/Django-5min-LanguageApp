@@ -875,3 +875,9 @@ msgstr "Formulario de espanol"
 
 msgid "Application form"
 msgstr "Formulario de solicitud"
+
+msgid "Tutor Comment"
+msgstr "Comentario del profesor"
+
+msgid "No tutor comment yet."
+msgstr "Aun no hay comentarios del profesor."
