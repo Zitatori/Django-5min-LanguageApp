@@ -47,6 +47,17 @@
   .point-hero .amount { font-size: 56px; font-weight: 700; line-height: 1; }
   .point-hero .unit   { font-size: 20px; font-weight: 500; margin-left: 4px; opacity: 0.9; }
   .point-hero .earned { font-size: 13px; opacity: 0.75; margin-top: 8px; }
+  .referral-bonus-note {
+    margin: -0.7rem 0 1.5rem;
+    padding: 12px 14px;
+    border: 1.5px solid #dbeafe;
+    border-radius: 14px;
+    background: #eff6ff;
+    color: #1e3a8a;
+    font-size: 13px;
+    line-height: 1.55;
+  }
+  .referral-bonus-note strong { color: #1d4ed8; }
 
   .btn-buy {
     display: block;
@@ -219,6 +230,11 @@
   {% if not is_gold %}
     <a href="{% url 'purchase_points' %}" class="btn-buy">＋ {% trans "Buy Points" %}</a>
   {% endif %}
+</div>
+
+<div class="referral-bonus-note">
+  🎁 <strong>{% trans "Referral bonus" %}</strong><br>
+  {% blocktrans with username=request.user.username %}Invite a friend and tell them your username ({{ username }}). When that person has at least one 5-minute conversation, you will receive 5 student points.{% endblocktrans %}
 </div>
 
 {% if request.user.tutorprofile %}

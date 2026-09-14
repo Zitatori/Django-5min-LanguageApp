@@ -1582,3 +1582,9 @@ msgstr "Tutor Comment"
 
 msgid "No tutor comment yet."
 msgstr "No tutor comment yet."
+
+msgid "Referral bonus"
+msgstr "Referral bonus"
+
+msgid "Invite a friend and tell them your username (%(username)s). When that person has at least one 5-minute conversation, you will receive 5 student points."
+msgstr "Invite a friend and tell them your username (%(username)s). When that person has at least one 5-minute conversation, you will receive 5 student points."

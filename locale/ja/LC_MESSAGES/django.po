@@ -872,3 +872,9 @@ msgstr "講師コメント"
 
 msgid "No tutor comment yet."
 msgstr "まだ講師コメントはありません。"
+
+msgid "Referral bonus"
+msgstr "紹介ボーナス"
+
+msgid "Invite a friend and tell them your username (%(username)s). When that person has at least one 5-minute conversation, you will receive 5 student points."
+msgstr "友だちを紹介して、あなたのユーザー名（%(username)s）を伝えてください。その人が5分会話を1回以上したら、紹介者に生徒ポイント5ptをプレゼントします。"

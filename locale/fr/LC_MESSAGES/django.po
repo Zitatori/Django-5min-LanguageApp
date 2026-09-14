@@ -890,3 +890,9 @@ msgstr "Commentaire du professeur"
 
 msgid "No tutor comment yet."
 msgstr "Pas encore de commentaire du professeur."
+
+msgid "Referral bonus"
+msgstr "Bonus de parrainage"
+
+msgid "Invite a friend and tell them your username (%(username)s). When that person has at least one 5-minute conversation, you will receive 5 student points."
+msgstr "Invitez une personne et donnez-lui votre nom d utilisateur (%(username)s). Quand cette personne aura eu au moins une conversation de 5 minutes, vous recevrez 5 points eleve."
