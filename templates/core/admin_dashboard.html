@@ -249,6 +249,12 @@
                color:#6b7280; font-weight:600;">
         ☆ Starred
       </button>
+      <button id="language-tutor-filter-btn" onclick="toggleLanguageTutorFilter(this)"
+        style="padding:7px 14px; border:1.5px solid #e5e7eb; border-radius:99px;
+               font-size:13px; background:#fff; cursor:pointer; transition:all 0.15s;
+               color:#6b7280; font-weight:600;">
+        🏷 Tutors with languages
+      </button>
       <input type="text" id="user-search" placeholder="🔍 Search by username…"
              oninput="filterUsers(this.value)"
              style="padding:7px 14px; border:1.5px solid #e5e7eb; border-radius:99px;
@@ -283,7 +289,7 @@
     </thead>
     <tbody>
       {% for u in recent_users %}
-      <tr data-username="{{ u.username|lower }} {{ u.first_name|lower }}" data-starred="{% if u.userprofile.is_starred %}true{% else %}false{% endif %}">
+      <tr data-username="{{ u.username|lower }} {{ u.first_name|lower }}" data-starred="{% if u.userprofile.is_starred %}true{% else %}false{% endif %}" data-language-tutor="{% if u.tutorprofile %}{% if u.tutorprofile.languages.all %}true{% else %}false{% endif %}{% else %}false{% endif %}">
         <td>
           <button class="star-btn" id="star-{{ u.id }}" onclick="toggleStar({{ u.id }})"
             title="{% if u.userprofile.is_starred %}Unstar{% else %}Star{% endif %}"
@@ -374,7 +380,7 @@
       </tr>
       {% endfor %}
       {% for u in older_users %}
-      <tr class="older-user" data-username="{{ u.username|lower }} {{ u.first_name|lower }}" data-starred="{% if u.userprofile.is_starred %}true{% else %}false{% endif %}" style="display:none;">
+      <tr class="older-user" data-username="{{ u.username|lower }} {{ u.first_name|lower }}" data-starred="{% if u.userprofile.is_starred %}true{% else %}false{% endif %}" data-language-tutor="{% if u.tutorprofile %}{% if u.tutorprofile.languages.all %}true{% else %}false{% endif %}{% else %}false{% endif %}" style="display:none;">
         <td>
           <button class="star-btn" id="star-{{ u.id }}" onclick="toggleStar({{ u.id }})"
             title="{% if u.userprofile.is_starred %}Unstar{% else %}Star{% endif %}"
@@ -827,14 +833,18 @@
 
 <script>
   let starFilterActive = false;
+  let languageTutorFilterActive = false;
+  let olderUsersExpanded = false;
 
   function applyUserFilters() {
     const q = (document.getElementById('user-search').value || '').toLowerCase().trim();
+    const hasActiveFilter = Boolean(q) || starFilterActive || languageTutorFilterActive;
     document.querySelectorAll('tbody tr[data-username]').forEach(row => {
       const matchesSearch = !q || row.dataset.username.includes(q);
       const matchesStar   = !starFilterActive || row.dataset.starred === 'true';
-      // older-user rows are controlled separately by toggleOlderUsers, but we override display here
-      row.style.display = (matchesSearch && matchesStar) ? '' : 'none';
+      const matchesLanguageTutor = !languageTutorFilterActive || row.dataset.languageTutor === 'true';
+      const allowedByOlderState = hasActiveFilter || !row.classList.contains('older-user') || olderUsersExpanded;
+      row.style.display = (matchesSearch && matchesStar && matchesLanguageTutor && allowedByOlderState) ? '' : 'none';
     });
   }
 
@@ -849,15 +859,27 @@
       btn.style.borderColor = '#f59e0b';
       btn.style.color = '#b45309';
       btn.textContent = '★ Starred';
-      // Show "older" rows too when filtering
-      document.querySelectorAll('.older-user').forEach(r => r.style.display = '');
     } else {
       btn.style.background = '#fff';
       btn.style.borderColor = '#e5e7eb';
       btn.style.color = '#6b7280';
       btn.textContent = '☆ Starred';
-      // Restore older-user hidden state
-      document.querySelectorAll('.older-user').forEach(r => r.style.display = 'none');
+    }
+    applyUserFilters();
+  }
+
+  function toggleLanguageTutorFilter(btn) {
+    languageTutorFilterActive = !languageTutorFilterActive;
+    if (languageTutorFilterActive) {
+      btn.style.background = '#ecfdf5';
+      btn.style.borderColor = '#10b981';
+      btn.style.color = '#047857';
+      btn.textContent = '🏷 Language tutors';
+    } else {
+      btn.style.background = '#fff';
+      btn.style.borderColor = '#e5e7eb';
+      btn.style.color = '#6b7280';
+      btn.textContent = '🏷 Tutors with languages';
     }
     applyUserFilters();
   }
@@ -991,9 +1013,10 @@
 
   function toggleOlderUsers(btn) {
     const rows = document.querySelectorAll('.older-user');
-    const hidden = rows[0] && rows[0].style.display === 'none';
-    rows.forEach(r => r.style.display = hidden ? '' : 'none');
-    btn.textContent = hidden ? 'Show less' : `Show all (${rows.length} more)`;
+    olderUsersExpanded = !(rows[0] && rows[0].style.display !== 'none');
+    rows.forEach(r => r.style.display = olderUsersExpanded ? '' : 'none');
+    btn.textContent = olderUsersExpanded ? 'Show less' : 'Show all (' + rows.length + ' more)';
+    applyUserFilters();
   }
 </script>
 
