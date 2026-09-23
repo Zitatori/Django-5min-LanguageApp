@@ -311,7 +311,11 @@
           {% if u.point_balance %}
             <span class="pt-stack" title="Student points are used for lessons. Teacher points are earned by teaching.">
               <span class="pt-badge pt-student">Student {{ u.point_balance.student_balance }} pt</span>
-              <span class="pt-badge pt-teacher">Teacher {{ u.point_balance.teacher_balance }} pt</span>
+              {% if u.tutorprofile and u.tutorprofile.is_hourly_paid %}
+                <span class="pt-badge pt-teacher">Hourly</span>
+              {% else %}
+                <span class="pt-badge pt-teacher">Teacher {{ u.point_balance.teacher_balance }} pt</span>
+              {% endif %}
             </span>
           {% else %}
             <span class="pt-none">—</span>
@@ -352,7 +356,7 @@
           {% endif %}
         </td>
         <td style="white-space:nowrap;">
-          <button class="edit-btn" onclick="openModal({{ u.id }}, '{{ u.username }}', [{% if u.tutorprofile %}{% for l in u.tutorprofile.languages.all %}{{ l.id }},{% endfor %}{% endif %}])">Edit</button>
+          <button class="edit-btn" onclick="openModal({{ u.id }}, '{{ u.username }}', [{% if u.tutorprofile %}{% for l in u.tutorprofile.languages.all %}{{ l.id }},{% endfor %}{% endif %}], {% if u.tutorprofile and u.tutorprofile.is_hourly_paid %}true{% else %}false{% endif %})">Edit</button>
           <button class="history-btn" onclick="openHistoryModal({{ u.id }}, '{{ u.username }}')">History</button>
           <button class="notes-btn" onclick="openStudentNotesModal({{ u.id }}, '{{ u.username }}')">Notes</button>
           <button class="points-btn" onclick="openPointsModal({{ u.id }}, '{{ u.username }}', {{ u.point_balance.student_balance|default:0 }}, {{ u.point_balance.teacher_balance|default:0 }})">Pts</button>
@@ -398,7 +402,11 @@
           {% if u.point_balance %}
             <span class="pt-stack" title="Student points are used for lessons. Teacher points are earned by teaching.">
               <span class="pt-badge pt-student">Student {{ u.point_balance.student_balance }} pt</span>
-              <span class="pt-badge pt-teacher">Teacher {{ u.point_balance.teacher_balance }} pt</span>
+              {% if u.tutorprofile and u.tutorprofile.is_hourly_paid %}
+                <span class="pt-badge pt-teacher">Hourly</span>
+              {% else %}
+                <span class="pt-badge pt-teacher">Teacher {{ u.point_balance.teacher_balance }} pt</span>
+              {% endif %}
             </span>
           {% else %}<span class="pt-none">—</span>{% endif %}
         </td>
@@ -425,7 +433,7 @@
           {% else %}—{% endif %}
         </td>
         <td style="white-space:nowrap;">
-          <button class="edit-btn" onclick="openModal({{ u.id }}, '{{ u.username }}', [{% if u.tutorprofile %}{% for l in u.tutorprofile.languages.all %}{{ l.id }},{% endfor %}{% endif %}])">Edit</button>
+          <button class="edit-btn" onclick="openModal({{ u.id }}, '{{ u.username }}', [{% if u.tutorprofile %}{% for l in u.tutorprofile.languages.all %}{{ l.id }},{% endfor %}{% endif %}], {% if u.tutorprofile and u.tutorprofile.is_hourly_paid %}true{% else %}false{% endif %})">Edit</button>
           <button class="history-btn" onclick="openHistoryModal({{ u.id }}, '{{ u.username }}')">History</button>
           <button class="notes-btn" onclick="openStudentNotesModal({{ u.id }}, '{{ u.username }}')">Notes</button>
           <button class="points-btn" onclick="openPointsModal({{ u.id }}, '{{ u.username }}', {{ u.point_balance.student_balance|default:0 }}, {{ u.point_balance.teacher_balance|default:0 }})">Pts</button>
@@ -742,6 +750,10 @@
         {{ lang.name }}
       </label>
       {% endfor %}
+      <label class="lang-checkbox" style="margin-top:10px; border-top:1px solid #e5e7eb; padding-top:10px;">
+        <input type="checkbox" name="is_hourly_paid" id="is-hourly-paid">
+        Hourly paid tutor
+      </label>
       <button type="submit" class="save-btn">Save</button>
     </form>
     <button class="cancel-btn" onclick="closeModal()">Cancel</button>
@@ -792,12 +804,13 @@
 </div>
 
 <script>
-  function openModal(userId, username, activeLangIds) {
+  function openModal(userId, username, activeLangIds, isHourlyPaid) {
     document.getElementById('modal-username').textContent = username;
     document.getElementById('lang-form').action = `/admin-dashboard/user/${userId}/languages/`;
     document.querySelectorAll('input[name="languages"]').forEach(cb => {
       cb.checked = activeLangIds.includes(parseInt(cb.value));
     });
+    document.getElementById('is-hourly-paid').checked = Boolean(isHourlyPaid);
     document.getElementById('modal').classList.add('open');
   }
   function closeModal() {

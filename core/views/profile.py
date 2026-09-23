@@ -27,7 +27,9 @@ def profile(request):
         user=request.user, status=WithdrawalRequest.STATUS_PENDING
     ).first()
 
-    is_tutor = hasattr(request.user, 'tutorprofile')
+    tutor_profile = getattr(request.user, 'tutorprofile', None)
+    is_tutor = tutor_profile is not None
+    is_hourly_paid_tutor = bool(tutor_profile and tutor_profile.is_hourly_paid)
 
     today = timezone.now().date()
     today_earned = PointTransaction.objects.filter(
@@ -50,6 +52,7 @@ def profile(request):
         'withdrawal_fee':     WITHDRAWAL_FEE,
         'can_withdraw':       (
             is_tutor
+            and not is_hourly_paid_tutor
             and balance.teacher_balance >= MIN_WITHDRAWAL_PTS
             and not pending_withdrawal
         ),
@@ -57,6 +60,7 @@ def profile(request):
         'withdrawal_methods':    WithdrawalRequest.METHOD_CHOICES,
         'gold_request_pending':  gold_request_pending,
         'today_earned':          today_earned,
+        'is_hourly_paid_tutor':  is_hourly_paid_tutor,
     })
 
 
@@ -72,7 +76,9 @@ def request_withdrawal(request):
     except ValueError:
         return redirect('profile')
 
-    if (not hasattr(request.user, 'tutorprofile')
+    tutor_profile = getattr(request.user, 'tutorprofile', None)
+    if (not tutor_profile
+            or tutor_profile.is_hourly_paid
             or points < MIN_WITHDRAWAL_PTS
             or points > balance.teacher_balance):
         return redirect('profile')
@@ -117,6 +123,10 @@ def transfer_points(request):
     try:
         pts = int(request.POST.get('points', 0))
     except ValueError:
+        return redirect('profile')
+
+    tutor_profile = getattr(request.user, 'tutorprofile', None)
+    if not tutor_profile or tutor_profile.is_hourly_paid:
         return redirect('profile')
 
     if pts < 1 or pts > balance.teacher_balance:

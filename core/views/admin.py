@@ -190,6 +190,8 @@ def update_tutor_languages(request, tutor_id):
         tutor = get_object_or_404(TutorProfile, id=tutor_id)
         lang_ids = request.POST.getlist('languages')
         tutor.languages.set(lang_ids)
+        tutor.is_hourly_paid = request.POST.get('is_hourly_paid') == 'on'
+        tutor.save(update_fields=['is_hourly_paid'])
         return redirect('admin_dashboard')
 
 
@@ -201,6 +203,8 @@ def update_user_languages(request, user_id):
         tutor, _ = TutorProfile.objects.get_or_create(user=user)
         lang_ids = request.POST.getlist('languages')
         tutor.languages.set(lang_ids)
+        tutor.is_hourly_paid = request.POST.get('is_hourly_paid') == 'on'
+        tutor.save(update_fields=['is_hourly_paid'])
         return redirect('admin_dashboard')
 
 @staff_or_admin_role_required

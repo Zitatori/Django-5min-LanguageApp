@@ -17,8 +17,8 @@ class LessonLanguageAdmin(admin.ModelAdmin):
 
 @admin.register(TutorProfile)
 class TutorProfileAdmin(admin.ModelAdmin):
-    list_display = ("user", "is_online")
-    list_filter = ("is_online",)
+    list_display = ("user", "is_online", "is_hourly_paid")
+    list_filter = ("is_online", "is_hourly_paid")
     filter_horizontal = ("languages",)
 
 

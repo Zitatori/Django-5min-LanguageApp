@@ -237,7 +237,7 @@
   {% blocktrans with username=request.user.username %}Invite a friend and tell them your username ({{ username }}). When that person has at least one 5-minute conversation, you will receive 5 student points.{% endblocktrans %}
 </div>
 
-{% if request.user.tutorprofile %}
+{% if request.user.tutorprofile and not is_hourly_paid_tutor %}
 {# ── 講師ポイント カード ── #}
 <div class="card" style="height:fit-content; margin-top:0;">
   <h3 class="card-title" style="margin-bottom:.6rem;">🎓 {% trans "Teacher Points" %}</h3>
@@ -274,7 +274,7 @@
 </div>{# /pf-pc-top #}
 
 {# ── 出金カード（全幅） ── #}
-{% if request.user.tutorprofile %}
+{% if request.user.tutorprofile and not is_hourly_paid_tutor %}
 <div class="card withdraw-card">
   <h3 class="card-title" style="margin-bottom:.8rem;">💸 {% trans "Withdraw Points" %}</h3>
 

@@ -180,16 +180,17 @@ class VideoCallConsumer(AsyncWebsocketConsumer):
                         reference_id=int(self.match_id),
                     )
 
-            # 講師: +1pt を講師ポイントに加算
-            t_bal, _ = PointBalance.objects.get_or_create(user=tutor_user)
-            t_bal.teacher_balance += 1
-            t_bal.save()
-            PointTransaction.objects.create(
-                user=tutor_user,
-                amount=1,
-                transaction_type=PointTransaction.TYPE_LESSON_TAUGHT,
-                reference_id=int(self.match_id),
-            )
+            # 講師: ポイント制講師だけ +1pt を講師ポイントに加算
+            if not match.tutor.is_hourly_paid:
+                t_bal, _ = PointBalance.objects.get_or_create(user=tutor_user)
+                t_bal.teacher_balance += 1
+                t_bal.save()
+                PointTransaction.objects.create(
+                    user=tutor_user,
+                    amount=1,
+                    transaction_type=PointTransaction.TYPE_LESSON_TAUGHT,
+                    reference_id=int(self.match_id),
+                )
 
         except Exception as e:
             # ポイント処理失敗してもレッスン自体は止めない
