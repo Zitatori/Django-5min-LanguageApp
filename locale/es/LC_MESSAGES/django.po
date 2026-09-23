@@ -887,3 +887,21 @@ msgstr "Bono por invitacion"
 
 msgid "Invite a friend and tell them your username (%(username)s). When that person has at least one 5-minute conversation, you will receive 5 student points."
 msgstr "Invita a una persona y dile tu nombre de usuario (%(username)s). Cuando esa persona tenga al menos una conversacion de 5 minutos, recibiras 5 puntos de estudiante."
+
+msgid "Email address"
+msgstr "Correo electrónico"
+
+msgid "e.g. Mika, Tom..."
+msgstr "ej. Mika, Tom..."
+
+msgid "How did you hear about us?"
+msgstr "¿Cómo nos conociste?"
+
+msgid "e.g. Instagram, friend, Google..."
+msgstr "ej. Instagram, amigo, Google..."
+
+msgid "Optional."
+msgstr "Opcional."
+
+msgid "This email address is already registered."
+msgstr "Este correo electrónico ya está registrado."

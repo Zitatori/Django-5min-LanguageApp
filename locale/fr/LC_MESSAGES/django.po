@@ -896,3 +896,21 @@ msgstr "Bonus de parrainage"
 
 msgid "Invite a friend and tell them your username (%(username)s). When that person has at least one 5-minute conversation, you will receive 5 student points."
 msgstr "Invitez une personne et donnez-lui votre nom d utilisateur (%(username)s). Quand cette personne aura eu au moins une conversation de 5 minutes, vous recevrez 5 points eleve."
+
+msgid "Email address"
+msgstr "Adresse e-mail"
+
+msgid "e.g. Mika, Tom..."
+msgstr "ex. Mika, Tom..."
+
+msgid "How did you hear about us?"
+msgstr "Comment avez-vous entendu parler de nous ?"
+
+msgid "e.g. Instagram, friend, Google..."
+msgstr "ex. Instagram, ami, Google..."
+
+msgid "Optional."
+msgstr "Facultatif."
+
+msgid "This email address is already registered."
+msgstr "Cette adresse e-mail est déjà enregistrée."

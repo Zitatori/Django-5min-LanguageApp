@@ -1,27 +1,28 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from django.utils.translation import gettext_lazy as _
 
 
 class SignupForm(UserCreationForm):
     email = forms.EmailField(
         required=True,
-        label="Email",
+        label=_("Email address"),
         widget=forms.EmailInput(attrs={"autocomplete": "email"}),
     )
     display_name = forms.CharField(
         required=False,
         max_length=50,
-        label="Nickname (shown during lessons)",
-        widget=forms.TextInput(attrs={"placeholder": "e.g. Mika, Tom…"}),
-        help_text="Optional. If blank, your username will be used.",
+        label=_("Nickname (shown during lessons)"),
+        widget=forms.TextInput(attrs={"placeholder": _("e.g. Mika, Tom...")}),
+        help_text=_("Optional. If blank, your username will be used."),
     )
     referral_source = forms.CharField(
         required=False,
         max_length=300,
-        label="How did you hear about us?",
-        widget=forms.TextInput(attrs={"placeholder": "e.g. Instagram, friend, Google…"}),
-        help_text="Optional.",
+        label=_("How did you hear about us?"),
+        widget=forms.TextInput(attrs={"placeholder": _("e.g. Instagram, friend, Google...")}),
+        help_text=_("Optional."),
     )
 
     class Meta:
@@ -31,7 +32,7 @@ class SignupForm(UserCreationForm):
     def clean_email(self):
         email = self.cleaned_data["email"]
         if User.objects.filter(email=email).exists():
-            raise forms.ValidationError("This email address is already registered.")
+            raise forms.ValidationError(_("This email address is already registered."))
         return email
 
     def save(self, commit=True):

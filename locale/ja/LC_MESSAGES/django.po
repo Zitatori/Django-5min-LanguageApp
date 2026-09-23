@@ -878,3 +878,21 @@ msgstr "紹介ボーナス"
 
 msgid "Invite a friend and tell them your username (%(username)s). When that person has at least one 5-minute conversation, you will receive 5 student points."
 msgstr "友だちを紹介して、あなたのユーザー名（%(username)s）を伝えてください。その人が5分会話を1回以上したら、紹介者に生徒ポイント5ptをプレゼントします。"
+
+msgid "Email address"
+msgstr "メールアドレス"
+
+msgid "e.g. Mika, Tom..."
+msgstr "例：ミカ、トム..."
+
+msgid "How did you hear about us?"
+msgstr "どこでQuickLessonを知りましたか？"
+
+msgid "e.g. Instagram, friend, Google..."
+msgstr "例：Instagram、友だち、Google..."
+
+msgid "Optional."
+msgstr "任意。"
+
+msgid "This email address is already registered."
+msgstr "このメールアドレスはすでに登録されています。"
