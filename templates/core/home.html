@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n static %}
 
 {% block content %}
 
@@ -67,6 +67,13 @@
   {% endif %}
 
 </div>{# /home-grid #}
+<div style="max-width: 1400px; margin: 32px auto; padding: 0 16px;">
+  <img
+    src="{% static 'images/quicklesson-how-it-works.png' %}"
+    alt="QuickLessonの使い方"
+    style="width: 100%; height: auto; display: block; border-radius: 16px;"
+  >
+</div>
 
 {# ── Other Sessions (below the main grid, compact) ── #}
 {% if other_sessions %}
