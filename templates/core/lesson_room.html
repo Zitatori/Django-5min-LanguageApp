@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n static %}
 
 {% block content %}
 
@@ -74,14 +74,16 @@
       📋 {% trans "Notes" %}
       <span class="lr-notes-chevron" id="lr-notes-chevron">▾</span>
     </button>
-    <div class="lr-notes-panel" id="lr-notes-panel" style="display:none;">
-      {% if is_first_session %}
-        <p class="lr-notes-first-label">{% trans "First session — consider asking:" %}</p>
-        <ul class="lr-notes-first-list">
-          <li>Why are you learning this language?</li>
-          <li>How do you study this language?</li>
-        </ul>
-      {% else %}
+    <div class="lr-notes-panel lr-notes-panel-guide" id="lr-notes-panel" style="display:none;">
+        <a class="lr-first-session-guide" href="{% static 'images/tutor-first-session-guide.png' %}" target="_blank" rel="noopener noreferrer">
+          <img
+            src="{% static 'images/tutor-first-session-guide.png' %}"
+            width="1536" height="1024"
+            alt="{% trans 'First-session guide: Ask about their name, hometown, favorite food and hobbies. Ask follow-up questions, speak slowly and clearly, give positive reactions, and wait patiently with a friendly expression.' %}"
+          >
+          <span>{% trans "Open full-size guide" %} ↗</span>
+        </a>
+      {% if previous_notes %}
         <p class="lr-notes-prev-label">{% trans "Previous Notes" %}</p>
         {% for note in previous_notes %}
         <div class="lr-notes-item">
@@ -400,16 +402,31 @@
     max-height: 260px;
     overflow-y: auto;
   }
-  .lr-notes-first-label {
-    font-size: 11px; font-weight: 700; color: #93c5fd;
-    letter-spacing: 0.05em; text-transform: uppercase;
-    margin-bottom: 7px;
+  .lr-notes-panel-guide {
+    width: 640px;
+    max-width: calc(100vw - 32px);
+    max-height: max(100px, calc(100dvh - 310px));
+    box-sizing: border-box;
+    padding: 8px;
   }
-  .lr-notes-first-list {
-    margin: 0; padding-left: 16px;
-    color: #bfdbfe; font-size: 13px; line-height: 1.65;
+  .lr-first-session-guide {
+    display: block;
+    color: #bfdbfe;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .lr-first-session-guide img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 6px;
+  }
+  .lr-first-session-guide span {
+    display: block;
+    margin-top: 6px;
   }
   .lr-notes-prev-label {
+    margin-top: 16px;
     font-size: 11px; font-weight: 700; color: #a78bfa;
     letter-spacing: 0.05em; text-transform: uppercase;
     margin-bottom: 8px;
