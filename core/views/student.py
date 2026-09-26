@@ -1,4 +1,5 @@
 import json
+import math
 import random
 from datetime import timedelta
 
@@ -20,6 +21,7 @@ from core.models import (
 )
 
 ONLINE_TIMEOUT_SECONDS = 1800     # tutor.py と合わせる（30分）スマホスリープ対策
+NOTE_WAIT_SECONDS = 60          # 通話終了後のメモ記入時間
 CONSECUTIVE_WAIT_SECONDS = 60    # 連続マッチを禁じる猶予期間（1分）
 
 
@@ -121,10 +123,10 @@ def _get_display_exclude_ids(student_profile):
 
 
 def _in_lesson_info(language, now=None):
-    """その言語を担当できる講師のうち、現在レッスン中の人数と最短終了時刻（分）を返す。"""
+    """通話中・終了後のメモ記入中の講師数と、メモ時間を含む待ち時間を返す。"""
     now = now or timezone.now()
     busy_tutor_pks = QuickLessonMatch.objects.filter(
-        end_at__gt=now,
+        end_at__gt=now - timedelta(seconds=NOTE_WAIT_SECONDS),
         started_at__isnull=False,
     ).values_list('tutor_id', flat=True)
     in_lesson_qs = TutorProfile.objects.filter(pk__in=busy_tutor_pks, languages=language)
@@ -133,12 +135,12 @@ def _in_lesson_info(language, now=None):
         return 0, None
     soonest_end = (
         QuickLessonMatch.objects
-        .filter(tutor__in=in_lesson_qs, end_at__gt=now, started_at__isnull=False)
+        .filter(tutor__in=in_lesson_qs, end_at__gt=now - timedelta(seconds=NOTE_WAIT_SECONDS), started_at__isnull=False)
         .order_by('end_at')
         .values_list('end_at', flat=True)
         .first()
     )
-    minutes = max(1, int((soonest_end - now).total_seconds() / 60) + 1) if soonest_end else None
+    minutes = max(1, math.ceil(((soonest_end - now).total_seconds() + NOTE_WAIT_SECONDS) / 60)) if soonest_end else None
     return count, minutes
 
 
@@ -160,7 +162,7 @@ def active_tutors_qs(language=None):
     now = timezone.now()
     cutoff = now - timedelta(seconds=ONLINE_TIMEOUT_SECONDS)
     busy_tutor_ids = QuickLessonMatch.objects.filter(
-        Q(started_at__isnull=True) | Q(end_at__gt=now)
+        Q(started_at__isnull=True) | Q(end_at__gt=now - timedelta(seconds=NOTE_WAIT_SECONDS))
     ).values("tutor_id")
     qs = TutorProfile.objects.filter(is_online=True).filter(
         Q(last_ping_at__isnull=True) | Q(last_ping_at__gte=cutoff)
@@ -174,7 +176,7 @@ def _claim_tutor_for_match(tutor):
     """オンライン候補を1人だけ確保する。通話中なら確保しない。"""
     now = timezone.now()
     busy_tutor_ids = QuickLessonMatch.objects.filter(
-        Q(started_at__isnull=True) | Q(end_at__gt=now)
+        Q(started_at__isnull=True) | Q(end_at__gt=now - timedelta(seconds=NOTE_WAIT_SECONDS))
     ).values("tutor_id")
     return TutorProfile.objects.filter(
         pk=tutor.pk,
@@ -319,7 +321,7 @@ def create_request(request):
 
     now = timezone.now()
     busy_tutor_ids = QuickLessonMatch.objects.filter(
-        Q(started_at__isnull=True) | Q(end_at__gt=now)
+        Q(started_at__isnull=True) | Q(end_at__gt=now - timedelta(seconds=NOTE_WAIT_SECONDS))
     ).values('tutor_id')
     admin_online = (
         not request.user.is_superuser
@@ -458,7 +460,7 @@ def student_online_counts(request):
     languages = LessonLanguage.objects.all()
     now = timezone.now()
     busy_tutor_ids = QuickLessonMatch.objects.filter(
-        Q(started_at__isnull=True) | Q(end_at__gt=now)
+        Q(started_at__isnull=True) | Q(end_at__gt=now - timedelta(seconds=NOTE_WAIT_SECONDS))
     ).values('tutor_id')
     admin_online = TutorProfile.objects.filter(
         user__is_superuser=True, is_online=True,
@@ -542,7 +544,7 @@ def request_admin_chat(request):
 
     now = timezone.now()
     busy_tutor_ids = QuickLessonMatch.objects.filter(
-        Q(started_at__isnull=True) | Q(end_at__gt=now)
+        Q(started_at__isnull=True) | Q(end_at__gt=now - timedelta(seconds=NOTE_WAIT_SECONDS))
     ).values('tutor_id')
 
     admin_tutor = TutorProfile.objects.filter(
