@@ -100,3 +100,6 @@ CHANNEL_LAYERS = {
         "BACKEND": "channels.layers.InMemoryChannelLayer",
     },
 }
+# Production credentials must be provided by the hosting environment.
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
+OPENAI_QUESTION_MODEL = os.getenv("OPENAI_QUESTION_MODEL", "gpt-4.1-mini")

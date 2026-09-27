@@ -83,6 +83,14 @@
           >
           <span>{% trans "Open full-size guide" %} ↗</span>
         </a>
+      {% if question_note.suggested_questions %}
+        <p class="lr-notes-prev-label">{% trans "Questions for the next conversation" %} · {{ question_note.questions_level }}</p>
+        <ol class="lr-suggested-questions">
+          {% for question in question_note.suggested_questions %}
+          <li>{{ question }}</li>
+          {% endfor %}
+        </ol>
+      {% endif %}
       {% if previous_notes %}
         <p class="lr-notes-prev-label">{% trans "Previous Notes" %}</p>
         {% for note in previous_notes %}
@@ -425,6 +433,8 @@
     display: block;
     margin-top: 6px;
   }
+  .lr-suggested-questions { padding-left: 22px; color: #e5e7eb; font-size: 14px; line-height: 1.6; }
+  .lr-suggested-questions li { margin-bottom: 7px; }
   .lr-notes-prev-label {
     margin-top: 16px;
     font-size: 11px; font-weight: 700; color: #a78bfa;

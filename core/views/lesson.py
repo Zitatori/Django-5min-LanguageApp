@@ -1,3 +1,8 @@
+from django.contrib import messages
+from django.db import transaction
+from django.utils.translation import gettext as _
+from core.services.question_generation import generate_for_note
+
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
@@ -86,6 +91,7 @@ def lesson_room(request, match_id: int):
         previous_notes = list(
             ConversationNote.objects.filter(
                 student=match.request.student,
+                match__request__language=match.request.language,
             ).select_related('tutor__user').order_by("-created_at")[:5]
         )
         is_first_session = len(previous_notes) == 0
@@ -101,6 +107,7 @@ def lesson_room(request, match_id: int):
         "is_student": is_student,
         "previous_notes": previous_notes,
         "is_first_session": is_first_session,
+        "question_note": previous_notes[0] if previous_notes else None,
     }
 
     return render(request, "core/lesson_room.html", context)
@@ -183,18 +190,23 @@ def lesson_note(request, match_id: int):
             learner_level = ""
         talked_about = request.POST.get("talked_about", "").strip()[:500]
         if talked_about or learner_level:
-            ConversationNote.objects.create(
-                student=student,
-                tutor=tutor,
-                match=match,
-                note=talked_about,
-                talked_about=talked_about,
-                learner_level=learner_level,
-            )
+            with transaction.atomic():
+                QuickLessonMatch.objects.select_for_update().get(pk=match.pk)
+                saved_note = ConversationNote.objects.filter(match=match, tutor=tutor).order_by("-created_at").first()
+                if saved_note is None:
+                    saved_note = ConversationNote.objects.create(
+                        student=student, tutor=tutor, match=match,
+                        note=talked_about, talked_about=talked_about, learner_level=learner_level,
+                    )
+            generate_for_note(saved_note)
+            saved_note.refresh_from_db()
+            if saved_note.questions_status == "unavailable":
+                messages.info(request, _("Note saved. Suggested questions are currently unavailable."))
         return redirect("tutor_dashboard")
 
     previous_notes = ConversationNote.objects.filter(
         student=student,
+        match__request__language=match.request.language,
     ).select_related('tutor__user').order_by("-created_at")[:10]
 
     return render(request, "core/lesson_note.html", {

@@ -1,10 +1,11 @@
 from django.contrib.auth.models import User
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.urls import reverse
 
 from core.models import ConversationNote, LessonLanguage, QuickLessonMatch, QuickLessonRequest, StudentProfile, TutorProfile
 
 
+@override_settings(OPENAI_API_KEY="")
 class ConversationNotesTests(TestCase):
     def setUp(self):
         self.tutor = TutorProfile.objects.create(user=User.objects.create_user(username='note-tutor'))
