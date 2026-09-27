@@ -25,5 +25,14 @@ class ConversationNote(models.Model):
     class Meta:
         ordering = ["-created_at"]
 
+    @property
+    def conversation_content(self):
+        """Show conversation content while preserving legacy free-form notes."""
+        if self.talked_about:
+            return self.talked_about
+        if self.learner_level or self.next_conversation:
+            return ""
+        return self.note
+
     def __str__(self):
         return f"Note by {self.tutor} for {self.student} on {self.created_at:%Y-%m-%d}"

@@ -20,25 +20,9 @@
         {% for n in previous_notes %}
         <li class="note-prev-item">
           <div class="note-prev-meta">{{ n.created_at|date:"Y/m/d" }}&ensp;·&ensp;{% if n.tutor.user.first_name %}{{ n.tutor.user.first_name }} ({{ n.tutor.user.username }}){% else %}{{ n.tutor.user.username }}{% endif %}</div>
-          {% if n.learner_level or n.talked_about or n.next_conversation %}
-            <div class="note-prev-structured">
-              {% if n.learner_level %}<p><strong>{% trans "Learner's level" %}:</strong> {{ n.learner_level }}</p>{% endif %}
-              {% if n.talked_about %}<p><strong>{% trans "What we talked about" %}:</strong> {{ n.talked_about }}</p>{% endif %}
-              {% if n.next_conversation %}<p><strong>{% trans "For the next conversation" %}:</strong> {{ n.next_conversation }}</p>{% endif %}
-            </div>
-          {% else %}
-            <div class="note-prev-body">{{ n.note }}</div>
-          {% endif %}
+          <div class="note-prev-body">{{ n.conversation_content }}</div>
         </li>
         {% endfor %}
-      </ul>
-    </div>
-    {% else %}
-    <div class="note-first-session">
-      <p class="note-first-label">{% trans "First session — consider asking:" %}</p>
-      <ul class="note-first-questions">
-        <li>Why are you learning this language?</li>
-        <li>How do you study this language?</li>
       </ul>
     </div>
     {% endif %}
@@ -64,16 +48,6 @@
         class="note-textarea"
         maxlength="500"
         placeholder="{% trans 'Planning a trip to Switzerland. Likes hiking.' %}"
-        rows="3"
-      ></textarea>
-
-      <label class="note-label" for="next-conversation">{% trans "For the next conversation" %}</label>
-      <textarea
-        id="next-conversation"
-        name="next_conversation"
-        class="note-textarea"
-        maxlength="500"
-        placeholder="{% trans 'Ask which cities they decided to visit.' %}"
         rows="3"
       ></textarea>
 

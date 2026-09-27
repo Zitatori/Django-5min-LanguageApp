@@ -606,10 +606,7 @@
       <div class="cr-hist-note">
         <span class="cr-hist-note-title">{% trans "Tutor Comment" %}</span>
         {% if match.tutor_comment %}
-          {% if match.tutor_comment.learner_level %}<div><strong>{% trans "Learner's level" %}:</strong> {{ match.tutor_comment.learner_level }}</div>{% endif %}
-          {% if match.tutor_comment.talked_about %}<div><strong>{% trans "What we talked about" %}:</strong> {{ match.tutor_comment.talked_about }}</div>{% endif %}
-          {% if match.tutor_comment.next_conversation %}<div><strong>{% trans "For the next conversation" %}:</strong> {{ match.tutor_comment.next_conversation }}</div>{% endif %}
-          {% if match.tutor_comment.note %}<div>{{ match.tutor_comment.note }}</div>{% endif %}
+          <div>{{ match.tutor_comment.conversation_content }}</div>
         {% else %}
           <span class="cr-hist-note-empty">{% trans "No tutor comment yet." %}</span>
         {% endif %}
