@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n static %}
 
 {% block content %}
 
@@ -254,6 +254,16 @@
 
 {# ── ❹ Recent History ── #}
 <div class="td-col-right">
+<section class="card td-instructor-guide" aria-labelledby="instructor-guide-title">
+  <h3 class="card-title" id="instructor-guide-title">{% trans "5-minute conversation guide" %}</h3>
+  <p class="text-muted">{% trans "Click the image to view the full-size guide." %}</p>
+  <a href="{% static 'images/tutor-conversation-tutorial.png' %}" target="_blank" rel="noopener" aria-label="{% trans 'Open the instructor guide in a new tab' %}">
+    <img src="{% static 'images/tutor-conversation-tutorial.png' %}"
+         alt="{% trans 'A practical guide for instructors: start with an easy opening, be curious, know when to wait, change the angle, support complete beginners, and close naturally.' %}"
+         width="1024" height="1536" loading="lazy"
+         style="display:block; width:100%; max-width:1024px; height:auto; margin:0 auto; border-radius:12px;">
+  </a>
+</section>
 {% include "core/_recent_lessons.html" with matches=matches %}
 </div>{# /td-col-right #}
 
