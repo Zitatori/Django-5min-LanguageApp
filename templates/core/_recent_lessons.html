@@ -8,13 +8,27 @@
   <ul class="list">
     {% for m in matches %}
       <li style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px;">
-        <div>
+        <div style="min-width:0; flex:1;">
           <div><strong>{{ m.started_at|date:"Y-m-d" }}</strong></div>
           <div class="text-muted" style="margin-top:4px; display:flex; align-items:center; gap:5px;">
             {% with u=m.request.student.user %}{% if u.first_name %}{{ u.first_name }} <span style="color:#9ca3af; font-size:.85em;">({{ u.username }})</span>{% else %}{{ u.username }}{% endif %}
             {% if u.is_superuser %}<span class="header-badge header-badge-dev">🚀 {% trans "Founder" %}</span>
             {% elif u.is_staff %}<span class="header-badge header-badge-admin">Admin</span>
             {% endif %}{% endwith %}
+          </div>
+          <div style="margin-top:10px; overflow-wrap:anywhere;">
+            <strong>{% trans "Student feedback" %}</strong>
+            {% if m.student_rating %}
+              <div style="margin-top:4px;">
+                <span aria-hidden="true" style="color:#d97706;">{% for star in "12345" %}{% if forloop.counter <= m.student_rating %}★{% else %}☆{% endif %}{% endfor %}</span>
+                <span>{{ m.student_rating }} / 5</span>
+              </div>
+            {% endif %}
+            {% if m.student_feedback %}
+              <div style="margin-top:4px; white-space:pre-wrap;">{{ m.student_feedback }}</div>
+            {% elif not m.student_rating %}
+              <div class="text-muted">{% trans "No feedback yet." %}</div>
+            {% endif %}
           </div>
         </div>
         <span class="badge badge-gray">{{ m.request.language.name }}</span>
