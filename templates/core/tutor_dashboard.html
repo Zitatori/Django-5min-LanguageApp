@@ -263,6 +263,13 @@
          width="1024" height="1536" loading="lazy"
          style="display:block; width:100%; max-width:1024px; height:auto; margin:0 auto; border-radius:12px;">
   </a>
+  <p class="text-muted" style="margin-top:16px;">{% trans "Conversation guide" %}</p>
+  <a href="{% static 'images/tutor-conversation-tutorial.png' %}" target="_blank" rel="noopener" aria-label="{% trans 'Open the conversation guide in a new tab' %}">
+    <img src="{% static 'images/tutor-conversation-tutorial.png' %}"
+         alt="{% trans 'Five-minute conversation guide' %}"
+         width="1024" height="1536" loading="lazy"
+         style="display:block; width:100%; max-width:1024px; height:auto; margin:0 auto; border-radius:12px;">
+  </a>
 </section>
 {% include "core/_recent_lessons.html" with matches=matches %}
 </div>{# /td-col-right #}
