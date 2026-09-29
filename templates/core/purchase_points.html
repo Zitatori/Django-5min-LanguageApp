@@ -103,10 +103,10 @@
 
   <div class="tier-grid">
     {% for tier in tiers %}
-    <div class="tier-card" onclick="selectTier(this, {{ tier.points }}, {{ tier.price_jpy }})">
+    <div class="tier-card" onclick="selectTier(this, {{ tier.points }}, {{ tier.price_chf }})">
       <div class="pts">{{ tier.points }}<span class="unit"> pt</span></div>
-      <div class="price">¥{{ tier.price_jpy|floatformat:0 }}</div>
-      <div class="per">¥{{ tier.price_jpy|floatformat:0 }} / {{ tier.points }}pt</div>
+      <div class="price">CHF {{ tier.price_chf|floatformat:0 }}</div>
+      <div class="per">CHF {{ tier.price_chf|floatformat:0 }} / {{ tier.points }}pt</div>
     </div>
     {% endfor %}
   </div>
@@ -159,7 +159,7 @@ document.getElementById('purchase-btn').addEventListener('click', () => {
   if (!selectedPoints) return;
   const box = document.getElementById('manual-payment-box');
   const selected = document.getElementById('manual-selected');
-  selected.textContent = `${selectedPoints} pt / ¥${selectedPrice}`;
+    selected.textContent = `${selectedPoints} pt / CHF ${selectedPrice}`;
   box.classList.add('open');
   box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 });

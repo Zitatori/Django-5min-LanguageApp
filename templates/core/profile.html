@@ -226,6 +226,8 @@
   </div>
   {% if is_gold %}
     <p class="earned">👑 {% trans "Gold: unlimited lessons" %}</p>
+    <p class="earned">⏱️ {% trans "Choose any times for up to 2 hours per week" %}</p>
+    <p class="earned">💰 {% trans "Unlimited points" %}</p>
   {% endif %}
   {% if not is_gold %}
     <a href="{% url 'purchase_points' %}" class="btn-buy">＋ {% trans "Buy Points" %}</a>
@@ -372,7 +374,11 @@
 {% if not is_gold %}
 <div class="card gold-sub-card">
   <p class="gold-sub-title">&#x1F451; Gold {% trans "Membership" %}</p>
-  <p class="gold-sub-desc">¥10,000/{% trans "month" %} — {% trans "Unlimited lessons, no points needed" %}</p>
+  <p class="gold-sub-desc">CHF 100/{% trans "month" %}</p>
+  <ul class="gold-sub-benefits">
+    <li>{% trans "Choose any times for up to 2 hours per week" %}</li>
+    <li>{% trans "Unlimited points" %}</li>
+  </ul>
   {% if gold_request_pending %}
     <span class="gold-pending-sm">&#x23F3; {% trans "Request pending — we'll activate it shortly." %}</span>
     <p class="gold-mail-note">

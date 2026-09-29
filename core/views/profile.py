@@ -149,9 +149,9 @@ def transfer_points(request):
 @login_required
 def purchase_points(request):
     TIERS = [
-        {'points': 10,  'price_jpy': 1000},
-        {'points': 50,  'price_jpy': 4500},
-        {'points': 100, 'price_jpy': 8000},
+        {'points': 10,  'price_chf': 10},
+        {'points': 50,  'price_chf': 50},
+        {'points': 100, 'price_chf': 100},
     ]
     balance = _get_or_create_balance(request.user)
     return render(request, 'core/purchase_points.html', {
