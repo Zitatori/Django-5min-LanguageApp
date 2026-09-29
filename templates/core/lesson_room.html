@@ -75,7 +75,29 @@
       <span class="lr-notes-chevron" id="lr-notes-chevron">▾</span>
     </button>
     <div class="lr-notes-panel lr-notes-panel-guide" id="lr-notes-panel" style="display:none;">
-      <section class="lr-note-card lr-note-card-guide">
+      <div class="lr-note-tabs" role="tablist">
+        <button type="button" class="lr-note-tab active" data-note-tab="questions" role="tab">✨ {% trans "Next questions" %}</button>
+        <button type="button" class="lr-note-tab" data-note-tab="notes" role="tab">📋 {% trans "Note" %}</button>
+        <button type="button" class="lr-note-tab" data-note-tab="guide" role="tab">🧭 {% trans "Guide" %}</button>
+      </div>
+      <section class="lr-note-card lr-note-card-questions lr-note-tab-content active" data-note-content="questions">
+        <p class="lr-notes-prev-label">✨ {% trans "AI questions for the next conversation" %}{% if question_note.questions_level %} · {{ question_note.questions_level }}{% endif %}</p>
+        {% if question_note.suggested_questions %}
+        <ol class="lr-suggested-questions">
+          {% for question in question_note.suggested_questions %}<li>{{ question }}</li>{% endfor %}
+        </ol>
+        {% else %}<p class="lr-notes-empty">{% trans "No generated questions yet." %}</p>{% endif %}
+      </section>
+      <section class="lr-note-card lr-note-card-notes lr-note-tab-content" data-note-content="notes" hidden>
+        <p class="lr-notes-prev-label">📋 {% trans "Conversation Notes" %}</p>
+      {% if previous_notes %}
+        <p class="lr-notes-prev-label">{% trans "Previous Notes" %}</p>
+        {% for note in previous_notes %}
+        <div class="lr-notes-item"><div class="lr-notes-meta">{{ note.created_at|date:"Y/m/d" }}&ensp;·&ensp;{% if note.tutor.user.first_name %}{{ note.tutor.user.first_name }}{% else %}{{ note.tutor.user.username }}{% endif %}</div><div class="lr-notes-body">{{ note.conversation_content }}</div></div>
+        {% endfor %}
+      {% else %}<p class="lr-notes-empty">{% trans "No previous notes yet." %}</p>{% endif %}
+      </section>
+      <section class="lr-note-card lr-note-card-guide lr-note-tab-content" data-note-content="guide" hidden>
         <p class="lr-notes-prev-label">🧭 {% trans "Instructor guide" %}</p>
         <a class="lr-first-session-guide" href="{% static 'images/tutor-first-session-guide.png' %}" target="_blank" rel="noopener noreferrer">
           <img
@@ -85,32 +107,6 @@
           >
           <span>{% trans "Open full-size guide" %} ↗</span>
         </a>
-      </section>
-
-      {% if question_note.suggested_questions %}
-      <section class="lr-note-card lr-note-card-questions">
-        <p class="lr-notes-prev-label">✨ {% trans "AI questions for the next conversation" %} · {{ question_note.questions_level }}</p>
-        <ol class="lr-suggested-questions">
-          {% for question in question_note.suggested_questions %}
-          <li>{{ question }}</li>
-          {% endfor %}
-        </ol>
-      </section>
-      {% endif %}
-
-      <section class="lr-note-card lr-note-card-notes">
-        <p class="lr-notes-prev-label">📋 {% trans "Conversation Notes" %}</p>
-      {% if previous_notes %}
-        <p class="lr-notes-prev-label">{% trans "Previous Notes" %}</p>
-        {% for note in previous_notes %}
-        <div class="lr-notes-item">
-          <div class="lr-notes-meta">{{ note.created_at|date:"Y/m/d" }}&ensp;·&ensp;{% if note.tutor.user.first_name %}{{ note.tutor.user.first_name }}{% else %}{{ note.tutor.user.username }}{% endif %}</div>
-          <div class="lr-notes-body">{{ note.conversation_content }}</div>
-        </div>
-        {% endfor %}
-      {% else %}
-        <p class="lr-notes-empty">{% trans "No previous notes yet." %}</p>
-      {% endif %}
       </section>
     </div>
   </div>
@@ -439,6 +435,10 @@
   .lr-note-card:last-child { margin-bottom: 0; }
   .lr-note-card .lr-notes-prev-label { margin-top: 0; }
   .lr-notes-empty { color: #9ca3af; font-size: 13px; margin: 0; }
+  .lr-note-tabs { display:flex; gap:5px; margin-bottom:8px; }
+  .lr-note-tab { flex:1; border:1px solid rgba(255,255,255,.16); border-radius:7px; padding:7px 5px; background:rgba(255,255,255,.06); color:#d1d5db; font-size:11px; font-weight:700; cursor:pointer; }
+  .lr-note-tab.active { background:#6366f1; border-color:#818cf8; color:#fff; }
+  .lr-note-tab-content[hidden] { display:none; }
   .lr-first-session-guide {
     display: block;
     color: #bfdbfe;
@@ -483,6 +483,13 @@
     const open = panel.style.display === "none";
     panel.style.display = open ? "block" : "none";
     chevron.classList.toggle("open", open);
+  });
+  document.querySelectorAll("[data-note-tab]").forEach((tab) => {
+    tab.addEventListener("click", () => {
+      const name = tab.dataset.noteTab;
+      document.querySelectorAll("[data-note-tab]").forEach((item) => item.classList.toggle("active", item === tab));
+      document.querySelectorAll("[data-note-content]").forEach((content) => { content.hidden = content.dataset.noteContent !== name; });
+    });
   });
 })();
 </script>
