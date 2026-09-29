@@ -75,6 +75,8 @@
       <span class="lr-notes-chevron" id="lr-notes-chevron">▾</span>
     </button>
     <div class="lr-notes-panel lr-notes-panel-guide" id="lr-notes-panel" style="display:none;">
+      <section class="lr-note-card lr-note-card-guide">
+        <p class="lr-notes-prev-label">🧭 {% trans "Instructor guide" %}</p>
         <a class="lr-first-session-guide" href="{% static 'images/tutor-first-session-guide.png' %}" target="_blank" rel="noopener noreferrer">
           <img
             src="{% static 'images/tutor-first-session-guide.png' %}"
@@ -83,14 +85,21 @@
           >
           <span>{% trans "Open full-size guide" %} ↗</span>
         </a>
+      </section>
+
       {% if question_note.suggested_questions %}
-        <p class="lr-notes-prev-label">{% trans "Questions for the next conversation" %} · {{ question_note.questions_level }}</p>
+      <section class="lr-note-card lr-note-card-questions">
+        <p class="lr-notes-prev-label">✨ {% trans "AI questions for the next conversation" %} · {{ question_note.questions_level }}</p>
         <ol class="lr-suggested-questions">
           {% for question in question_note.suggested_questions %}
           <li>{{ question }}</li>
           {% endfor %}
         </ol>
+      </section>
       {% endif %}
+
+      <section class="lr-note-card lr-note-card-notes">
+        <p class="lr-notes-prev-label">📋 {% trans "Conversation Notes" %}</p>
       {% if previous_notes %}
         <p class="lr-notes-prev-label">{% trans "Previous Notes" %}</p>
         {% for note in previous_notes %}
@@ -99,7 +108,10 @@
           <div class="lr-notes-body">{{ note.conversation_content }}</div>
         </div>
         {% endfor %}
+      {% else %}
+        <p class="lr-notes-empty">{% trans "No previous notes yet." %}</p>
       {% endif %}
+      </section>
     </div>
   </div>
   {% endif %}
@@ -417,6 +429,16 @@
     box-sizing: border-box;
     padding: 8px;
   }
+  .lr-note-card {
+    padding: 10px;
+    margin-bottom: 8px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px;
+  }
+  .lr-note-card:last-child { margin-bottom: 0; }
+  .lr-note-card .lr-notes-prev-label { margin-top: 0; }
+  .lr-notes-empty { color: #9ca3af; font-size: 13px; margin: 0; }
   .lr-first-session-guide {
     display: block;
     color: #bfdbfe;

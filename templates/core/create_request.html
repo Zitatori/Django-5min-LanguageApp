@@ -606,6 +606,7 @@
       <div class="cr-hist-note">
         <span class="cr-hist-note-title">{% trans "Tutor Comment" %}</span>
         {% if match.tutor_comment %}
+          {% if match.tutor_comment.learner_level %}<div style="margin-bottom:6px; font-weight:600; color:#6366f1;">{% trans "Level" %}: {{ match.tutor_comment.learner_level }}</div>{% endif %}
           <div>{{ match.tutor_comment.conversation_content }}</div>
         {% else %}
           <span class="cr-hist-note-empty">{% trans "No tutor comment yet." %}</span>

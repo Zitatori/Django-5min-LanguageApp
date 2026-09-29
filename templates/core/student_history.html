@@ -32,6 +32,7 @@
             <td class="student-note-cell">
               {% if match.tutor_comment %}
                 <div class="student-note-card">
+                  {% if match.tutor_comment.learner_level %}<div style="margin-bottom:6px; font-weight:600; color:#6366f1;">{% trans "Level" %}: {{ match.tutor_comment.learner_level }}</div>{% endif %}
                   <div>{{ match.tutor_comment.conversation_content }}</div>
                 </div>
               {% else %}
