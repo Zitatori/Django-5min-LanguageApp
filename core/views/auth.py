@@ -5,7 +5,7 @@ from core.forms import SignupForm
 from core.models import StudentProfile, TutorProfile, UserProfile
 from core.models import PointBalance, PointTransaction
 
-SIGNUP_BONUS_POINTS = 10
+SIGNUP_BONUS_POINTS = 2
 
 
 def signup(request):
