@@ -1,0 +1,11 @@
+{% load i18n %}
+{% if note.suggested_questions %}
+<div style="margin-top:12px; overflow-wrap:anywhere;">
+  <strong>{% get_current_language as ui_language %}{% if ui_language == 'ja' %}次に聞かれそうな質問{% elif ui_language == 'fr' %}Questions possibles pour la prochaine conversation{% elif ui_language == 'es' %}Posibles preguntas para la próxima conversación{% else %}Questions you might be asked next time{% endif %}</strong>
+  <ol style="margin:6px 0 0; padding-left:24px;">
+    {% for question in note.suggested_questions %}
+    <li style="margin-bottom:4px;">{{ question }}</li>
+    {% endfor %}
+  </ol>
+</div>
+{% endif %}
