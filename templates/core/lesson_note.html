@@ -33,13 +33,16 @@
       <label class="note-label" for="learner-level">{% trans "Learner's level" %}</label>
       <select id="learner-level" name="learner_level" class="note-select">
         <option value="">{% trans "Select level" %}</option>
-        <option value="A1">A1</option>
-        <option value="A2">A2</option>
-        <option value="B1">B1</option>
-        <option value="B2">B2</option>
-        <option value="C1">C1</option>
-        <option value="C2">C2</option>
+        <option value="A1">A1{% if match.request.language.code == 'ja' %}（JLPT N5目安）{% endif %}</option>
+        <option value="A2">A2{% if match.request.language.code == 'ja' %}（JLPT N4〜N3目安）{% endif %}</option>
+        <option value="B1">B1{% if match.request.language.code == 'ja' %}（JLPT N3〜N2目安）{% endif %}</option>
+        <option value="B2">B2{% if match.request.language.code == 'ja' %}（JLPT N2〜N1目安）{% endif %}</option>
+        <option value="C1">C1{% if match.request.language.code == 'ja' %}（JLPT N1高得点目安）{% endif %}</option>
+        <option value="C2">C2{% if match.request.language.code == 'ja' %}（JLPT対応なし・熟達）{% endif %}</option>
       </select>
+      {% if match.request.language.code == 'ja' %}
+      <p class="text-muted" style="font-size:13px; margin-top:6px;">※JLPTは参考目安です。会話中の理解・発話をもとに選んでください。</p>
+      {% endif %}
 
       <label class="note-label" for="talked-about">{% trans "What we talked about" %}</label>
       <textarea
@@ -47,7 +50,7 @@
         name="talked_about"
         class="note-textarea"
         maxlength="500"
-        placeholder="{% trans 'Planning a trip to Switzerland. Likes hiking.' %}"
+        placeholder="{% if match.request.language.code == 'ja' %}・名前：マリア&#10;・国：スペイン&#10;・好きな食べ物：寿司&#10;・趣味：映画{% elif match.request.language.code == 'es' %}・Nombre: María&#10;・País: España&#10;・Comida favorita: sushi&#10;・Aficiones: cine{% elif match.request.language.code == 'fr' %}・Prénom : Maria&#10;・Pays : Espagne&#10;・Plat préféré : sushi&#10;・Loisirs : cinéma{% else %}・Name: Maria&#10;・Country: Spain&#10;・Favorite food: sushi&#10;・Hobbies: movies{% endif %}"
         rows="3"
       ></textarea>
 
