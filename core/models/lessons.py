@@ -52,6 +52,7 @@ class QuickLessonMatch(models.Model):
     student_rating = models.PositiveSmallIntegerField(null=True, blank=True)
     student_rated_at = models.DateTimeField(null=True, blank=True)
     student_feedback = models.TextField(max_length=500, blank=True, default="")
+    student_private_note = models.TextField(max_length=1000, blank=True, default="")
 
     meeting_url = models.URLField(blank=True)
     price = models.DecimalField(max_digits=8, decimal_places=2, default=0)

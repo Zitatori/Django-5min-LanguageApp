@@ -154,14 +154,19 @@ def lesson_rating(request, match_id: int):
         except ValueError:
             rating = 0
 
+        updates = {}
+        if "private_note" in request.POST:
+            updates["student_private_note"] = request.POST["private_note"].strip()[:1000]
         if 1 <= rating <= 5:
             feedback = request.POST.get("feedback", "").strip()[:500]
-            QuickLessonMatch.objects.filter(pk=match.pk).update(
+            updates.update(
                 student_rating=rating,
                 student_rated_at=timezone.now(),
                 student_feedback=feedback,
             )
-            return redirect("create_request")
+        if updates:
+            QuickLessonMatch.objects.filter(pk=match.pk).update(**updates)
+        return redirect("create_request")
 
     return render(request, "core/lesson_rating.html", {"match": match})
 

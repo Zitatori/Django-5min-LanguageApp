@@ -18,14 +18,18 @@
     {% if match.student_feedback %}
       <p class="rating-feedback-display">{{ match.student_feedback }}</p>
     {% endif %}
-    <a class="btn" href="{% url 'home' %}" style="margin-top:16px;display:inline-block;">{% trans "Back to Home" %}</a>
+    <form method="post">
+      {% csrf_token %}
+      {% include "core/_private_note_input.html" %}
+      <button type="submit" class="btn">{% trans "Save" %}</button>
+    </form>
   {% else %}
     <form method="post" id="rating-form">
       {% csrf_token %}
       <div class="rating-options" role="radiogroup" aria-label="Lesson rating">
         {% for value in "12345" %}
           <label class="rating-option" for="star{{ value }}" data-value="{{ value }}">
-            <input type="radio" id="star{{ value }}" name="rating" value="{{ value }}" required>
+            <input type="radio" id="star{{ value }}" name="rating" value="{{ value }}">
             <span class="rating-option-star">★</span>
           </label>
         {% endfor %}
@@ -44,7 +48,8 @@
         <div class="feedback-charcount"><span id="feedback-count">0</span> / 500</div>
       </div>
 
-      <button type="submit" class="btn rating-submit" disabled>{% trans "Submit rating" %}</button>
+      {% include "core/_private_note_input.html" %}
+      <button type="submit" class="btn rating-submit">{% trans "Save" %}</button>
       <a href="{% url 'home' %}" class="rating-skip">{% trans "Skip" %}</a>
     </form>
   {% endif %}
@@ -228,7 +233,7 @@
     });
   });
 
-  document.querySelector('.rating-options').addEventListener('mouseleave', () => {
+  document.querySelector('.rating-options')?.addEventListener('mouseleave', () => {
     const checked = document.querySelector('input[name="rating"]:checked');
     paintStars(checked ? Number(checked.value) : 0);
   });
