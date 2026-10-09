@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load display_names i18n %}
 
 {% block content %}
 <style>
@@ -277,7 +277,7 @@
   <table class="table">
     <thead>
       <tr>
-        <th>Username</th>
+        <th>Name</th>
         <th>Email</th>
         <th>Role</th>
         <th>Points</th>
@@ -289,12 +289,12 @@
     </thead>
     <tbody>
       {% for u in recent_users %}
-      <tr data-username="{{ u.username|lower }} {{ u.first_name|lower }}" data-starred="{% if u.userprofile.is_starred %}true{% else %}false{% endif %}" data-language-tutor="{% if u.tutorprofile %}{% if u.tutorprofile.languages.all %}true{% else %}false{% endif %}{% else %}false{% endif %}">
+      <tr data-username="{{ u|display_name|lower }} {{ u.first_name|lower }}" data-starred="{% if u.userprofile.is_starred %}true{% else %}false{% endif %}" data-language-tutor="{% if u.tutorprofile %}{% if u.tutorprofile.languages.all %}true{% else %}false{% endif %}{% else %}false{% endif %}">
         <td>
           <button class="star-btn" id="star-{{ u.id }}" onclick="toggleStar({{ u.id }})"
             title="{% if u.userprofile.is_starred %}Unstar{% else %}Star{% endif %}"
-            style="background:none; border:none; cursor:pointer; font-size:16px; padding:0 4px 0 0; vertical-align:middle; line-height:1;{% if u.userprofile.is_starred %} color:#f59e0b;{% endif %}">{% if u.userprofile.is_starred %}★{% else %}☆{% endif %}</button>{{ u.username }}
-          {% if u.first_name %}<br><span style="font-size:11px; color:#9ca3af; margin-left:20px;">{{ u.first_name }}</span>{% endif %}
+            style="background:none; border:none; cursor:pointer; font-size:16px; padding:0 4px 0 0; vertical-align:middle; line-height:1;{% if u.userprofile.is_starred %} color:#f59e0b;{% endif %}">{% if u.userprofile.is_starred %}★{% else %}☆{% endif %}</button>{{ u|display_name }}
+          {% if u.first_name and not u|has_generated_username %}<br><span style="font-size:11px; color:#9ca3af; margin-left:20px;">{{ u.first_name }}</span>{% endif %}
           {% if u.userprofile.referral_source %}<br><span style="font-size:11px; color:#6366f1; margin-left:20px;" title="{{ u.userprofile.referral_source }}">📍 {{ u.userprofile.referral_source|truncatechars:30 }}</span>{% endif %}
         </td>
         <td style="font-size:12px; color:#6b7280; max-width:160px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ u.email|default:"—" }}</td>
@@ -356,26 +356,26 @@
           {% endif %}
         </td>
         <td style="white-space:nowrap;">
-          <button class="edit-btn" onclick="openModal({{ u.id }}, '{{ u.username }}', [{% if u.tutorprofile %}{% for l in u.tutorprofile.languages.all %}{{ l.id }},{% endfor %}{% endif %}], {% if u.tutorprofile and u.tutorprofile.is_hourly_paid %}true{% else %}false{% endif %})">Edit</button>
-          <button class="history-btn" onclick="openHistoryModal({{ u.id }}, '{{ u.username }}')">History</button>
-          <button class="notes-btn" onclick="openStudentNotesModal({{ u.id }}, '{{ u.username }}')">Notes</button>
-          <button class="points-btn" onclick="openPointsModal({{ u.id }}, '{{ u.username }}', {{ u.point_balance.student_balance|default:0 }}, {{ u.point_balance.teacher_balance|default:0 }})">Pts</button>
+          <button class="edit-btn" onclick="openModal({{ u.id }}, '{{ u|display_name|escapejs }}', [{% if u.tutorprofile %}{% for l in u.tutorprofile.languages.all %}{{ l.id }},{% endfor %}{% endif %}], {% if u.tutorprofile and u.tutorprofile.is_hourly_paid %}true{% else %}false{% endif %})">Edit</button>
+          <button class="history-btn" onclick="openHistoryModal({{ u.id }}, '{{ u|display_name|escapejs }}')">History</button>
+          <button class="notes-btn" onclick="openStudentNotesModal({{ u.id }}, '{{ u|display_name|escapejs }}')">Notes</button>
+          <button class="points-btn" onclick="openPointsModal({{ u.id }}, '{{ u|display_name|escapejs }}', {{ u.point_balance.student_balance|default:0 }}, {{ u.point_balance.teacher_balance|default:0 }})">Pts</button>
           {% if u.gold_membership.is_active %}
             <form method="post" action="{% url 'revoke_gold' u.id %}" style="display:inline;"
-                  onsubmit="return confirm('Revoke Gold from {{ u.username }} now?')">
+                  onsubmit="return confirm('Revoke Gold from {{ u|display_name|escapejs }} now?')">
               {% csrf_token %}
               <button type="submit" class="delete-btn" title="Revoke Gold">Gold off</button>
             </form>
           {% else %}
             <form method="post" action="{% url 'grant_gold' u.id %}" style="display:inline;"
-                  onsubmit="return confirm('Grant Gold 30 days to {{ u.username }}?')">
+                  onsubmit="return confirm('Grant Gold 30 days to {{ u|display_name|escapejs }}?')">
               {% csrf_token %}
               <button type="submit" class="edit-btn" style="border-color:#f59e0b;color:#b45309;" title="Grant Gold 30 days">&#x1F451;</button>
             </form>
           {% endif %}
           {% if u != request.user %}
             <form method="post" action="{% url 'delete_user' u.id %}" style="display:inline;"
-                  onsubmit="return confirm('Delete {{ u.username }}? This cannot be undone.')">
+                  onsubmit="return confirm('Delete {{ u|display_name|escapejs }}? This cannot be undone.')">
               {% csrf_token %}
               <button type="submit" class="delete-btn">Delete</button>
             </form>
@@ -384,12 +384,12 @@
       </tr>
       {% endfor %}
       {% for u in older_users %}
-      <tr class="older-user" data-username="{{ u.username|lower }} {{ u.first_name|lower }}" data-starred="{% if u.userprofile.is_starred %}true{% else %}false{% endif %}" data-language-tutor="{% if u.tutorprofile %}{% if u.tutorprofile.languages.all %}true{% else %}false{% endif %}{% else %}false{% endif %}" style="display:none;">
+      <tr class="older-user" data-username="{{ u|display_name|lower }} {{ u.first_name|lower }}" data-starred="{% if u.userprofile.is_starred %}true{% else %}false{% endif %}" data-language-tutor="{% if u.tutorprofile %}{% if u.tutorprofile.languages.all %}true{% else %}false{% endif %}{% else %}false{% endif %}" style="display:none;">
         <td>
           <button class="star-btn" id="star-{{ u.id }}" onclick="toggleStar({{ u.id }})"
             title="{% if u.userprofile.is_starred %}Unstar{% else %}Star{% endif %}"
-            style="background:none; border:none; cursor:pointer; font-size:16px; padding:0 4px 0 0; vertical-align:middle; line-height:1;{% if u.userprofile.is_starred %} color:#f59e0b;{% endif %}">{% if u.userprofile.is_starred %}★{% else %}☆{% endif %}</button>{{ u.username }}
-          {% if u.first_name %}<br><span style="font-size:11px; color:#9ca3af; margin-left:20px;">{{ u.first_name }}</span>{% endif %}
+            style="background:none; border:none; cursor:pointer; font-size:16px; padding:0 4px 0 0; vertical-align:middle; line-height:1;{% if u.userprofile.is_starred %} color:#f59e0b;{% endif %}">{% if u.userprofile.is_starred %}★{% else %}☆{% endif %}</button>{{ u|display_name }}
+          {% if u.first_name and not u|has_generated_username %}<br><span style="font-size:11px; color:#9ca3af; margin-left:20px;">{{ u.first_name }}</span>{% endif %}
           {% if u.userprofile.referral_source %}<br><span style="font-size:11px; color:#6366f1; margin-left:20px;" title="{{ u.userprofile.referral_source }}">📍 {{ u.userprofile.referral_source|truncatechars:30 }}</span>{% endif %}
         </td>
         <td style="font-size:12px; color:#6b7280; max-width:160px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ u.email|default:"—" }}</td>
@@ -433,23 +433,23 @@
           {% else %}—{% endif %}
         </td>
         <td style="white-space:nowrap;">
-          <button class="edit-btn" onclick="openModal({{ u.id }}, '{{ u.username }}', [{% if u.tutorprofile %}{% for l in u.tutorprofile.languages.all %}{{ l.id }},{% endfor %}{% endif %}], {% if u.tutorprofile and u.tutorprofile.is_hourly_paid %}true{% else %}false{% endif %})">Edit</button>
-          <button class="history-btn" onclick="openHistoryModal({{ u.id }}, '{{ u.username }}')">History</button>
-          <button class="notes-btn" onclick="openStudentNotesModal({{ u.id }}, '{{ u.username }}')">Notes</button>
-          <button class="points-btn" onclick="openPointsModal({{ u.id }}, '{{ u.username }}', {{ u.point_balance.student_balance|default:0 }}, {{ u.point_balance.teacher_balance|default:0 }})">Pts</button>
+          <button class="edit-btn" onclick="openModal({{ u.id }}, '{{ u|display_name|escapejs }}', [{% if u.tutorprofile %}{% for l in u.tutorprofile.languages.all %}{{ l.id }},{% endfor %}{% endif %}], {% if u.tutorprofile and u.tutorprofile.is_hourly_paid %}true{% else %}false{% endif %})">Edit</button>
+          <button class="history-btn" onclick="openHistoryModal({{ u.id }}, '{{ u|display_name|escapejs }}')">History</button>
+          <button class="notes-btn" onclick="openStudentNotesModal({{ u.id }}, '{{ u|display_name|escapejs }}')">Notes</button>
+          <button class="points-btn" onclick="openPointsModal({{ u.id }}, '{{ u|display_name|escapejs }}', {{ u.point_balance.student_balance|default:0 }}, {{ u.point_balance.teacher_balance|default:0 }})">Pts</button>
           {% if u.gold_membership.is_active %}
-            <form method="post" action="{% url 'revoke_gold' u.id %}" style="display:inline;" onsubmit="return confirm('Revoke Gold from {{ u.username }} now?')">
+            <form method="post" action="{% url 'revoke_gold' u.id %}" style="display:inline;" onsubmit="return confirm('Revoke Gold from {{ u|display_name|escapejs }} now?')">
               {% csrf_token %}
               <button type="submit" class="delete-btn" title="Revoke Gold">Gold off</button>
             </form>
           {% else %}
-            <form method="post" action="{% url 'grant_gold' u.id %}" style="display:inline;" onsubmit="return confirm('Grant Gold 30 days to {{ u.username }}?')">
+            <form method="post" action="{% url 'grant_gold' u.id %}" style="display:inline;" onsubmit="return confirm('Grant Gold 30 days to {{ u|display_name|escapejs }}?')">
               {% csrf_token %}
               <button type="submit" class="edit-btn" style="border-color:#f59e0b;color:#b45309;" title="Grant Gold 30 days">&#x1F451;</button>
             </form>
           {% endif %}
           {% if u != request.user %}
-            <form method="post" action="{% url 'delete_user' u.id %}" style="display:inline;" onsubmit="return confirm('Delete {{ u.username }}? This cannot be undone.')">
+            <form method="post" action="{% url 'delete_user' u.id %}" style="display:inline;" onsubmit="return confirm('Delete {{ u|display_name|escapejs }}? This cannot be undone.')">
               {% csrf_token %}
               <button type="submit" class="delete-btn">Delete</button>
             </form>
@@ -485,7 +485,7 @@
       </div>
       {% for tutor in tutor_list %}
       <div style="display:flex; align-items:center; justify-content:space-between; font-size:13px; padding:3px 0; border-top:1px solid #c7d2fe;">
-        <span style="font-weight:600;">{{ tutor.user.username }}</span>
+        <span style="font-weight:600;">{{ tutor.user|display_name }}</span>
         {% if tutor.last_ping_at %}
         <span style="color:#78716c; font-size:11px;">{{ tutor.last_ping_at|date:"H:i" }}</span>
         {% endif %}
@@ -515,8 +515,8 @@
     <tbody>
       {% for match in live_matches %}
       <tr style="background:#f0fdf4;">
-        <td><strong>{{ match.request.student.user.username }}</strong></td>
-        <td><strong>{{ match.tutor.user.username }}</strong></td>
+        <td><strong>{{ match.request.student.user|display_name }}</strong></td>
+        <td><strong>{{ match.tutor.user|display_name }}</strong></td>
         <td>
           {% with lang=match.request.language %}
             {% if lang.name == 'English' %}<span class="lang-tag tag-en">{{ lang.name }}</span>
@@ -554,8 +554,8 @@
     <tbody>
       {% for match in recent_matches %}
       <tr>
-        <td>{{ match.request.student.user.username }}</td>
-        <td>{{ match.tutor.user.username }}</td>
+        <td>{{ match.request.student.user|display_name }}</td>
+        <td>{{ match.tutor.user|display_name }}</td>
         <td>
           {% with lang=match.request.language %}
             {% if lang.name == 'English' %}<span class="lang-tag tag-en">{{ lang.name }}</span>
@@ -577,7 +577,7 @@
         <td style="font-size:12px; color:#6b7280;">{{ match.started_at|date:"Y-m-d H:i" }}</td>
         <td style="font-size:12px; color:#6b7280;">{% if match.end_at %}{{ match.end_at|date:"H:i" }}{% else %}<span class="pt-none">—</span>{% endif %}</td>
         <td>
-          <button class="notes-btn" onclick="openMatchNotesModal({{ match.id }}, '{{ match.request.student.user.username }} × {{ match.tutor.user.username }}')">
+          <button class="notes-btn" onclick="openMatchNotesModal({{ match.id }}, '{{ match.request.student.user|display_name|escapejs }} × {{ match.tutor.user|display_name|escapejs }}')">
             📋<span class="notes-count" id="mnc-{{ match.id }}"></span>
           </button>
         </td>
@@ -585,8 +585,8 @@
       {% endfor %}
       {% for match in older_matches %}
       <tr class="older-match" style="display:none;">
-        <td>{{ match.request.student.user.username }}</td>
-        <td>{{ match.tutor.user.username }}</td>
+        <td>{{ match.request.student.user|display_name }}</td>
+        <td>{{ match.tutor.user|display_name }}</td>
         <td>
           {% with lang=match.request.language %}
             {% if lang.name == 'English' %}<span class="lang-tag tag-en">{{ lang.name }}</span>
@@ -608,7 +608,7 @@
         <td style="font-size:12px; color:#6b7280;">{{ match.started_at|date:"Y-m-d H:i" }}</td>
         <td style="font-size:12px; color:#6b7280;">{% if match.end_at %}{{ match.end_at|date:"H:i" }}{% else %}<span class="pt-none">—</span>{% endif %}</td>
         <td>
-          <button class="notes-btn" onclick="openMatchNotesModal({{ match.id }}, '{{ match.request.student.user.username }} × {{ match.tutor.user.username }}')">
+          <button class="notes-btn" onclick="openMatchNotesModal({{ match.id }}, '{{ match.request.student.user|display_name|escapejs }} × {{ match.tutor.user|display_name|escapejs }}')">
             📋<span class="notes-count" id="mnc-{{ match.id }}"></span>
           </button>
         </td>
@@ -642,7 +642,7 @@
     <tbody>
       {% for wr in withdrawal_requests %}
       <tr>
-        <td><strong>{{ wr.user.username }}</strong></td>
+        <td><strong>{{ wr.user|display_name }}</strong></td>
         <td style="color:#6b7280;">{{ wr.points }} pt</td>
         <td style="color:#d97706;">{% if wr.fee %}-{{ wr.fee }} pt{% else %}—{% endif %}</td>
         <td><strong style="color:#16a34a;">{{ wr.net_points }} pt</strong></td>
@@ -662,13 +662,13 @@
         <td style="white-space:nowrap;">
           {% if wr.status == 'pending' %}
             <form method="post" action="{% url 'process_withdrawal' wr.id %}" style="display:inline;"
-                  onsubmit="return confirm('Mark as PAID for {{ wr.user.username }}?')">
+                  onsubmit="return confirm('Mark as PAID for {{ wr.user|display_name|escapejs }}?')">
               {% csrf_token %}
               <input type="hidden" name="action" value="paid">
               <button type="submit" class="edit-btn" style="border-color:#16a34a;color:#16a34a;">✓ Paid</button>
             </form>
             <form method="post" action="{% url 'process_withdrawal' wr.id %}" style="display:inline;"
-                  onsubmit="return confirm('Reject and return points to {{ wr.user.username }}?')">
+                  onsubmit="return confirm('Reject and return points to {{ wr.user|display_name|escapejs }}?')">
               {% csrf_token %}
               <input type="hidden" name="action" value="reject">
               <button type="submit" class="delete-btn">✗ Reject</button>
@@ -699,12 +699,12 @@
     <tbody>
       {% for gr in gold_requests %}
       <tr>
-        <td><strong>{{ gr.user.username }}</strong></td>
+        <td><strong>{{ gr.user|display_name }}</strong></td>
         <td style="font-size:12px;color:#6b7280;">{{ gr.created_at|date:"Y-m-d H:i" }}</td>
         <td>
           <form method="post" action="{% url 'grant_gold' gr.user.id %}"
                 style="display:inline;"
-                onsubmit="return confirm('Grant Gold 30 days to {{ gr.user.username }}?')">
+                onsubmit="return confirm('Grant Gold 30 days to {{ gr.user|display_name|escapejs }}?')">
             {% csrf_token %}
             <button type="submit" class="edit-btn" style="border-color:#f59e0b;color:#b45309;font-weight:700;">
               &#x1F451; Activate 30 days

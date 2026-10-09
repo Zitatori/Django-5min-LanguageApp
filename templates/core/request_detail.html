@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load display_names i18n %}
 
 {% block content %}
   <div class="card">
@@ -26,7 +26,7 @@
 
     {% if match %}
       <div class="mt-16">
-        <p><strong>{% trans "Tutor" %}:</strong> {{ match.tutor.user.username }}</p>
+        <p><strong>{% trans "Tutor" %}:</strong> {{ match.tutor.user|display_name }}</p>
         <p class="text-muted" style="font-size:13px; margin-top:4px;">
           {% if match.previous_conversation_count %}
             {% blocktrans with count=match.previous_conversation_count %}Previous conversations: {{ count }}{% endblocktrans %}

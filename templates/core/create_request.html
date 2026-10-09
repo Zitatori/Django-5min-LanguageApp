@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load display_names i18n %}
 
 {% block content %}
 <style>
@@ -577,10 +577,10 @@
   {% if matches %}
     {% for match in matches %}
     <div class="cr-hist-item">
-      <div class="cr-hist-avatar">{{ match.tutor.user.username|slice:":2"|upper }}</div>
+      <div class="cr-hist-avatar">{{ match.tutor.user|display_name|slice:":2"|upper }}</div>
       <div class="cr-hist-info">
         <div class="cr-hist-name" style="display:flex; align-items:center; gap:5px;">
-          {{ match.tutor.user.username }}
+          {{ match.tutor.user|display_name }}
           {% if match.tutor.user.gold_membership.is_active %}<span class="header-badge header-badge-gold">&#x1F451; Gold</span>
           {% elif match.tutor.user.is_superuser %}<span class="header-badge header-badge-dev">🚀 {% trans "Founder" %}</span>
           {% elif match.tutor.user.is_staff %}<span class="header-badge header-badge-admin">Admin</span>

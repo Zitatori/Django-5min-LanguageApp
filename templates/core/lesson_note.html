@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load display_names i18n %}
 
 {% block content %}
 <div class="note-wrap">
@@ -8,7 +8,7 @@
     <h2 class="card-title">{% trans "Conversation Notes" %}</h2>
     <p class="note-subtitle">
       {% with u=match.request.student.user %}
-        {% if u.first_name %}{{ u.first_name }} <span class="note-username">({{ u.username }})</span>{% else %}{{ u.username }}{% endif %}
+        {% if u.first_name %}{{ u.first_name }} <span class="note-username">({{ u|display_name }})</span>{% else %}{{ u|display_name }}{% endif %}
       {% endwith %}
       &nbsp;·&nbsp;{% trans match.request.language.name %}
     </p>
@@ -19,7 +19,7 @@
       <ul class="note-prev-list">
         {% for n in previous_notes %}
         <li class="note-prev-item">
-          <div class="note-prev-meta">{{ n.created_at|date:"Y/m/d" }}&ensp;·&ensp;{% if n.tutor.user.first_name %}{{ n.tutor.user.first_name }} ({{ n.tutor.user.username }}){% else %}{{ n.tutor.user.username }}{% endif %}</div>
+          <div class="note-prev-meta">{{ n.created_at|date:"Y/m/d" }}&ensp;·&ensp;{% if n.tutor.user.first_name %}{{ n.tutor.user.first_name }} ({{ n.tutor.user|display_name }}){% else %}{{ n.tutor.user|display_name }}{% endif %}</div>
           <div class="note-prev-body">{{ n.conversation_content }}</div>
         </li>
         {% endfor %}

@@ -1,5 +1,5 @@
 {% load static %}
-{% load i18n %}
+{% load display_names i18n %}
 
 <!DOCTYPE html>
 <html lang="{{ request.LANGUAGE_CODE|default:'ja' }}">
@@ -42,7 +42,7 @@
         </form>
         {% if user.is_authenticated %}
           <span class="header-username">
-            {{ user.username }}
+            {{ user|display_name }}
             {% if is_gold %}<span class="header-badge header-badge-gold">&#x1F451; Gold</span>{% endif %}
             {% if user.is_superuser %}<span class="header-badge header-badge-dev">🚀 {% trans "Founder" %}</span>
             {% elif user.is_staff %}<span class="header-badge header-badge-admin">Admin</span>
@@ -80,7 +80,7 @@
       </form>
       {% if user.is_authenticated %}
         <span class="header-username">
-          {{ user.username }}
+          {{ user|display_name }}
           {% if is_gold %}<span class="header-badge header-badge-gold">&#x1F451; Gold</span>
           {% elif user.is_superuser %}<span class="header-badge header-badge-dev">🚀 {% trans "Founder" %}</span>
           {% elif user.is_staff %}<span class="header-badge header-badge-admin">Admin</span>

@@ -1,11 +1,11 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load display_names i18n %}
 
 {% block content %}
 <div class="card rating-card">
   <h2 class="card-title rating-title">{% trans "Rate this lesson" %}</h2>
   <p class="card-subtitle rating-subtitle">
-    {{ match.tutor.user.username }} · {% trans match.request.language.name %}
+    {{ match.tutor.user|display_name }} · {% trans match.request.language.name %}
   </p>
 
   {% if match.student_rating %}

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load display_names i18n %}
 
 {% block content %}
 <style>
@@ -408,7 +408,7 @@
     <div style="display:flex; gap:8px; align-items:center;">
       <input type="text" name="display_name" maxlength="50"
              value="{{ request.user.first_name }}"
-             placeholder="{{ request.user.username }}"
+             placeholder="{{ request.user|display_name }}"
              style="flex:1; padding:9px 12px; border:1.5px solid #e5e7eb; border-radius:10px; font-size:15px; box-sizing:border-box;">
       <button type="submit" class="btn" style="white-space:nowrap; padding:9px 18px;">{% trans "Save" %}</button>
     </div>
