@@ -1,0 +1,7 @@
+{% load i18n %}
+{% if request.user == match.request.student.user and match.student_private_note %}
+<div style="margin-top:12px; overflow-wrap:anywhere;">
+  <strong>{% get_current_language as lang %}{% if lang == 'ja' %}自分用のメモ（講師には共有されません）{% else %}Private notes (not shared with your tutor){% endif %}</strong>
+  <div style="white-space:pre-wrap;">{{ match.student_private_note }}</div>
+</div>
+{% endif %}

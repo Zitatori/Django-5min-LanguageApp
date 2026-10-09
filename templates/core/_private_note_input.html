@@ -1,0 +1,5 @@
+{% load i18n %}
+<div style="margin:16px 0; text-align:left;">
+  <label for="private-note">{% get_current_language as lang %}{% if lang == 'ja' %}自分用のメモ（任意・講師には共有されません）{% else %}Private notes (optional — not shared with your tutor){% endif %}</label>
+  <textarea id="private-note" name="private_note" class="feedback-textarea" maxlength="1000" rows="4">{{ match.student_private_note }}</textarea>
+</div>
