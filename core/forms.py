@@ -1,5 +1,6 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from uuid import uuid4
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
 
@@ -11,11 +12,10 @@ class SignupForm(UserCreationForm):
         widget=forms.EmailInput(attrs={"autocomplete": "email"}),
     )
     display_name = forms.CharField(
-        required=False,
+        required=True,
         max_length=50,
         label=_("Nickname (shown during lessons)"),
         widget=forms.TextInput(attrs={"placeholder": _("e.g. Mika, Tom...")}),
-        help_text=_("Optional. If blank, your username will be used."),
     )
     referral_source = forms.CharField(
         required=False,
@@ -27,18 +27,26 @@ class SignupForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ("username", "email", "display_name", "password1", "password2")
+        fields = ("email", "display_name", "password1", "password2")
 
     def clean_email(self):
         email = self.cleaned_data["email"]
-        if User.objects.filter(email=email).exists():
+        if User.objects.filter(email__iexact=email).exists():
             raise forms.ValidationError(_("This email address is already registered."))
         return email
 
     def save(self, commit=True):
         user = super().save(commit=False)
+        user.username = "member_" + uuid4().hex
         user.email = self.cleaned_data["email"]
         user.first_name = self.cleaned_data.get("display_name", "")
         if commit:
             user.save()
         return user
+
+
+class EmailOrUsernameAuthenticationForm(AuthenticationForm):
+    username = forms.CharField(
+        label=_("Email address (or username)"),
+        widget=forms.TextInput(attrs={"autofocus": True, "autocomplete": "username"}),
+    )

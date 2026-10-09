@@ -6,14 +6,17 @@ class EmailOrUsernameBackend(ModelBackend):
     """ユーザー名またはメールアドレスでログインできるバックエンド。"""
 
     def authenticate(self, request, username=None, password=None, **kwargs):
-        # メールアドレスで検索
+        if not username or password is None:
+            return None
+        # Existing usernames remain usable even if legacy emails are duplicated.
         try:
-            user = User.objects.get(email=username)
+            user = User.objects.get(username=username)
         except User.DoesNotExist:
             # ユーザー名で検索
             try:
-                user = User.objects.get(username=username)
-            except User.DoesNotExist:
+                user = User.objects.get(email__iexact=username)
+            except (User.DoesNotExist, User.MultipleObjectsReturned):
+                User().set_password(password)
                 return None
 
         if user.check_password(password) and self.user_can_authenticate(user):

@@ -2,6 +2,8 @@ from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
 from django.http import JsonResponse
+from django.contrib.auth.views import LoginView
+from core.forms import EmailOrUsernameAuthenticationForm
 
 def assetlinks(request):
     return JsonResponse([{
@@ -17,6 +19,7 @@ def assetlinks(request):
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("accounts/login/", LoginView.as_view(authentication_form=EmailOrUsernameAuthenticationForm), name="login"),
     path("accounts/", include("django.contrib.auth.urls")),
 
     # 言語切替用
