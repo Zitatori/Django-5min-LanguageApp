@@ -103,3 +103,15 @@ CHANNEL_LAYERS = {
 # Production credentials must be provided by the hosting environment.
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
 OPENAI_QUESTION_MODEL = os.getenv("OPENAI_QUESTION_MODEL", "gpt-4.1-mini")
+
+# AI study notes: reusable existing key, independent configurable model and bounds.
+OPENAI_STUDY_MODEL = os.getenv('OPENAI_STUDY_MODEL', 'gpt-4.1-mini')
+OPENAI_STUDY_MAX_OUTPUT_TOKENS = min(6000, max(1000, int(os.getenv('OPENAI_STUDY_MAX_OUTPUT_TOKENS', '3600'))))
+OPENAI_STUDY_TIMEOUT_SECONDS = min(20, max(1, int(os.getenv('OPENAI_STUDY_TIMEOUT_SECONDS', '20'))))
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {'study_console': {'class': 'logging.StreamHandler'}},
+    'loggers': {'core.services.study_notes': {'handlers': ['study_console'], 'level': 'INFO', 'propagate': False}},
+}

@@ -913,3 +913,155 @@ msgstr "Notas privadas"
 #: templates/core/_student_private_note.html
 msgid "Not shared with your tutor"
 msgstr "No se comparten con tu profesor"
+
+#: AI study notes
+msgid "AI Study Notes"
+msgstr "Notas de repaso con IA"
+
+#: AI study notes
+msgid "AI creates personalized review materials from your past lessons."
+msgstr "La IA crea material de repaso personalizado a partir de tus clases anteriores."
+
+#: AI study notes
+msgid "Unlimited generation for Gold members, at no extra charge."
+msgstr "Generaciones ilimitadas para miembros Gold, sin coste adicional."
+
+#: AI study notes
+msgid "Study language"
+msgstr "Idioma de estudio"
+
+#: AI study notes
+msgid "Explanation language"
+msgstr "Idioma de las explicaciones"
+
+#: AI study notes
+msgid "Include my private notes"
+msgstr "Incluir mis notas privadas"
+
+#: AI study notes
+msgid "Generate AI study notes"
+msgstr "Generar notas de repaso con IA"
+
+#: AI study notes
+msgid "Generating your study notes… Please wait on this page."
+msgstr "Generando las notas… Espera en esta página."
+
+#: AI study notes
+msgid "Gold membership is required to generate study notes."
+msgstr "Necesitas una suscripción Gold para generar notas de repaso."
+
+#: AI study notes
+msgid "Upgrade to Gold"
+msgstr "Mejorar a Gold"
+
+#: AI study notes
+msgid "Saved study notes"
+msgstr "Notas de repaso guardadas"
+
+#: AI study notes
+msgid "No saved study notes yet."
+msgstr "Todavía no hay notas de repaso guardadas."
+
+#: AI study notes
+msgid "Please reload this page and try again."
+msgstr "Recarga esta página e inténtalo de nuevo."
+
+#: AI study notes
+msgid "This request was already submitted. Reload to start a new request."
+msgstr "Esta solicitud ya se ha enviado. Recarga para iniciar otra."
+
+#: AI study notes
+msgid "No lesson notes are available for this language yet. Complete a lesson and save notes first."
+msgstr "Aún no hay notas de clases en este idioma. Completa una clase y guarda notas primero."
+
+#: AI study notes
+msgid "A study note is already being generated. Please wait, then reload."
+msgstr "Ya se está generando una nota de repaso. Espera y recarga."
+
+#: AI study notes
+msgid "Study notes could not be generated. Please try again later. Your lesson notes are safe."
+msgstr "No se pudieron generar las notas. Inténtalo más tarde. Tus notas de clase están guardadas."
+
+#: AI study notes
+msgid "We send notes from your latest five completed lessons in the selected language to OpenAI, including your level and your tutor's next-conversation comments. Private notes are sent only if you opt in below. We do not record or monitor conversations."
+msgstr "Enviamos a OpenAI las notas de tus cinco últimas clases completadas en el idioma elegido, tu nivel y los comentarios del profesor para la siguiente conversación. Las notas privadas solo se envían si lo autorizas abajo. No grabamos ni monitorizamos conversaciones."
+
+#: AI study notes
+msgid "Account names and email fields are not sent. Known identifiers in notes are masked, but this cannot detect every personal detail. Remove sensitive information from your notes before generating. Generated materials are saved privately in QuickLesson and can be read without another API call."
+msgstr "No se envían los campos de nombre ni correo de la cuenta. Se ocultan los identificadores conocidos en las notas, pero no se puede detectar todo dato personal. Elimina la información sensible antes de generar. El material se guarda de forma privada en QuickLesson y consultarlo no realiza otra llamada a la API."
+
+#: AI study notes
+msgid "OpenAI data handling"
+msgstr "Tratamiento de datos de OpenAI"
+
+#: AI study notes
+msgid "Lessons reviewed"
+msgstr "Clases utilizadas"
+
+#: AI study notes
+msgid "Included"
+msgstr "Incluidas"
+
+#: AI study notes
+msgid "Not included"
+msgstr "No incluidas"
+
+#: AI study notes
+msgid "Key learning points"
+msgstr "Puntos clave de aprendizaje"
+
+#: AI study notes
+msgid "Words and expressions"
+msgstr "Palabras y expresiones"
+
+#: AI study notes
+msgid "Grammar review"
+msgstr "Repaso de gramática"
+
+#: AI study notes
+msgid "Corrections"
+msgstr "Correcciones"
+
+#: AI study notes
+msgid "Conversation practice"
+msgstr "Práctica de conversación"
+
+#: AI study notes
+msgid "Review plan"
+msgstr "Plan de repaso"
+
+#: AI study notes
+msgid "What to learn next"
+msgstr "Qué aprender después"
+
+#: AI study notes
+msgid "AI-generated materials may contain mistakes. Check anything uncertain with your tutor. Answers below are practice examples."
+msgstr "El material generado por IA puede contener errores. Consulta las dudas con tu profesor. Las respuestas siguientes son ejemplos para practicar."
+
+#: AI study notes
+msgid "No specific grammar was recorded in these lessons."
+msgstr "No se registraron puntos gramaticales concretos en estas clases."
+
+#: AI study notes
+msgid "No specific mistakes were documented by your tutor."
+msgstr "Tu profesor no ha registrado errores concretos."
+
+#: AI study notes
+msgid "Recorded tutor note"
+msgstr "Nota del profesor utilizada"
+
+#: AI study notes
+msgid "Example answer"
+msgstr "Respuesta de ejemplo"
+
+#: AI study notes
+msgid "minutes"
+msgstr "minutos"
+
+#: AI study notes
+msgid "Previous"
+msgstr "Anterior"
+
+#: AI study notes
+msgid "Next"
+msgstr "Siguiente"

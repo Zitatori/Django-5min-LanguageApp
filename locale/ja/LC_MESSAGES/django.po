@@ -904,3 +904,155 @@ msgstr "プライベートメモ"
 #: templates/core/_student_private_note.html
 msgid "Not shared with your tutor"
 msgstr "講師には共有されません"
+
+#: AI study notes
+msgid "AI Study Notes"
+msgstr "AI復習ノート"
+
+#: AI study notes
+msgid "AI creates personalized review materials from your past lessons."
+msgstr "過去のレッスンをもとに、AIがあなただけの復習教材を作成します。"
+
+#: AI study notes
+msgid "Unlimited generation for Gold members, at no extra charge."
+msgstr "Gold会員は追加料金なしで何度でも生成できます。"
+
+#: AI study notes
+msgid "Study language"
+msgstr "学習対象言語"
+
+#: AI study notes
+msgid "Explanation language"
+msgstr "説明言語"
+
+#: AI study notes
+msgid "Include my private notes"
+msgstr "自分のプライベートメモを含める"
+
+#: AI study notes
+msgid "Generate AI study notes"
+msgstr "AI復習ノートを生成"
+
+#: AI study notes
+msgid "Generating your study notes… Please wait on this page."
+msgstr "復習ノートを生成しています。このページでお待ちください。"
+
+#: AI study notes
+msgid "Gold membership is required to generate study notes."
+msgstr "復習ノートの生成にはGold会員登録が必要です。"
+
+#: AI study notes
+msgid "Upgrade to Gold"
+msgstr "Goldにアップグレード"
+
+#: AI study notes
+msgid "Saved study notes"
+msgstr "保存した復習ノート"
+
+#: AI study notes
+msgid "No saved study notes yet."
+msgstr "保存した復習ノートはまだありません。"
+
+#: AI study notes
+msgid "Please reload this page and try again."
+msgstr "ページを再読み込みして、もう一度お試しください。"
+
+#: AI study notes
+msgid "This request was already submitted. Reload to start a new request."
+msgstr "この生成リクエストは送信済みです。新しく生成するには再読み込みしてください。"
+
+#: AI study notes
+msgid "No lesson notes are available for this language yet. Complete a lesson and save notes first."
+msgstr "この言語のレッスンノートがまだありません。レッスンを受けてノートを保存してからお試しください。"
+
+#: AI study notes
+msgid "A study note is already being generated. Please wait, then reload."
+msgstr "復習ノートを生成中です。少し待ってから再読み込みしてください。"
+
+#: AI study notes
+msgid "Study notes could not be generated. Please try again later. Your lesson notes are safe."
+msgstr "復習ノートを生成できませんでした。時間をおいてお試しください。元のレッスンノートは保存されています。"
+
+#: AI study notes
+msgid "We send notes from your latest five completed lessons in the selected language to OpenAI, including your level and your tutor's next-conversation comments. Private notes are sent only if you opt in below. We do not record or monitor conversations."
+msgstr "選択した言語の直近5回の受講済みレッスンについて、レベル・講師のノート・次回へのコメントをOpenAIに送信します。プライベートメモは下で選択した場合のみ送信します。会話の録音・モニタリングは行いません。"
+
+#: AI study notes
+msgid "Account names and email fields are not sent. Known identifiers in notes are masked, but this cannot detect every personal detail. Remove sensitive information from your notes before generating. Generated materials are saved privately in QuickLesson and can be read without another API call."
+msgstr "アカウントの氏名・メールアドレスの項目は送信しません。ノート内の既知の識別情報は伏せますが、すべての個人情報を検出できるわけではありません。生成前に機密情報を取り除いてください。教材はQuickLessonに本人専用で保存され、再閲覧時にはAPIを呼び出しません。"
+
+#: AI study notes
+msgid "OpenAI data handling"
+msgstr "OpenAIでのデータの取り扱い"
+
+#: AI study notes
+msgid "Lessons reviewed"
+msgstr "対象レッスン数"
+
+#: AI study notes
+msgid "Included"
+msgstr "含む"
+
+#: AI study notes
+msgid "Not included"
+msgstr "含まない"
+
+#: AI study notes
+msgid "Key learning points"
+msgstr "今回の重要な学習ポイント"
+
+#: AI study notes
+msgid "Words and expressions"
+msgstr "単語・表現集"
+
+#: AI study notes
+msgid "Grammar review"
+msgstr "文法の復習"
+
+#: AI study notes
+msgid "Corrections"
+msgstr "間違いの訂正"
+
+#: AI study notes
+msgid "Conversation practice"
+msgstr "会話練習"
+
+#: AI study notes
+msgid "Review plan"
+msgstr "復習プラン"
+
+#: AI study notes
+msgid "What to learn next"
+msgstr "次に学ぶべき内容"
+
+#: AI study notes
+msgid "AI-generated materials may contain mistakes. Check anything uncertain with your tutor. Answers below are practice examples."
+msgstr "AI教材には誤りが含まれる場合があります。不明な点は講師に確認してください。以下の回答は練習用の例です。"
+
+#: AI study notes
+msgid "No specific grammar was recorded in these lessons."
+msgstr "これらのレッスンには具体的な文法の記録がありません。"
+
+#: AI study notes
+msgid "No specific mistakes were documented by your tutor."
+msgstr "講師が記録した具体的な間違いはありません。"
+
+#: AI study notes
+msgid "Recorded tutor note"
+msgstr "根拠となる講師の記録"
+
+#: AI study notes
+msgid "Example answer"
+msgstr "回答例"
+
+#: AI study notes
+msgid "minutes"
+msgstr "分"
+
+#: AI study notes
+msgid "Previous"
+msgstr "前へ"
+
+#: AI study notes
+msgid "Next"
+msgstr "次へ"

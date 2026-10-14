@@ -570,6 +570,7 @@
 <div class="card">
   <div class="cr-hist-header">
     <h3 class="card-title" style="margin:0;">{% trans "My Lesson History" %}</h3>
+    <a href="{% url 'study_notes' %}">✨ {% trans "AI Study Notes" %} (Gold)</a>
     {% if total_lessons %}<span class="cr-hist-total">{{ total_lessons }}{% trans " lessons" %}</span>{% endif %}
   </div>
 

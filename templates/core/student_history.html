@@ -7,6 +7,7 @@
 <div class="card lesson-history-card">
   <div class="card-header">
     <h2 class="card-title">{% trans "My Lesson History" %}</h2>
+    <a href="{% url 'study_notes' %}">✨ {% trans "AI Study Notes" %} (Gold)</a>
   </div>
 
   {% if matches %}

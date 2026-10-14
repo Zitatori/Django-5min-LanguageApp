@@ -5,3 +5,4 @@ from .points import PointBalance, PointTransaction, WithdrawalRequest
 from .gold import GoldMembership, GoldSubscriptionRequest
 from .sessions import UpcomingSession
 from .notes import ConversationNote
+from .study_notes import StudyNote
