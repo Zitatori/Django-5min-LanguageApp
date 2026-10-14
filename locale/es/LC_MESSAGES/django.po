@@ -905,3 +905,11 @@ msgstr "Opcional."
 
 msgid "This email address is already registered."
 msgstr "Este correo electrónico ya está registrado."
+
+#: templates/core/_student_private_note.html
+msgid "Private notes"
+msgstr "Notas privadas"
+
+#: templates/core/_student_private_note.html
+msgid "Not shared with your tutor"
+msgstr "No se comparten con tu profesor"

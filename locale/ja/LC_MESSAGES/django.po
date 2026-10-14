@@ -896,3 +896,11 @@ msgstr "任意。"
 
 msgid "This email address is already registered."
 msgstr "このメールアドレスはすでに登録されています。"
+
+#: templates/core/_student_private_note.html
+msgid "Private notes"
+msgstr "プライベートメモ"
+
+#: templates/core/_student_private_note.html
+msgid "Not shared with your tutor"
+msgstr "講師には共有されません"

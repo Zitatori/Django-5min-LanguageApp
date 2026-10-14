@@ -1,14 +1,16 @@
 {% extends "base.html" %}
 {% load display_names i18n %}
 
+{% block container_class %}lesson-history-page{% endblock %}
+
 {% block content %}
-<div class="card">
+<div class="card lesson-history-card">
   <div class="card-header">
     <h2 class="card-title">{% trans "My Lesson History" %}</h2>
   </div>
 
   {% if matches %}
-    <table>
+    <table class="lesson-history-table">
       <thead>
         <tr>
           <th>{% trans "Date" %}</th>
@@ -20,20 +22,20 @@
       <tbody>
         {% for match in matches %}
           <tr>
-            <td>{{ match.started_at|date:"Y-m-d H:i" }}</td>
-            <td>
+            <td data-label="{% trans 'Date' %}">{{ match.started_at|date:"Y-m-d H:i" }}</td>
+            <td data-label="{% trans 'Tutor' %}">
               {% if match.tutor.user.first_name %}{{ match.tutor.user.first_name }} <span style="color:#9ca3af; font-size:.85em;">({{ match.tutor.user|display_name }})</span>{% else %}{{ match.tutor.user|display_name }}{% endif %}
               {% if match.tutor.user.gold_membership.is_active %}<span class="header-badge header-badge-gold">&#x1F451; Gold</span>
               {% elif match.tutor.user.is_superuser %}<span class="header-badge header-badge-dev">🚀 {% trans "Founder" %}</span>
               {% elif match.tutor.user.is_staff %}<span class="header-badge header-badge-admin">Admin</span>
               {% endif %}
             </td>
-            <td>{% trans match.request.language.name %}</td>
-            <td class="student-note-cell">
+            <td data-label="{% trans 'Language' %}">{% trans match.request.language.name %}</td>
+            <td class="student-note-cell" data-label="{% trans 'Tutor Comment' %}">
               {% if match.tutor_comment %}
                 <div class="student-note-card">
                   {% if match.tutor_comment.learner_level %}<div style="margin-bottom:6px; font-weight:600; color:#6366f1;">{% trans "Level" %}: {{ match.tutor_comment.learner_level }}</div>{% endif %}
-                  <div>{{ match.tutor_comment.conversation_content }}</div>
+                  <div class="lesson-conversation-content">{{ match.tutor_comment.conversation_content }}</div>
                   {% include "core/_student_next_questions.html" with note=match.tutor_comment %}
                 </div>
               {% else %}

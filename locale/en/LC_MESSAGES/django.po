@@ -1609,3 +1609,11 @@ msgstr "Optional."
 
 msgid "This email address is already registered."
 msgstr "This email address is already registered."
+
+#: templates/core/_student_private_note.html
+msgid "Private notes"
+msgstr "Private notes"
+
+#: templates/core/_student_private_note.html
+msgid "Not shared with your tutor"
+msgstr "Not shared with your tutor"

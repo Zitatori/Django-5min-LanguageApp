@@ -630,3 +630,32 @@ input[type="password"] {
     max-width: 1200px;
   }
 }
+
+/* Keep history content compact without affecting other page layouts. */
+.container.lesson-history-page { max-width: 1440px; margin: 20px auto; }
+.lesson-history-card { padding: 18px; }
+.lesson-history-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.lesson-history-table th, .lesson-history-table td {
+  padding: 12px 10px; text-align: left; vertical-align: top;
+  border-bottom: 1px solid #eef2f7; overflow-wrap: anywhere;
+}
+.lesson-history-table th { font-size: 13px; color: #6b7280; }
+.lesson-history-table th:nth-child(1) { width: 16%; }
+.lesson-history-table th:nth-child(2) { width: 20%; }
+.lesson-history-table th:nth-child(3) { width: 12%; }
+.lesson-history-table tbody tr:last-child td { border-bottom: 0; }
+.lesson-history-table .student-note-cell { line-height: 1.5; }
+.lesson-conversation-content { white-space: pre-wrap; overflow-wrap: anywhere; }
+@media (max-width: 700px) {
+  .container.lesson-history-page { margin: 12px auto; padding: 0 10px; }
+  .lesson-history-card { padding: 14px; }
+  .lesson-history-table, .lesson-history-table tbody { display: block; }
+  .lesson-history-table thead { display: none; }
+  .lesson-history-table tr { display: block; padding: 10px 0; border-bottom: 1px solid #e5e7eb; }
+  .lesson-history-table tr:last-child { border-bottom: 0; }
+  .lesson-history-table td { display: block; padding: 5px 0; border: 0; }
+  .lesson-history-table td::before {
+    content: attr(data-label); display: block; margin-bottom: 3px;
+    color: #6b7280; font-size: 12px; font-weight: 600;
+  }
+}

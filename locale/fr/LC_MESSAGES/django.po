@@ -914,3 +914,11 @@ msgstr "Facultatif."
 
 msgid "This email address is already registered."
 msgstr "Cette adresse e-mail est déjà enregistrée."
+
+#: templates/core/_student_private_note.html
+msgid "Private notes"
+msgstr "Notes privées"
+
+#: templates/core/_student_private_note.html
+msgid "Not shared with your tutor"
+msgstr "Non partagées avec votre professeur"

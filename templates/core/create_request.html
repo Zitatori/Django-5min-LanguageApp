@@ -243,7 +243,7 @@
   .cr-hist-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
   .cr-hist-note {
     flex-basis: 100%;
-    margin: 0 0 0 52px;
+    margin: 0;
     padding: 8px 10px;
     border-radius: 10px;
     background: #f9fafb;
@@ -251,7 +251,7 @@
     color: #4b5563;
     font-size: 12px;
     line-height: 1.45;
-    white-space: pre-wrap;
+    overflow-wrap: anywhere;
   }
   .cr-hist-note-title { display: block; margin-bottom: 4px; color: #111827; font-weight: 800; }
   .cr-hist-note div + div { margin-top: 3px; }
@@ -392,12 +392,12 @@
     }
   }
 
-  /* ── PC 2カラムレイアウト ── */
+  /* ── Full-width lesson history below the booking controls ── */
   @media (min-width: 900px) {
     .cr-pc-grid {
       display: grid;
-      grid-template-columns: 1fr 360px;
-      gap: 0 28px;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 20px;
       align-items: start;
     }
     .cr-pc-left,
@@ -408,10 +408,9 @@
     .cr-pc-right > *:last-child {
       margin-bottom: 0;
     }
-    /* 右カラムの履歴カードはヒーローの高さに合わせてストレッチしない */
+    /* Keep the history in the normal document flow. */
     .cr-pc-right .card {
-      position: sticky;
-      top: 24px;
+      position: static;
     }
   }
 </style>
@@ -607,7 +606,7 @@
         <span class="cr-hist-note-title">{% trans "Tutor Comment" %}</span>
         {% if match.tutor_comment %}
           {% if match.tutor_comment.learner_level %}<div style="margin-bottom:6px; font-weight:600; color:#6366f1;">{% trans "Level" %}: {{ match.tutor_comment.learner_level }}</div>{% endif %}
-          <div>{{ match.tutor_comment.conversation_content }}</div>
+          <div class="lesson-conversation-content">{{ match.tutor_comment.conversation_content }}</div>
           {% include "core/_student_next_questions.html" with note=match.tutor_comment %}
         {% else %}
           <span class="cr-hist-note-empty">{% trans "No tutor comment yet." %}</span>
