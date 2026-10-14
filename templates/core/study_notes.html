@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load i18n static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/study_notes.css' %}">
+<div class="study-page">
+<header class="study-hero"><span class="study-tag">Gold</span><h1>✨ {% trans "AI Study Notes" %}</h1><p>{% trans "AI creates personalized review materials from your past lessons." %}</p><p>{% trans "Unlimited generation for Gold members, at no extra charge." %}</p></header>
+<section class="card">
+<p>{% trans "We send notes from your latest five completed lessons in the selected language to OpenAI, including your level and your tutor's next-conversation comments. Private notes are sent only if you opt in below. We do not record or monitor conversations." %}</p>
+<p class="study-muted">{% trans "Account names and email fields are not sent. Known identifiers in notes are masked, but this cannot detect every personal detail. Remove sensitive information from your notes before generating. Generated materials are saved privately in QuickLesson and can be read without another API call." %} <a href="https://platform.openai.com/docs/guides/your-data" target="_blank" rel="noopener noreferrer">{% trans "OpenAI data handling" %}</a></p>
+{% if error %}<p class="study-error" role="alert">{{ error }}</p>{% endif %}
+{% if study_gold %}
+<form method="post" id="study-form">{% csrf_token %}{{ form.request_token }}
+<div class="study-form-grid"><div>{{ form.target_language.label_tag }}{{ form.target_language }}{{ form.target_language.errors }}</div><div>{{ form.explanation_language.label_tag }}{{ form.explanation_language }}{{ form.explanation_language.errors }}</div></div>
+<label class="study-consent">{{ form.include_private_notes }} {{ form.include_private_notes.label }}</label>
+<button type="submit" class="btn" id="study-generate">{% trans "Generate AI study notes" %}</button>
+<p id="study-loading" role="status" aria-live="polite" hidden>{% trans "Generating your study notes… Please wait on this page." %}</p>
+</form>
+{% else %}
+<p>{% trans "Gold membership is required to generate study notes." %}</p><a class="btn" href="{% url 'profile' %}">{% trans "Upgrade to Gold" %}</a>
+{% endif %}
+</section>
+<section><h2>{% trans "Saved study notes" %}</h2><div class="study-grid">
+{% for item in notes %}<a class="card study-saved" href="{% url 'study_note_detail' item.pk %}"><strong>{% trans "AI Study Notes" %}</strong><p>{{ item.target_language|upper }} → {{ item.explanation_language|upper }} · {{ item.learner_level }}</p><time>{{ item.created_at|date:"Y-m-d H:i" }}</time></a>{% empty %}<p>{% trans "No saved study notes yet." %}</p>{% endfor %}
+</div>{% if notes.has_previous %}<a href="?page={{ notes.previous_page_number }}">← {% trans "Previous" %}</a>{% endif %} {% if notes.has_next %}<a href="?page={{ notes.next_page_number }}">{% trans "Next" %} →</a>{% endif %}</section>
+</div>
+<script>
+(function () {
+ const form = document.getElementById('study-form');
+ if (!form) return;
+ let submitting = false;
+ form.addEventListener('submit', function (event) {
+   if (submitting) { event.preventDefault(); return; }
+   submitting = true;
+   document.getElementById('study-generate').disabled = true;
+   document.getElementById('study-loading').hidden = false;
+   form.setAttribute('aria-busy', 'true');
+ });
+ window.addEventListener('pageshow', function () {
+   submitting = false;
+   document.getElementById('study-generate').disabled = false;
+   document.getElementById('study-loading').hidden = true;
+   form.removeAttribute('aria-busy');
+ });
+})();
+</script>
+{% endblock %}
