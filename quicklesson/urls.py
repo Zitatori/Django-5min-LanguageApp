@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.urls import path, include
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, RedirectView
+from django.templatetags.static import static
+from django.utils.functional import lazy
 from django.http import JsonResponse
 from django.contrib.auth.views import LoginView
 from core.forms import EmailOrUsernameAuthenticationForm
@@ -18,6 +20,9 @@ def assetlinks(request):
     }], safe=False)
 
 urlpatterns = [
+    path("favicon.ico", RedirectView.as_view(
+        url=lazy(static, str)("icons/quicklesson-character.ico"), permanent=False,
+    ), name="favicon"),
     path("admin/", admin.site.urls),
     path("accounts/login/", LoginView.as_view(authentication_form=EmailOrUsernameAuthenticationForm), name="login"),
     path("accounts/", include("django.contrib.auth.urls")),
