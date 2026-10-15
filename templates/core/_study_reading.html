@@ -1,0 +1,4 @@
+{% if note.target_language == 'ja' %}
+{% if reading %}<span class="study-reading" lang="ja">{{ reading }}</span>{% endif %}
+{% if romaji %}<span class="study-pronunciation study-romaji" lang="ja-Latn">{{ romaji }}</span>{% endif %}
+{% endif %}
