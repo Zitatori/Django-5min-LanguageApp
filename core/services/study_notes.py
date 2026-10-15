@@ -1,4 +1,5 @@
 """Bounded OpenAI requests. Never log prompts, completions, or credentials."""
+import copy
 import json
 import logging
 import re
@@ -54,6 +55,47 @@ Create related practice questions and label answers as examples, not personal fa
 The sum of plan minutes must be between 10 and 15. Suggest next topics based on teacher comments and level.
 Never repeat personal identifiers or redaction placeholders. No identifying names, emails, addresses or phone numbers.
 Keep the entire sheet short enough for the output budget. Use plain text strings only.'''
+
+
+
+# Keep the original schema for other languages/levels and existing saved sheets.
+READING_FIELDS = {
+    'vocabulary': ('example',),
+    'grammar': ('pattern', 'example'),
+    'corrections': ('original', 'corrected'),
+    'conversation': ('question', 'answer'),
+}
+
+
+def needs_readings(target, level):
+    return target == 'ja' and level in ('A1', 'A2', '', 'unknown')
+
+
+def study_schema(target, level):
+    schema = copy.deepcopy(SCHEMA)
+    if needs_readings(target, level):
+        for section, fields in READING_FIELDS.items():
+            item = schema['properties'][section]['items']
+            for field in fields:
+                for suffix in ('_reading', '_romaji'):
+                    key = field + suffix
+                    item['properties'][key] = string()
+                    item['required'].append(key)
+    return schema
+
+
+def validate_readings(content):
+    pairs = [(word['reading'], word['pronunciation']) for word in content['vocabulary']]
+    for section, fields in READING_FIELDS.items():
+        for item in content[section]:
+            pairs.extend((item[field + '_reading'], item[field + '_romaji']) for field in fields)
+    for kana, romaji in pairs:
+        if (not kana.strip() or not romaji.strip()
+                or not re.search(r'[ぁ-ゖァ-ヺ]', kana)
+                or re.search(r'[一-鿿㐀-䶿々]', kana)
+                or not re.search(r'[A-Za-z]', romaji)
+                or re.search(r'[ぁ-ゖァ-ヺ一-鿿]', romaji)):
+            raise ValueError('Missing or invalid beginner reading aid')
 
 
 def validate(value, schema):
@@ -122,12 +164,25 @@ def collect_history(user, language, include_private):
 def request_study_note(target, explanation, level, history):
     if not settings.OPENAI_API_KEY:
         raise StudyGenerationError()
+    schema = study_schema(target, level)
+    instructions = INSTRUCTIONS
+    if needs_readings(target, level):
+        instructions += (
+            '\nThe learner cannot read kanji. For EVERY Japanese term, example, grammar pattern, '
+            'correction original/corrected phrase, conversation question and answer provide BOTH '
+            'the complete kana reading (no kanji) and Hepburn romaji. Use the corresponding '
+            '*_reading and *_romaji fields; vocabulary term uses reading and pronunciation. '
+            'Never leave these fields empty. Read numbers and particles as pronounced. '
+            'Keep sentences short and provide 3-5 vocabulary items and 2-3 practice questions '
+            'so every reading fits the output budget. Do not put Japanese examples in explanation-only '
+            'fields without also writing their kana and romaji inline. Preserve original correction evidence.'
+        )
     payload = {
         'model': settings.OPENAI_STUDY_MODEL, 'store': False,
         'max_output_tokens': settings.OPENAI_STUDY_MAX_OUTPUT_TOKENS,
-        'instructions': INSTRUCTIONS,
+        'instructions': instructions,
         'input': json.dumps({'target_language': LANGUAGES[target], 'explanation_language': LANGUAGES[explanation], 'cefr_level': level or 'unknown', 'history': history}, ensure_ascii=False),
-        'text': {'format': {'type': 'json_schema', 'name': 'study_note', 'strict': True, 'schema': SCHEMA}},
+        'text': {'format': {'type': 'json_schema', 'name': 'study_note', 'strict': True, 'schema': schema}},
     }
     # Conservative byte ceiling also bounds tokenizer input; no extra tokenizer/API call.
     encoded = json.dumps(payload, ensure_ascii=False).encode('utf-8')
@@ -152,7 +207,9 @@ def request_study_note(target, explanation, level, history):
         text = ''.join(part.get('text', '') for item in result.get('output', []) if item.get('type') == 'message'
                        for part in item.get('content', []) if part.get('type') == 'output_text')
         content = json.loads(text)
-        validate(content, SCHEMA)
+        validate(content, schema)
+        if needs_readings(target, level):
+            validate_readings(content)
         if not 10 <= sum(step['minutes'] for step in content['plan']) <= 15:
             raise ValueError('Invalid study duration')
         evidence = [text for row in history for key, text in row['tutor_notes'].items() if key != 'level' and text]

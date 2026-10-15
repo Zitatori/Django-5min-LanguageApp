@@ -29,3 +29,7 @@
 .study-page button:disabled { opacity:.6; cursor:wait; }
 @media(max-width:600px) { .study-form-grid { grid-template-columns:1fr; } .study-hero { padding:16px; } .study-page .btn { width:100%; box-sizing:border-box; } }
 @media print { .header, .study-nav { display:none; } .study-page .card { break-inside:avoid; } }
+
+/* Full-sentence readings wrap naturally on narrow screens; terms retain ruby. */
+.study-reading, .study-romaji { display:block; font-size:.9rem; font-weight:400; line-height:1.6; margin-top:4px; overflow-wrap:anywhere; }
+.study-reading { color:#475569; }

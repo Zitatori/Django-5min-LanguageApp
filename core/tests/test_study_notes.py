@@ -9,7 +9,7 @@ from django.test import TestCase, override_settings
 from django.urls import reverse
 from django.utils import timezone
 from core.models import ConversationNote, GoldMembership, LessonLanguage, QuickLessonMatch, QuickLessonRequest, StudentProfile, StudyNote, TutorProfile
-from core.services.study_notes import collect_history, request_study_note, StudyGenerationError
+from core.services.study_notes import collect_history, request_study_note, StudyGenerationError, study_schema, validate, validate_readings
 from core.views.study_notes import new_token
 
 SHEET = {'title': 'Weather review', 'priorities': ['Weather', 'Seasons', 'Likes'],
@@ -165,6 +165,12 @@ class StudyNoteTests(TestCase):
 @override_settings(OPENAI_API_KEY='test-placeholder', OPENAI_STUDY_MODEL='gpt-4.1-mini', OPENAI_STUDY_TIMEOUT_SECONDS=20, OPENAI_STUDY_MAX_OUTPUT_TOKENS=3600)
 class StudyAPITests(TestCase):
     def response(self, sheet=None, **overrides):
+        sheet = copy.deepcopy(sheet or SHEET)
+        for section, fields in {'vocabulary': ('example',), 'grammar': ('pattern', 'example'), 'corrections': ('original', 'corrected'), 'conversation': ('question', 'answer')}.items():
+            for item in sheet.get(section, []):
+                for field in fields:
+                    item[field + '_reading'] = 'いいてんきです。'
+                    item[field + '_romaji'] = 'Ii tenki desu.'
         data = {'status':'completed', 'usage':USAGE, 'output':[{'type':'message','content':[{'type':'output_text','text':json.dumps(sheet or SHEET)}]}]}
         data.update(overrides)
         response = MagicMock()
@@ -203,3 +209,51 @@ class StudyAPITests(TestCase):
         for response in [self.response(status='incomplete'),self.response(output=[]),self.response({'title':'invalid'})]:
             api.return_value=response
             with self.assertRaises(StudyGenerationError): request_study_note('ja','en','A1',[])
+
+
+class BeginnerReadingTests(TestCase):
+    def sheet(self):
+        sheet = copy.deepcopy(SHEET)
+        sheet['vocabulary'][0].update(example_reading='いいてんきです。', example_romaji='Ii tenki desu.')
+        sheet['conversation'][0].update(question_reading='ふゆがすきですか？', question_romaji='Fuyu ga suki desu ka?',
+                                        answer_reading='はい、すきです。', answer_romaji='Hai, suki desu.')
+        return sheet
+
+    def test_a1_a2_and_unknown_require_complete_readings(self):
+        for level in ['A1', 'A2', '']:
+            schema = study_schema('ja', level)
+            validate(self.sheet(), schema)
+            validate_readings(self.sheet())
+            with self.assertRaises(ValueError):
+                validate(SHEET, schema)
+        for target, level in [('ja','B1'), ('en','A1'), ('fr','A2'), ('es','A1')]:
+            validate(SHEET, study_schema(target, level))
+
+    def test_blank_or_kanji_readings_rejected(self):
+        for value in ['', '冬が好きですか？']:
+            sheet = self.sheet()
+            sheet['conversation'][0]['question_reading'] = value
+            with self.assertRaises(ValueError): validate_readings(sheet)
+        sheet = self.sheet()
+        sheet['conversation'][0]['answer_romaji'] = 'はい'
+        with self.assertRaises(ValueError): validate_readings(sheet)
+
+    def test_readings_render_and_legacy_notes_still_render(self):
+        from django.template.loader import render_to_string
+        from types import SimpleNamespace
+        from django.test import RequestFactory
+        from django.contrib.auth.models import AnonymousUser
+        request = RequestFactory().get('/')
+        request.user = AnonymousUser()
+        note = SimpleNamespace(explanation_language='en', target_language='ja', learner_level='A1', source_lesson_ids=[], include_private_notes=False)
+        context = {'note':note, 'sheet':self.sheet(), 'request':request}
+        html = render_to_string('core/study_note_detail.html', context)
+        for text in ['<ruby>天気<rt>てんき</rt></ruby>', 'いいてんきです。', 'Ii tenki desu.', 'ふゆがすきですか？', 'Fuyu ga suki desu ka?', 'Hai, suki desu.']:
+            self.assertIn(text, html)
+        context['sheet'] = SHEET
+        self.assertIn('冬が好きですか？',render_to_string('core/study_note_detail.html',context))
+        sheet = self.sheet()
+        sheet['conversation'][0]['answer_romaji'] = '<script>alert(1)</script>'
+        context['sheet'] = sheet
+        html = render_to_string('core/study_note_detail.html',context)
+        self.assertNotIn('<script>alert(1)</script>', html)
