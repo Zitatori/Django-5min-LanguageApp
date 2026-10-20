@@ -7,6 +7,7 @@
 <div class="card lesson-history-card">
   <div class="card-header">
     <h2 class="card-title">{% trans "My Lesson History" %}</h2>
+    <a href="{% url 'cheatsheets' %}">✨ {% trans "Study Cheatsheet" %} (Gold)</a>
     <a href="{% url 'study_notes' %}">✨ {% trans "AI Study Notes" %} (Gold)</a>
   </div>
 
@@ -22,7 +23,7 @@
       </thead>
       <tbody>
         {% for match in matches %}
-          <tr>
+          <tr id="lesson-{{ match.pk }}">
             <td data-label="{% trans 'Date' %}">{{ match.started_at|date:"Y-m-d H:i" }}</td>
             <td data-label="{% trans 'Tutor' %}">
               {% if match.tutor.user.first_name %}{{ match.tutor.user.first_name }} <span style="color:#9ca3af; font-size:.85em;">({{ match.tutor.user|display_name }})</span>{% else %}{{ match.tutor.user|display_name }}{% endif %}
@@ -43,6 +44,7 @@
                 <span class="student-note-empty">{% trans "No tutor comment yet." %}</span>
               {% endif %}
               {% include "core/_student_private_note.html" %}
+              {% if match.request.language.code == "ja" %}<a href="{% url 'cheatsheets' %}?lesson={{ match.pk }}">{% trans "Study Cheatsheet" %} →</a>{% endif %}
             </td>
           </tr>
         {% endfor %}

@@ -1074,3 +1074,90 @@ msgstr "Précédent"
 #: AI study notes
 msgid "Next"
 msgstr "Suivant"
+
+msgid "Study Cheatsheet"
+msgstr "Fiche de révision"
+
+msgid "Japanese review for the next two days"
+msgstr "Révisez le japonais pendant les deux prochains jours"
+
+msgid "Lesson Review"
+msgstr "Révision du cours"
+
+msgid "Essential Vocabulary"
+msgstr "Vocabulaire essentiel"
+
+msgid "Grammar Focus"
+msgstr "Point de grammaire"
+
+msgid "Practice"
+msgstr "Entraînement"
+
+msgid ""
+"No specific vocabulary was recorded. Review the lesson summary instead."
+msgstr "Aucun mot précis n’a été noté. Révisez plutôt le résumé du cours."
+
+msgid "New practice examples based on the lesson, not a transcript."
+msgstr "Nouveaux exemples basés sur le cours, et non une transcription."
+
+msgid "Recommended new material — not yet covered in this lesson."
+msgstr "Suggestions de nouveaux sujets, non abordés dans ce cours."
+
+msgid ""
+"Day 1: review the words and grammar. Day 2: practise aloud and try the next "
+"objective. Spend 5–10 minutes each day."
+msgstr ""
+"Jour 1 : révisez les mots et la grammaire. Jour 2 : entraînez-vous à voix "
+"haute et essayez le prochain objectif. Prévoyez 5 à 10 minutes par jour."
+
+msgid "Corresponding lesson"
+msgstr "Cours correspondant"
+
+msgid "Latest cheatsheet"
+msgstr "Dernière fiche"
+
+msgid "Generate cheatsheet"
+msgstr "Créer une fiche"
+
+msgid "Creating and checking your cheatsheet… Please wait."
+msgstr "Création et vérification de votre fiche… Veuillez patienter."
+
+msgid ""
+"Your tutor needs to record lesson content and a level before a cheatsheet "
+"can be generated."
+msgstr ""
+"Votre professeur doit noter le contenu du cours et votre niveau avant la "
+"création d’une fiche."
+
+msgid ""
+"We could not create a verified cheatsheet. Please try again later. Your "
+"notes are safe."
+msgstr ""
+"La fiche n’a pas pu être validée. Réessayez plus tard. Vos notes sont "
+"conservées."
+
+msgid ""
+"Your tutor's lesson notes and assessed level are sent to OpenAI to create a "
+"short review. Earlier learning topics help tailor the next steps. Your "
+"personal private notes are not used. Raw tutor notes are not displayed in "
+"the cheatsheet."
+msgstr ""
+"Les notes de cours et le niveau évalué par votre professeur sont envoyés à "
+"OpenAI pour créer une courte révision. Les sujets précédents permettent "
+"d’adapter la suite. Vos notes personnelles privées ne sont pas utilisées. "
+"Les notes brutes du professeur ne sont pas affichées."
+
+msgid ""
+"One saved cheatsheet per lesson. Gold members can generate sheets for any "
+"eligible lesson, with no monthly limit or extra charge."
+msgstr ""
+"Une fiche sauvegardée par cours. Les membres Gold peuvent créer des fiches "
+"pour chaque cours admissible, sans limite mensuelle ni frais "
+"supplémentaires."
+
+msgid ""
+"Choose a completed Japanese lesson. Your tutor must have recorded both "
+"content and a level."
+msgstr ""
+"Choisissez un cours de japonais terminé, avec un contenu et un niveau notés "
+"par votre professeur."

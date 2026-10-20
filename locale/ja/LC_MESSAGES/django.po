@@ -1056,3 +1056,85 @@ msgstr "前へ"
 #: AI study notes
 msgid "Next"
 msgstr "次へ"
+
+msgid "Study Cheatsheet"
+msgstr "学習チートシート"
+
+msgid "Japanese review for the next two days"
+msgstr "2日間で取り組む日本語の復習"
+
+msgid "Lesson Review"
+msgstr "レッスンの復習 / ressun no fukushū"
+
+msgid "Essential Vocabulary"
+msgstr "重要な単語 / jūyō na tango"
+
+msgid "Grammar Focus"
+msgstr "文法のポイント / bunpō no pointo"
+
+msgid "Practice"
+msgstr "練習 / renshū"
+
+msgid ""
+"No specific vocabulary was recorded. Review the lesson summary instead."
+msgstr ""
+"単語の記録がないため、レッスンの要約を復習してください。 / Tango no kiroku ga nai tame, ressun no yōyaku"
+" o fukushū shite kudasai."
+
+msgid "New practice examples based on the lesson, not a transcript."
+msgstr ""
+"レッスンに関連した新しい練習例です。会話の記録ではありません。 / Ressun ni kanren shita atarashii renshūrei"
+" desu. Kaiwa no kiroku de wa arimasen."
+
+msgid "Recommended new material — not yet covered in this lesson."
+msgstr ""
+"次に学ぶ内容の提案です。このレッスンで習った内容ではありません。 / Tsugi ni manabu naiyō no teian desu. Kono"
+" ressun de naratta naiyō de wa arimasen."
+
+msgid ""
+"Day 1: review the words and grammar. Day 2: practise aloud and try the next "
+"objective. Spend 5–10 minutes each day."
+msgstr ""
+"1日目は単語と文法を復習。2日目は声に出して練習し、次の目標に取り組みましょう。各日5〜10分です。 / Ichinichime wa tango to"
+" bunpō o fukushū. Futsukame wa koe ni dashite renshū shi, tsugi no mokuhyō "
+"ni torikumimashō. Kakujitsu go kara juppun desu."
+
+msgid "Corresponding lesson"
+msgstr "関連レッスン"
+
+msgid "Latest cheatsheet"
+msgstr "最新のチートシート"
+
+msgid "Generate cheatsheet"
+msgstr "チートシートを生成"
+
+msgid "Creating and checking your cheatsheet… Please wait."
+msgstr "チートシートを生成・確認中です。そのままお待ちください。"
+
+msgid ""
+"Your tutor needs to record lesson content and a level before a cheatsheet "
+"can be generated."
+msgstr "生成するには、講師によるレッスン内容とレベルの記録が必要です。"
+
+msgid ""
+"We could not create a verified cheatsheet. Please try again later. Your "
+"notes are safe."
+msgstr "確認済みのチートシートを生成できませんでした。後でもう一度お試しください。元のメモは保存されています。"
+
+msgid ""
+"Your tutor's lesson notes and assessed level are sent to OpenAI to create a "
+"short review. Earlier learning topics help tailor the next steps. Your "
+"personal private notes are not used. Raw tutor notes are not displayed in "
+"the cheatsheet."
+msgstr ""
+"講師のレッスンメモと判定レベルをOpenAIに送り、短い復習教材を作ります。過去の学習内容も次の提案に利用します。生徒本人のプライベートメモは使用せず、講師メモの原文は教材に表示しません。"
+
+msgid ""
+"One saved cheatsheet per lesson. Gold members can generate sheets for any "
+"eligible lesson, with no monthly limit or extra charge."
+msgstr "1レッスンにつき1枚を保存します。Gold会員は対象レッスンの教材を月間回数制限・追加料金なしで生成できます。"
+
+msgid ""
+"Choose a completed Japanese lesson. Your tutor must have recorded both "
+"content and a level."
+msgstr "終了した日本語レッスンを選んでください。講師による内容とレベルの記録が必要です。"

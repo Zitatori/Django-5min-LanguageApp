@@ -2,6 +2,7 @@
 {% load i18n static %}
 
 {% block content %}
+<p><a href="{% url 'cheatsheets' %}">✨ {% trans "Study Cheatsheet" %} (Gold) — {% trans "Japanese review for the next two days" %}</a></p>
 <div class="card">
   <a href="{% url 'study_notes' %}" style="font-weight:700;">✨ {% trans "AI Study Notes" %} (Gold)</a>
   <p>{% trans "AI creates personalized review materials from your past lessons." %}</p>

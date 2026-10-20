@@ -33,3 +33,8 @@
 /* Full-sentence readings wrap naturally on narrow screens; terms retain ruby. */
 .study-reading, .study-romaji { display:block; font-size:.9rem; font-weight:400; line-height:1.6; margin-top:4px; overflow-wrap:anywhere; }
 .study-reading { color:#475569; }
+
+.cheat-text { display:block; overflow-wrap:anywhere; }
+.cheat-sections details { padding:12px 0; border-bottom:1px solid #e4e7ec; }
+.study-hero .study-reading, .study-hero .study-romaji { color:#dbeafe; }
+[id^="lesson-"] { scroll-margin-top:90px; }

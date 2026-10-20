@@ -86,7 +86,7 @@ def study_notes(request):
         data = request.POST.copy()
         data['request_token'] = new_token(request.user)
         form = StudyNoteForm(data)
-    notes = Paginator(StudyNote.objects.filter(user=request.user, status='ready').defer('content'), 20).get_page(request.GET.get('page'))
+    notes = Paginator(StudyNote.objects.filter(user=request.user, format='study_note', status='ready').defer('content'), 20).get_page(request.GET.get('page'))
     return render(request, 'core/study_notes.html', {'form': form, 'study_gold': gold, 'notes': notes, 'error': error}, status=status)
 
 
@@ -96,5 +96,7 @@ def study_notes(request):
 def study_note_detail(request, pk):
     # Saved notes remain readable by their owner even if membership later expires.
     note = get_object_or_404(StudyNote, pk=pk, user=request.user, status='ready')
+    if note.format == 'cheatsheet':
+        return redirect('cheatsheet_detail', pk=note.pk)
     return render(request, 'core/study_note_detail.html', {'note': note, 'sheet': note.content,
         'target_name': _(LANGUAGES[note.target_language]), 'explanation_name': _(LANGUAGES[note.explanation_language])})

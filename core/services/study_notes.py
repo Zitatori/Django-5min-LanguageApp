@@ -99,6 +99,8 @@ def validate_readings(content):
 
 
 def validate(value, schema):
+    if 'enum' in schema and value not in schema['enum']:
+        raise ValueError('Invalid option')
     kind = schema['type']
     if kind == 'object':
         if not isinstance(value, dict) or set(value) != set(schema['properties']):
@@ -111,8 +113,12 @@ def validate(value, schema):
         for item in value:
             validate(item, schema['items'])
     elif kind == 'string':
-        if not isinstance(value, str) or len(value) > schema['maxLength']:
+        if (not isinstance(value, str) or len(value) > schema['maxLength']
+                or ('pattern' in schema and not re.search(schema['pattern'], value))):
             raise ValueError('Invalid string')
+    elif kind == 'boolean':
+        if type(value) is not bool:
+            raise ValueError('Invalid boolean')
     elif kind == 'integer':
         if type(value) is not int or not schema['minimum'] <= value <= schema['maximum']:
             raise ValueError('Invalid integer')
@@ -177,12 +183,34 @@ def request_study_note(target, explanation, level, history):
             'so every reading fits the output budget. Do not put Japanese examples in explanation-only '
             'fields without also writing their kana and romaji inline. Preserve original correction evidence.'
         )
+    content, tokens = request_structured(schema, instructions, {
+        'target_language': LANGUAGES[target], 'explanation_language': LANGUAGES[explanation],
+        'cefr_level': level or 'unknown', 'history': history,
+    })
+    try:
+        if needs_readings(target, level):
+            validate_readings(content)
+        if not 10 <= sum(step['minutes'] for step in content['plan']) <= 15:
+            raise ValueError('Invalid study duration')
+        evidence = [text for row in history for key, text in row['tutor_notes'].items() if key != 'level' and text]
+        content['corrections'] = [c for c in content['corrections'] if c['original'].strip() and c['evidence'].strip()
+                                  and ERROR_MARKERS.search(c['evidence']) and c['original'] in c['evidence'] and any(c['evidence'] in source for source in evidence)]
+        return content, tokens
+    except (OSError, ValueError, KeyError, TypeError, AttributeError):
+        logger.warning('study_notes_api failed; content omitted')
+        raise StudyGenerationError() from None
+
+
+def request_structured(schema, instructions, input_data, *, timeout=None, max_output_tokens=None):
+    """Shared bounded transport; logs only model, status and token counts."""
+    if not settings.OPENAI_API_KEY:
+        raise StudyGenerationError()
     payload = {
         'model': settings.OPENAI_STUDY_MODEL, 'store': False,
-        'max_output_tokens': settings.OPENAI_STUDY_MAX_OUTPUT_TOKENS,
+        'max_output_tokens': max_output_tokens or settings.OPENAI_STUDY_MAX_OUTPUT_TOKENS,
         'instructions': instructions,
-        'input': json.dumps({'target_language': LANGUAGES[target], 'explanation_language': LANGUAGES[explanation], 'cefr_level': level or 'unknown', 'history': history}, ensure_ascii=False),
-        'text': {'format': {'type': 'json_schema', 'name': 'study_note', 'strict': True, 'schema': schema}},
+        'input': json.dumps(input_data, ensure_ascii=False),
+        'text': {'format': {'type': 'json_schema', 'name': 'study_material', 'strict': True, 'schema': schema}},
     }
     # Conservative byte ceiling also bounds tokenizer input; no extra tokenizer/API call.
     encoded = json.dumps(payload, ensure_ascii=False).encode('utf-8')
@@ -192,7 +220,7 @@ def request_study_note(target, explanation, level, history):
         'Authorization': 'Bearer ' + settings.OPENAI_API_KEY, 'Content-Type': 'application/json',
     }, method='POST')
     try:
-        with urlopen(req, timeout=settings.OPENAI_STUDY_TIMEOUT_SECONDS) as response:
+        with urlopen(req, timeout=timeout or settings.OPENAI_STUDY_TIMEOUT_SECONDS) as response:
             raw = response.read(200001)
         if len(raw) > 200000:
             raise ValueError('Response too large')
@@ -208,13 +236,6 @@ def request_study_note(target, explanation, level, history):
                        for part in item.get('content', []) if part.get('type') == 'output_text')
         content = json.loads(text)
         validate(content, schema)
-        if needs_readings(target, level):
-            validate_readings(content)
-        if not 10 <= sum(step['minutes'] for step in content['plan']) <= 15:
-            raise ValueError('Invalid study duration')
-        evidence = [text for row in history for key, text in row['tutor_notes'].items() if key != 'level' and text]
-        content['corrections'] = [c for c in content['corrections'] if c['original'].strip() and c['evidence'].strip()
-                                  and ERROR_MARKERS.search(c['evidence']) and c['original'] in c['evidence'] and any(c['evidence'] in source for source in evidence)]
         return content, tokens
     except (OSError, ValueError, KeyError, TypeError, AttributeError):
         logger.warning('study_notes_api failed; content omitted')

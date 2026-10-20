@@ -3,6 +3,7 @@
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/study_notes.css' %}">
 <div class="study-page">
+<p><a href="{% url 'cheatsheets' %}">{% trans "Study Cheatsheet" %} — {% trans "Japanese review for the next two days" %} →</a></p>
 <header class="study-hero"><span class="study-tag">Gold</span><h1>✨ {% trans "AI Study Notes" %}</h1><p>{% trans "AI creates personalized review materials from your past lessons." %}</p><p>{% trans "Unlimited generation for Gold members, at no extra charge." %}</p></header>
 <section class="card">
 <p>{% trans "We send notes from your latest five completed lessons in the selected language to OpenAI, including your level and your tutor's next-conversation comments. Private notes are sent only if you opt in below. We do not record or monitor conversations." %}</p>

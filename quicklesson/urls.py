@@ -21,7 +21,7 @@ def assetlinks(request):
 
 urlpatterns = [
     path("favicon.ico", RedirectView.as_view(
-        url=lazy(static, str)("icons/quicklesson-character.ico"), permanent=False,
+        url=lazy(static, str)("icons/quicklesson-rounded.ico"), permanent=False,
     ), name="favicon"),
     path("admin/", admin.site.urls),
     path("accounts/login/", LoginView.as_view(authentication_form=EmailOrUsernameAuthenticationForm), name="login"),

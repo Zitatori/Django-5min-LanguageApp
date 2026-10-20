@@ -8,6 +8,9 @@ class StudyNote(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='study_notes')
     request_key = models.UUIDField()
+    format = models.CharField(max_length=20, default='study_note')
+    lesson = models.ForeignKey('QuickLessonMatch', null=True, blank=True,
+        on_delete=models.CASCADE, related_name='study_cheatsheets')
     target_language = models.CharField(max_length=2)
     explanation_language = models.CharField(max_length=2)
     include_private_notes = models.BooleanField(default=False)
@@ -24,6 +27,9 @@ class StudyNote(models.Model):
     class Meta:
         ordering = ['-created_at']
         constraints = [
+            models.UniqueConstraint(fields=['user', 'lesson'],
+                condition=models.Q(format='cheatsheet', status__in=['generating', 'ready']),
+                name='cheatsheet_once_per_lesson'),
             models.UniqueConstraint(fields=['user', 'request_key'], name='study_request_once'),
             models.UniqueConstraint(fields=['user'], condition=models.Q(status='generating'), name='study_one_generation_per_user'),
         ]

@@ -1,5 +1,6 @@
 from django.urls import path
 from core.views.study_notes import study_notes, study_note_detail
+from core.views.cheatsheets import cheatsheets, cheatsheet_detail
 from . import views
 from .views import VideoRoomView
 from core.views.admin import admin_dashboard, update_tutor_languages, update_user_languages, delete_user, update_user_points, grant_initial_points_all, process_withdrawal, grant_gold, revoke_gold, session_create, session_edit, session_delete, toggle_user_star
@@ -9,6 +10,8 @@ from core.views.profile import profile, purchase_points, request_withdrawal, tra
 
 
 urlpatterns = [
+    path("study-cheatsheets/", cheatsheets, name="cheatsheets"),
+    path("study-cheatsheets/<uuid:pk>/", cheatsheet_detail, name="cheatsheet_detail"),
     path("study-notes/", study_notes, name="study_notes"),
     path("study-notes/<uuid:pk>/", study_note_detail, name="study_note_detail"),
     path("", views.home, name="home"),
