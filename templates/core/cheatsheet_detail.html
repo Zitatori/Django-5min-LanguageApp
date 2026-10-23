@@ -1,0 +1,17 @@
+{% extends 'base.html' %}{% load static i18n %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/study_notes.css' %}">
+<div class="study-page">
+{% if admin_review %}{% include 'core/_admin_study_banner.html' %}{% else %}<a href="{% url 'cheatsheets' %}">← {% trans "Study Cheatsheet" %}</a>{% endif %}
+{% language note.explanation_language %}
+<article lang="{{ note.explanation_language }}">
+<header class="study-hero"><span class="study-tag">{{ note.learner_level }} · 2 days</span><h1>{% include 'core/_cheatsheet_text.html' with block=sheet.title %}</h1><time>{{ note.created_at|date:'Y-m-d H:i' }}</time></header>
+<p>{% trans "Day 1: review the words and grammar. Day 2: practise aloud and try the next objective. Spend 5–10 minutes each day." %}</p>
+<p class="study-muted">{% trans "AI-generated materials may contain mistakes. Check anything uncertain with your tutor. Answers below are practice examples." %}</p>
+{% include 'core/_cheatsheet_content.html' %}
+</article>
+{% endlanguage %}
+{% if not admin_review %}<p><a href="{% url 'student_history' %}#lesson-{{ note.lesson_id }}">{% trans "Corresponding lesson" %} · {{ note.lesson.end_at|date:'Y-m-d H:i' }} →</a></p>
+<nav class="study-nav" aria-label="{% trans 'Saved study notes' %}">{% if previous %}<a href="{% url 'cheatsheet_detail' previous.pk %}">← {% trans "Previous" %}</a>{% endif %}{% if following %}<a href="{% url 'cheatsheet_detail' following.pk %}">{% trans "Next" %} →</a>{% endif %}</nav>{% endif %}
+</div>
+{% endblock %}

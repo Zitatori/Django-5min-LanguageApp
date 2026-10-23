@@ -1,0 +1,25 @@
+{% extends 'base.html' %}{% load static i18n %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/study_notes.css' %}">
+<div class="study-page">
+<header class="study-hero"><span class="study-tag">Gold · 日本語 / nihongo</span><h1>✨ {% trans "Study Cheatsheet" %}</h1><p>{% trans "Japanese review for the next two days" %}</p></header>
+<section class="card">
+<p class="study-muted">{% trans "Saved learning materials can also be reviewed by QuickLesson administrators. Your private note text is not displayed in that administrator view." %}</p>
+<p>{% trans "Your tutor's lesson notes and assessed level are sent to OpenAI to create a short review. Earlier learning topics help tailor the next steps. Your personal private notes are not used. Raw tutor notes are not displayed in the cheatsheet." %}</p>
+<p class="study-muted">{% trans "One saved cheatsheet per lesson. Gold members can generate sheets for any eligible lesson, with no monthly limit or extra charge." %}</p>
+{% if error %}<p class="study-error" role="alert">{{ error }}</p>{% endif %}
+{% if study_gold %}
+<form method="post" id="study-form">{% csrf_token %}{{ form.request_token }}{{ form.non_field_errors }}
+<div class="study-form-grid"><div>{{ form.lesson.label_tag }}{{ form.lesson }}{{ form.lesson.errors }}</div><div>{{ form.explanation_language.label_tag }}{{ form.explanation_language }}{{ form.explanation_language.errors }}</div></div>
+<p>{% trans "Choose a completed Japanese lesson. Your tutor must have recorded both content and a level." %}</p>
+<button class="btn" type="submit" id="study-generate">{% trans "Generate cheatsheet" %}</button>
+<p id="study-loading" role="status" aria-live="polite" hidden>{% trans "Creating and checking your cheatsheet… Please wait." %}</p>
+</form>
+{% else %}<p>{% trans "Gold membership is required to generate study notes." %}</p><a class="btn" href="{% url 'profile' %}">{% trans "Upgrade to Gold" %}</a>{% endif %}
+</section>
+{% if latest %}<section><h2>{% trans "Latest cheatsheet" %}</h2><a href="{% url 'cheatsheet_detail' latest.pk %}">{{ latest.created_at|date:'Y-m-d H:i' }} · {{ latest.learner_level }} →</a>{% include 'core/_cheatsheet_content.html' with sheet=latest.content %}</section>{% endif %}
+<section><h2>{% trans "Saved study notes" %}</h2><div class="study-grid">{% for item in notes %}<div class="card"><a href="{% url 'cheatsheet_detail' item.pk %}"><strong>{% include 'core/_cheatsheet_text.html' with block=item.content.title %}</strong></a><p>{{ item.learner_level }} · {{ item.created_at|date:'Y-m-d H:i' }}</p><a href="{% url 'student_history' %}#lesson-{{ item.lesson_id }}">{% trans "Corresponding lesson" %} · {{ item.lesson.end_at|date:'Y-m-d H:i' }}</a></div>{% empty %}<p>{% trans "No saved study notes yet." %}</p>{% endfor %}</div>
+<nav class="study-nav">{% if notes.has_previous %}<a href="?page={{ notes.previous_page_number }}">← {% trans "Previous" %}</a>{% endif %}{% if notes.has_next %}<a href="?page={{ notes.next_page_number }}">{% trans "Next" %} →</a>{% endif %}</nav></section>
+</div>
+<script src="{% static 'js/cheatsheets.js' %}" defer></script>
+{% endblock %}

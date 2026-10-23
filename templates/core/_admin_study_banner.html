@@ -1,0 +1,3 @@
+{% load display_names i18n %}
+<p><a href="{% url 'admin_study_notes' learner.pk %}">← {% trans 'AI Study Notes' %} · {{ learner|display_name }}</a></p>
+<p class="study-muted">{% trans 'Read-only administrator view' %}</p>
