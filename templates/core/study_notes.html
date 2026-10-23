@@ -6,6 +6,7 @@
 <p><a href="{% url 'cheatsheets' %}">{% trans "Study Cheatsheet" %} — {% trans "Japanese review for the next two days" %} →</a></p>
 <header class="study-hero"><span class="study-tag">Gold</span><h1>✨ {% trans "AI Study Notes" %}</h1><p>{% trans "AI creates personalized review materials from your past lessons." %}</p><p>{% trans "Unlimited generation for Gold members, at no extra charge." %}</p></header>
 <section class="card">
+<p class="study-muted">{% trans "Saved learning materials can also be reviewed by QuickLesson administrators. Your private note text is not displayed in that administrator view." %}</p>
 <p>{% trans "We send notes from your latest five completed lessons in the selected language to OpenAI, including your level and your tutor's next-conversation comments. Private notes are sent only if you opt in below. We do not record or monitor conversations." %}</p>
 <p class="study-muted">{% trans "Account names and email fields are not sent. Known identifiers in notes are masked, but this cannot detect every personal detail. Remove sensitive information from your notes before generating. Generated materials are saved privately in QuickLesson and can be read without another API call." %} <a href="https://platform.openai.com/docs/guides/your-data" target="_blank" rel="noopener noreferrer">{% trans "OpenAI data handling" %}</a></p>
 {% if error %}<p class="study-error" role="alert">{{ error }}</p>{% endif %}

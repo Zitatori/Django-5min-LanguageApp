@@ -1138,3 +1138,11 @@ msgid ""
 "Choose a completed Japanese lesson. Your tutor must have recorded both "
 "content and a level."
 msgstr "終了した日本語レッスンを選んでください。講師による内容とレベルの記録が必要です。"
+
+msgid "Read-only administrator view"
+msgstr "管理者向け閲覧専用画面"
+
+msgid ""
+"Saved learning materials can also be reviewed by QuickLesson administrators."
+" Your private note text is not displayed in that administrator view."
+msgstr "保存された学習教材はQuickLessonの管理者も閲覧できます。管理者向けの教材画面に、本人用プライベートメモの原文は表示されません。"
