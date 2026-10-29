@@ -20,6 +20,7 @@ class ConversationNote(models.Model):
     learner_level = models.CharField(max_length=2, choices=LEVEL_CHOICES, blank=True, default="")
     talked_about = models.TextField(max_length=500, blank=True, default="")
     next_conversation = models.TextField(max_length=500, blank=True, default="")
+    conversation_not_held = models.BooleanField(default=False)
     suggested_questions = models.JSONField(default=list, blank=True)
     questions_status = models.CharField(max_length=16, default="pending")
     questions_level = models.CharField(max_length=2, blank=True, default="")

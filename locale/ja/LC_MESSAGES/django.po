@@ -1146,3 +1146,15 @@ msgid ""
 "Saved learning materials can also be reviewed by QuickLesson administrators."
 " Your private note text is not displayed in that administrator view."
 msgstr "保存された学習教材はQuickLessonの管理者も閲覧できます。管理者向けの教材画面に、本人用プライベートメモの原文は表示されません。"
+
+msgid "Conversation did not take place"
+msgstr "会話が成立していない"
+
+msgid "What to study"
+msgstr "勉強した方がいいこと"
+
+msgid "Both notes are required unless the conversation did not take place."
+msgstr "「会話が成立していない」を選んだ場合を除き、両方の欄の入力が必要です。"
+
+msgid "Complete this field, or select 'Conversation did not take place'."
+msgstr "この欄を入力するか、「会話が成立していない」を選択してください。"

@@ -1172,3 +1172,17 @@ msgstr ""
 "Les administrateurs QuickLesson peuvent également consulter les supports "
 "enregistrés. Le texte original de vos notes privées n’est pas affiché dans "
 "cette vue."
+
+msgid "Conversation did not take place"
+msgstr "La conversation n’a pas eu lieu"
+
+msgid "What to study"
+msgstr "À étudier"
+
+msgid "Both notes are required unless the conversation did not take place."
+msgstr ""
+"Les deux champs sont obligatoires, sauf si la conversation n’a pas eu lieu."
+
+msgid "Complete this field, or select 'Conversation did not take place'."
+msgstr ""
+"Remplissez ce champ ou sélectionnez « La conversation n’a pas eu lieu »."

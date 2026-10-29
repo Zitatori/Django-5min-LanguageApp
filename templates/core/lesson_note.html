@@ -30,15 +30,20 @@
     <form method="post" id="note-form">
       {% csrf_token %}
 
+      <label class="note-outcome" for="conversation-not-held">
+        <input type="checkbox" id="conversation-not-held" name="conversation_not_held" value="on" {% if form.conversation_not_held.value %}checked{% endif %}>
+        {% trans "Conversation did not take place" %}
+      </label>
+      <p class="note-help">{% trans "Both notes are required unless the conversation did not take place." %}</p>
       <label class="note-label" for="learner-level">{% trans "Learner's level" %}</label>
       <select id="learner-level" name="learner_level" class="note-select">
         <option value="">{% trans "Select level" %}</option>
-        <option value="A1">A1{% if match.request.language.code == 'ja' %}（JLPT N5目安）{% endif %}</option>
-        <option value="A2">A2{% if match.request.language.code == 'ja' %}（JLPT N4〜N3目安）{% endif %}</option>
-        <option value="B1">B1{% if match.request.language.code == 'ja' %}（JLPT N3〜N2目安）{% endif %}</option>
-        <option value="B2">B2{% if match.request.language.code == 'ja' %}（JLPT N2〜N1目安）{% endif %}</option>
-        <option value="C1">C1{% if match.request.language.code == 'ja' %}（JLPT N1高得点目安）{% endif %}</option>
-        <option value="C2">C2{% if match.request.language.code == 'ja' %}（JLPT対応なし・熟達）{% endif %}</option>
+        <option value="A1" {% if form.learner_level.value == 'A1' %}selected{% endif %}>A1{% if match.request.language.code == 'ja' %}（JLPT N5目安）{% endif %}</option>
+        <option value="A2" {% if form.learner_level.value == 'A2' %}selected{% endif %}>A2{% if match.request.language.code == 'ja' %}（JLPT N4〜N3目安）{% endif %}</option>
+        <option value="B1" {% if form.learner_level.value == 'B1' %}selected{% endif %}>B1{% if match.request.language.code == 'ja' %}（JLPT N3〜N2目安）{% endif %}</option>
+        <option value="B2" {% if form.learner_level.value == 'B2' %}selected{% endif %}>B2{% if match.request.language.code == 'ja' %}（JLPT N2〜N1目安）{% endif %}</option>
+        <option value="C1" {% if form.learner_level.value == 'C1' %}selected{% endif %}>C1{% if match.request.language.code == 'ja' %}（JLPT N1高得点目安）{% endif %}</option>
+        <option value="C2" {% if form.learner_level.value == 'C2' %}selected{% endif %}>C2{% if match.request.language.code == 'ja' %}（JLPT対応なし・熟達）{% endif %}</option>
       </select>
       {% if match.request.language.code == 'ja' %}
       <p class="text-muted" style="font-size:13px; margin-top:6px;">※JLPTは参考目安です。会話中の理解・発話をもとに選んでください。</p>
@@ -52,17 +57,33 @@
         maxlength="500"
         placeholder="{% if match.request.language.code == 'ja' %}・名前：マリア&#10;・国：スペイン&#10;・好きな食べ物：寿司&#10;・趣味：映画{% elif match.request.language.code == 'es' %}・Nombre: María&#10;・País: España&#10;・Comida favorita: sushi&#10;・Aficiones: cine{% elif match.request.language.code == 'fr' %}・Prénom : Maria&#10;・Pays : Espagne&#10;・Plat préféré : sushi&#10;・Loisirs : cinéma{% else %}・Name: Maria&#10;・Country: Spain&#10;・Favorite food: sushi&#10;・Hobbies: movies{% endif %}"
         rows="3"
-      ></textarea>
+        {% if not form.conversation_not_held.value %}required{% endif %}
+        aria-describedby="talked-about-errors"
+      >{{ form.talked_about.value|default_if_none:"" }}</textarea>
+      <div class="note-errors" id="talked-about-errors" role="alert">{{ form.talked_about.errors }}</div>
+
+      <label class="note-label" for="next-conversation">{% trans "What to study" %}</label>
+      <textarea id="next-conversation" name="next_conversation" class="note-textarea"
+        maxlength="500" rows="3" aria-describedby="next-conversation-errors"
+        {% if not form.conversation_not_held.value %}required{% endif %}
+      >{{ form.next_conversation.value|default_if_none:"" }}</textarea>
+      <div class="note-errors" id="next-conversation-errors" role="alert">{{ form.next_conversation.errors }}</div>
 
       <button type="submit" class="btn note-submit">{% trans "Save Note" %}</button>
     </form>
 
-    <a href="{% url 'tutor_dashboard' %}" class="note-skip">{% trans "Skip" %}</a>
+
   </div>
 
 </div>
 
 <style>
+  .note-outcome { display:flex; gap:10px; align-items:center; padding:12px; border:1px solid #9ca3af; border-radius:8px; cursor:pointer; }
+  .note-outcome input { width:20px; height:20px; flex-shrink:0; }
+  .note-help { font-size:13px; margin:10px 0 20px; }
+  .note-errors { color:#dc2626; font-size:14px; }
+  .note-errors ul { margin:0 0 14px; padding-left:20px; }
+
   .note-wrap {
     max-width: 600px;
     margin: 32px auto;
@@ -222,12 +243,12 @@
 </style>
 
 <script>
-  const textarea  = document.getElementById("note-input");
-  const countSpan = document.getElementById("note-count");
-  if (textarea && countSpan) {
-    textarea.addEventListener("input", () => {
-      countSpan.textContent = textarea.value.length;
-    });
-  }
+  (() => {
+    const outcome = document.getElementById('conversation-not-held');
+    const fields = ['talked-about', 'next-conversation'].map(id => document.getElementById(id));
+    const update = () => fields.forEach(field => { field.required = !outcome.checked; });
+    outcome.addEventListener('change', update);
+    update();
+  })();
 </script>
 {% endblock %}

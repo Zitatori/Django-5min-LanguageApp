@@ -1866,3 +1866,15 @@ msgid ""
 msgstr ""
 "Saved learning materials can also be reviewed by QuickLesson administrators."
 " Your private note text is not displayed in that administrator view."
+
+msgid "Conversation did not take place"
+msgstr "Conversation did not take place"
+
+msgid "What to study"
+msgstr "What to study"
+
+msgid "Both notes are required unless the conversation did not take place."
+msgstr "Both notes are required unless the conversation did not take place."
+
+msgid "Complete this field, or select 'Conversation did not take place'."
+msgstr "Complete this field, or select 'Conversation did not take place'."

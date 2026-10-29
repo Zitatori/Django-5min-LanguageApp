@@ -50,3 +50,23 @@ class EmailOrUsernameAuthenticationForm(AuthenticationForm):
         label=_("Email address (or username)"),
         widget=forms.TextInput(attrs={"autofocus": True, "autocomplete": "username"}),
     )
+
+
+class ConversationNoteForm(forms.Form):
+    learner_level = forms.CharField(required=False)
+    talked_about = forms.CharField(required=False, max_length=500)
+    next_conversation = forms.CharField(required=False, max_length=500)
+    conversation_not_held = forms.BooleanField(required=False)
+
+    def clean_learner_level(self):
+        from core.models import ConversationNote
+        level = self.cleaned_data['learner_level']
+        return level if level in dict(ConversationNote.LEVEL_CHOICES) else ''
+
+    def clean(self):
+        data = super().clean()
+        if not data.get('conversation_not_held'):
+            for field in ('talked_about', 'next_conversation'):
+                if field not in self.errors and not data.get(field):
+                    self.add_error(field, _("Complete this field, or select 'Conversation did not take place'."))
+        return data
