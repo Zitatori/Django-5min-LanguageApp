@@ -29,14 +29,14 @@ class QuestionGenerationTests(ConversationNotesTests):
     def test_repeated_post_saves_and_generates_once(self):
         with patch('core.services.question_generation.request_questions', return_value=QUESTIONS) as api:
             for _ in range(2):
-                response = self.client.post(self.url, {'talked_about': 'Hiking', 'learner_level': 'A1'})
+                response = self.client.post(self.url, {'talked_about': 'Hiking', 'learner_level': 'A1', 'next_conversation': 'Practice past tense'})
                 self.assertEqual(response.status_code, 302)
         self.assertEqual(ConversationNote.objects.filter(match=self.match).count(), 1)
         api.assert_called_once()
 
     def test_api_failure_preserves_note(self):
         with patch('core.services.question_generation.request_questions', side_effect=QuestionGenerationError):
-            response = self.client.post(self.url, {'talked_about': 'Hiking', 'learner_level': 'A1'})
+            response = self.client.post(self.url, {'talked_about': 'Hiking', 'learner_level': 'A1', 'next_conversation': 'Practice past tense'})
         self.assertEqual(response.status_code, 302)
         note = ConversationNote.objects.get(match=self.match)
         self.assertEqual(note.talked_about, 'Hiking')
@@ -50,9 +50,9 @@ class QuestionGenerationTests(ConversationNotesTests):
         self.assertContains(response, QUESTIONS[0])
         api.assert_not_called()
 
-    def test_save_only_content_and_ignore_removed_field(self):
+    def test_save_both_notes_with_generation(self):
         with patch('core.services.question_generation.request_questions', return_value=QUESTIONS):
-            super().test_save_level_and_content_and_ignore_removed_field()
+            super().test_save_level_and_both_notes()
 
     # Inherited tests also remain offline.
     def setUp(self):
