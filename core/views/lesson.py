@@ -107,7 +107,6 @@ def lesson_room(request, match_id: int):
         "partner_badge": partner_badge,
         "is_student": is_student,
         "previous_notes": previous_notes,
-        "form": form,
         "is_first_session": is_first_session,
         "question_note": previous_notes[0] if previous_notes else None,
     }

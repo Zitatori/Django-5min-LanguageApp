@@ -96,3 +96,15 @@ class ConversationNotesTests(TestCase):
                                 ('fr', 'À étudier'), ('es', 'Qué estudiar')]:
             self.client.cookies['django_language'] = language
             self.assertContains(self.client.get(self.url), label)
+
+    def test_lesson_room_renders_for_tutor_and_student(self):
+        from core.models import PointBalance
+        student_user = self.match.request.student.user
+        balance, _ = PointBalance.objects.get_or_create(user=student_user)
+        balance.student_balance = 2
+        balance.save()
+        for user in (self.tutor.user, student_user):
+            self.client.force_login(user)
+            response = self.client.get(reverse('lesson_room', args=[self.match.pk]))
+            self.assertEqual(response.status_code, 200)
+            self.assertTemplateUsed(response, 'core/lesson_room.html')
