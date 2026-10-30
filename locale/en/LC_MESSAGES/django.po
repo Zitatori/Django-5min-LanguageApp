@@ -1931,3 +1931,17 @@ msgstr "Near-native fluency"
 
 msgid "Vocabulary beyond native-speaker level"
 msgstr "Vocabulary beyond native-speaker level"
+
+msgid ""
+"Shared with the student. Used to generate questions for the next "
+"conversation and AI review materials."
+msgstr ""
+"Shared with the student. Used to generate questions for the next "
+"conversation and AI review materials."
+
+msgid ""
+"Shared with the student. Used when Gold members generate AI Study Notes. "
+"Write what to practice and specific points to improve."
+msgstr ""
+"Shared with the student. Used when Gold members generate AI Study Notes. "
+"Write what to practice and specific points to improve."

@@ -1231,3 +1231,18 @@ msgstr "Fluidez casi nativa"
 
 msgid "Vocabulary beyond native-speaker level"
 msgstr "Vocabulario superior al de un hablante nativo"
+
+msgid ""
+"Shared with the student. Used to generate questions for the next "
+"conversation and AI review materials."
+msgstr ""
+"Se comparte con el estudiante. Se utiliza para generar preguntas para la "
+"próxima conversación y materiales de repaso con IA."
+
+msgid ""
+"Shared with the student. Used when Gold members generate AI Study Notes. "
+"Write what to practice and specific points to improve."
+msgstr ""
+"Se comparte con el estudiante. Se utiliza cuando los miembros Gold generan "
+"sus notas de estudio con IA. Indica qué practicar y los puntos concretos que"
+" mejorar."

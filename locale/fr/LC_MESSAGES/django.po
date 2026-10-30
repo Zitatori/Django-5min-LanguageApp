@@ -1241,3 +1241,18 @@ msgstr "Aisance proche de celle d’un locuteur natif"
 
 msgid "Vocabulary beyond native-speaker level"
 msgstr "Vocabulaire supérieur à celui d’un locuteur natif"
+
+msgid ""
+"Shared with the student. Used to generate questions for the next "
+"conversation and AI review materials."
+msgstr ""
+"Partagé avec l’élève. Utilisé pour générer les questions de la prochaine "
+"conversation et les supports de révision par IA."
+
+msgid ""
+"Shared with the student. Used when Gold members generate AI Study Notes. "
+"Write what to practice and specific points to improve."
+msgstr ""
+"Partagé avec l’élève. Utilisé lorsque les membres Gold génèrent leurs fiches"
+" de révision IA. Indiquez les éléments à pratiquer et les points précis à "
+"améliorer."

@@ -50,6 +50,7 @@
       {% endif %}
 
       <label class="note-label" for="talked-about">{% trans "What we talked about" %}</label>
+      <p class="note-help" id="talked-about-help">{% trans "Shared with the student. Used to generate questions for the next conversation and AI review materials." %}</p>
       <textarea
         id="talked-about"
         name="talked_about"
@@ -58,13 +59,14 @@
         placeholder="{% if match.request.language.code == 'ja' %}・名前：マリア&#10;・国：スペイン&#10;・好きな食べ物：寿司&#10;・趣味：映画{% elif match.request.language.code == 'es' %}・Nombre: María&#10;・País: España&#10;・Comida favorita: sushi&#10;・Aficiones: cine{% elif match.request.language.code == 'fr' %}・Prénom : Maria&#10;・Pays : Espagne&#10;・Plat préféré : sushi&#10;・Loisirs : cinéma{% else %}・Name: Maria&#10;・Country: Spain&#10;・Favorite food: sushi&#10;・Hobbies: movies{% endif %}"
         rows="3"
         {% if not form.conversation_not_held.value %}required{% endif %}
-        aria-describedby="talked-about-errors"
+        aria-describedby="talked-about-help talked-about-errors"
       >{{ form.talked_about.value|default_if_none:"" }}</textarea>
       <div class="note-errors" id="talked-about-errors" role="alert">{{ form.talked_about.errors }}</div>
 
       <label class="note-label" for="next-conversation">{% trans "What to study" %}</label>
+      <p class="note-help" id="next-conversation-help">{% trans "Shared with the student. Used when Gold members generate AI Study Notes. Write what to practice and specific points to improve." %}</p>
       <textarea id="next-conversation" name="next_conversation" class="note-textarea"
-        maxlength="500" rows="3" aria-describedby="next-conversation-errors"
+        maxlength="500" rows="3" aria-describedby="next-conversation-help next-conversation-errors"
         {% if not form.conversation_not_held.value %}required{% endif %}
       >{{ form.next_conversation.value|default_if_none:"" }}</textarea>
       <div class="note-errors" id="next-conversation-errors" role="alert">{{ form.next_conversation.errors }}</div>

@@ -40,3 +40,22 @@ class TutorFeedbackTests(TestCase):
         response = self.client.get(reverse('tutor_dashboard'))
         self.assertNotContains(response, '0 / 5')
         self.assertNotContains(response, '★')
+
+    def test_student_sees_shared_study_advice_only_for_own_lesson(self):
+        from core.models import ConversationNote
+        self.match.tutor_joined_at = timezone.now()
+        self.match.save()
+        ConversationNote.objects.create(
+            student=self.match.request.student, tutor=self.tutor, match=self.match,
+            note='Travel conversation', talked_about='Travel conversation',
+            next_conversation='Practice past tense <script>unsafe</script>',
+        )
+        self.client.force_login(self.match.request.student.user)
+        for name in ('student_history', 'create_request'):
+            response = self.client.get(reverse(name))
+            self.assertContains(response, 'Practice past tense &lt;script&gt;unsafe&lt;/script&gt;')
+            self.assertNotContains(response, '<script>unsafe</script>')
+        other = User.objects.create_user(username='different-learner')
+        StudentProfile.objects.create(user=other)
+        self.client.force_login(other)
+        self.assertNotContains(self.client.get(reverse('student_history')), 'Practice past tense')
