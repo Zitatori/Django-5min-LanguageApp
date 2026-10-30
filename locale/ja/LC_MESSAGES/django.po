@@ -1205,8 +1205,8 @@ msgstr "日常会話ができる"
 msgid "Can discuss varied topics and explain opinions"
 msgstr "幅広い話題で会話し、意見を説明できる"
 
-msgid "Can discuss complex topics fluently"
-msgstr "難しい話題でも流暢に話せる"
+msgid "Near-native fluency"
+msgstr "ほぼネイティブレベルの流暢さ"
 
-msgid "Can express subtle meanings with ease"
-msgstr "細かいニュアンスまで自在に表現できる"
+msgid "Vocabulary beyond native-speaker level"
+msgstr "ネイティブ以上の語彙力"

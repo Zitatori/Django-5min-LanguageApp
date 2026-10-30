@@ -1236,8 +1236,8 @@ msgstr "Peut tenir une conversation quotidienne"
 msgid "Can discuss varied topics and explain opinions"
 msgstr "Peut discuter de sujets variés et expliquer ses opinions"
 
-msgid "Can discuss complex topics fluently"
-msgstr "Peut discuter de sujets complexes avec aisance"
+msgid "Near-native fluency"
+msgstr "Aisance proche de celle d’un locuteur natif"
 
-msgid "Can express subtle meanings with ease"
-msgstr "Peut exprimer aisément des nuances fines"
+msgid "Vocabulary beyond native-speaker level"
+msgstr "Vocabulaire supérieur à celui d’un locuteur natif"

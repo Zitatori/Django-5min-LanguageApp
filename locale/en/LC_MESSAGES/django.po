@@ -1926,8 +1926,8 @@ msgstr "Can hold everyday conversations"
 msgid "Can discuss varied topics and explain opinions"
 msgstr "Can discuss varied topics and explain opinions"
 
-msgid "Can discuss complex topics fluently"
-msgstr "Can discuss complex topics fluently"
+msgid "Near-native fluency"
+msgstr "Near-native fluency"
 
-msgid "Can express subtle meanings with ease"
-msgstr "Can express subtle meanings with ease"
+msgid "Vocabulary beyond native-speaker level"
+msgstr "Vocabulary beyond native-speaker level"
