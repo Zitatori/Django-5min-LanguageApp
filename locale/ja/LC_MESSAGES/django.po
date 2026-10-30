@@ -1183,3 +1183,12 @@ msgstr "元の保存メモ"
 msgid ""
 "Administrators can view your private notes. They are not shared with tutors."
 msgstr "自分用メモは管理者が閲覧できます。講師には共有されません。"
+
+msgid "Automatic updates every 20 seconds"
+msgstr "20秒ごとに自動更新"
+
+msgid "Update failed. Retrying automatically."
+msgstr "更新できませんでした。自動で再試行します。"
+
+msgid "Updates paused while you are editing or viewing details."
+msgstr "入力中・詳細表示中は更新を一時停止します。"

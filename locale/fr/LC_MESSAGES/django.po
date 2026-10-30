@@ -1213,3 +1213,13 @@ msgid ""
 msgstr ""
 "Les administrateurs peuvent consulter vos notes privées. Elles ne sont pas "
 "partagées avec les professeurs."
+
+msgid "Automatic updates every 20 seconds"
+msgstr "Mise à jour automatique toutes les 20 secondes"
+
+msgid "Update failed. Retrying automatically."
+msgstr "Échec de la mise à jour. Nouvelle tentative automatique."
+
+msgid "Updates paused while you are editing or viewing details."
+msgstr ""
+"Mises à jour en pause pendant la saisie ou la consultation des détails."

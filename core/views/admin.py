@@ -30,7 +30,10 @@ def staff_or_admin_role_required(view_func):
         return HttpResponseForbidden("You don't have permission to access this page.")
     return wrapper
 
+@login_required
 @staff_or_admin_role_required
+@never_cache
+@require_GET
 def admin_dashboard(request):
     users = (
         User.objects
@@ -166,6 +169,7 @@ def admin_dashboard(request):
         })
 
     return render(request, 'core/admin_dashboard.html', {
+        'dashboard_data': {'user_matches': dict(user_matches_dict), 'match_notes': dict(match_notes_dict), 'student_notes': dict(student_notes_dict), 'match_feedback': match_feedback_dict},
         'users':               users,
         'users_count':         len(users_list),
         'recent_users':        recent_users,

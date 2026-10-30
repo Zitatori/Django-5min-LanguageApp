@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load display_names i18n %}
+{% load static display_names i18n %}
 
 {% block content %}
 <style>
@@ -77,6 +77,8 @@
   .role-badge-t { background:#dbeafe; color:#1d4ed8; border:1.5px solid #93c5fd; border-radius:99px; padding:1px 8px; font-size:11px; font-weight:600; }
 </style>
 
+<p id="admin-refresh-status" role="status" data-ready="{% trans 'Automatic updates every 20 seconds' %}" data-failed="{% trans 'Update failed. Retrying automatically.' %}" data-paused="{% trans 'Updates paused while you are editing or viewing details.' %}">{% trans "Automatic updates every 20 seconds" %}</p>
+{{ dashboard_data|json_script:"admin-dashboard-data" }}
 <!-- Upcoming Sessions -->
 <div class="card admin-section">
   <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
@@ -913,10 +915,11 @@
     });
   }
 
-  const USER_MATCHES     = {{ user_matches_json|safe }};
-  const MATCH_NOTES     = {{ match_notes_json|safe }};
-  const STUDENT_NOTES   = {{ student_notes_json|safe }};
-  const MATCH_FEEDBACK  = {{ match_feedback_json|safe }};
+  const initialDashboardData = JSON.parse(document.getElementById('admin-dashboard-data').textContent);
+  let USER_MATCHES = initialDashboardData.user_matches;
+  let MATCH_NOTES = initialDashboardData.match_notes;
+  let STUDENT_NOTES = initialDashboardData.student_notes;
+  let MATCH_FEEDBACK = initialDashboardData.match_feedback;
 
   // ノートカウントバッジを初期表示
   (function () {
@@ -1155,4 +1158,5 @@
     if (e.target === this) closeSessionModal();
   });
 </script>
+<script src="{% static 'js/admin-refresh.js' %}" defer></script>
 {% endblock %}

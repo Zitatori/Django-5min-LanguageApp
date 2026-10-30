@@ -1904,3 +1904,12 @@ msgid ""
 "Administrators can view your private notes. They are not shared with tutors."
 msgstr ""
 "Administrators can view your private notes. They are not shared with tutors."
+
+msgid "Automatic updates every 20 seconds"
+msgstr "Automatic updates every 20 seconds"
+
+msgid "Update failed. Retrying automatically."
+msgstr "Update failed. Retrying automatically."
+
+msgid "Updates paused while you are editing or viewing details."
+msgstr "Updates paused while you are editing or viewing details."

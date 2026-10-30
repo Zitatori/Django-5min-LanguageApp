@@ -1204,3 +1204,12 @@ msgid ""
 msgstr ""
 "Los administradores pueden ver tus notas privadas. No se comparten con los "
 "profesores."
+
+msgid "Automatic updates every 20 seconds"
+msgstr "Actualización automática cada 20 segundos"
+
+msgid "Update failed. Retrying automatically."
+msgstr "No se pudo actualizar. Se reintentará automáticamente."
+
+msgid "Updates paused while you are editing or viewing details."
+msgstr "Actualizaciones en pausa mientras editas o consultas los detalles."

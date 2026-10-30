@@ -116,3 +116,34 @@ class AdminLessonRecordsTests(TestCase):
         other = User.objects.create_user('unrelated-records')
         self.assertNotContains(self.client.get(reverse('admin_user_lesson_records', args=[other.pk])), 'Student feedback')
         self.assertEqual(self.client.get(reverse('admin_match_lesson_records', args=[999999])).status_code, 404)
+
+
+    def test_dashboard_refresh_data_is_fresh_authorized_and_safe(self):
+        import json
+        from html.parser import HTMLParser
+        class PayloadParser(HTMLParser):
+            inside = False
+            payload = ''
+            def handle_starttag(self, tag, attrs):
+                if tag == 'script' and dict(attrs).get('id') == 'admin-dashboard-data':
+                    self.inside = True
+            def handle_endtag(self, tag):
+                if tag == 'script': self.inside = False
+            def handle_data(self, data):
+                if self.inside: self.payload += data
+        self.client.force_login(self.admin)
+        url = reverse('admin_dashboard')
+        self.note.note = '</script><script>alert(1)</script>'
+        self.note.save()
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('no-store', response['Cache-Control'])
+        self.assertNotContains(response, '</script><script>alert(1)</script>')
+        parser = PayloadParser(); parser.feed(response.content.decode())
+        data = json.loads(parser.payload)
+        self.assertEqual(data['student_notes'][str(self.student.pk)][0]['note'], self.note.note)
+        self.note.note = 'Newly saved note'; self.note.save()
+        parser = PayloadParser(); parser.feed(self.client.get(url).content.decode())
+        self.assertEqual(json.loads(parser.payload)['student_notes'][str(self.student.pk)][0]['note'], 'Newly saved note')
+        self.client.force_login(self.student)
+        self.assertEqual(self.client.get(url).status_code, 403)
