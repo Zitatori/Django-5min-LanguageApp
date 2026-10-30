@@ -1878,3 +1878,29 @@ msgstr "Both notes are required unless the conversation did not take place."
 
 msgid "Complete this field, or select 'Conversation did not take place'."
 msgstr "Complete this field, or select 'Conversation did not take place'."
+
+msgid "All lesson notes"
+msgstr "All lesson notes"
+
+msgid "Student entries"
+msgstr "Student entries"
+
+msgid "Tutor entries"
+msgstr "Tutor entries"
+
+msgid "Comment for the tutor"
+msgstr "Comment for the tutor"
+
+msgid "No lesson records yet."
+msgstr "No lesson records yet."
+
+msgid "Notes without a linked lesson"
+msgstr "Notes without a linked lesson"
+
+msgid "Original saved note"
+msgstr "Original saved note"
+
+msgid ""
+"Administrators can view your private notes. They are not shared with tutors."
+msgstr ""
+"Administrators can view your private notes. They are not shared with tutors."

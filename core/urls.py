@@ -1,3 +1,4 @@
+from core.views.admin import admin_lesson_records
 from django.urls import path
 from core.views.study_notes import study_notes, study_note_detail
 from core.views.cheatsheets import cheatsheets, cheatsheet_detail
@@ -11,6 +12,8 @@ from core.views.profile import profile, purchase_points, request_withdrawal, tra
 
 
 urlpatterns = [
+    path('admin-dashboard/user/<int:user_id>/lesson-records/', admin_lesson_records, name='admin_user_lesson_records'),
+    path('admin-dashboard/match/<int:match_id>/lesson-records/', admin_lesson_records, name='admin_match_lesson_records'),
     path('admin-dashboard/user/<int:user_id>/study-notes/', admin_study_notes, name='admin_study_notes'),
     path('admin-dashboard/user/<int:user_id>/study-notes/<uuid:pk>/', admin_study_note_detail, name='admin_study_note_detail'),
     path("study-cheatsheets/", cheatsheets, name="cheatsheets"),

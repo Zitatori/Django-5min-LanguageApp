@@ -1,3 +1,5 @@
+from django.views.decorators.cache import never_cache
+from django.views.decorators.http import require_GET
 import json
 from collections import defaultdict
 from zoneinfo import ZoneInfo
@@ -422,3 +424,32 @@ def toggle_user_star(request, user_id):
         from django.http import JsonResponse
         return JsonResponse({'starred': profile.is_starred})
     return redirect('admin_dashboard')
+
+
+@login_required
+@staff_or_admin_role_required
+@never_cache
+@require_GET
+def admin_lesson_records(request, user_id=None, match_id=None):
+    from django.core.paginator import Paginator
+    from django.db.models import Prefetch
+    person = get_object_or_404(User, pk=user_id) if user_id is not None else None
+    matches = QuickLessonMatch.objects.select_related(
+        'request__student__user', 'request__language', 'tutor__user'
+    ).prefetch_related(Prefetch('conversationnote_set', queryset=ConversationNote.objects.select_related(
+        'tutor__user', 'student__user'
+    ).order_by('-created_at'), to_attr='admin_notes'))
+    if person:
+        matches = matches.filter(Q(request__student__user=person) | Q(tutor__user=person))
+    else:
+        get_object_or_404(QuickLessonMatch, pk=match_id)
+        matches = matches.filter(pk=match_id)
+    page = Paginator(matches.order_by('-pk'), 20).get_page(request.GET.get('page'))
+    orphan_notes = ConversationNote.objects.none()
+    if person:
+        orphan_notes = ConversationNote.objects.filter(match__isnull=True).filter(
+            Q(student__user=person) | Q(tutor__user=person)
+        ).select_related('student__user', 'tutor__user')
+    return render(request, 'core/admin_lesson_records.html', {
+        'person': person, 'page_obj': page, 'orphan_notes': orphan_notes,
+    })

@@ -59,3 +59,60 @@ class AdminStudyNotesTests(TestCase):
             'evidence':'RAW TUTOR PRIVATE EVIDENCE'}])
         self.note.save(); self.client.force_login(self.admin)
         self.assertNotContains(self.client.get(self.detail_url), 'RAW TUTOR PRIVATE EVIDENCE')
+
+
+class AdminLessonRecordsTests(TestCase):
+    def setUp(self):
+        from core.models import StudentProfile, TutorProfile, LessonLanguage, QuickLessonRequest, QuickLessonMatch, ConversationNote
+        self.student = User.objects.create_user('records-student')
+        self.tutor = User.objects.create_user('records-tutor')
+        self.admin = User.objects.create_user('records-admin', is_staff=True)
+        student = StudentProfile.objects.create(user=self.student)
+        tutor = TutorProfile.objects.create(user=self.tutor)
+        language = LessonLanguage.objects.create(code='ja', name='Japanese')
+        request = QuickLessonRequest.objects.create(student=student, language=language)
+        self.match = QuickLessonMatch.objects.create(request=request, tutor=tutor,
+            student_rating=4, student_feedback='Student feedback', student_private_note='<script>private</script>')
+        self.note = ConversationNote.objects.create(student=student, tutor=tutor, match=self.match,
+            note='Original note', talked_about='Talked about travel', next_conversation='Study particles',
+            learner_level='A2', conversation_not_held=True)
+        self.urls = [reverse('admin_user_lesson_records', args=[self.student.pk]),
+                     reverse('admin_user_lesson_records', args=[self.tutor.pk]),
+                     reverse('admin_match_lesson_records', args=[self.match.pk])]
+
+    def test_admin_sees_all_fields_and_escaped_private_note(self):
+        self.client.force_login(self.admin)
+        for url in self.urls:
+            response = self.client.get(url)
+            for value in ['Student feedback', '&lt;script&gt;private&lt;/script&gt;',
+                          'Original note', 'Talked about travel', 'Study particles', 'A2']:
+                self.assertContains(response, value)
+            self.assertNotContains(response, '<script>private</script>')
+            self.assertIn('no-store', response['Cache-Control'])
+            self.assertEqual(self.client.post(url).status_code, 405)
+
+    def test_learner_tutor_and_anonymous_cannot_view(self):
+        for url in self.urls:
+            self.assertEqual(self.client.get(url).status_code, 302)
+        for user in [self.student, self.tutor]:
+            self.client.force_login(user)
+            for url in self.urls:
+                self.assertEqual(self.client.get(url).status_code, 403)
+
+    def test_admin_role_and_unlinked_legacy_notes(self):
+        UserProfile.objects.update_or_create(user=self.admin, defaults={'role': 'Admin'})
+        self.admin.is_staff = False
+        self.admin.save()
+        self.note.match = None
+        self.note.save()
+        self.client.force_login(self.admin)
+        self.assertContains(self.client.get(self.urls[0]), 'Original note')
+        self.assertNotContains(self.client.get(self.urls[2]), 'Original note')
+
+    def test_private_only_match_and_user_filter(self):
+        self.note.delete()
+        self.client.force_login(self.admin)
+        self.assertContains(self.client.get(self.urls[0]), '&lt;script&gt;private&lt;/script&gt;')
+        other = User.objects.create_user('unrelated-records')
+        self.assertNotContains(self.client.get(reverse('admin_user_lesson_records', args=[other.pk])), 'Student feedback')
+        self.assertEqual(self.client.get(reverse('admin_match_lesson_records', args=[999999])).status_code, 404)

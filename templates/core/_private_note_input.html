@@ -3,3 +3,5 @@
   <label for="private-note">{% get_current_language as lang %}{% if lang == 'ja' %}自分用のメモ（任意・講師には共有されません）{% else %}Private notes (optional — not shared with your tutor){% endif %}</label>
   <textarea id="private-note" name="private_note" class="feedback-textarea" maxlength="1000" rows="4">{{ match.student_private_note }}</textarea>
 </div>
+
+<p style="font-size:12px;">{% trans "Administrators can view your private notes. They are not shared with tutors." %}</p>

@@ -1177,3 +1177,30 @@ msgstr ""
 
 msgid "Complete this field, or select 'Conversation did not take place'."
 msgstr "Completa este campo o selecciona « La conversación no se realizó »."
+
+msgid "All lesson notes"
+msgstr "Todas las notas de clase"
+
+msgid "Student entries"
+msgstr "Contenido del estudiante"
+
+msgid "Tutor entries"
+msgstr "Contenido del profesor"
+
+msgid "Comment for the tutor"
+msgstr "Comentario para el profesor"
+
+msgid "No lesson records yet."
+msgstr "Aún no hay registros de clases."
+
+msgid "Notes without a linked lesson"
+msgstr "Notas sin clase vinculada"
+
+msgid "Original saved note"
+msgstr "Nota original guardada"
+
+msgid ""
+"Administrators can view your private notes. They are not shared with tutors."
+msgstr ""
+"Los administradores pueden ver tus notas privadas. No se comparten con los "
+"profesores."

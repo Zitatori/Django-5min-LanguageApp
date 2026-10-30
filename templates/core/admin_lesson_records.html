@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load i18n display_names %}
+{% block content %}
+<div class="records">
+<a href="{% url 'admin_dashboard' %}">← {% trans "Admin Dashboard" %}</a>
+<h1>{% trans "All lesson notes" %}{% if person %} — {{ person|display_name }}{% endif %}</h1>
+<p>{% trans "Read-only administrator view" %}</p>
+{% for match in page_obj %}
+<article class="card">
+<h2>#{{ match.pk }} · {{ match.request.language.name }} · {{ match.started_at|date:"Y/m/d H:i" }}</h2>
+<p>{% trans "Student" %}: {{ match.request.student.user|display_name }} · {% trans "Tutor" %}: {{ match.tutor.user|display_name }}</p>
+<div class="record-columns">
+<section><h3>{% trans "Student entries" %}</h3>
+<h4>{% trans "Rating" %}</h4><p>{{ match.student_rating|default_if_none:"—" }} / 5</p>
+<h4>{% trans "Comment for the tutor" %}</h4><div class="record-text">{{ match.student_feedback|default:"—" }}</div>
+<h4>{% trans "Private notes" %}</h4><div class="record-text">{{ match.student_private_note|default:"—" }}</div>
+</section>
+<section><h3>{% trans "Tutor entries" %}</h3>
+{% for note in match.admin_notes %}{% include "core/_admin_tutor_record.html" %}{% empty %}<p>—</p>{% endfor %}
+</section></div></article>
+{% empty %}<p>{% trans "No lesson records yet." %}</p>{% endfor %}
+{% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}">← {% trans "Previous" %}</a>{% endif %}
+<span>{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+{% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}">{% trans "Next" %} →</a>{% endif %}
+{% if orphan_notes %}<h2>{% trans "Notes without a linked lesson" %}</h2>
+{% for note in orphan_notes %}<article class="card"><p>{% trans "Student" %}: {{ note.student.user|display_name }}</p>{% include "core/_admin_tutor_record.html" %}</article>{% endfor %}{% endif %}
+</div>
+<style>.records{max-width:1200px;margin:24px auto;padding:0 12px}.record-columns{display:grid;grid-template-columns:1fr 1fr;gap:24px}.record-columns section{min-width:0}.record-text{white-space:pre-wrap;overflow-wrap:anywhere}.records h4{margin:16px 0 6px}.records h2{font-size:20px}.tutor-record{border-top:1px solid #aaa;padding:12px 0}@media(max-width:700px){.record-columns{grid-template-columns:1fr}}</style>
+{% endblock %}

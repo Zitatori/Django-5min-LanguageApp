@@ -1158,3 +1158,28 @@ msgstr "「会話が成立していない」を選んだ場合を除き、両方
 
 msgid "Complete this field, or select 'Conversation did not take place'."
 msgstr "この欄を入力するか、「会話が成立していない」を選択してください。"
+
+msgid "All lesson notes"
+msgstr "レッスンの全記録"
+
+msgid "Student entries"
+msgstr "生徒が記入した内容"
+
+msgid "Tutor entries"
+msgstr "講師が記入した内容"
+
+msgid "Comment for the tutor"
+msgstr "先生へのコメント"
+
+msgid "No lesson records yet."
+msgstr "レッスンの記録はまだありません。"
+
+msgid "Notes without a linked lesson"
+msgstr "レッスンに紐付いていないメモ"
+
+msgid "Original saved note"
+msgstr "元の保存メモ"
+
+msgid ""
+"Administrators can view your private notes. They are not shared with tutors."
+msgstr "自分用メモは管理者が閲覧できます。講師には共有されません。"

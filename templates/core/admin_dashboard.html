@@ -358,7 +358,7 @@
         <td style="white-space:nowrap;">
           <button class="edit-btn" onclick="openModal({{ u.id }}, '{{ u|display_name|escapejs }}', [{% if u.tutorprofile %}{% for l in u.tutorprofile.languages.all %}{{ l.id }},{% endfor %}{% endif %}], {% if u.tutorprofile and u.tutorprofile.is_hourly_paid %}true{% else %}false{% endif %})">Edit</button>
           <button class="history-btn" onclick="openHistoryModal({{ u.id }}, '{{ u|display_name|escapejs }}')">History</button>
-          <button class="notes-btn" onclick="openStudentNotesModal({{ u.id }}, '{{ u|display_name|escapejs }}')">Notes</button>
+          <a class="notes-btn" href="{% url 'admin_user_lesson_records' u.id %}">{% trans "All lesson notes" %}</a>
           <a class="notes-btn" href="{% url 'admin_study_notes' u.id %}">{% trans "AI Study Notes" %}</a>
           <button class="points-btn" onclick="openPointsModal({{ u.id }}, '{{ u|display_name|escapejs }}', {{ u.point_balance.student_balance|default:0 }}, {{ u.point_balance.teacher_balance|default:0 }})">Pts</button>
           {% if u.gold_membership.is_active %}
@@ -436,7 +436,7 @@
         <td style="white-space:nowrap;">
           <button class="edit-btn" onclick="openModal({{ u.id }}, '{{ u|display_name|escapejs }}', [{% if u.tutorprofile %}{% for l in u.tutorprofile.languages.all %}{{ l.id }},{% endfor %}{% endif %}], {% if u.tutorprofile and u.tutorprofile.is_hourly_paid %}true{% else %}false{% endif %})">Edit</button>
           <button class="history-btn" onclick="openHistoryModal({{ u.id }}, '{{ u|display_name|escapejs }}')">History</button>
-          <button class="notes-btn" onclick="openStudentNotesModal({{ u.id }}, '{{ u|display_name|escapejs }}')">Notes</button>
+          <a class="notes-btn" href="{% url 'admin_user_lesson_records' u.id %}">{% trans "All lesson notes" %}</a>
           <a class="notes-btn" href="{% url 'admin_study_notes' u.id %}">{% trans "AI Study Notes" %}</a>
           <button class="points-btn" onclick="openPointsModal({{ u.id }}, '{{ u|display_name|escapejs }}', {{ u.point_balance.student_balance|default:0 }}, {{ u.point_balance.teacher_balance|default:0 }})">Pts</button>
           {% if u.gold_membership.is_active %}
@@ -579,9 +579,7 @@
         <td style="font-size:12px; color:#6b7280;">{{ match.started_at|date:"Y-m-d H:i" }}</td>
         <td style="font-size:12px; color:#6b7280;">{% if match.end_at %}{{ match.end_at|date:"H:i" }}{% else %}<span class="pt-none">—</span>{% endif %}</td>
         <td>
-          <button class="notes-btn" onclick="openMatchNotesModal({{ match.id }}, '{{ match.request.student.user|display_name|escapejs }} × {{ match.tutor.user|display_name|escapejs }}')">
-            📋<span class="notes-count" id="mnc-{{ match.id }}"></span>
-          </button>
+          <a class="notes-btn" href="{% url 'admin_match_lesson_records' match.id %}">{% trans "All lesson notes" %}</a>
         </td>
       </tr>
       {% endfor %}
@@ -610,9 +608,7 @@
         <td style="font-size:12px; color:#6b7280;">{{ match.started_at|date:"Y-m-d H:i" }}</td>
         <td style="font-size:12px; color:#6b7280;">{% if match.end_at %}{{ match.end_at|date:"H:i" }}{% else %}<span class="pt-none">—</span>{% endif %}</td>
         <td>
-          <button class="notes-btn" onclick="openMatchNotesModal({{ match.id }}, '{{ match.request.student.user|display_name|escapejs }} × {{ match.tutor.user|display_name|escapejs }}')">
-            📋<span class="notes-count" id="mnc-{{ match.id }}"></span>
-          </button>
+          <a class="notes-btn" href="{% url 'admin_match_lesson_records' match.id %}">{% trans "All lesson notes" %}</a>
         </td>
       </tr>
       {% endfor %}
