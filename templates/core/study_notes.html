@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n static %}
+{% load display_names i18n static %}
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/study_notes.css' %}">
 <div class="study-page">
@@ -22,7 +22,7 @@
 {% endif %}
 </section>
 <section><h2>{% trans "Saved study notes" %}</h2><div class="study-grid">
-{% for item in notes %}<a class="card study-saved" href="{% url 'study_note_detail' item.pk %}"><strong>{% trans "AI Study Notes" %}</strong><p>{{ item.target_language|upper }} → {{ item.explanation_language|upper }} · {{ item.learner_level }}</p><time>{{ item.created_at|date:"Y-m-d H:i" }}</time></a>{% empty %}<p>{% trans "No saved study notes yet." %}</p>{% endfor %}
+{% for item in notes %}<a class="card study-saved" href="{% url 'study_note_detail' item.pk %}"><strong>{% trans "AI Study Notes" %}</strong><p>{{ item.target_language|upper }} → {{ item.explanation_language|upper }} · {{ item.learner_level|level_label }}</p><time>{{ item.created_at|date:"Y-m-d H:i" }}</time></a>{% empty %}<p>{% trans "No saved study notes yet." %}</p>{% endfor %}
 </div>{% if notes.has_previous %}<a href="?page={{ notes.previous_page_number }}">← {% trans "Previous" %}</a>{% endif %} {% if notes.has_next %}<a href="?page={{ notes.next_page_number }}">{% trans "Next" %} →</a>{% endif %}</section>
 </div>
 <script>

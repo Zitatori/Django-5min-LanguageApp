@@ -38,12 +38,12 @@
       <label class="note-label" for="learner-level">{% trans "Learner's level" %}</label>
       <select id="learner-level" name="learner_level" class="note-select">
         <option value="">{% trans "Select level" %}</option>
-        <option value="A1" {% if form.learner_level.value == 'A1' %}selected{% endif %}>A1{% if match.request.language.code == 'ja' %}（JLPT N5目安）{% endif %}</option>
-        <option value="A2" {% if form.learner_level.value == 'A2' %}selected{% endif %}>A2{% if match.request.language.code == 'ja' %}（JLPT N4〜N3目安）{% endif %}</option>
-        <option value="B1" {% if form.learner_level.value == 'B1' %}selected{% endif %}>B1{% if match.request.language.code == 'ja' %}（JLPT N3〜N2目安）{% endif %}</option>
-        <option value="B2" {% if form.learner_level.value == 'B2' %}selected{% endif %}>B2{% if match.request.language.code == 'ja' %}（JLPT N2〜N1目安）{% endif %}</option>
-        <option value="C1" {% if form.learner_level.value == 'C1' %}selected{% endif %}>C1{% if match.request.language.code == 'ja' %}（JLPT N1高得点目安）{% endif %}</option>
-        <option value="C2" {% if form.learner_level.value == 'C2' %}selected{% endif %}>C2{% if match.request.language.code == 'ja' %}（JLPT対応なし・熟達）{% endif %}</option>
+        <option value="A1" {% if form.learner_level.value == 'A1' %}selected{% endif %}>{{ "A1"|level_label }}{% if match.request.language.code == 'ja' %}（JLPT N5目安）{% endif %}</option>
+        <option value="A2" {% if form.learner_level.value == 'A2' %}selected{% endif %}>{{ "A2"|level_label }}{% if match.request.language.code == 'ja' %}（JLPT N4〜N3目安）{% endif %}</option>
+        <option value="B1" {% if form.learner_level.value == 'B1' %}selected{% endif %}>{{ "B1"|level_label }}{% if match.request.language.code == 'ja' %}（JLPT N3〜N2目安）{% endif %}</option>
+        <option value="B2" {% if form.learner_level.value == 'B2' %}selected{% endif %}>{{ "B2"|level_label }}{% if match.request.language.code == 'ja' %}（JLPT N2〜N1目安）{% endif %}</option>
+        <option value="C1" {% if form.learner_level.value == 'C1' %}selected{% endif %}>{{ "C1"|level_label }}{% if match.request.language.code == 'ja' %}（JLPT N1高得点目安）{% endif %}</option>
+        <option value="C2" {% if form.learner_level.value == 'C2' %}selected{% endif %}>{{ "C2"|level_label }}{% if match.request.language.code == 'ja' %}（JLPT対応なし・熟達）{% endif %}</option>
       </select>
       {% if match.request.language.code == 'ja' %}
       <p class="text-muted" style="font-size:13px; margin-top:6px;">※JLPTは参考目安です。会話中の理解・発話をもとに選んでください。</p>

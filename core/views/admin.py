@@ -1,3 +1,4 @@
+from core.templatetags.display_names import level_label
 from django.views.decorators.cache import never_cache
 from django.views.decorators.http import require_GET
 import json
@@ -128,6 +129,7 @@ def admin_dashboard(request):
             'date': n.created_at.strftime('%Y/%m/%d'),
             'note': n.note,
             'learner_level': n.learner_level,
+            'level_label': level_label(n.learner_level),
             'tutor': n.tutor.user.first_name or n.tutor.user.username,
         }
         if n.match_id:

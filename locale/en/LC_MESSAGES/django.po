@@ -1913,3 +1913,21 @@ msgstr "Update failed. Retrying automatically."
 
 msgid "Updates paused while you are editing or viewing details."
 msgstr "Updates paused while you are editing or viewing details."
+
+msgid "Beginner: basic greetings and introductions"
+msgstr "Beginner: basic greetings and introductions"
+
+msgid "Simple exchanges on familiar topics"
+msgstr "Simple exchanges on familiar topics"
+
+msgid "Can hold everyday conversations"
+msgstr "Can hold everyday conversations"
+
+msgid "Can discuss varied topics and explain opinions"
+msgstr "Can discuss varied topics and explain opinions"
+
+msgid "Can discuss complex topics fluently"
+msgstr "Can discuss complex topics fluently"
+
+msgid "Can express subtle meanings with ease"
+msgstr "Can express subtle meanings with ease"

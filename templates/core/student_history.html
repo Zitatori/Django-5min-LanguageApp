@@ -36,7 +36,7 @@
             <td class="student-note-cell" data-label="{% trans 'Tutor Comment' %}">
               {% if match.tutor_comment %}
                 <div class="student-note-card">
-                  {% if match.tutor_comment.learner_level %}<div style="margin-bottom:6px; font-weight:600; color:#6366f1;">{% trans "Level" %}: {{ match.tutor_comment.learner_level }}</div>{% endif %}
+                  {% if match.tutor_comment.learner_level %}<div style="margin-bottom:6px; font-weight:600; color:#6366f1;">{% trans "Level" %}: {{ match.tutor_comment.learner_level|level_label }}</div>{% endif %}
                   <div class="lesson-conversation-content">{{ match.tutor_comment.conversation_content }}</div>
                   {% include "core/_student_next_questions.html" with note=match.tutor_comment %}
                 </div>

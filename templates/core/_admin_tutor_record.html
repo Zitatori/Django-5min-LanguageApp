@@ -2,7 +2,7 @@
 <div class="tutor-record">
 <p>{{ note.created_at|date:"Y/m/d H:i" }} · {{ note.tutor.user|display_name }}</p>
 {% if note.conversation_not_held %}<strong>{% trans "Conversation did not take place" %}</strong>{% endif %}
-<h4>{% trans "Learner's level" %}</h4><p>{{ note.learner_level|default:"—" }}</p>
+<h4>{% trans "Learner's level" %}</h4><p>{{ note.learner_level|level_label|default:"—" }}</p>
 <h4>{% trans "What we talked about" %}</h4><div class="record-text">{{ note.conversation_content|default:"—" }}</div>
 <h4>{% trans "What to study" %}</h4><div class="record-text">{{ note.next_conversation|default:"—" }}</div>
 {% if note.note and note.note != note.conversation_content %}<h4>{% trans "Original saved note" %}</h4><div class="record-text">{{ note.note }}</div>{% endif %}

@@ -1,12 +1,12 @@
 {% extends "base.html" %}
-{% load i18n static %}
+{% load display_names i18n static %}
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/study_notes.css' %}">
 <div class="study-page">
 {% if admin_review %}{% include 'core/_admin_study_banner.html' %}{% else %}<a href="{% url 'study_notes' %}">← {% trans "Saved study notes" %}</a>{% endif %}
 {% language note.explanation_language %}
 <article lang="{{ note.explanation_language }}">
-<header class="study-hero"><span class="study-tag">{{ note.learner_level|default:"—" }}</span><h1>{{ sheet.title }}</h1><p>{{ target_name }} → {{ explanation_name }} · {{ note.created_at|date:"Y-m-d H:i" }}</p><p>{% trans "Lessons reviewed" %}: {{ note.source_lesson_ids|length }} · {% trans "Private notes" %}: {% if note.include_private_notes %}{% trans "Included" %}{% else %}{% trans "Not included" %}{% endif %}</p></header>
+<header class="study-hero"><span class="study-tag">{{ note.learner_level|level_label|default:"—" }}</span><h1>{{ sheet.title }}</h1><p>{{ target_name }} → {{ explanation_name }} · {{ note.created_at|date:"Y-m-d H:i" }}</p><p>{% trans "Lessons reviewed" %}: {{ note.source_lesson_ids|length }} · {% trans "Private notes" %}: {% if note.include_private_notes %}{% trans "Included" %}{% else %}{% trans "Not included" %}{% endif %}</p></header>
 <nav class="study-nav" aria-label="{% trans 'AI Study Notes' %}"><a href="#priorities">① {% trans "Key learning points" %}</a><a href="#vocabulary">② {% trans "Words and expressions" %}</a><a href="#grammar">③ {% trans "Grammar review" %}</a><a href="#corrections">④ {% trans "Corrections" %}</a><a href="#conversation">⑤ {% trans "Conversation practice" %}</a><a href="#plan">⑥ {% trans "Review plan" %}</a><a href="#next">⑦ {% trans "What to learn next" %}</a></nav>
 <p class="study-muted">{% trans "AI-generated materials may contain mistakes. Check anything uncertain with your tutor. Answers below are practice examples." %}</p>
 <section id="priorities"><h2>① {% trans "Key learning points" %}</h2><div class="card study-priority"><ul>{% for point in sheet.priorities %}<li>{{ point }}</li>{% endfor %}</ul></div></section>

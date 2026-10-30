@@ -1192,3 +1192,21 @@ msgstr "更新できませんでした。自動で再試行します。"
 
 msgid "Updates paused while you are editing or viewing details."
 msgstr "入力中・詳細表示中は更新を一時停止します。"
+
+msgid "Beginner: basic greetings and introductions"
+msgstr "初心者・簡単な挨拶や自己紹介ができる"
+
+msgid "Simple exchanges on familiar topics"
+msgstr "身近な話題で簡単なやり取りができる"
+
+msgid "Can hold everyday conversations"
+msgstr "日常会話ができる"
+
+msgid "Can discuss varied topics and explain opinions"
+msgstr "幅広い話題で会話し、意見を説明できる"
+
+msgid "Can discuss complex topics fluently"
+msgstr "難しい話題でも流暢に話せる"
+
+msgid "Can express subtle meanings with ease"
+msgstr "細かいニュアンスまで自在に表現できる"

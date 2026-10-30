@@ -15,3 +15,19 @@ def display_name(user):
     if re.fullmatch(r'member_[0-9a-f]{32}', username):
         return user.first_name or 'Member'
     return username
+
+
+@register.filter
+def level_label(value):
+    from django.utils.translation import gettext as _
+    descriptions = {
+        'A1': _('Beginner: basic greetings and introductions'),
+        'A2': _('Simple exchanges on familiar topics'),
+        'B1': _('Can hold everyday conversations'),
+        'B2': _('Can discuss varied topics and explain opinions'),
+        'C1': _('Can discuss complex topics fluently'),
+        'C2': _('Can express subtle meanings with ease'),
+    }
+    if value not in descriptions:
+        return value or ''
+    return '{} ({})'.format(value, descriptions[value])

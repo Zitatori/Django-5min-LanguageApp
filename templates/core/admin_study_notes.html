@@ -5,7 +5,7 @@
 <a href="{% url 'admin_dashboard' %}">← Admin Dashboard</a>
 <header class="study-hero"><h1>{% trans 'AI Study Notes' %} · {{ learner|display_name }}</h1><p>{% trans 'Read-only administrator view' %}</p></header>
 <div class="study-grid">
-{% for item in notes %}<a class="card study-saved" href="{% url 'admin_study_note_detail' learner.pk item.pk %}"><strong>{% if item.format == 'cheatsheet' %}{% trans 'Study Cheatsheet' %}{% else %}{% trans 'AI Study Notes' %}{% endif %}</strong><p>{{ item.target_language|upper }} → {{ item.explanation_language|upper }} · {{ item.learner_level|default:'—' }}</p><time>{{ item.created_at|date:'Y-m-d H:i' }}</time><p>{% trans 'Lessons reviewed' %}: {{ item.source_lesson_ids|length }}</p></a>{% empty %}<p>{% trans 'No saved study notes yet.' %}</p>{% endfor %}
+{% for item in notes %}<a class="card study-saved" href="{% url 'admin_study_note_detail' learner.pk item.pk %}"><strong>{% if item.format == 'cheatsheet' %}{% trans 'Study Cheatsheet' %}{% else %}{% trans 'AI Study Notes' %}{% endif %}</strong><p>{{ item.target_language|upper }} → {{ item.explanation_language|upper }} · {{ item.learner_level|level_label|default:'—' }}</p><time>{{ item.created_at|date:'Y-m-d H:i' }}</time><p>{% trans 'Lessons reviewed' %}: {{ item.source_lesson_ids|length }}</p></a>{% empty %}<p>{% trans 'No saved study notes yet.' %}</p>{% endfor %}
 </div>
 <nav class="study-nav">{% if notes.has_previous %}<a href="?page={{ notes.previous_page_number }}">← {% trans 'Previous' %}</a>{% endif %}{% if notes.has_next %}<a href="?page={{ notes.next_page_number }}">{% trans 'Next' %} →</a>{% endif %}</nav>
 </div>

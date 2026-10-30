@@ -939,7 +939,7 @@
       list.innerHTML = entries.map(e =>
         `<div class="notes-item">
           <div class="notes-item-meta">${e.date}&ensp;·&ensp;Tutor: ${e.tutor}</div>
-          <div class="notes-item-meta">Level: ${(e.learner_level || 'Not selected').replace(/</g,'&lt;')}</div>
+          <div class="notes-item-meta">Level: ${(e.level_label || e.learner_level || 'Not selected').replace(/</g,'&lt;')}</div>
           <div class="notes-item-body">${e.note.replace(/</g,'&lt;')}</div>
         </div>`
       ).join('');
@@ -971,7 +971,7 @@
       html += entries.map(e =>
         `<div class="notes-item">
           <div class="notes-item-meta">${e.date}&ensp;·&ensp;Tutor: ${e.tutor}</div>
-          <div class="notes-item-meta">Level: ${(e.learner_level || 'Not selected').replace(/</g,'&lt;')}</div>
+          <div class="notes-item-meta">Level: ${(e.level_label || e.learner_level || 'Not selected').replace(/</g,'&lt;')}</div>
           <div class="notes-item-body">${e.note.replace(/</g,'&lt;')}</div>
         </div>`
       ).join('');

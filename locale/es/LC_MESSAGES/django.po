@@ -1213,3 +1213,21 @@ msgstr "No se pudo actualizar. Se reintentará automáticamente."
 
 msgid "Updates paused while you are editing or viewing details."
 msgstr "Actualizaciones en pausa mientras editas o consultas los detalles."
+
+msgid "Beginner: basic greetings and introductions"
+msgstr "Principiante: saludos y presentaciones básicos"
+
+msgid "Simple exchanges on familiar topics"
+msgstr "Intercambios sencillos sobre temas conocidos"
+
+msgid "Can hold everyday conversations"
+msgstr "Puede mantener conversaciones cotidianas"
+
+msgid "Can discuss varied topics and explain opinions"
+msgstr "Puede conversar sobre temas variados y explicar sus opiniones"
+
+msgid "Can discuss complex topics fluently"
+msgstr "Puede hablar con fluidez de temas complejos"
+
+msgid "Can express subtle meanings with ease"
+msgstr "Puede expresar matices sutiles con facilidad"

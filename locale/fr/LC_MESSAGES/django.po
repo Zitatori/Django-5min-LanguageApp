@@ -1223,3 +1223,21 @@ msgstr "Échec de la mise à jour. Nouvelle tentative automatique."
 msgid "Updates paused while you are editing or viewing details."
 msgstr ""
 "Mises à jour en pause pendant la saisie ou la consultation des détails."
+
+msgid "Beginner: basic greetings and introductions"
+msgstr "Débutant : salutations et présentations simples"
+
+msgid "Simple exchanges on familiar topics"
+msgstr "Échanges simples sur des sujets familiers"
+
+msgid "Can hold everyday conversations"
+msgstr "Peut tenir une conversation quotidienne"
+
+msgid "Can discuss varied topics and explain opinions"
+msgstr "Peut discuter de sujets variés et expliquer ses opinions"
+
+msgid "Can discuss complex topics fluently"
+msgstr "Peut discuter de sujets complexes avec aisance"
+
+msgid "Can express subtle meanings with ease"
+msgstr "Peut exprimer aisément des nuances fines"
