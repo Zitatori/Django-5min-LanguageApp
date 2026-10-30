@@ -21,7 +21,7 @@ class QuestionGenerationTests(ConversationNotesTests):
         with patch('core.services.question_generation.request_questions', return_value=QUESTIONS) as api:
             generate_for_note(note)
             generate_for_note(note)
-        api.assert_called_once_with('English', 'A2', ['Earlier English topic', 'Hiking'])
+        api.assert_called_once_with('English', 'A2', ['Earlier English topic', 'Hiking'], previous_questions=[])
         note.refresh_from_db()
         self.assertEqual(note.suggested_questions, QUESTIONS)
         self.assertEqual(note.questions_level, 'A2')
@@ -67,7 +67,7 @@ class ResponseValidationTests(SimpleTestCase):
     @patch('core.services.question_generation.urlopen')
     def test_structured_response_and_private_request(self, transport):
         response = MagicMock()
-        response.read.return_value = json.dumps({'status':'completed','output':[{'type':'message','content':[{'type':'output_text','text':json.dumps({'questions':QUESTIONS})}]}]}).encode()
+        response.read.return_value = json.dumps({'status':'completed','output':[{'type':'message','content':[{'type':'output_text','text':json.dumps({'follow_up_questions': QUESTIONS[:3], 'new_topic_questions': QUESTIONS[3:]})}]}]}).encode()
         transport.return_value.__enter__.return_value = response
         self.assertEqual(request_questions('English', 'A1', ['Hiking']), QUESTIONS)
         payload = json.loads(transport.call_args.args[0].data)
@@ -81,3 +81,35 @@ class ResponseValidationTests(SimpleTestCase):
         transport.return_value.__enter__.return_value = response
         with self.assertRaises(QuestionGenerationError):
             request_questions('English', 'A1', [])
+
+
+    @patch('core.services.question_generation.urlopen')
+    def test_question_mix_and_previous_questions_are_sent(self, transport):
+        response = MagicMock()
+        response.read.return_value = json.dumps({'status': 'completed', 'output': [
+            {'type': 'message', 'content': [{'type': 'output_text', 'text': json.dumps({
+                'follow_up_questions': QUESTIONS[:3], 'new_topic_questions': QUESTIONS[3:]})}]}]}).encode()
+        transport.return_value.__enter__.return_value = response
+        self.assertEqual(request_questions('Japanese', 'A1', ['Older lesson', 'Latest lesson'], ['Earlier question?']), QUESTIONS)
+        payload = json.loads(transport.call_args.args[0].data)
+        context = json.loads(payload['input'])
+        self.assertEqual(context['latest_lesson'], 'Latest lesson')
+        self.assertEqual(context['previous_questions'], ['Earlier question?'])
+        properties = payload['text']['format']['schema']['properties']
+        self.assertEqual(properties['follow_up_questions']['maxItems'], 3)
+        self.assertEqual(properties['new_topic_questions']['maxItems'], 2)
+
+    @patch('core.services.question_generation.urlopen')
+    def test_wrong_mix_duplicates_and_previous_repeats_are_rejected(self, transport):
+        cases = [
+            ({'follow_up_questions': QUESTIONS[:4], 'new_topic_questions': QUESTIONS[4:]}, []),
+            ({'follow_up_questions': QUESTIONS[:3], 'new_topic_questions': [QUESTIONS[0], QUESTIONS[4]]}, []),
+            ({'follow_up_questions': QUESTIONS[:3], 'new_topic_questions': QUESTIONS[3:]}, [QUESTIONS[0].upper()]),
+        ]
+        for groups, previous in cases:
+            response = MagicMock()
+            response.read.return_value = json.dumps({'status': 'completed', 'output': [
+                {'type': 'message', 'content': [{'type': 'output_text', 'text': json.dumps(groups)}]}]}).encode()
+            transport.return_value.__enter__.return_value = response
+            with self.assertRaises(QuestionGenerationError):
+                request_questions('English', 'A2', ['Food'], previous)
