@@ -1256,3 +1256,15 @@ msgstr ""
 "Partagé avec l’élève. Utilisé lorsque les membres Gold génèrent leurs fiches"
 " de révision IA. Indiquez les éléments à pratiquer et les points précis à "
 "améliorer."
+
+msgid "Practice tasks"
+msgstr "À travailler"
+
+msgid "Your rating"
+msgstr "Votre évaluation"
+
+msgid "Your comment"
+msgstr "Votre commentaire"
+
+msgid "Lesson notes"
+msgstr "Notes de leçon"

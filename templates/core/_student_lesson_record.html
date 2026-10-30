@@ -1,0 +1,11 @@
+{% load i18n display_names %}
+<div class="student-note-card">
+  <div style="margin-bottom:12px;"><strong>{% trans "Level" %}</strong><div>{{ match.tutor_comment.learner_level|level_label|default:"—" }}</div></div>
+  <div style="margin-bottom:12px;"><strong>{% trans "What we talked about" %}</strong><div class="lesson-conversation-content">{{ match.tutor_comment.conversation_content|default:"—" }}</div></div>
+  <div style="margin-bottom:12px; overflow-wrap:anywhere;"><strong>{% trans "Practice tasks" %}</strong><div style="white-space:pre-wrap;">{{ match.tutor_comment.next_conversation|default:"—" }}</div></div>
+  {% if request.user == match.request.student.user %}
+  <div style="margin-bottom:12px;"><strong>{% trans "Your rating" %}</strong><div>{% if match.student_rating %}{% for star in "12345" %}{% if forloop.counter <= match.student_rating %}★{% else %}☆{% endif %}{% endfor %} ({{ match.student_rating }} / 5){% else %}—{% endif %}</div></div>
+  <div style="margin-bottom:12px; overflow-wrap:anywhere;"><strong>{% trans "Your comment" %}</strong><div style="white-space:pre-wrap;">{{ match.student_feedback|default:"—" }}</div></div>
+  <div style="overflow-wrap:anywhere;"><strong>{% trans "Private notes" %}</strong><small style="display:block;">{% trans "Not shared with your tutor" %}</small><div style="white-space:pre-wrap;">{{ match.student_private_note|default:"—" }}</div></div>
+  {% endif %}
+</div>

@@ -1246,3 +1246,15 @@ msgstr ""
 "Se comparte con el estudiante. Se utiliza cuando los miembros Gold generan "
 "sus notas de estudio con IA. Indica qué practicar y los puntos concretos que"
 " mejorar."
+
+msgid "Practice tasks"
+msgstr "Tareas de práctica"
+
+msgid "Your rating"
+msgstr "Tu valoración"
+
+msgid "Your comment"
+msgstr "Tu comentario"
+
+msgid "Lesson notes"
+msgstr "Notas de clase"

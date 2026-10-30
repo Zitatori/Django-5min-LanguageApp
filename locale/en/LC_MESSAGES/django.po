@@ -1945,3 +1945,15 @@ msgid ""
 msgstr ""
 "Shared with the student. Used when Gold members generate AI Study Notes. "
 "Write what to practice and specific points to improve."
+
+msgid "Practice tasks"
+msgstr "Practice tasks"
+
+msgid "Your rating"
+msgstr "Your rating"
+
+msgid "Your comment"
+msgstr "Your comment"
+
+msgid "Lesson notes"
+msgstr "Lesson notes"

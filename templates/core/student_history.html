@@ -18,7 +18,7 @@
           <th>{% trans "Date" %}</th>
           <th>{% trans "Tutor" %}</th>
           <th>{% trans "Language" %}</th>
-          <th>{% trans "Tutor Comment" %}</th>
+          <th>{% trans "Lesson notes" %}</th>
         </tr>
       </thead>
       <tbody>
@@ -33,24 +33,8 @@
               {% endif %}
             </td>
             <td data-label="{% trans 'Language' %}">{% trans match.request.language.name %}</td>
-            <td class="student-note-cell" data-label="{% trans 'Tutor Comment' %}">
-              {% if match.tutor_comment %}
-                <div class="student-note-card">
-                  {% if match.tutor_comment.learner_level %}<div style="margin-bottom:6px; font-weight:600; color:#6366f1;">{% trans "Level" %}: {{ match.tutor_comment.learner_level|level_label }}</div>{% endif %}
-                  <div class="lesson-conversation-content">{{ match.tutor_comment.conversation_content }}</div>
-                  {% if match.tutor_comment.next_conversation %}
-                  <div style="margin-top:12px; overflow-wrap:anywhere;">
-                    <strong>{% trans "What to study" %}</strong>
-                    <div style="white-space:pre-wrap;">{{ match.tutor_comment.next_conversation }}</div>
-                  </div>
-                  {% endif %}
-                  {% include "core/_student_next_questions.html" with note=match.tutor_comment %}
-                </div>
-              {% else %}
-                <span class="student-note-empty">{% trans "No tutor comment yet." %}</span>
-              {% endif %}
-              {% include "core/_student_private_note.html" %}
-              {% if match.request.language.code == "ja" %}<a href="{% url 'cheatsheets' %}?lesson={{ match.pk }}">{% trans "Study Cheatsheet" %} →</a>{% endif %}
+            <td class="student-note-cell" data-label="{% trans 'Lesson notes' %}">
+              {% include "core/_student_lesson_record.html" %}
             </td>
           </tr>
         {% endfor %}

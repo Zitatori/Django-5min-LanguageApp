@@ -1220,3 +1220,15 @@ msgid ""
 "Shared with the student. Used when Gold members generate AI Study Notes. "
 "Write what to practice and specific points to improve."
 msgstr "生徒に共有されます。Gold会員専用のAI復習ノートを生成する際に使われます。練習するとよいことや、具体的な改善点を書いてください。"
+
+msgid "Practice tasks"
+msgstr "課題"
+
+msgid "Your rating"
+msgstr "自分の星評価"
+
+msgid "Your comment"
+msgstr "自分のコメント"
+
+msgid "Lesson notes"
+msgstr "レッスンノート"

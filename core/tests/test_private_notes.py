@@ -34,3 +34,22 @@ class PrivateNoteTests(TestCase):
         self.assertEqual(self.match.student_rating, 5)
         self.assertEqual(self.match.student_feedback, 'Thank you')
         self.assertEqual(self.match.student_private_note, 'Updated')
+
+    def test_normal_notes_show_requested_fields_without_ai_questions(self):
+        from core.models import ConversationNote
+        ConversationNote.objects.create(student=self.student, tutor=self.tutor, match=self.match,
+            note='Lesson content', talked_about='Lesson content', learner_level='A2',
+            next_conversation='Practice task', questions_status='ready',
+            suggested_questions=['Hidden AI question?'])
+        self.match.student_rating = 4
+        self.match.student_feedback = 'My feedback <script>unsafe</script>'
+        self.match.student_private_note = 'My personal memo'
+        self.match.save()
+        for name in ('create_request', 'student_history'):
+            response = self.client.get(reverse(name))
+            for text in ['A2', 'Lesson content', 'Practice task', '★★★★☆',
+                         'My feedback &lt;script&gt;unsafe&lt;/script&gt;', 'My personal memo']:
+                self.assertContains(response, text)
+            self.assertNotContains(response, 'Hidden AI question?')
+            self.assertNotContains(response, '<script>unsafe</script>')
+        self.assertEqual(ConversationNote.objects.get(match=self.match).suggested_questions, ['Hidden AI question?'])

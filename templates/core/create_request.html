@@ -604,21 +604,8 @@
         </span>
       </div>
       <div class="cr-hist-note">
-        <span class="cr-hist-note-title">{% trans "Tutor Comment" %}</span>
-        {% if match.tutor_comment %}
-          {% if match.tutor_comment.learner_level %}<div style="margin-bottom:6px; font-weight:600; color:#6366f1;">{% trans "Level" %}: {{ match.tutor_comment.learner_level|level_label }}</div>{% endif %}
-          <div class="lesson-conversation-content">{{ match.tutor_comment.conversation_content }}</div>
-                  {% if match.tutor_comment.next_conversation %}
-                  <div style="margin-top:12px; overflow-wrap:anywhere;">
-                    <strong>{% trans "What to study" %}</strong>
-                    <div style="white-space:pre-wrap;">{{ match.tutor_comment.next_conversation }}</div>
-                  </div>
-                  {% endif %}
-          {% include "core/_student_next_questions.html" with note=match.tutor_comment %}
-        {% else %}
-          <span class="cr-hist-note-empty">{% trans "No tutor comment yet." %}</span>
-        {% endif %}
-        {% include "core/_student_private_note.html" %}
+        <span class="cr-hist-note-title">{% trans "Lesson notes" %}</span>
+        {% include "core/_student_lesson_record.html" %}
       </div>
     </div>
     {% endfor %}
