@@ -6,9 +6,11 @@ from django.utils import timezone
 from django.views.decorators.http import require_POST
 from core.models import LessonLanguage, TutorProfile, QuickLessonMatch
 from django.http import JsonResponse
+from core.tutor_access import tutor_access_required
 
 
 @login_required
+@tutor_access_required
 def tutor_dashboard(request):
     tutor_profile, _ = TutorProfile.objects.get_or_create(user=request.user)
 
@@ -104,6 +106,7 @@ def _active_match_for_tutor(tutor_profile, now=None):
 
 
 @login_required
+@tutor_access_required
 def tutor_match_status(request):
     """ポーリング兼ハートビート。呼ばれるたびに last_ping_at を更新。"""
     from django.urls import reverse
@@ -141,6 +144,7 @@ def tutor_match_status(request):
 
 
 @login_required
+@tutor_access_required
 @require_POST
 def tutor_set_offline(request):
     """チューターがタブを閉じたときなどに sendBeacon で叩くエンドポイント。"""

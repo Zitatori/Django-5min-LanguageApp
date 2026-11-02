@@ -21,9 +21,11 @@
       <button class="btn" style="width:100%;" onclick="window.location.href='{% url "create_request" %}'">
         &#127919; {% trans "Start a 5-Minute Lesson Now" %}
       </button>
+      {% if can_access_tutor_dashboard %}
       <a href="{% url "tutor_dashboard" %}" class="btn btn-secondary" style="width:100%; margin-top:10px; margin-left:0; box-sizing:border-box; text-align:center;">
         {% trans "Tutor Dashboard" %}
       </a>
+      {% endif %}
     {% else %}
       <p style="font-size:14px; color:#374151; margin-bottom:16px;">{% trans "You need to log in to start a lesson." %}</p>
       <div style="display:flex; gap:10px; flex-wrap:wrap;">

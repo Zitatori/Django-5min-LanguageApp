@@ -1,4 +1,5 @@
 from django.utils import timezone
+from core.tutor_access import can_access_tutor_dashboard
 
 
 def gold_status(request):
@@ -21,6 +22,7 @@ def gold_status(request):
 
     return {
         'is_gold': active,
+        'can_access_tutor_dashboard': can_access_tutor_dashboard(request.user),
         'gold_expires_at': membership.expires_at if active else None,
         'nav_points': nav_points,
     }
