@@ -1268,3 +1268,18 @@ msgstr "Votre commentaire"
 
 msgid "Lesson notes"
 msgstr "Notes de leçon"
+
+msgid "Gold membership"
+msgstr "Abonnement Gold"
+
+msgid "CHF 100 per month"
+msgstr "100 CHF par mois"
+
+msgid "Unlimited participation in existing sessions"
+msgstr "Participation illimitée aux sessions existantes"
+
+msgid "Choose your preferred times for two 30-minute sessions per week"
+msgstr "Choisissez vos horaires pour deux sessions de 30 minutes par semaine"
+
+msgid "Unlimited points"
+msgstr "Points illimités"

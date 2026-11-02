@@ -225,8 +225,8 @@
     {% endif %}
   </div>
   {% if is_gold %}
-    <p class="earned">👑 {% trans "Gold: unlimited lessons" %}</p>
-    <p class="earned">⏱️ {% trans "Choose any times for up to 2 hours per week" %}</p>
+    <p class="earned">👑 {% trans "Unlimited participation in existing sessions" %}</p>
+    <p class="earned">⏱️ {% trans "Choose your preferred times for two 30-minute sessions per week" %}</p>
     <p class="earned">💰 {% trans "Unlimited points" %}</p>
   {% endif %}
   {% if not is_gold %}
@@ -373,10 +373,11 @@
 
 {% if not is_gold %}
 <div class="card gold-sub-card">
-  <p class="gold-sub-title">&#x1F451; Gold {% trans "Membership" %}</p>
-  <p class="gold-sub-desc">CHF 100/{% trans "month" %}</p>
+  <p class="gold-sub-title">&#x1F451; {% trans "Gold membership" %}</p>
+  <p class="gold-sub-desc">{% trans "CHF 100 per month" %}</p>
   <ul class="gold-sub-benefits">
-    <li>{% trans "Choose any times for up to 2 hours per week" %}</li>
+    <li>{% trans "Unlimited participation in existing sessions" %}</li>
+    <li>{% trans "Choose your preferred times for two 30-minute sessions per week" %}</li>
     <li>{% trans "Unlimited points" %}</li>
   </ul>
   {% if gold_request_pending %}

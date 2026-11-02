@@ -1232,3 +1232,18 @@ msgstr "自分のコメント"
 
 msgid "Lesson notes"
 msgstr "レッスンノート"
+
+msgid "Gold membership"
+msgstr "Gold メンバーシップ"
+
+msgid "CHF 100 per month"
+msgstr "月額19,000円（CHF 100・1 CHF＝190円換算）"
+
+msgid "Unlimited participation in existing sessions"
+msgstr "既存のセッションにいつでも参加し放題"
+
+msgid "Choose your preferred times for two 30-minute sessions per week"
+msgstr "週2回・各30分、好きな時間を指定できます"
+
+msgid "Unlimited points"
+msgstr "ポイント無制限"

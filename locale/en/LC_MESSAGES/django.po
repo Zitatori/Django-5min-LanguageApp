@@ -1957,3 +1957,18 @@ msgstr "Your comment"
 
 msgid "Lesson notes"
 msgstr "Lesson notes"
+
+msgid "Gold membership"
+msgstr "Gold membership"
+
+msgid "CHF 100 per month"
+msgstr "CHF 100 per month"
+
+msgid "Unlimited participation in existing sessions"
+msgstr "Unlimited participation in existing sessions"
+
+msgid "Choose your preferred times for two 30-minute sessions per week"
+msgstr "Choose your preferred times for two 30-minute sessions per week"
+
+msgid "Unlimited points"
+msgstr "Unlimited points"
