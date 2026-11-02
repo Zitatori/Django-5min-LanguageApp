@@ -1972,3 +1972,6 @@ msgstr "Choose your preferred times for two 30-minute sessions per week"
 
 msgid "Unlimited points"
 msgstr "Unlimited points"
+
+msgid "A Gold badge appears after your name"
+msgstr "A Gold badge appears after your name"

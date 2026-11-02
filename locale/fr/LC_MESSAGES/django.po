@@ -1283,3 +1283,6 @@ msgstr "Choisissez vos horaires pour deux sessions de 30 minutes par semaine"
 
 msgid "Unlimited points"
 msgstr "Points illimités"
+
+msgid "A Gold badge appears after your name"
+msgstr "Un badge Gold apparaît après votre nom"

@@ -153,6 +153,8 @@ def purchase_points(request):
         {'points': 50,  'price_chf': 50},
         {'points': 100, 'price_chf': 100},
     ]
+    for tier in TIERS:
+        tier['price_jpy_display'] = format(tier['price_chf'] * 190, ',')
     balance = _get_or_create_balance(request.user)
     return render(request, 'core/purchase_points.html', {
         'tiers':   TIERS,

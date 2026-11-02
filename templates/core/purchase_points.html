@@ -2,6 +2,7 @@
 {% load i18n %}
 
 {% block content %}
+{% get_current_language as purchase_language %}
 <style>
   .purchase-header {
     text-align: center;
@@ -105,11 +106,18 @@
     {% for tier in tiers %}
     <div class="tier-card" onclick="selectTier(this, {{ tier.points }}, {{ tier.price_chf }})">
       <div class="pts">{{ tier.points }}<span class="unit"> pt</span></div>
+      {% if purchase_language|slice:":2" == 'ja' %}
+      <div class="price">{{ tier.price_jpy_display }}円</div>
+      <div class="per">{{ tier.price_jpy_display }}円 / {{ tier.points }}pt</div>
+      {% else %}
       <div class="price">CHF {{ tier.price_chf|floatformat:0 }}</div>
       <div class="per">CHF {{ tier.price_chf|floatformat:0 }} / {{ tier.points }}pt</div>
+      {% endif %}
     </div>
     {% endfor %}
   </div>
+
+  {% if purchase_language|slice:":2" == 'ja' %}<p class="manual-note">1 CHF＝190円で換算しています。支払いの詳細はメールでご案内します。</p>{% endif %}
 
   <button
     id="purchase-btn"
@@ -159,7 +167,11 @@ document.getElementById('purchase-btn').addEventListener('click', () => {
   if (!selectedPoints) return;
   const box = document.getElementById('manual-payment-box');
   const selected = document.getElementById('manual-selected');
-    selected.textContent = `${selectedPoints} pt / CHF ${selectedPrice}`;
+  {% if purchase_language|slice:":2" == 'ja' %}
+  selected.textContent = `${selectedPoints} pt / ${(selectedPrice * 190).toLocaleString('ja-JP')}円`;
+  {% else %}
+  selected.textContent = `${selectedPoints} pt / CHF ${selectedPrice}`;
+  {% endif %}
   box.classList.add('open');
   box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 });

@@ -1247,3 +1247,6 @@ msgstr "週2回・各30分、好きな時間を指定できます"
 
 msgid "Unlimited points"
 msgstr "ポイント無制限"
+
+msgid "A Gold badge appears after your name"
+msgstr "名前の後ろにGoldバッジが表示されます"
