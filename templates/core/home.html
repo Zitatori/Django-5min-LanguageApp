@@ -2,6 +2,7 @@
 {% load i18n static %}
 
 {% block content %}
+{% get_current_language as home_language %}
 <div class="card">
   <a href="{% url 'study_notes' %}" style="font-weight:700;">✨ {% trans "AI Study Notes" %} (Gold)</a>
   <p>{% trans "AI creates personalized review materials from your past lessons." %}</p>
@@ -73,8 +74,13 @@
 </div>{# /home-grid #}
 <div style="max-width: 1400px; margin: 32px auto; padding: 0 16px;">
   <img
+    {% if home_language|slice:":2" == 'fr' %}
+    src="{% static 'images/quicklesson-how-it-works-fr.png' %}"
+    alt="Comment utiliser QuickLesson : créez un compte, choisissez une session et parlez pendant cinq minutes."
+    {% else %}
     src="{% static 'images/quicklesson-how-it-works.png' %}"
     alt="QuickLessonの使い方"
+    {% endif %}
     style="width: 100%; height: auto; display: block; border-radius: 16px;"
   >
 </div>
