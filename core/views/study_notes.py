@@ -10,12 +10,38 @@ from django.utils import timezone
 from django.utils.translation import gettext as _, gettext_lazy
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.cache import never_cache
-from core.models import GoldMembership, StudyNote
+from core.models import GoldMembership, StudyNote, QuickLessonMatch
+from django.contrib.auth import get_user_model
 from core.services.study_notes import LANGUAGES, StudyGenerationError, collect_history, request_study_note
 
 
+class StudyLessonChoice(forms.ModelChoiceField):
+    def label_from_instance(self, lesson):
+        return '{} · {} · #{}'.format(timezone.localtime(lesson.end_at).strftime('%Y-%m-%d %H:%M'), lesson.request.language.name, lesson.pk)
+
+
 class StudyNoteForm(forms.Form):
-    target_language = forms.ChoiceField(label=gettext_lazy('Study language'), choices=[(k, gettext_lazy(v)) for k, v in LANGUAGES.items()])
+    lesson = StudyLessonChoice(queryset=QuickLessonMatch.objects.none(), label=gettext_lazy('Lesson'), required=False)
+
+    def __init__(self, *args, user, gold=False, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['lesson'].required = not gold
+        self.fields['lesson'].queryset = QuickLessonMatch.objects.filter(
+            request__student__user=user, request__purpose='lesson',
+            student_joined_at__isnull=False, tutor_joined_at__isnull=False,
+            end_at__lte=timezone.now(), request__language__code__in=LANGUAGES,
+        ).exclude(conversationnote__conversation_not_held=True).select_related('request__language').order_by('-end_at', '-pk')
+
+    def clean(self):
+        data = super().clean()
+        lesson = data.get('lesson')
+        if lesson:
+            data['target_language'] = lesson.request.language.code
+        elif not data.get('target_language'):
+            self.add_error('target_language', gettext_lazy('This field is required.'))
+        return data
+
+    target_language = forms.ChoiceField(required=False, label=gettext_lazy('Study language'), choices=[(k, gettext_lazy(v)) for k, v in LANGUAGES.items()])
     explanation_language = forms.ChoiceField(label=gettext_lazy('Explanation language'), choices=[(k, gettext_lazy(v)) for k, v in LANGUAGES.items()])
     include_private_notes = forms.BooleanField(label=gettext_lazy('Include my private notes'), required=False, initial=False)
     request_token = forms.CharField(widget=forms.HiddenInput)
@@ -30,16 +56,14 @@ def new_token(user):
 @require_http_methods(['GET', 'POST'])
 def study_notes(request):
     gold = GoldMembership.objects.filter(user=request.user, expires_at__gt=timezone.now()).exists()
-    form = StudyNoteForm(request.POST if request.method == 'POST' else None, initial={
+    form = StudyNoteForm(request.POST if request.method == 'POST' else None, user=request.user, gold=gold, initial={
         'request_token': new_token(request.user),
         'explanation_language': getattr(request, 'LANGUAGE_CODE', 'en').split('-')[0],
         'target_language': 'ja',
     })
     error, status = '', 200
     if request.method == 'POST':
-        if not gold:
-            error, status = _('Gold membership is required to generate study notes.'), 403
-        elif form.is_valid():
+        if form.is_valid():
             try:
                 token = signing.loads(form.cleaned_data['request_token'], salt='study-notes', max_age=86400)
                 if token['user'] != request.user.pk:
@@ -55,7 +79,7 @@ def study_notes(request):
                     error, status = _('This request was already submitted. Reload to start a new request.'), 409
                 else:
                     data = form.cleaned_data
-                    history, level, ids = collect_history(request.user, data['target_language'], data['include_private_notes'])
+                    history, level, ids = collect_history(request.user, data['target_language'], data['include_private_notes'], lesson_id=data['lesson'].pk if data.get('lesson') else None)
                     if not history:
                         error = _('No lesson notes are available for this language yet. Complete a lesson and save notes first.')
                     else:
@@ -63,8 +87,14 @@ def study_notes(request):
                         StudyNote.objects.filter(user=request.user, status='generating', created_at__lt=timezone.now()-timedelta(minutes=5)).update(status='failed', finished_at=timezone.now())
                         try:
                             with transaction.atomic():
+                                # Serialize the allowance check across requests/workers for this learner.
+                                get_user_model().objects.select_for_update().get(pk=request.user.pk)
+                                if not gold:
+                                    saved = StudyNote.objects.filter(user=request.user, format='study_note', lesson=data['lesson'], status='ready').first()
+                                    if saved:
+                                        return redirect('study_note_detail', pk=saved.pk)
                                 note = StudyNote.objects.create(user=request.user, request_key=key,
-                                    target_language=data['target_language'], explanation_language=data['explanation_language'],
+                                    lesson=data.get('lesson'), target_language=data['target_language'], explanation_language=data['explanation_language'],
                                     include_private_notes=data['include_private_notes'], learner_level=level, source_lesson_ids=ids)
                         except IntegrityError:
                             error, status = _('A study note is already being generated. Please wait, then reload.'), 409
@@ -85,7 +115,7 @@ def study_notes(request):
     if request.method == 'POST':
         data = request.POST.copy()
         data['request_token'] = new_token(request.user)
-        form = StudyNoteForm(data)
+        form = StudyNoteForm(data, user=request.user, gold=gold)
     notes = Paginator(StudyNote.objects.filter(user=request.user, format='study_note', status='ready').defer('content'), 20).get_page(request.GET.get('page'))
     return render(request, 'core/study_notes.html', {'form': form, 'study_gold': gold, 'notes': notes, 'error': error}, status=status)
 

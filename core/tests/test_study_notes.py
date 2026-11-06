@@ -72,16 +72,57 @@ class StudyNoteTests(TestCase):
         self.assertEqual(api.call_args.args[3][0]['private_notes'], 'PRIVATE hobbies')
 
     @patch('core.views.study_notes.request_study_note')
-    def test_expired_non_gold_and_staff_cannot_generate(self, api):
+    def test_non_gold_requires_a_lesson_even_for_staff(self, api):
         self.gold.expires_at = timezone.now()-timedelta(days=1)
         self.gold.save()
         self.user.is_staff = True
         self.user.save()
-        self.assertEqual(self.client.post(self.url, self.data()).status_code, 403)
+        self.assertEqual(self.client.post(self.url, self.data()).status_code, 400)
         self.gold.delete()
-        self.assertEqual(self.client.post(self.url, self.data()).status_code, 403)
-        self.assertNotContains(self.client.get(self.url), 'id="study-form"')
+        self.assertEqual(self.client.post(self.url, self.data()).status_code, 400)
+        self.assertContains(self.client.get(self.url), 'id="study-form"')
         api.assert_not_called()
+
+    @patch('core.views.study_notes.request_study_note', return_value=(SHEET, USAGE))
+    def test_free_user_once_per_lesson_and_private_choice(self, api):
+        self.gold.delete()
+        data = self.data(lesson=self.match.pk, target_language='es')
+        first = self.client.post(self.url, data)
+        self.assertEqual(first.status_code, 302)
+        note = StudyNote.objects.get()
+        self.assertEqual(note.lesson_id, self.match.pk)
+        self.assertEqual(note.target_language, 'ja')
+        self.assertEqual(note.source_lesson_ids, [self.match.pk])
+        self.assertNotIn('private_notes', api.call_args.args[3][0])
+        again = self.client.post(self.url, self.data(lesson=self.match.pk, explanation_language='en'))
+        self.assertEqual(again.url, first.url)
+        self.assertEqual(api.call_count, 1)
+        second = self.lesson(self.student)
+        self.assertEqual(self.client.post(self.url, self.data(lesson=second.pk, include_private_notes='on')).status_code, 302)
+        self.assertEqual(api.call_count, 2)
+        self.assertIn('private_notes', api.call_args.args[3][0])
+        self.assertEqual(self.client.get(first.url).status_code, 200)
+        self.assertEqual(api.call_count, 2)
+
+    @patch('core.views.study_notes.request_study_note', side_effect=[StudyGenerationError(), (SHEET, USAGE)])
+    def test_free_failure_does_not_use_allowance(self, api):
+        self.gold.delete()
+        self.assertEqual(self.client.post(self.url, self.data(lesson=self.match.pk)).status_code, 200)
+        self.assertEqual(self.client.post(self.url, self.data(lesson=self.match.pk)).status_code, 302)
+        self.assertEqual(api.call_count, 2)
+
+    @patch('core.views.study_notes.request_study_note')
+    def test_free_cannot_select_someone_elses_lesson(self, api):
+        self.gold.delete()
+        other = self.lesson(StudentProfile.objects.create(user=self.other))
+        self.assertEqual(self.client.post(self.url, self.data(lesson=other.pk)).status_code, 400)
+        api.assert_not_called()
+
+    @patch('core.views.study_notes.request_study_note', return_value=(SHEET, USAGE))
+    def test_gold_can_repeat_selected_lesson(self, api):
+        for _ in range(2):
+            self.assertEqual(self.client.post(self.url, self.data(lesson=self.match.pk)).status_code, 302)
+        self.assertEqual(api.call_count, 2)
 
     @patch('core.views.study_notes.request_study_note')
     def test_no_history_and_wrong_language_do_not_call_api(self, api):

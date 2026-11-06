@@ -1250,3 +1250,21 @@ msgstr "ポイント無制限"
 
 msgid "A Gold badge appears after your name"
 msgstr "名前の後ろにGoldバッジが表示されます"
+
+msgid ""
+"One AI study note per lesson for everyone. Unlimited generation for Gold "
+"members."
+msgstr "どなたでも1レッスンにつき1回、AI復習ノートを作成できます。Gold会員は回数無制限です。"
+
+msgid ""
+"Choose a lesson. Its language will be used automatically. Gold members may "
+"leave it blank to review their latest five lessons."
+msgstr "レッスンを選ぶと学習言語が自動で設定されます。Gold会員は未選択で直近5回分を復習できます。"
+
+msgid ""
+"We send notes from your selected lesson to OpenAI. If Gold members select no"
+" lesson, we use their latest five lessons in the selected language. Private "
+"notes are included only with your permission. We do not record or monitor "
+"conversations."
+msgstr ""
+"選択したレッスンのノートをOpenAIに送信します。Gold会員がレッスンを選ばない場合は、選択言語の直近5回分を使用します。プライベートメモは許可した場合のみ含めます。会話の録音・監視は行いません。"

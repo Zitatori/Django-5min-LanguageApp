@@ -137,15 +137,18 @@ def redact(text, identifiers):
     return text
 
 
-def collect_history(user, language, include_private):
-    matches = list(QuickLessonMatch.objects.filter(
+def collect_history(user, language, include_private, lesson_id=None):
+    matches_query = QuickLessonMatch.objects.filter(
         request__student__user=user, request__language__code=language,
         request__purpose='lesson', student_joined_at__isnull=False,
         tutor_joined_at__isnull=False, end_at__lte=timezone.now(),
     ).select_related('tutor__user').prefetch_related(Prefetch(
         'conversationnote_set', queryset=ConversationNote.objects.filter(student__user=user).order_by('-created_at', '-pk'),
         to_attr='study_tutor_notes',
-    )).order_by('-started_at', '-pk')[:5])
+    )).order_by('-started_at', '-pk')
+    if lesson_id is not None:
+        matches_query = matches_query.filter(pk=lesson_id)
+    matches = list(matches_query[:5])
     identifiers = [user.username, user.first_name, user.last_name, user.email]
     for match in matches:
         tutor = match.tutor.user
