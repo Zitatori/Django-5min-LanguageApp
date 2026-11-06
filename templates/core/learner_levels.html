@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block content %}<section class="card" style="max-width:700px;margin:24px auto;">
+<h1>{% trans 'My learning level' %}</h1>
+<p>{% trans 'Choose your level for each language. It is saved for future lessons and AI materials. You can change it anytime.' %}</p>
+<form method="post" action="{% url 'learner_levels' %}">{% if return_to_lessons %}<input type="hidden" name="return_to_lessons" value="1">{% endif %}{% csrf_token %}{{ form.as_p }}<button type="submit" class="btn">{% trans 'Save' %}</button></form>
+<a href="{% url 'create_request' %}">{% trans 'Start a 5-Minute Lesson Now' %}</a>
+</section>{% endblock %}
