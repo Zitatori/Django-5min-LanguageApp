@@ -1268,3 +1268,17 @@ msgid ""
 "conversations."
 msgstr ""
 "選択したレッスンのノートをOpenAIに送信します。Gold会員がレッスンを選ばない場合は、選択言語の直近5回分を使用します。プライベートメモは許可した場合のみ含めます。会話の録音・監視は行いません。"
+
+msgid "My learning level"
+msgstr "自分の学習レベル"
+
+msgid "Set my learning level"
+msgstr "学習レベルを設定する"
+
+msgid "Learner-selected level"
+msgstr "本人が選択したレベル"
+
+msgid ""
+"Choose your level for each language. It is saved for future lessons and AI "
+"materials. You can change it anytime."
+msgstr "言語ごとに自分のレベルを選んでください。次回以降のレッスンやAI教材に使用します。いつでも変更できます。"

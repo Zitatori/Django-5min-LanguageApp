@@ -1311,3 +1311,19 @@ msgstr ""
 "sélectionnée, les membres Gold utilisent leurs cinq dernières leçons dans la"
 " langue choisie. Les notes privées sont incluses uniquement avec votre "
 "accord. Les conversations ne sont ni enregistrées ni surveillées."
+
+msgid "My learning level"
+msgstr "Mon niveau"
+
+msgid "Set my learning level"
+msgstr "Définir mon niveau"
+
+msgid "Learner-selected level"
+msgstr "Niveau choisi par l’élève"
+
+msgid ""
+"Choose your level for each language. It is saved for future lessons and AI "
+"materials. You can change it anytime."
+msgstr ""
+"Choisissez votre niveau pour chaque langue. Il sera utilisé pour les "
+"prochaines leçons et les supports IA. Vous pouvez le modifier à tout moment."

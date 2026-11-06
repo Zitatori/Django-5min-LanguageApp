@@ -6,6 +6,7 @@
 <div class="lr-room" id="lr-room">
 
   {# ── パートナー映像（背景全面） ── #}
+  {% if not is_student and self_selected_level %}<div style="position:absolute;top:12px;left:16px;z-index:12;background:#111827;color:white;padding:8px;border-radius:8px;">{% trans "Learner-selected level" %}: {{ self_selected_level|level_label }}</div>{% endif %}
   <video id="remoteVideo" class="lr-remote" autoplay playsinline></video>
 
   {# リモート映像が来るまでのアバタープレースホルダー #}

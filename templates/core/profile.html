@@ -2,6 +2,12 @@
 {% load display_names i18n %}
 
 {% block content %}
+<section class="card">
+<h3>{% trans "My learning level" %}</h3>
+<p>{% trans "Choose your level for each language. It is saved for future lessons and AI materials. You can change it anytime." %}</p>
+{% for item in learning_levels %}<p>{% trans item.language.name %}: {{ item.level|level_label }} <a href="{% url 'learner_levels' %}?language={{ item.language_id }}">{% trans 'Edit' %}</a></p>{% endfor %}
+<a class="btn" href="{% url 'learner_levels' %}">{% trans "Set my learning level" %}</a>
+</section>
 <style>
   .withdraw-card { margin-top: 1.2rem; }
   .withdraw-label { font-size:13px; font-weight:500; color:#374151; display:block; margin-bottom:5px; }

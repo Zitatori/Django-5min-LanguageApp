@@ -1301,3 +1301,19 @@ msgstr ""
 "no selecciona una lección, usamos sus últimas cinco lecciones del idioma "
 "elegido. Las notas privadas solo se incluyen con tu permiso. No grabamos ni "
 "supervisamos conversaciones."
+
+msgid "My learning level"
+msgstr "Mi nivel"
+
+msgid "Set my learning level"
+msgstr "Configurar mi nivel"
+
+msgid "Learner-selected level"
+msgstr "Nivel elegido por el estudiante"
+
+msgid ""
+"Choose your level for each language. It is saved for future lessons and AI "
+"materials. You can change it anytime."
+msgstr ""
+"Elige tu nivel para cada idioma. Se guardará para las próximas lecciones y "
+"materiales de IA. Puedes cambiarlo cuando quieras."

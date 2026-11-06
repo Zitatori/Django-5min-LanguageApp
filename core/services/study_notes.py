@@ -1,3 +1,4 @@
+from core.services.learner_levels import self_level
 """Bounded OpenAI requests. Never log prompts, completions, or credentials."""
 import copy
 import json
@@ -153,7 +154,7 @@ def collect_history(user, language, include_private, lesson_id=None):
     for match in matches:
         tutor = match.tutor.user
         identifiers.extend([tutor.username, tutor.first_name, tutor.last_name, tutor.email])
-    history, level = [], ''
+    history, level = [], self_level(user, language)
     for match in matches:
         note = next((n for n in match.study_tutor_notes if n.tutor_id == match.tutor_id), None)
         if note and not level and note.learner_level in dict(ConversationNote.LEVEL_CHOICES):

@@ -1,3 +1,4 @@
+from core.services.learner_levels import self_level
 from django.contrib import messages
 from django.db import transaction
 from django.utils.translation import gettext as _
@@ -99,6 +100,7 @@ def lesson_room(request, match_id: int):
 
     context = {
         "match": match,
+        "self_selected_level": self_level(match.request.student.user, match.request.language.code),
         "remaining_seconds": remaining_seconds,
         "timer_end_at": match.end_at,
         "after_lesson_url": after_lesson_url,

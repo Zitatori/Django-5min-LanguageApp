@@ -1,3 +1,5 @@
+from core.services.learner_levels import self_level
+from core.views.learner_levels import LearnerLevelForm
 import json
 import math
 import random
@@ -194,6 +196,8 @@ def create_request(request):
     if request.method == "POST":
         lang_id = request.POST.get("language_id")
         language = get_object_or_404(LessonLanguage, id=lang_id)
+        if not self_level(request.user, language.code):
+            return render(request, 'core/learner_levels.html', {'form': LearnerLevelForm(initial={'language': language.pk}), 'return_to_lessons': True})
         preferred_tutor_id = request.POST.get("preferred_tutor_id", "").strip()
 
         qlr = QuickLessonRequest.objects.create(

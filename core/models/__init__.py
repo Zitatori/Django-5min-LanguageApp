@@ -1,5 +1,5 @@
 from .languages import LessonLanguage
-from .users import UserRole, UserProfile, TutorProfile, StudentProfile
+from .users import UserRole, UserProfile, TutorProfile, StudentProfile, LearnerLanguageLevel
 from .lessons import QuickLessonRequest, QuickLessonMatch
 from .points import PointBalance, PointTransaction, WithdrawalRequest
 from .gold import GoldMembership, GoldSubscriptionRequest

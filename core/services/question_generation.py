@@ -1,3 +1,4 @@
+from core.services.learner_levels import self_level
 """Generate and persist next-session questions without affecting saved notes."""
 import json
 import logging
@@ -96,7 +97,7 @@ def generate_for_note(note):
         student=note.student, match__request__language_id=note.match.request.language_id,
         created_at__lte=note.created_at, conversation_not_held=False,
     ).order_by('-created_at', '-pk')[:5])
-    level = next((n.learner_level for n in history_notes if n.learner_level), '')
+    level = self_level(note.student.user, note.match.request.language.code) or next((n.learner_level for n in history_notes if n.learner_level), '')
     if not settings.OPENAI_API_KEY or not level:
         ConversationNote.objects.filter(pk=note.pk).update(questions_status='unavailable')
         return

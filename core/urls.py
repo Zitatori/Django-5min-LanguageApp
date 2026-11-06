@@ -1,3 +1,4 @@
+from core.views.learner_levels import learner_levels
 from core.views.admin import admin_lesson_records
 from django.urls import path
 from core.views.study_notes import study_notes, study_note_detail
@@ -50,6 +51,7 @@ urlpatterns = [
 
     # プロフィール・ポイント
     path('profile/', profile, name='profile'),
+    path('profile/levels/', learner_levels, name='learner_levels'),
     path('points/purchase/', purchase_points, name='purchase_points'),
     path('points/withdraw/', request_withdrawal, name='request_withdrawal'),
     path('points/transfer/', transfer_points, name='transfer_points'),

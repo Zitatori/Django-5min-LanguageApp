@@ -1,3 +1,4 @@
+from core.services.learner_levels import self_level
 """Lesson-scoped Japanese review. Raw tutor notes never enter saved content."""
 import copy
 import json
@@ -70,7 +71,8 @@ def collect_context(user, lesson):
     notes = ConversationNote.objects.filter(student__user=user, tutor_id=lesson.tutor_id,
         match=lesson).order_by('-created_at', '-pk')
     note = notes.first()
-    if not note or note.learner_level not in LEVELS or not note.conversation_content.strip():
+    level = self_level(user, lesson.request.language.code) or (note.learner_level if note else '')
+    if not note or level not in LEVELS or not note.conversation_content.strip():
         return None
     prior = list(ConversationNote.objects.filter(student__user=user,
         match__request__language__code='ja', match__request__purpose='lesson',
@@ -98,7 +100,7 @@ def collect_context(user, lesson):
     previous_coverage = [{'vocabulary': [v['term']['text'] for v in sheet.content.get('vocabulary', [])],
                          'grammar': [g['topic_id'] for g in sheet.content.get('grammar', [])]}
                         for sheet in previous]
-    return {'current': clean(note), 'history': history, 'level': note.learner_level,
+    return {'current': clean(note), 'history': history, 'level': level,
             'previously_recommended': previous_topics, 'previous_coverage': previous_coverage}
 
 

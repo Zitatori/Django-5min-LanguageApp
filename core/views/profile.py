@@ -46,6 +46,7 @@ def profile(request):
     return render(request, 'core/profile.html', {
         'balance':            balance,
         'transactions':       transactions,
+        'learning_levels': request.user.studentprofile.language_levels.select_related('language').all() if hasattr(request.user, 'studentprofile') else [],
         'pending_withdrawal': pending_withdrawal,
         'min_withdrawal':     MIN_WITHDRAWAL_PTS,
         'fee_threshold':      FEE_THRESHOLD,

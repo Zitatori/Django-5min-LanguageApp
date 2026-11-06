@@ -2000,3 +2000,19 @@ msgstr ""
 " lesson, we use their latest five lessons in the selected language. Private "
 "notes are included only with your permission. We do not record or monitor "
 "conversations."
+
+msgid "My learning level"
+msgstr "My learning level"
+
+msgid "Set my learning level"
+msgstr "Set my learning level"
+
+msgid "Learner-selected level"
+msgstr "Learner-selected level"
+
+msgid ""
+"Choose your level for each language. It is saved for future lessons and AI "
+"materials. You can change it anytime."
+msgstr ""
+"Choose your level for each language. It is saved for future lessons and AI "
+"materials. You can change it anytime."
