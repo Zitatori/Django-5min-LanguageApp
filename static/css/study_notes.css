@@ -38,3 +38,7 @@
 .cheat-sections details { padding:12px 0; border-bottom:1px solid #e4e7ec; }
 .study-hero .study-reading, .study-hero .study-romaji { color:#dbeafe; }
 [id^="lesson-"] { scroll-margin-top:90px; }
+
+.study-tag {white-space:normal;overflow-wrap:anywhere;max-width:100%;box-sizing:border-box;}
+.study-translation {display:block;margin-top:6px;color:#475569;font-size:0.95em;}
+.study-quiz {min-width:0;}

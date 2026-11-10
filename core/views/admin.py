@@ -1,3 +1,4 @@
+from core.services.lesson_lifecycle import completed_lessons
 from core.templatetags.display_names import level_label
 from django.views.decorators.cache import never_cache
 from django.views.decorators.http import require_GET
@@ -46,7 +47,7 @@ def admin_dashboard(request):
                 default=Value(0),
                 output_field=IntegerField(),
             ),
-            lesson_count=Count('tutorprofile__quicklessonmatch', distinct=True),
+            lesson_count=Count('tutorprofile__quicklessonmatch', filter=Q(tutorprofile__quicklessonmatch__in=completed_lessons()), distinct=True),
         )
         .order_by('-date_joined')
     )

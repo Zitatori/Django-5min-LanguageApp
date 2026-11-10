@@ -9,6 +9,9 @@
 <a class="btn" href="{% url 'learner_levels' %}">{% trans "Set my learning level" %}</a>
 </section>
 <style>
+  .gold-banner,.gold-banner .gold-left {flex-wrap:wrap;}
+  .card {min-width:0;overflow-wrap:anywhere;}
+  input {min-width:0;}
   .withdraw-card { margin-top: 1.2rem; }
   .withdraw-label { font-size:13px; font-weight:500; color:#374151; display:block; margin-bottom:5px; }
   .withdraw-input, .withdraw-select, .withdraw-textarea {
@@ -211,8 +214,8 @@
 {% if is_gold %}
 <div class="gold-banner gold-active">
   <div class="gold-left">
-    &#x1F451; <span>Gold {% trans "Member" %}</span>
-    <span class="gold-expiry-text">— {% trans "Active until" %} {{ gold_expires_at|date:"Y/m/d" }}</span>
+    &#x1F451; <span>{% trans "Gold member" %}</span>
+    <span class="gold-expiry-text">— {% trans "Active until" %} {{ gold_expires_at|date:"DATE_FORMAT" }}</span>
   </div>
 </div>
 {% endif %}
@@ -242,7 +245,11 @@
 
 <div class="referral-bonus-note">
   🎁 <strong>{% trans "Referral bonus" %}</strong><br>
-  {% blocktrans with username=request.user.username %}Invite a friend and tell them your username ({{ username }}). When that person has at least one 5-minute conversation, you will receive 5 student points.{% endblocktrans %}
+  <p>{% trans 'Share this invitation link with a friend. Your referral is filled in automatically at signup.' %}</p>
+  <input id="referral-link" value="{{ referral_link }}" readonly aria-label="{% trans 'Invitation link' %}" style="width:100%;box-sizing:border-box;">
+  <button type="button" class="btn" id="copy-referral">{% trans 'Copy link' %}</button><span id="referral-copy-status" role="status"></span>
+  <p>{% trans 'When your friend completes a five-minute conversation, contact us to request the existing 5-point referral bonus.' %}</p>
+  <script>document.getElementById('copy-referral').onclick=async()=>{const input=document.getElementById('referral-link');try{await navigator.clipboard.writeText(input.value);document.getElementById('referral-copy-status').textContent="{% trans 'Copied' as js_label_1 %}{{ js_label_1|escapejs }}";}catch(e){input.focus();input.select();}};</script>
 </div>
 
 {% if request.user.tutorprofile and not is_hourly_paid_tutor %}
@@ -355,10 +362,10 @@
         netEl.textContent = (pts - fee) + 'pt';
         if (fee === 0) {
           noticeEl.style.background = '#f0fdf4'; noticeEl.style.color = '#15803d'; noticeEl.style.borderColor = '#bbf7d0';
-          noticeEl.textContent = '{% trans "You can withdraw. Withdrawals of 50 pt or more have no fee." %}';
+          noticeEl.textContent = '{% trans "You can withdraw. Withdrawals of 50 pt or more have no fee." as js_label_2 %}{{ js_label_2|escapejs }}';
         } else {
           noticeEl.style.background = '#fffbeb'; noticeEl.style.color = '#92400e'; noticeEl.style.borderColor = '#fde68a';
-          noticeEl.textContent = '{% trans "You can withdraw. Withdrawals under 50 pt have a 5 pt fee." %}';
+          noticeEl.textContent = '{% trans "You can withdraw. Withdrawals under 50 pt have a 5 pt fee." as js_label_3 %}{{ js_label_3|escapejs }}';
         }
       }
       input.addEventListener('input', update);
@@ -381,6 +388,8 @@
 <div class="card gold-sub-card">
   <p class="gold-sub-title">&#x1F451; {% trans "Gold membership" %}</p>
   <p class="gold-sub-desc">{% trans "CHF 100 per month" %}</p>
+  <p>{% trans 'Join published sessions while tutors are available. To arrange your two weekly 30-minute sessions, email us your preferred times. We confirm availability by email.' %}</p>
+  <p>{% trans 'To activate Gold: email us, receive payment instructions, then wait for our activation confirmation after payment is checked.' %}</p>
   <ul class="gold-sub-benefits">
     <li>{% trans "Unlimited participation in existing sessions" %}</li>
     <li>{% trans "Choose your preferred times for two 30-minute sessions per week" %}</li>
@@ -392,7 +401,7 @@
     <p class="gold-mail-note">
       {% trans "To avoid missed requests, please email" %}
       <a href="mailto:zitatori@gmail.com?subject=QuickLesson%20Gold%20membership">zitatori@gmail.com</a>
-      {% blocktrans trimmed with username=request.user.username %}
+      {% blocktrans trimmed with username=request.user.first_name|default:request.user.username %}
         with your username ({{ username }}) for Gold.
       {% endblocktrans %}
     </p>
@@ -400,7 +409,7 @@
     <a class="btn-gold-full" href="mailto:zitatori@gmail.com?subject=QuickLesson%20Gold%20membership">&#x1F451; {% trans "Email us about Gold" %}</a>
     <p class="gold-mail-note">
       {% trans "Bank transfer and PayPal are available. Payment details are sent by email." %}<br>
-      {% blocktrans trimmed with username=request.user.username %}
+      {% blocktrans trimmed with username=request.user.first_name|default:request.user.username %}
         Please include your username ({{ username }}) when you contact us.
       {% endblocktrans %}
     </p>

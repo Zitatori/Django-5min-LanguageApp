@@ -47,6 +47,11 @@ class QuickLessonMatch(models.Model):
     student_joined_at = models.DateTimeField(null=True, blank=True)
     tutor_joined_at = models.DateTimeField(null=True, blank=True)
 
+    # Media confirmations are written only by authenticated room participants.
+    student_media_at = models.DateTimeField(null=True, blank=True)
+    tutor_media_at = models.DateTimeField(null=True, blank=True)
+    points_settled_at = models.DateTimeField(null=True, blank=True)
+
     started_at = models.DateTimeField(null=True, blank=True)
     end_at = models.DateTimeField(null=True, blank=True)
     student_rating = models.PositiveSmallIntegerField(null=True, blank=True)
@@ -69,7 +74,8 @@ class QuickLessonMatch(models.Model):
 
     @property
     def previous_conversation_count(self) -> int:
-        return QuickLessonMatch.objects.filter(
+        from core.services.lesson_lifecycle import completed_lessons
+        return completed_lessons().filter(
             request__student=self.request.student,
             tutor=self.tutor,
             student_joined_at__isnull=False,

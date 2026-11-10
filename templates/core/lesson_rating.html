@@ -3,6 +3,8 @@
 
 {% block content %}
 <div class="card rating-card">
+<p role="status">{% trans match.request.language.name as study_language %}{% if full_lesson %}{% blocktrans %}Congratulations! You spoke {{ study_language }} for five minutes!{% endblocktrans %}{% else %}{% trans 'Well done for practising today!' %}{% endif %}</p>
+<p><a href="{% url 'study_notes' %}?lesson={{ match.pk }}">{% trans 'AI Study Notes' %}</a></p>
   <h2 class="card-title rating-title">{% trans "Rate this lesson" %}</h2>
   <p class="card-subtitle rating-subtitle">
     {{ match.tutor.user|display_name }} · {% trans match.request.language.name %}

@@ -7,8 +7,13 @@ from core.models import LearnerLanguageLevel, LessonLanguage, StudentProfile
 from core.templatetags.display_names import level_label
 
 
+class LanguageChoice(forms.ModelChoiceField):
+    def label_from_instance(self, obj):
+        return _(obj.name)
+
+
 class LearnerLevelForm(forms.Form):
-    language = forms.ModelChoiceField(queryset=LessonLanguage.objects.all(), label=_('Study language'))
+    language = LanguageChoice(queryset=LessonLanguage.objects.all(), label=_('Study language'))
     level = forms.ChoiceField(label=_('My learning level'))
 
     def __init__(self, *args, **kwargs):

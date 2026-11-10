@@ -13,6 +13,8 @@ class LearnerLevelTests(TestCase):
         self.student = StudentProfile.objects.create(user=self.user)
         self.ja = LessonLanguage.objects.create(code='ja', name='Japanese')
         self.fr = LessonLanguage.objects.create(code='fr', name='French')
+        from core.models import PointBalance
+        PointBalance.objects.create(user=self.user, student_balance=2)
         self.client.force_login(self.user)
 
     def test_save_change_and_separate_languages(self):

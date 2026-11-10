@@ -1,3 +1,4 @@
+from core.services.lesson_lifecycle import completed_lessons
 from core.services.learner_levels import self_level
 """Lesson-scoped Japanese review. Raw tutor notes never enter saved content."""
 import copy
@@ -77,7 +78,7 @@ def collect_context(user, lesson):
     prior = list(ConversationNote.objects.filter(student__user=user,
         match__request__language__code='ja', match__request__purpose='lesson',
         match__student_joined_at__isnull=False, match__tutor_joined_at__isnull=False,
-        match__end_at__lte=lesson.end_at).exclude(match=lesson)
+        match__end_at__lte=lesson.end_at, match__in=completed_lessons()).exclude(match=lesson)
         .select_related('tutor__user', 'match').order_by('-match__end_at', '-created_at')[:20])
     identifiers = [user.username, user.email, user.first_name, user.last_name]
     teachers = [lesson.tutor.user] + [n.tutor.user for n in prior]

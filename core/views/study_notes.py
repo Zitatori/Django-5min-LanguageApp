@@ -1,3 +1,4 @@
+from core.services.lesson_lifecycle import completed_lessons
 import uuid
 from datetime import timedelta
 from django import forms
@@ -17,7 +18,7 @@ from core.services.study_notes import LANGUAGES, StudyGenerationError, collect_h
 
 class StudyLessonChoice(forms.ModelChoiceField):
     def label_from_instance(self, lesson):
-        return '{} · {} · #{}'.format(timezone.localtime(lesson.end_at).strftime('%Y-%m-%d %H:%M'), lesson.request.language.name, lesson.pk)
+        return '{} · {} · #{}'.format(timezone.localtime(lesson.end_at).strftime('%Y-%m-%d %H:%M'), _(lesson.request.language.name), lesson.pk)
 
 
 class StudyNoteForm(forms.Form):
@@ -26,7 +27,7 @@ class StudyNoteForm(forms.Form):
     def __init__(self, *args, user, gold=False, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['lesson'].required = not gold
-        self.fields['lesson'].queryset = QuickLessonMatch.objects.filter(
+        self.fields['lesson'].queryset = completed_lessons().filter(
             request__student__user=user, request__purpose='lesson',
             student_joined_at__isnull=False, tutor_joined_at__isnull=False,
             end_at__lte=timezone.now(), request__language__code__in=LANGUAGES,
@@ -58,6 +59,7 @@ def study_notes(request):
     gold = GoldMembership.objects.filter(user=request.user, expires_at__gt=timezone.now()).exists()
     form = StudyNoteForm(request.POST if request.method == 'POST' else None, user=request.user, gold=gold, initial={
         'request_token': new_token(request.user),
+        'lesson': request.GET.get('lesson') if request.GET.get('lesson', '').isdigit() else None,
         'explanation_language': getattr(request, 'LANGUAGE_CODE', 'en').split('-')[0],
         'target_language': 'ja',
     })

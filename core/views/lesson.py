@@ -1,4 +1,7 @@
+from core.services.phrases import conversation_phrases
 from core.services.learner_levels import self_level
+from core.services.lesson_lifecycle import active_calls, completed_lessons, settle_points
+from django.http import HttpResponseForbidden
 from django.contrib import messages
 from django.db import transaction
 from django.utils.translation import gettext as _
@@ -29,6 +32,11 @@ def video_room(request):
 def lesson_room(request, match_id: int):
     match = get_object_or_404(QuickLessonMatch, id=match_id)
 
+    if request.user.pk not in (match.request.student.user_id, match.tutor.user_id):
+        return HttpResponseForbidden()
+    if not QuickLessonMatch.objects.filter(pk=match.pk).filter(active_calls()).exists():
+        return redirect('create_request' if request.user == match.request.student.user else 'tutor_dashboard')
+
     # 生徒は残高1pt以上ないと入室不可（Gold会員は免除）
     is_student = (request.user == match.request.student.user)
     if is_student:
@@ -39,7 +47,7 @@ def lesson_room(request, match_id: int):
         except Exception:
             pass
 
-        if not is_gold:
+        if not is_gold and not match.started_at:
             balance = PointBalance.objects.filter(user=request.user).first()
             if not balance or balance.student_balance < 1:
                 return redirect('purchase_points')
@@ -99,6 +107,7 @@ def lesson_room(request, match_id: int):
         is_first_session = len(previous_notes) == 0
 
     context = {
+        "conversation_phrases": conversation_phrases(match.request.language.code, self_level(match.request.student.user, match.request.language.code)),
         "match": match,
         "self_selected_level": self_level(match.request.student.user, match.request.language.code),
         "remaining_seconds": remaining_seconds,
@@ -122,21 +131,20 @@ def lesson_end(request, match_id: int):
     """レッスン途中退出・タイムアップ時に end_at を今に縮める。
     チューターもオフライン化する（次のポーリングで自動復帰するが意図的退出扱い）。
     """
-    match = get_object_or_404(QuickLessonMatch, id=match_id)
-    now = timezone.now()
-
-    # started_at が未設定なら今に設定（WSが繋がらなかった場合の保険）
-    if not match.started_at:
-        QuickLessonMatch.objects.filter(pk=match.pk, started_at__isnull=True).update(started_at=now)
-
-    # end_at をまだ迎えていない場合のみ今に更新（延長はしない）
-    if match.end_at is None or match.end_at > now:
-        QuickLessonMatch.objects.filter(pk=match.pk).update(end_at=now)
-
-    # チューターをオフライン化
+    with transaction.atomic():
+        match = get_object_or_404(QuickLessonMatch.objects.select_for_update(), id=match_id)
+        if request.user.pk not in (match.request.student.user_id, match.tutor.user_id):
+            return HttpResponseForbidden()
+        now = timezone.now()
+        if match.end_at is None or match.end_at > now:
+            match.end_at = now
+            match.save(update_fields=['end_at'])
+        if not match.started_at:
+            match.request.status = 'cancelled'
+            match.request.save(update_fields=['status'])
+    settle_points(match.pk)
     TutorProfile.objects.filter(pk=match.tutor.pk).update(is_online=False)
-
-    return JsonResponse({"ok": True})
+    return JsonResponse({'ok': True, 'connected': bool(match.started_at)})
 
 
 @login_required
@@ -151,6 +159,8 @@ def lesson_rating(request, match_id: int):
         request__student__user=request.user,
     )
 
+    if not completed_lessons().filter(pk=match.pk).exists():
+        return redirect('create_request')
     if request.method == "POST":
         try:
             rating = int(request.POST.get("rating", 0))
@@ -171,7 +181,7 @@ def lesson_rating(request, match_id: int):
             QuickLessonMatch.objects.filter(pk=match.pk).update(**updates)
         return redirect("create_request")
 
-    return render(request, "core/lesson_rating.html", {"match": match})
+    return render(request, "core/lesson_rating.html", {"match": match, "full_lesson": (match.end_at-match.started_at).total_seconds() >= 295})
 
 
 @login_required

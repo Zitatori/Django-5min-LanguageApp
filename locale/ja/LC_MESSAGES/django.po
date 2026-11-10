@@ -78,10 +78,9 @@ msgstr ""
 "マッチングされます。"
 
 #: templates/core/create_request.html:224
-#, fuzzy
 #| msgid "End lesson"
 msgid "Total lessons"
-msgstr "レッスン終了"
+msgstr "合計レッスン数"
 
 #: templates/core/create_request.html:253
 #: templates/core/create_request.html:278
@@ -1282,3 +1281,162 @@ msgid ""
 "Choose your level for each language. It is saved for future lessons and AI "
 "materials. You can change it anytime."
 msgstr "言語ごとに自分のレベルを選んでください。次回以降のレッスンやAI教材に使用します。いつでも変更できます。"
+
+msgid "Review quiz"
+msgstr "復習クイズ"
+
+msgid "Correct!"
+msgstr "正解！"
+
+msgid "Not quite. Review the answer below."
+msgstr "惜しい！下の正解と解説を確認しましょう。"
+
+msgid "Correct answer"
+msgstr "正解"
+
+msgid "There is not enough recorded lesson content for a review quiz."
+msgstr "レッスンの記録が不足しているため、復習クイズは作成されませんでした。"
+
+
+msgid "Retry"
+msgstr "再試行"
+
+
+msgid "Try another tutor"
+msgstr "別の講師を試す"
+
+
+msgid "Back to dashboard"
+msgstr "ダッシュボードに戻る"
+
+
+msgid "Waiting…"
+msgstr "接続を待っています…"
+
+
+msgid ""
+"Connection could not be established. Check your connection and camera "
+"permissions, then retry or choose another tutor."
+msgstr "接続できませんでした。通信状態とカメラの許可を確認して再試行するか、別の講師を選んでください。"
+
+
+msgid ""
+"The call server could not be reached. Please check your connection and "
+"retry."
+msgstr "通話サーバーに接続できません。通信状態を確認して再試行してください。"
+
+
+msgid "30 seconds left — time to say goodbye and thank your partner."
+msgstr "残り30秒です。お互いにお礼と最後の挨拶をしましょう。"
+
+
+msgid "Helpful phrases"
+msgstr "会話に役立つフレーズ"
+
+
+msgid "Please say that again."
+msgstr "もう一度お願いします。"
+
+
+msgid "Please speak slowly."
+msgstr "ゆっくり話してください。"
+
+
+msgid "I don’t understand."
+msgstr "分かりません。"
+
+
+msgid "How about you?"
+msgstr "あなたはどうですか？"
+
+
+msgid "Congratulations! You spoke %(study_language)s for five minutes!"
+msgstr "おめでとうございます！%(study_language)sで5分間話しました！"
+
+
+msgid "Well done for practising today!"
+msgstr "今日も会話練習、お疲れさまでした！"
+
+
+msgid "Next session (your local time)"
+msgstr "次回セッション（現在地の時間）"
+
+
+msgid "A tutor is now available. Choose a tutor to start."
+msgstr "講師が空きました。講師を選んで始めましょう。"
+
+
+msgid "Choose a tutor"
+msgstr "講師を選ぶ"
+
+
+msgid "online"
+msgstr "オンライン"
+
+
+msgid "Select the language and tutor you want to practice with."
+msgstr "練習したい言語と講師を選んでください。"
+
+
+msgid "No tutors online for this language."
+msgstr "現在、この言語の講師はオンラインではありません。"
+
+
+msgid "Gold member"
+msgstr "Gold会員"
+
+
+msgid "Can express subtle nuances precisely and naturally"
+msgstr "細かいニュアンスまで正確かつ自然に表現できる"
+
+
+msgid ""
+"Share this invitation link with a friend. Your referral is filled in "
+"automatically at signup."
+msgstr "この紹介リンクを友達に送ってください。登録時に紹介者が自動で記録されます。"
+
+
+msgid "Invitation link"
+msgstr "紹介リンク"
+
+
+msgid "Copy link"
+msgstr "リンクをコピー"
+
+
+msgid "Copied"
+msgstr "コピーしました"
+
+
+msgid ""
+"When your friend completes a five-minute conversation, contact us to request"
+" the existing 5-point referral bonus."
+msgstr "友達が5分間の会話を終えたら、紹介特典の5ポイントについて運営にご連絡ください。"
+
+
+msgid ""
+"Join published sessions while tutors are available. To arrange your two "
+"weekly 30-minute sessions, email us your preferred times. We confirm "
+"availability by email."
+msgstr ""
+"公開中のセッションに、講師が対応できる時間に参加できます。週2回・各30分の希望枠はメールでご相談ください。対応可能な時間をメールで確認します。"
+
+
+msgid ""
+"To activate Gold: email us, receive payment instructions, then wait for our "
+"activation confirmation after payment is checked."
+msgstr "Goldの有効化：メールで申し込み → 支払い案内を受け取る → 入金確認後、有効化の連絡を受け取る。"
+
+
+msgid "%(n)s lesson"
+msgid_plural "%(n)s lessons"
+msgstr[0] "%(n)sレッスン"
+
+
+msgid "Welcome bonus: %(n)s point"
+msgid_plural "Welcome bonus: %(n)s points"
+msgstr[0] "登録特典：%(n)sポイント"
+
+
+msgid "Lesson #%(number)s"
+msgstr "レッスン #%(number)s"

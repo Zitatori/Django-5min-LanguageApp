@@ -12,9 +12,9 @@ from core.models import ConversationNote, GoldMembership, LessonLanguage, QuickL
 from core.services.study_notes import collect_history, request_study_note, StudyGenerationError, study_schema, validate, validate_readings
 from core.views.study_notes import new_token
 
-SHEET = {'title': 'Weather review', 'priorities': ['Weather', 'Seasons', 'Likes'],
-         'vocabulary': [{'term': '天気', 'reading': 'てんき', 'pronunciation': 'tenki', 'meaning': 'météo', 'example': 'いい天気です。'}],
-         'grammar': [], 'corrections': [], 'conversation': [{'question': '冬が好きですか？', 'answer': 'はい、好きです。'}],
+SHEET = {'quiz': [], 'title': 'Weather review', 'priorities': ['Weather', 'Seasons', 'Likes'],
+         'vocabulary': [{'term': '天気', 'reading': 'てんき', 'pronunciation': 'tenki', 'meaning': 'météo', 'example': 'いい天気です。', 'example_translation': 'Il fait beau.'}],
+         'grammar': [], 'corrections': [], 'conversation': [{'question': '冬が好きですか？', 'answer': 'はい、好きです。', 'question_translation': 'Aimez-vous l’hiver ?', 'answer_translation': 'Oui, j’aime cela.'}],
          'plan': [{'minutes': 5, 'activity': 'Read'}, {'minutes': 5, 'activity': 'Practice'}], 'next_topics': ['Seasons']}
 USAGE = {'input_tokens': 300, 'output_tokens': 500}
 
@@ -298,3 +298,45 @@ class BeginnerReadingTests(TestCase):
         context['sheet'] = sheet
         html = render_to_string('core/study_note_detail.html',context)
         self.assertNotIn('<script>alert(1)</script>', html)
+
+
+class ReviewQuizTests(TestCase):
+    def quiz(self):
+        return {'question': 'Choose the word for rain.', 'options': [
+            {'text': t, 'reading': '', 'romaji': ''} for t in ['rain', 'sun', 'snow']],
+            'correct_index': 0, 'explanation': 'Rain is falling water.', 'evidence': 'Practiced rain.'}
+
+    @patch('core.services.study_notes.request_structured')
+    @override_settings(OPENAI_API_KEY='test')
+    def test_grounded_quiz_and_unrecorded_evidence(self, api):
+        sheet = copy.deepcopy(SHEET)
+        sheet['quiz'] = [self.quiz()]
+        api.return_value = (sheet, USAGE)
+        history = [{'tutor_notes': {'what_we_talked_about': 'Practiced rain.', 'level': 'A1', 'for_next_conversation': ''}}]
+        content, _ = request_study_note('en', 'fr', 'A1', history)
+        self.assertEqual(len(content['quiz']), 1)
+        sheet['quiz'][0]['evidence'] = 'Invented lesson'
+        content, _ = request_study_note('en', 'fr', 'A1', history)
+        self.assertEqual(content['quiz'], [])
+
+    def test_quiz_schema_rejects_invalid_answer_and_option_count(self):
+        sheet = copy.deepcopy(SHEET)
+        sheet['quiz'] = [self.quiz()]
+        validate(sheet, study_schema('en', 'A1'))
+        sheet['quiz'][0]['correct_index'] = 3
+        with self.assertRaises(ValueError): validate(sheet, study_schema('en', 'A1'))
+        sheet['quiz'][0]['correct_index'] = 0
+        sheet['quiz'][0]['options'].pop()
+        with self.assertRaises(ValueError): validate(sheet, study_schema('en', 'A1'))
+
+    def test_render_answers_hidden_and_old_note_supported(self):
+        from django.template.loader import render_to_string
+        note = {'target_language': 'en', 'explanation_language': 'en'}
+        sheet = copy.deepcopy(SHEET)
+        sheet['quiz'] = [self.quiz()]
+        html = render_to_string('core/study_note_detail.html', {'note': note, 'sheet': sheet})
+        self.assertIn('quiz-feedback" hidden', html)
+        self.assertIn('data-correct="0"', html)
+        del sheet['quiz']
+        html = render_to_string('core/study_note_detail.html', {'note': note, 'sheet': sheet})
+        self.assertNotIn('id="quiz"', html)

@@ -1,3 +1,4 @@
+from core.services.lesson_lifecycle import active_calls, completed_lessons
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Q
 from django.shortcuts import render
@@ -18,17 +19,11 @@ def tutor_dashboard(request):
         action = request.POST.get("action")
 
         if action == "go_online":
-            # 講師が自分でオンラインを押した = レッスンは終了済みと判断し、
-            # stuck なアクティブマッチを強制終了してからオンラインにする。
             now_go = timezone.now()
-            _active_match_for_tutor(tutor_profile, now=now_go) and                 QuickLessonMatch.objects.filter(
-                    tutor=tutor_profile,
-                ).filter(
-                    Q(end_at__gt=now_go) | Q(started_at__isnull=True)
-                ).update(
-                    started_at=now_go,
-                    end_at=now_go,
-                )
+            # Going online never fabricates lesson starts or ends an ongoing call.
+            if _active_match_for_tutor(tutor_profile, now_go):
+                from django.shortcuts import redirect
+                return redirect('tutor_dashboard')
             tutor_profile.is_online = True
             tutor_profile.last_ping_at = now_go
             tutor_profile.online_since = now_go
@@ -38,7 +33,11 @@ def tutor_dashboard(request):
 
         tutor_profile.save()
 
-    matches = QuickLessonMatch.objects.filter(
+    if request.method == 'GET' and tutor_profile.online_since and not _active_match_for_tutor(tutor_profile):
+        tutor_profile.is_online = True
+        tutor_profile.last_ping_at = timezone.now()
+        tutor_profile.save(update_fields=['is_online', 'last_ping_at'])
+    matches = completed_lessons().filter(
         tutor=tutor_profile,
         student_joined_at__isnull=False,  # 実際に通話したものだけ
     ).select_related(
@@ -48,25 +47,11 @@ def tutor_dashboard(request):
         "request__language",
     ).order_by("-started_at")
 
-    _cutoff = timezone.now() - timedelta(minutes=15)
-    active_matches = QuickLessonMatch.objects.filter(
-        tutor=tutor_profile,
-    ).filter(
-        Q(end_at__gt=timezone.now()) |
-        Q(started_at__isnull=True, tutor_joined_at__isnull=True) |
-        Q(started_at__isnull=True, tutor_joined_at__gt=_cutoff)
-    ).select_related(
-        "request",
-        "request__student",
-        "request__student__user",
-        "request__language",
-        "tutor",
-        "tutor__user",
-    ).order_by("-started_at")
+    active_matches = QuickLessonMatch.objects.filter(tutor=tutor_profile).filter(active_calls()).select_related('request__student__user', 'request__language', 'tutor__user')
 
     # 言語別の担当レッスン数
     lang_name_counts = dict(
-        QuickLessonMatch.objects.filter(tutor=tutor_profile)
+        completed_lessons().filter(tutor=tutor_profile)
         .values("request__language__name")
         .annotate(cnt=Count("id"))
         .values_list("request__language__name", "cnt")
@@ -95,14 +80,7 @@ ONLINE_TIMEOUT_SECONDS = 1800  # 30分以内の ping がないとオフライン
 
 def _active_match_for_tutor(tutor_profile, now=None):
     now = now or timezone.now()
-    cutoff = now - timedelta(minutes=15)
-    return QuickLessonMatch.objects.filter(
-        tutor=tutor_profile,
-    ).filter(
-        Q(end_at__gt=now) |
-        Q(started_at__isnull=True, tutor_joined_at__isnull=True) |
-        Q(started_at__isnull=True, tutor_joined_at__gt=cutoff)
-    ).first()
+    return QuickLessonMatch.objects.filter(tutor=tutor_profile).filter(active_calls(now)).first()
 
 
 @login_required
@@ -125,22 +103,11 @@ def tutor_match_status(request):
             "room_url": reverse("lesson_room", args=[active_match.id])
         })
 
-    # マッチなし: 30分経過していたら自動オフライン
-    tutor_profile.refresh_from_db()
-    if (
-        tutor_profile.online_since is not None
-        and (now - tutor_profile.online_since).total_seconds() >= ONLINE_TIMEOUT_SECONDS
-    ):
-        TutorProfile.objects.filter(pk=tutor_profile.pk).update(
-            is_online=False, online_since=None, last_ping_at=now
-        )
-        return JsonResponse({"matched": False, "auto_offlined": True})
-
-    # ハートビートで is_online=True を維持（スマホスリープ等からの復旧も兼ねる）
-    TutorProfile.objects.filter(pk=tutor_profile.pk).update(
-        is_online=True, last_ping_at=now
-    )
-    return JsonResponse({"matched": False})
+    # online_since represents the tutor's explicit availability intention.
+    # A heartbeat must never undo a manual offline action.
+    available = tutor_profile.online_since is not None
+    TutorProfile.objects.filter(pk=tutor_profile.pk).update(is_online=available, last_ping_at=now)
+    return JsonResponse({'matched': False, 'auto_offlined': not available})
 
 
 @login_required

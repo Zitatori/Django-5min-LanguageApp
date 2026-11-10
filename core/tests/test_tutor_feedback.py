@@ -1,3 +1,4 @@
+from datetime import timedelta
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
@@ -13,8 +14,8 @@ class TutorFeedbackTests(TestCase):
         language = LessonLanguage.objects.create(code='en', name='English')
         lesson_request = QuickLessonRequest.objects.create(student=student, language=language, status='matched')
         self.match = QuickLessonMatch.objects.create(
-            request=lesson_request, tutor=self.tutor, student_joined_at=timezone.now(),
-            started_at=timezone.now(), end_at=timezone.now(), student_rating=4,
+            request=lesson_request, tutor=self.tutor, student_joined_at=timezone.now(), tutor_joined_at=timezone.now(),
+            started_at=timezone.now()-timedelta(minutes=5), end_at=timezone.now(), student_rating=4,
             student_feedback='Helpful lesson! <script>alert(1)</script>',
         )
         self.client.force_login(self.tutor.user)

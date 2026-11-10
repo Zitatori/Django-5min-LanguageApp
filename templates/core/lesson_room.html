@@ -6,7 +6,7 @@
 <div class="lr-room" id="lr-room">
 
   {# ── パートナー映像（背景全面） ── #}
-  {% if not is_student and self_selected_level %}<div style="position:absolute;top:12px;left:16px;z-index:12;background:#111827;color:white;padding:8px;border-radius:8px;">{% trans "Learner-selected level" %}: {{ self_selected_level|level_label }}</div>{% endif %}
+  {% if not is_student and self_selected_level %}<div style="position:absolute;top:12px;left:16px;right:100px;overflow-wrap:anywhere;max-height:80px;overflow:auto;z-index:12;background:#111827;color:white;padding:8px;border-radius:8px;">{% trans "Learner-selected level" %}: {{ self_selected_level|level_label }}</div>{% endif %}
   <video id="remoteVideo" class="lr-remote" autoplay playsinline></video>
 
   {# リモート映像が来るまでのアバタープレースホルダー #}
@@ -155,6 +155,12 @@
 
 </div>
 
+<div id="connection-error" hidden role="alert" style="position:fixed;inset:20% 5% auto;z-index:1000;background:#fff;color:#172554;padding:24px;border-radius:16px;max-width:600px;margin:auto;">
+<p id="connection-error-text"></p><button class="btn" id="connection-retry" type="button">{% trans 'Retry' %}</button>
+<button class="btn" id="connection-back" type="button">{% if is_student %}{% trans 'Try another tutor' %}{% else %}{% trans 'Back to dashboard' %}{% endif %}</button></div>
+<p id="wrap-up" hidden role="status" style="position:fixed;top:80px;left:10%;right:10%;text-align:center;z-index:90;background:#172554;color:white;border-radius:12px;padding:8px;">{% trans '30 seconds left — time to say goodbye and thank your partner.' %}</p>
+{% if is_student and conversation_phrases %}<details class="call-phrases"><summary>{% trans 'Helpful phrases' %}</summary>{% for phrase, reading, meaning in conversation_phrases %}<p><strong>{{ phrase }}</strong>{% if reading %}<br>{{ reading }}{% endif %}<br>{{ meaning }}</p>{% endfor %}</details>{% endif %}
+<style>.call-phrases {position:fixed;top:125px;left:12px;z-index:80;max-width:min(310px,80vw);max-height:40vh;overflow:auto;background:#fff;color:#172554;padding:10px;border-radius:12px;font-size:14px}.call-phrases summary{cursor:pointer}.call-phrases p{margin:10px 0}</style>
 <style>
   /* ルームはヘッダー直下から全画面 */
   .container { margin: 0 !important; padding: 0 !important; max-width: 100% !important; }
@@ -512,7 +518,7 @@
 // Warn before language switch (causes page reload which ends the call)
 document.addEventListener('submit', function(e) {
   if (e.target.action && e.target.action.indexOf('setlang') !== -1) {
-    var ok = confirm("{% trans 'Changing language during a call will disconnect you. Continue?' %}");
+    var ok = confirm("{% trans 'Changing language during a call will disconnect you. Continue?' as js_label_1 %}{{ js_label_1|escapejs }}");
     if (!ok) e.preventDefault();
   }
 });
@@ -573,13 +579,33 @@ document.addEventListener('submit', function(e) {
   const MAX_RECONNECT     = 3;     // 最大再接続回数
   let calleeJoinTimer     = null;  // Callee側: Offerが来なければjoin返送
   let audioUnlockButton   = null;  // ブラウザが音声付き自動再生を拒否した時の復旧ボタン
-  // 60秒以内にWebRTC接続しなければ適切なページへリダイレクト
+  let callEnded = false;
+  let connectionFailed = false;
+  // Bound connection waits, but let users explicitly retry.
   const failRedirectUrl = "{% if request.user == match.request.student.user %}{% url 'create_request' %}{% else %}{% url 'tutor_dashboard' %}{% endif %}";
   let globalRedirectTimer = setTimeout(() => {
-    if (!timerStarted) { window.location.href = failRedirectUrl; }
-  }, 60000);
+    if (!timerStarted) showConnectionError();
+  }, 25000);
 
-  display.textContent = "Waiting…";
+  display.textContent = "{% trans 'Waiting…' as js_label_2 %}{{ js_label_2|escapejs }}";
+  function showConnectionError(message) {
+    if (callEnded || connectionFailed) return;
+    connectionFailed = true;
+    document.getElementById('connection-error-text').textContent = message || "{% trans 'Connection could not be established. Check your connection and camera permissions, then retry or choose another tutor.' as js_label_3 %}{{ js_label_3|escapejs }}";
+    document.getElementById('connection-error').hidden = false;
+    cleanupCall();
+  }
+  document.getElementById('connection-retry').onclick = () => {
+    // Reload the same reservation without sending an end beacon.
+    window.removeEventListener('pagehide', sendEndLessonBeacon);
+    location.reload();
+  };
+  document.getElementById('connection-back').onclick = () => endLesson('failed');
+  const mediaHeartbeat = setInterval(() => {
+    if (!callEnded && !connectionFailed && peerConnection && peerConnection.connectionState === 'connected' && remoteStreamReady) {
+      sendSignal({type: 'media_heartbeat'});
+    }
+  }, 5000);
 
   // ── タイマー ──
   const timerOverlay   = document.getElementById("timer-overlay");
@@ -614,6 +640,7 @@ document.addEventListener('submit', function(e) {
   }
   function startTimer(seconds, endAt) {
     if (timerStarted) return;
+    if (connectionFailed || callEnded) return;
     timerStarted = true;
     if (globalRedirectTimer) { clearTimeout(globalRedirectTimer); globalRedirectTimer = null; }
     const targetTime = endAt ? Date.parse(endAt) : Date.now() + (seconds * 1000);
@@ -621,7 +648,8 @@ document.addEventListener('submit', function(e) {
       const remaining = Math.max(0, Math.ceil((targetTime - Date.now()) / 1000));
       display.textContent = format(remaining);
       setTimerState(remaining);
-      if (remaining <= 5 && remaining > 0) showFinalCountdown(remaining);
+      document.getElementById("wrap-up").hidden = remaining > 30;
+      if (false) showFinalCountdown(remaining);
       else finalCountdown.style.display = "none";
       if (remaining <= 0) { endLesson("timeup"); return; }
       setTimeout(update, 1000);
@@ -630,11 +658,17 @@ document.addEventListener('submit', function(e) {
   }
   window.onTimerStart = startTimer;
 
-  function endLesson(reason) {
+  async function endLesson(reason) {
+    if (callEnded) return;
+    callEnded = true;
     log('Lesson', 'ending:', reason);
-    sendEndLessonBeacon();
     cleanupCall();
-    window.location.href = afterLessonUrl;
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 3000);
+    try {
+      await fetch("{% url 'lesson_end' match.id %}", {method:'POST',headers:{'X-CSRFToken':getCsrf()},credentials:'same-origin',keepalive:true,signal:controller.signal});
+    } catch (e) { sendEndLessonBeacon(); } finally { clearTimeout(timeout); }
+    window.location.href = timerStarted ? afterLessonUrl : failRedirectUrl;
   }
   leaveBtn.addEventListener("click", () => endLesson("manual"));
   window.addEventListener('pagehide', sendEndLessonBeacon);
@@ -670,10 +704,12 @@ document.addEventListener('submit', function(e) {
 
   // ── 再接続（最大MAX_RECONNECT回まで）──
   function triggerReconnect() {
+    if (callEnded || connectionFailed) return;
     if (reconnectTimer) { clearTimeout(reconnectTimer); reconnectTimer = null; }
 
     if (reconnectAttempts >= MAX_RECONNECT) {
       log('Reconnect', `max attempts (${MAX_RECONNECT}) reached — giving up`);
+      showConnectionError();
       return;
     }
     reconnectAttempts++;
@@ -1006,15 +1042,15 @@ document.addEventListener('submit', function(e) {
       }
     } catch(e) {
       log('getUserMedia', 'FAILED:', e.name, e.message);
-      let msg = "{% trans 'Could not access camera/microphone.' %}";
+      let msg = "{% trans 'Could not access camera/microphone.' as js_label_4 %}{{ js_label_4|escapejs }}";
       if (e.name === "NotAllowedError" || e.name === "PermissionDeniedError") {
-        msg = "{% trans 'Camera/microphone permission was denied. Please allow access in your browser settings and reload.' %}";
+        msg = "{% trans 'Camera/microphone permission was denied. Please allow access in your browser settings and reload.' as js_label_5 %}{{ js_label_5|escapejs }}";
       } else if (e.name === "NotFoundError" || e.name === "DevicesNotFoundError") {
-        msg = "{% trans 'No camera or microphone found. Please connect a device and reload.' %}";
+        msg = "{% trans 'No camera or microphone found. Please connect a device and reload.' as js_label_6 %}{{ js_label_6|escapejs }}";
       } else if (e.name === "NotReadableError" || e.name === "TrackStartError") {
-        msg = "{% trans 'Camera is already in use by another app. Please close it and reload.' %}";
+        msg = "{% trans 'Camera is already in use by another app. Please close it and reload.' as js_label_7 %}{{ js_label_7|escapejs }}";
       } else if (e.name === "OverconstrainedError") {
-        msg = "{% trans 'Camera does not meet requirements. Please try a different device.' %}";
+        msg = "{% trans 'Camera does not meet requirements. Please try a different device.' as js_label_8 %}{{ js_label_8|escapejs }}";
       }
       const placeholder = document.getElementById("remote-placeholder");
       if (placeholder) {
@@ -1023,10 +1059,12 @@ document.addEventListener('submit', function(e) {
         errEl.textContent = "⚠ " + msg;
         placeholder.appendChild(errEl);
       }
-      alert(msg);
+      showConnectionError(msg);
     }
   };
 
+  socket.onerror = () => showConnectionError("{% trans 'The call server could not be reached. Please check your connection and retry.' as js_label_9 %}{{ js_label_9|escapejs }}");
+  socket.onclose = () => { if (!callEnded && !connectionFailed) showConnectionError(); };
   socket.onmessage = async e => {
     const data = JSON.parse(e.data);
     if (data.sender === userId) return;
@@ -1038,7 +1076,7 @@ document.addEventListener('submit', function(e) {
       if (peerLeftTimer) { clearTimeout(peerLeftTimer); peerLeftTimer = null; }
       // 両者が揃った → 接続中表示に切り替え（60秒タイマーはページ読み込み時から動いている）
       if (!timerStarted) {
-        display.textContent = "{% trans 'Connecting…' %}";
+        display.textContent = "{% trans 'Connecting…' as js_label_10 %}{{ js_label_10|escapejs }}";
       }
       if (!localMediaReady) { pendingJoinSeen = true; peerIdSeen = data.sender; return; }
       peerIdSeen = data.sender;
@@ -1082,12 +1120,15 @@ document.addEventListener('submit', function(e) {
 
     if (data.type === "peer_left") {
       log('WS', 'peer_left — 4s grace before ending');
-      peerLeftTimer = setTimeout(() => endLesson("peer_left"), 4000);
+      peerLeftTimer = setTimeout(() => { if (timerStarted) endLesson("peer_left"); else showConnectionError(); }, 10000);
     }
   };
 
   function cleanupCall() {
     log('Cleanup', 'cleaning up all resources');
+    clearInterval(mediaHeartbeat);
+    clearTimeout(globalRedirectTimer);
+    clearTimeout(peerLeftTimer);
     if (reconnectTimer)   { clearTimeout(reconnectTimer);   reconnectTimer = null; }
     if (calleeJoinTimer)  { clearTimeout(calleeJoinTimer);  calleeJoinTimer = null; }
     if (srcObjectGuard)   { clearInterval(srcObjectGuard);  srcObjectGuard = null; }

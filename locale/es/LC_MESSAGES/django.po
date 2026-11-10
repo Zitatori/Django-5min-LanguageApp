@@ -73,10 +73,9 @@ msgstr ""
 "te conectará aleatoriamente con uno."
 
 #: templates/core/create_request.html:224
-#, fuzzy
 #| msgid "End lesson"
 msgid "Total lessons"
-msgstr "Terminar clase"
+msgstr "Número de lecciones"
 
 #: templates/core/create_request.html:253
 #: templates/core/create_request.html:278
@@ -250,7 +249,7 @@ msgstr "Comprar puntos"
 
 #: templates/core/profile.html
 msgid "Student Points"
-msgstr "Puntos de estudiante"
+msgstr "Puntos de alumno"
 
 #: templates/core/profile.html
 msgid "Gold: unlimited lessons"
@@ -258,7 +257,7 @@ msgstr "Gold: clases ilimitadas"
 
 #: templates/core/profile.html
 msgid "Teacher Points"
-msgstr "Puntos de tutor"
+msgstr "Puntos de profesor"
 
 #: templates/core/profile.html
 msgid "Earned from teaching. Withdraw as cash or move to Student Points."
@@ -1317,3 +1316,178 @@ msgid ""
 msgstr ""
 "Elige tu nivel para cada idioma. Se guardará para las próximas lecciones y "
 "materiales de IA. Puedes cambiarlo cuando quieras."
+
+msgid "Review quiz"
+msgstr "Cuestionario de repaso"
+
+msgid "Correct!"
+msgstr "¡Correcto!"
+
+msgid "Not quite. Review the answer below."
+msgstr "No exactamente. Revisa la respuesta a continuación."
+
+msgid "Correct answer"
+msgstr "Respuesta correcta"
+
+msgid "There is not enough recorded lesson content for a review quiz."
+msgstr ""
+"No hay suficiente contenido registrado para crear un cuestionario de repaso."
+
+
+msgid "Retry"
+msgstr "Reintentar"
+
+
+msgid "Try another tutor"
+msgstr "Probar con otro tutor"
+
+
+msgid "Back to dashboard"
+msgstr "Volver al panel"
+
+
+msgid "Waiting…"
+msgstr "Esperando…"
+
+
+msgid ""
+"Connection could not be established. Check your connection and camera "
+"permissions, then retry or choose another tutor."
+msgstr ""
+"No se pudo establecer la conexión. Comprueba la conexión y los permisos de "
+"la cámara, y vuelve a intentarlo o elige otro tutor."
+
+
+msgid ""
+"The call server could not be reached. Please check your connection and "
+"retry."
+msgstr ""
+"No se pudo contactar con el servidor de llamadas. Comprueba tu conexión y "
+"vuelve a intentarlo."
+
+
+msgid "30 seconds left — time to say goodbye and thank your partner."
+msgstr "Quedan 30 segundos: despídete y dale las gracias a tu compañero."
+
+
+msgid "Helpful phrases"
+msgstr "Frases útiles"
+
+
+msgid "Please say that again."
+msgstr "¿Puede repetir, por favor?"
+
+
+msgid "Please speak slowly."
+msgstr "Hable despacio, por favor."
+
+
+msgid "I don’t understand."
+msgstr "No entiendo."
+
+
+msgid "How about you?"
+msgstr "¿Y usted?"
+
+
+msgid "Congratulations! You spoke %(study_language)s for five minutes!"
+msgstr ""
+"¡Felicidades! ¡Has hablado en %(study_language)s durante cinco minutos!"
+
+
+msgid "Well done for practising today!"
+msgstr "¡Muy bien por practicar hoy!"
+
+
+msgid "Next session (your local time)"
+msgstr "Próxima sesión (hora local)"
+
+
+msgid "A tutor is now available. Choose a tutor to start."
+msgstr "Ya hay un tutor disponible. Elige un tutor para empezar."
+
+
+msgid "Choose a tutor"
+msgstr "Elegir un tutor"
+
+
+msgid "online"
+msgstr "en línea"
+
+
+msgid "Select the language and tutor you want to practice with."
+msgstr "Elige el idioma y el tutor con quien quieres practicar."
+
+
+msgid "No tutors online for this language."
+msgstr "No hay tutores en línea para este idioma en este momento."
+
+
+msgid "Gold member"
+msgstr "Miembro Gold"
+
+
+msgid "Can express subtle nuances precisely and naturally"
+msgstr "Puede expresar matices sutiles con precisión y naturalidad"
+
+
+msgid ""
+"Share this invitation link with a friend. Your referral is filled in "
+"automatically at signup."
+msgstr ""
+"Comparte este enlace con un amigo. La recomendación se registra "
+"automáticamente al inscribirse."
+
+
+msgid "Invitation link"
+msgstr "Enlace de invitación"
+
+
+msgid "Copy link"
+msgstr "Copiar enlace"
+
+
+msgid "Copied"
+msgstr "Copiado"
+
+
+msgid ""
+"When your friend completes a five-minute conversation, contact us to request"
+" the existing 5-point referral bonus."
+msgstr ""
+"Cuando tu amigo complete una conversación de cinco minutos, contáctanos para"
+" solicitar los 5 puntos de recomendación."
+
+
+msgid ""
+"Join published sessions while tutors are available. To arrange your two "
+"weekly 30-minute sessions, email us your preferred times. We confirm "
+"availability by email."
+msgstr ""
+"Participa en las sesiones publicadas cuando haya tutores disponibles. Para "
+"organizar tus dos sesiones semanales de 30 minutos, envíanos tus horarios "
+"preferidos por correo. Confirmaremos la disponibilidad por correo."
+
+
+msgid ""
+"To activate Gold: email us, receive payment instructions, then wait for our "
+"activation confirmation after payment is checked."
+msgstr ""
+"Para activar Gold: contáctanos por correo, recibe las instrucciones de pago "
+"y espera la confirmación de activación tras verificar el pago."
+
+
+msgid "%(n)s lesson"
+msgid_plural "%(n)s lessons"
+msgstr[0] "%(n)s lección"
+msgstr[1] "%(n)s lecciones"
+
+
+msgid "Welcome bonus: %(n)s point"
+msgid_plural "Welcome bonus: %(n)s points"
+msgstr[0] "Regalo de bienvenida: %(n)s punto"
+msgstr[1] "Regalo de bienvenida: %(n)s puntos"
+
+
+msgid "Lesson #%(number)s"
+msgstr "Lección n.º %(number)s"

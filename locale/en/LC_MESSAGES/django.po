@@ -2016,3 +2016,34 @@ msgid ""
 msgstr ""
 "Choose your level for each language. It is saved for future lessons and AI "
 "materials. You can change it anytime."
+
+msgid "Review quiz"
+msgstr "Review quiz"
+
+msgid "Correct!"
+msgstr "Correct!"
+
+msgid "Not quite. Review the answer below."
+msgstr "Not quite. Review the answer below."
+
+msgid "Correct answer"
+msgstr "Correct answer"
+
+msgid "There is not enough recorded lesson content for a review quiz."
+msgstr "There is not enough recorded lesson content for a review quiz."
+
+
+msgid "%(n)s lesson"
+msgid_plural "%(n)s lessons"
+msgstr[0] "%(n)s lesson"
+msgstr[1] "%(n)s lessons"
+
+
+msgid "Welcome bonus: %(n)s point"
+msgid_plural "Welcome bonus: %(n)s points"
+msgstr[0] "Welcome bonus: %(n)s point"
+msgstr[1] "Welcome bonus: %(n)s points"
+
+
+msgid "Lesson #%(number)s"
+msgstr "Lesson #%(number)s"

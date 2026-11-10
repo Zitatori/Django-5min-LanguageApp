@@ -1,3 +1,4 @@
+from core.services.lesson_lifecycle import completed_lessons
 """Owner-only lesson cheatsheets; existing Gold and generation lock are reused."""
 import uuid
 from datetime import timedelta
@@ -20,7 +21,7 @@ from core.views.study_notes import new_token
 
 
 def eligible_lessons(user):
-    return QuickLessonMatch.objects.filter(request__student__user=user,
+    return completed_lessons().filter(request__student__user=user,
         request__language__code='ja', request__purpose='lesson',
         student_joined_at__isnull=False, tutor_joined_at__isnull=False,
         end_at__lte=timezone.now()).select_related('request', 'tutor__user').order_by('-end_at', '-pk')

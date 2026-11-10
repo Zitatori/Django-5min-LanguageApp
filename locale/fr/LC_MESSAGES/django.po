@@ -73,10 +73,9 @@ msgstr ""
 "en ligne, vous serez associé aléatoirement."
 
 #: templates/core/create_request.html:224
-#, fuzzy
 #| msgid "End lesson"
 msgid "Total lessons"
-msgstr "Terminer la leçon"
+msgstr "Nombre de leçons"
 
 #: templates/core/create_request.html:253
 #: templates/core/create_request.html:278
@@ -250,7 +249,7 @@ msgstr "Acheter des points"
 
 #: templates/core/profile.html
 msgid "Student Points"
-msgstr "Points étudiant"
+msgstr "Points élève"
 
 #: templates/core/profile.html
 msgid "Gold: unlimited lessons"
@@ -895,7 +894,7 @@ msgid "Referral bonus"
 msgstr "Bonus de parrainage"
 
 msgid "Invite a friend and tell them your username (%(username)s). When that person has at least one 5-minute conversation, you will receive 5 student points."
-msgstr "Invitez une personne et donnez-lui votre nom d utilisateur (%(username)s). Quand cette personne aura eu au moins une conversation de 5 minutes, vous recevrez 5 points eleve."
+msgstr "Invitez une personne et donnez-lui votre nom d'utilisateur (%(username)s). Quand cette personne aura eu au moins une conversation de 5 minutes, vous recevrez 5 points élève."
 
 msgid "Email address"
 msgstr "Adresse e-mail"
@@ -1327,3 +1326,179 @@ msgid ""
 msgstr ""
 "Choisissez votre niveau pour chaque langue. Il sera utilisé pour les "
 "prochaines leçons et les supports IA. Vous pouvez le modifier à tout moment."
+
+msgid "Review quiz"
+msgstr "Quiz de révision"
+
+msgid "Correct!"
+msgstr "Bonne réponse !"
+
+msgid "Not quite. Review the answer below."
+msgstr "Pas tout à fait. Consultez la réponse ci-dessous."
+
+msgid "Correct answer"
+msgstr "Bonne réponse"
+
+msgid "There is not enough recorded lesson content for a review quiz."
+msgstr "Le contenu consigné est insuffisant pour créer un quiz de révision."
+
+
+msgid "Retry"
+msgstr "Réessayer"
+
+
+msgid "Try another tutor"
+msgstr "Essayer un autre tuteur"
+
+
+msgid "Back to dashboard"
+msgstr "Retour au tableau de bord"
+
+
+msgid "Waiting…"
+msgstr "En attente…"
+
+
+msgid ""
+"Connection could not be established. Check your connection and camera "
+"permissions, then retry or choose another tutor."
+msgstr ""
+"La connexion n’a pas pu être établie. Vérifiez votre connexion et "
+"l’autorisation de la caméra, puis réessayez ou choisissez un autre tuteur."
+
+
+msgid ""
+"The call server could not be reached. Please check your connection and "
+"retry."
+msgstr ""
+"Le serveur d’appel est inaccessible. Vérifiez votre connexion et réessayez."
+
+
+msgid "30 seconds left — time to say goodbye and thank your partner."
+msgstr ""
+"Il reste 30 secondes : remerciez votre partenaire et dites-lui au revoir."
+
+
+msgid "Helpful phrases"
+msgstr "Expressions utiles"
+
+
+msgid "Please say that again."
+msgstr "Pouvez-vous répéter, s’il vous plaît ?"
+
+
+msgid "Please speak slowly."
+msgstr "Parlez lentement, s’il vous plaît."
+
+
+msgid "I don’t understand."
+msgstr "Je ne comprends pas."
+
+
+msgid "How about you?"
+msgstr "Et vous ?"
+
+
+msgid "Congratulations! You spoke %(study_language)s for five minutes!"
+msgstr "Bravo ! Vous avez parlé en %(study_language)s pendant cinq minutes !"
+
+
+msgid "Well done for practising today!"
+msgstr "Bravo pour votre pratique d’aujourd’hui !"
+
+
+msgid "Next session (your local time)"
+msgstr "Prochaine session (heure locale)"
+
+
+msgid "A tutor is now available. Choose a tutor to start."
+msgstr ""
+"Un tuteur est maintenant disponible. Choisissez un tuteur pour commencer."
+
+
+msgid "Choose a tutor"
+msgstr "Choisir un tuteur"
+
+
+msgid "online"
+msgstr "en ligne"
+
+
+msgid "Select the language and tutor you want to practice with."
+msgstr "Choisissez la langue et le tuteur avec qui vous souhaitez pratiquer."
+
+
+msgid "No tutors online for this language."
+msgstr "Aucun tuteur en ligne pour cette langue pour le moment."
+
+
+msgid "Gold member"
+msgstr "Membre Gold"
+
+
+msgid "Can express subtle nuances precisely and naturally"
+msgstr "Peut exprimer les nuances subtiles avec précision et naturel"
+
+
+msgid ""
+"Share this invitation link with a friend. Your referral is filled in "
+"automatically at signup."
+msgstr ""
+"Partagez ce lien avec un ami. Le parrainage est renseigné automatiquement à "
+"l’inscription."
+
+
+msgid "Invitation link"
+msgstr "Lien d’invitation"
+
+
+msgid "Copy link"
+msgstr "Copier le lien"
+
+
+msgid "Copied"
+msgstr "Copié"
+
+
+msgid ""
+"When your friend completes a five-minute conversation, contact us to request"
+" the existing 5-point referral bonus."
+msgstr ""
+"Après la première conversation de cinq minutes de votre ami, contactez-nous "
+"pour demander les 5 points de parrainage."
+
+
+msgid ""
+"Join published sessions while tutors are available. To arrange your two "
+"weekly 30-minute sessions, email us your preferred times. We confirm "
+"availability by email."
+msgstr ""
+"Rejoignez les sessions publiées lorsque des tuteurs sont disponibles. Pour "
+"organiser vos deux sessions hebdomadaires de 30 minutes, envoyez-nous vos "
+"horaires souhaités par e-mail. Nous confirmerons les disponibilités par "
+"e-mail."
+
+
+msgid ""
+"To activate Gold: email us, receive payment instructions, then wait for our "
+"activation confirmation after payment is checked."
+msgstr ""
+"Pour activer Gold : contactez-nous par e-mail, recevez les instructions de "
+"paiement, puis attendez la confirmation d’activation après vérification du "
+"paiement."
+
+
+msgid "%(n)s lesson"
+msgid_plural "%(n)s lessons"
+msgstr[0] "%(n)s leçon"
+msgstr[1] "%(n)s leçons"
+
+
+msgid "Welcome bonus: %(n)s point"
+msgid_plural "Welcome bonus: %(n)s points"
+msgstr[0] "Cadeau de bienvenue : %(n)s point"
+msgstr[1] "Cadeau de bienvenue : %(n)s points"
+
+
+msgid "Lesson #%(number)s"
+msgstr "Leçon n° %(number)s"

@@ -1,3 +1,4 @@
+from datetime import timedelta
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
@@ -11,7 +12,7 @@ class PrivateNoteTests(TestCase):
         self.tutor = TutorProfile.objects.create(user=User.objects.create_user(username='private-tutor'))
         language = LessonLanguage.objects.create(code='en', name='English')
         req = QuickLessonRequest.objects.create(student=self.student, language=language)
-        self.match = QuickLessonMatch.objects.create(request=req, tutor=self.tutor, student_joined_at=timezone.now(), tutor_joined_at=timezone.now(), started_at=timezone.now(), end_at=timezone.now())
+        self.match = QuickLessonMatch.objects.create(request=req, tutor=self.tutor, student_joined_at=timezone.now(), tutor_joined_at=timezone.now(), started_at=timezone.now()-timedelta(minutes=5), end_at=timezone.now())
         self.url = reverse('lesson_rating', args=[self.match.pk])
         self.client.force_login(self.student.user)
 

@@ -26,7 +26,7 @@ def level_label(value):
         'B1': _('Can hold everyday conversations'),
         'B2': _('Can discuss varied topics and explain opinions'),
         'C1': _('Near-native fluency'),
-        'C2': _('Vocabulary beyond native-speaker level'),
+        'C2': _('Can express subtle nuances precisely and naturally'),
     }
     if value not in descriptions:
         return value or ''

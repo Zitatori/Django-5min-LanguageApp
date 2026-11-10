@@ -1,3 +1,5 @@
+from django.db import transaction
+from core.services.lesson_lifecycle import active_calls, completed_lessons, PRESENCE_SECONDS
 from core.services.learner_levels import self_level
 from core.views.learner_levels import LearnerLevelForm
 import json
@@ -22,7 +24,7 @@ from core.models import (
     ConversationNote,
 )
 
-ONLINE_TIMEOUT_SECONDS = 1800     # tutor.py と合わせる（30分）スマホスリープ対策
+ONLINE_TIMEOUT_SECONDS = PRESENCE_SECONDS     # tutor.py と合わせる（30分）スマホスリープ対策
 NOTE_WAIT_SECONDS = 60          # 通話終了後のメモ記入時間
 CONSECUTIVE_WAIT_SECONDS = 60    # 連続マッチを禁じる猶予期間（1分）
 
@@ -38,7 +40,7 @@ def _get_consecutive_exclude_ids(student_profile):
 
     # 生徒側: 60秒以内に終わった直前マッチの相手を除外
     last = (
-        QuickLessonMatch.objects
+        QuickLessonMatch.objects.filter(started_at__isnull=False)
         .filter(request__student=student_profile, end_at__gt=cutoff)
         .order_by("-started_at")
         .values("tutor_id")
@@ -49,13 +51,13 @@ def _get_consecutive_exclude_ids(student_profile):
 
     # チューター側: 60秒以内の直前マッチがこの生徒だったチューターを除外
     latest_student_sq = (
-        QuickLessonMatch.objects
+        QuickLessonMatch.objects.filter(started_at__isnull=False)
         .filter(tutor=OuterRef("pk"))
         .order_by("-started_at")
         .values("request__student_id")[:1]
     )
     latest_end_sq = (
-        QuickLessonMatch.objects
+        QuickLessonMatch.objects.filter(started_at__isnull=False)
         .filter(tutor=OuterRef("pk"))
         .order_by("-started_at")
         .values("end_at")[:1]
@@ -87,7 +89,7 @@ def _get_display_exclude_ids(student_profile):
 
     # 生徒側: 直前マッチが猶予期間内なら除外
     last = (
-        QuickLessonMatch.objects
+        QuickLessonMatch.objects.filter(started_at__isnull=False)
         .filter(request__student=student_profile)
         .order_by("-started_at")
         .first()
@@ -97,13 +99,13 @@ def _get_display_exclude_ids(student_profile):
 
     # チューター側: 直前マッチがこの生徒で猶予期間内なら除外
     latest_student_sq = (
-        QuickLessonMatch.objects
+        QuickLessonMatch.objects.filter(started_at__isnull=False)
         .filter(tutor=OuterRef("pk"))
         .order_by("-started_at")
         .values("request__student_id")[:1]
     )
     latest_end_sq = (
-        QuickLessonMatch.objects
+        QuickLessonMatch.objects.filter(started_at__isnull=False)
         .filter(tutor=OuterRef("pk"))
         .order_by("-started_at")
         .values("end_at")[:1]
@@ -147,7 +149,7 @@ def _in_lesson_info(language, now=None):
 
 
 def _previous_conversation_count(student_profile, tutor_profile):
-    return QuickLessonMatch.objects.filter(
+    return completed_lessons().filter(
         request__student=student_profile,
         tutor=tutor_profile,
         student_joined_at__isnull=False,
@@ -164,10 +166,10 @@ def active_tutors_qs(language=None):
     now = timezone.now()
     cutoff = now - timedelta(seconds=ONLINE_TIMEOUT_SECONDS)
     busy_tutor_ids = QuickLessonMatch.objects.filter(
-        Q(started_at__isnull=True) | Q(end_at__gt=now - timedelta(seconds=NOTE_WAIT_SECONDS))
+        active_calls(now, include_notes=True)
     ).values("tutor_id")
     qs = TutorProfile.objects.filter(is_online=True).filter(
-        Q(last_ping_at__isnull=True) | Q(last_ping_at__gte=cutoff)
+        Q(last_ping_at__gte=cutoff)
     ).exclude(pk__in=busy_tutor_ids)
     if language:
         qs = qs.filter(languages=language)
@@ -178,7 +180,7 @@ def _claim_tutor_for_match(tutor):
     """オンライン候補を1人だけ確保する。通話中なら確保しない。"""
     now = timezone.now()
     busy_tutor_ids = QuickLessonMatch.objects.filter(
-        Q(started_at__isnull=True) | Q(end_at__gt=now - timedelta(seconds=NOTE_WAIT_SECONDS))
+        active_calls(now, include_notes=True)
     ).values("tutor_id")
     return TutorProfile.objects.filter(
         pk=tutor.pk,
@@ -187,13 +189,17 @@ def _claim_tutor_for_match(tutor):
 
 
 @login_required
+@transaction.atomic
 def create_request(request):
     student_profile, _ = StudentProfile.objects.get_or_create(user=request.user)
 
     # Student ページに来たら自分の Tutor をオフラインに
-    TutorProfile.objects.filter(user=request.user, is_online=True).update(is_online=False)
+    TutorProfile.objects.filter(user=request.user).update(is_online=False, online_since=None)
 
     if request.method == "POST":
+        from core.models import GoldMembership, PointBalance
+        if not GoldMembership.objects.filter(user=request.user, expires_at__gt=timezone.now()).exists() and not PointBalance.objects.filter(user=request.user, student_balance__gte=1).exists():
+            return redirect('purchase_points')
         lang_id = request.POST.get("language_id")
         language = get_object_or_404(LessonLanguage, id=lang_id)
         if not self_level(request.user, language.code):
@@ -271,7 +277,7 @@ def create_request(request):
         return redirect("create_request")
 
     languages = LessonLanguage.objects.all()
-    matches = list(QuickLessonMatch.objects.filter(
+    matches = list(completed_lessons().filter(
         request__student__user=request.user,
         student_joined_at__isnull=False,
         tutor_joined_at__isnull=False,  # 両者が入室したものだけ
@@ -300,7 +306,7 @@ def create_request(request):
 
     # 言語別の受講済みレッスン数（両者が入室したものだけ）
     lang_lesson_counts = dict(
-        QuickLessonMatch.objects.filter(
+        completed_lessons().filter(
             request__student=student_profile,
             student_joined_at__isnull=False,
             tutor_joined_at__isnull=False,
@@ -325,7 +331,7 @@ def create_request(request):
 
     now = timezone.now()
     busy_tutor_ids = QuickLessonMatch.objects.filter(
-        Q(started_at__isnull=True) | Q(end_at__gt=now - timedelta(seconds=NOTE_WAIT_SECONDS))
+        active_calls(now, include_notes=True)
     ).values('tutor_id')
     admin_online = (
         not request.user.is_superuser
@@ -372,10 +378,11 @@ def create_request(request):
         "matches": matches,
         "total_lessons": total_lessons,
         "admin_online": admin_online,
-        "tutors_by_language_json": tutors_by_language_json,
+        "tutors_by_language": tutors_by_language,
     })
 
 @login_required
+@transaction.atomic
 def request_detail(request, request_id: int):
     qlr = get_object_or_404(
         QuickLessonRequest,
@@ -420,6 +427,7 @@ def request_detail(request, request_id: int):
 
 
 @login_required
+@transaction.atomic
 def create_interview_request(request):
     student_profile, _ = StudentProfile.objects.get_or_create(user=request.user)
 
@@ -464,7 +472,7 @@ def student_online_counts(request):
     languages = LessonLanguage.objects.all()
     now = timezone.now()
     busy_tutor_ids = QuickLessonMatch.objects.filter(
-        Q(started_at__isnull=True) | Q(end_at__gt=now - timedelta(seconds=NOTE_WAIT_SECONDS))
+        active_calls(now, include_notes=True)
     ).values('tutor_id')
     admin_online = TutorProfile.objects.filter(
         user__is_superuser=True, is_online=True,
@@ -499,7 +507,11 @@ def student_online_counts(request):
                 "badge": badge,
                 "previous_count": _previous_conversation_count(student_profile, t),
             })
+        from core.models import UpcomingSession
+        schedule_field = {'en':'english_count', 'fr':'french_count', 'es':'spanish_count', 'ja':'japanese_count'}.get(lang.code)
+        session = UpcomingSession.objects.filter(is_published=True, end_time__gt=now, **{schedule_field+'__gt':0}).order_by('start_time').first() if schedule_field else None
         data[str(lang.id)] = {
+            'next_session': {'start':session.start_time.isoformat(), 'end':session.end_time.isoformat()} if session else None,
             'online': qs.count(),
             'in_lesson': in_lesson_count,
             'soonest_minutes': soonest_minutes,
@@ -508,8 +520,9 @@ def student_online_counts(request):
     return JsonResponse(data)
 
 
+@login_required
 def student_history(request):
-    matches = list(QuickLessonMatch.objects.filter(
+    matches = list(completed_lessons().filter(
         request__student__user=request.user,
         student_joined_at__isnull=False,  # 実際に通話したものだけ
     ).select_related(
@@ -539,6 +552,7 @@ def student_history(request):
 
 @login_required
 @require_POST
+@transaction.atomic
 def request_admin_chat(request):
     """管理者と直接話すリクエスト。管理者がオンライン且つ空きがある時のみ成立。"""
     if request.user.is_superuser:
@@ -548,7 +562,7 @@ def request_admin_chat(request):
 
     now = timezone.now()
     busy_tutor_ids = QuickLessonMatch.objects.filter(
-        Q(started_at__isnull=True) | Q(end_at__gt=now - timedelta(seconds=NOTE_WAIT_SECONDS))
+        active_calls(now, include_notes=True)
     ).values('tutor_id')
 
     admin_tutor = TutorProfile.objects.filter(

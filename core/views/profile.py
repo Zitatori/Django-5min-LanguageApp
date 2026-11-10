@@ -1,3 +1,7 @@
+from django.db import transaction
+from django.core import signing
+from django.urls import reverse
+from urllib.parse import urlencode
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
 from django.shortcuts import render, redirect
@@ -45,6 +49,7 @@ def profile(request):
 
     return render(request, 'core/profile.html', {
         'balance':            balance,
+        'referral_link': request.build_absolute_uri(reverse('signup')) + '?' + urlencode({'ref': signing.dumps(request.user.pk, salt='referral-link')}),
         'transactions':       transactions,
         'learning_levels': request.user.studentprofile.language_levels.select_related('language').all() if hasattr(request.user, 'studentprofile') else [],
         'pending_withdrawal': pending_withdrawal,
@@ -66,11 +71,13 @@ def profile(request):
 
 
 @login_required
+@transaction.atomic
 def request_withdrawal(request):
     if request.method != 'POST':
         return redirect('profile')
 
     balance = _get_or_create_balance(request.user)
+    balance = PointBalance.objects.select_for_update().get(pk=balance.pk)
 
     try:
         points = int(request.POST.get('points', 0))
@@ -114,12 +121,14 @@ def request_withdrawal(request):
 
 
 @login_required
+@transaction.atomic
 def transfer_points(request):
     """講師ポイント → 生徒ポイント への振り替え"""
     if request.method != 'POST':
         return redirect('profile')
 
     balance = _get_or_create_balance(request.user)
+    balance = PointBalance.objects.select_for_update().get(pk=balance.pk)
 
     try:
         pts = int(request.POST.get('points', 0))

@@ -3,6 +3,7 @@
 
 {% block content %}
 <div class="card" style="max-width: 480px; margin: 40px auto;">
+  <p>{% blocktrans count n=signup_bonus %}Welcome bonus: {{ n }} point{% plural %}Welcome bonus: {{ n }} points{% endblocktrans %}</p>
   <h2 style="margin-bottom: 24px;">{% trans "Create an account" %}</h2>
 
   <form method="post">

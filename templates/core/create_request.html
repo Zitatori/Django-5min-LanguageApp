@@ -430,6 +430,7 @@
 
 {# ── Step wizard ── #}
 <div class="card">
+  <div id="availability-notice" hidden role="status"><p>{% trans 'A tutor is now available. Choose a tutor to start.' %}</p><button type="button" class="btn">{% trans 'Choose a tutor' %}</button></div>
   <form method="post" id="lesson-form">
     {% csrf_token %}
     <input type="hidden" name="language_id" id="selected-lang-id" value="">
@@ -445,7 +446,7 @@
                     {% elif lang.name == 'Spanish' %}cr-lang-es
                     {% elif lang.name == 'Japanese' %}cr-lang-ja{% endif %}"
              onclick="goToTutors(this, '{{ lang.id }}', '{% trans lang.name %}', '{{ lang.name }}')"
-             data-id="{{ lang.id }}">
+             role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}" data-id="{{ lang.id }}">
           <div class="cr-bg-photo"></div>
           <div class="cr-overlay"></div>
           <div class="cr-flag">
@@ -456,9 +457,9 @@
             {% else %}<span class="fi fi-un cr-fi"></span>{% endif %}
           </div>
           <div class="cr-lang-name">{% trans lang.name %}</div>
-          {% if lesson_count > 0 %}<div class="cr-lesson-stat">📚 {{ lesson_count }}{% trans " lessons" %}</div>{% endif %}
+          {% if lesson_count > 0 %}<div class="cr-lesson-stat">📚 {% blocktrans count n=lesson_count %}{{ n }} lesson{% plural %}{{ n }} lessons{% endblocktrans %}</div>{% endif %}
           {% if count > 0 %}
-            <div class="cr-status-on"><span class="cr-dot-on"></span>{{ count }} online</div>
+            <div class="cr-status-on"><span class="cr-dot-on"></span>{{ count }} {% trans "online" %}</div>
           {% elif in_lesson_count > 0 %}
             <div class="cr-status-busy"><span class="cr-dot-busy"></span>{{ in_lesson_count }} {% trans "in lesson" %}{% if soonest_minutes %} · {% blocktrans with m=soonest_minutes %}~{{ m }}min free{% endblocktrans %}{% endif %}</div>
           {% else %}
@@ -478,6 +479,7 @@
           <div class="cr-step2-title">{% trans "Select a tutor" %}</div>
         </div>
       </div>
+      <p id="selected-next-session" role="status" style="font-size:14px;"></p>
       <div id="tutor-list" class="cr-tutor-grid"></div>
       <div class="cr-btns">
         <button type="submit" id="cr-start-btn" class="cr-btn-start" disabled>🎯 {% trans "Start a 5-Minute Lesson" %}</button>
@@ -571,7 +573,7 @@
   <div class="cr-hist-header">
     <h3 class="card-title" style="margin:0;">{% trans "My Lesson History" %}</h3>
     <a href="{% url 'study_notes' %}">✨ {% trans "AI Study Notes" %}</a>
-    {% if total_lessons %}<span class="cr-hist-total">{{ total_lessons }}{% trans " lessons" %}</span>{% endif %}
+    {% if total_lessons %}<span class="cr-hist-total">{% blocktrans count n=total_lessons %}{{ n }} lesson{% plural %}{{ n }} lessons{% endblocktrans %}</span>{% endif %}
   </div>
 
   {% if matches %}
@@ -651,6 +653,7 @@
 </button>
 {% endif %}
 
+{{ tutors_by_language|json_script:"tutor-data" }}
 <script>
   const langInput  = document.getElementById('selected-lang-id');
   const tutorInput = document.getElementById('preferred-tutor-id');
@@ -669,7 +672,7 @@
   const deviceError = document.getElementById('student-device-error');
   const speakerTestBtn = document.getElementById('student-speaker-test-btn');
 
-  let tutorsByLang  = {{ tutors_by_language_json|safe }};
+  let tutorsByLang  = JSON.parse(document.getElementById("tutor-data").textContent);
   let currentLangId = '';
   let selectedTutorId = '';
   let deviceStream = null;
@@ -678,8 +681,9 @@
   let deviceMeterFrame = null;
   let deviceMicDetected = false;
 
+  function escapeHtml(text) {const span=document.createElement('span');span.textContent=String(text);return span.innerHTML;}
   function badgeHtml(badge) {
-    if (badge === 'dev')   return ' <span class="header-badge header-badge-dev" style="font-size:10px;padding:1px 6px;">🚀 {% trans "Founder" %}</span>';
+    if (badge === 'dev')   return ' <span class="header-badge header-badge-dev" style="font-size:10px;padding:1px 6px;">🚀 {% trans "Founder" as js_label_1 %}{{ js_label_1|escapejs }}</span>';
     if (badge === 'admin') return ' <span class="header-badge header-badge-admin" style="font-size:10px;padding:1px 6px;">Admin</span>';
     if (badge === 'gold')  return ' <span class="header-badge header-badge-gold" style="font-size:10px;padding:1px 6px;">&#x1F451; Gold</span>';
     return '';
@@ -687,14 +691,15 @@
 
   function renderTutorList(langId) {
     const tutors = tutorsByLang[String(langId)] || [];
-    const firstTimeLabel = "{% trans 'First time' %}";
-    const previousConversationsLabel = "{% trans 'Previous conversations' %}";
+    const firstTimeLabel = "{% trans 'First time' as js_label_2 %}{{ js_label_2|escapejs }}";
+    const previousConversationsLabel = "{% trans 'Previous conversations' as js_label_3 %}{{ js_label_3|escapejs }}";
+    const previousSelection = selectedTutorId;
     selectedTutorId = '';
     tutorInput.value = '';
     startBtn.disabled = true;
 
     if (tutors.length === 0) {
-      tutorList.innerHTML = '<p class="cr-tutor-none">{% trans "No tutors online for this language." %}</p>';
+      tutorList.innerHTML = '<p class="cr-tutor-none">{% trans "No tutors online for this language." as js_label_4 %}{{ js_label_4|escapejs }}</p>';
       return;
     }
 
@@ -708,15 +713,17 @@
         ? `${previousConversationsLabel}: ${previousCount}`
         : firstTimeLabel;
       return `<div class="cr-tutor-card${founderClass}" onclick="pickTutor(this,'${t.id}')">
-        <div class="cr-tutor-avatar"${avatarStyle}>${initials}</div>
+        <div class="cr-tutor-avatar"${avatarStyle}>${escapeHtml(initials)}</div>
         <div class="cr-tutor-main">
-          <span class="cr-tutor-name">${t.name}${badgeHtml(t.badge)}</span>
+          <span class="cr-tutor-name">${escapeHtml(t.name)}${badgeHtml(t.badge)}</span>
           <span class="cr-tutor-history">${historyText}</span>
         </div>
         <span class="cr-tutor-check">✓</span>
       </div>`;
     }).join('');
 
+    const retained = tutors.findIndex(t => String(t.id) === previousSelection);
+    if (retained >= 0) { pickTutor(tutorList.children[retained], previousSelection); return; }
     // 講師が1人のみなら自動選択
     if (tutors.length === 1) {
       pickTutor(tutorList.querySelector('.cr-tutor-card'), tutors[0].id);
@@ -740,6 +747,8 @@
     const flagMap = {English:'fi-gb', French:'fi-fr', Spanish:'fi-es', Japanese:'fi-jp'};
     const flagClass = flagMap[langName] || 'fi-un';
     step2Label.innerHTML = `<span class="fi ${flagClass} cr-fi-sm"></span> ${langLabel}`;
+    const next = el.querySelector('.next-session');
+    document.getElementById('selected-next-session').textContent = next ? next.textContent : '';
     renderTutorList(langId);
     stepLang.classList.add('hidden');
     stepTutor.classList.remove('hidden');
@@ -926,11 +935,16 @@
   });
 
   // ── オンライン人数をリアルタイム更新（5秒ごと） ──
-  const offlineLabel  = "{% trans 'Offline' %}";
-  const inLessonLabel = "{% trans 'in lesson' %}";
-  const freeInTpl     = "{% trans '~Xmin free' %}";
+  const onlineLabel = "{% trans 'online' as js_label_5 %}{{ js_label_5|escapejs }}";
+  const previousOnline = {};
+  let refreshingCounts = false;
+  const offlineLabel  = "{% trans 'Offline' as js_label_6 %}{{ js_label_6|escapejs }}";
+  const inLessonLabel = "{% trans 'in lesson' as js_label_7 %}{{ js_label_7|escapejs }}";
+  const freeInTpl     = "{% trans '~Xmin free' as js_label_8 %}{{ js_label_8|escapejs }}";
 
   async function refreshOnlineCounts() {
+    if (refreshingCounts) return;
+    refreshingCounts = true;
     try {
       const res = await fetch("{% url 'student_online_counts' %}");
       if (!res.ok) return;
@@ -939,11 +953,24 @@
         if (langId === 'admin_online') continue;
         const card = document.querySelector('.cr-lang-card[data-id="' + langId + '"]');
         if (card) {
+          let schedule = card.querySelector('.next-session');
+          if (!schedule) { schedule = document.createElement('div'); schedule.className='next-session'; schedule.style.cssText='position:relative;z-index:1;color:white;font-size:12px;margin-top:8px;white-space:normal';card.appendChild(schedule); }
+          if (info.next_session) {
+            const fmt = new Intl.DateTimeFormat(document.documentElement.lang || 'en', {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',timeZoneName:'short'});
+            schedule.textContent = "{% trans 'Next session (your local time)' as js_label_9 %}{{ js_label_9|escapejs }}" + ': ' + fmt.format(new Date(info.next_session.start)) + ' – ' + new Intl.DateTimeFormat(document.documentElement.lang || 'en', {hour:'2-digit',minute:'2-digit'}).format(new Date(info.next_session.end));
+          } else { schedule.textContent = ''; }
+          if (previousOnline[langId] === 0 && info.online > 0) {
+            const notice = document.getElementById('availability-notice');
+            notice.hidden = false;
+            notice.querySelector('button').onclick = () => card.click();
+          }
+          previousOnline[langId] = info.online;
+          if (langId === currentLangId) document.getElementById('selected-next-session').textContent = schedule.textContent;
           const statusEl = card.querySelector('.cr-status-on, .cr-status-off, .cr-status-busy');
           if (statusEl) {
             if (info.online > 0) {
               statusEl.className = 'cr-status-on';
-              statusEl.innerHTML = '<span class="cr-dot-on"></span>' + info.online + ' online';
+              statusEl.innerHTML = '<span class="cr-dot-on"></span>' + info.online + ' ' + onlineLabel;
             } else if (info.in_lesson > 0) {
               statusEl.className = 'cr-status-busy';
               let txt = info.in_lesson + ' ' + inLessonLabel;
@@ -965,9 +992,10 @@
       }
       const adminBtn = document.getElementById('admin-chat-btn');
       if (adminBtn) adminBtn.style.display = data.admin_online ? 'flex' : 'none';
-    } catch(e) {}
+    } catch(e) {} finally { refreshingCounts = false; }
   }
-
+  refreshOnlineCounts();
+  document.addEventListener('visibilitychange', () => {if (!document.hidden) refreshOnlineCounts();});
   setInterval(refreshOnlineCounts, 5000);
 </script>
 {% endblock %}
