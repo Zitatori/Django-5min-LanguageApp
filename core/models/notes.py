@@ -44,3 +44,15 @@ class ConversationNote(models.Model):
 
     def __str__(self):
         return f"Note by {self.tutor} for {self.student} on {self.created_at:%Y-%m-%d}"
+
+
+class LessonNoteTranslation(models.Model):
+    note = models.ForeignKey(ConversationNote, on_delete=models.CASCADE, related_name='translations')
+    language = models.CharField(max_length=2)
+    fingerprint = models.CharField(max_length=64, default='')
+    content = models.JSONField(default=dict)
+    status = models.CharField(max_length=12, default='pending')
+    attempted_at = models.DateTimeField(null=True)
+
+    class Meta:
+        constraints = [models.UniqueConstraint(fields=['note', 'language'], name='lesson_translation_language')]

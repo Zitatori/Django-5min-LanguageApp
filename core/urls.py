@@ -1,3 +1,4 @@
+from core.views.note_translation import note_translation
 from core.views.learner_brief import learner_brief
 from core.views.currency import set_display_currency
 from core.views.learner_levels import learner_levels
@@ -15,6 +16,7 @@ from core.views.profile import profile, purchase_points, request_withdrawal, tra
 
 
 urlpatterns = [
+    path('lesson-notes/<int:note_id>/translation/', note_translation, name='note_translation'),
     path('lesson/<int:match_id>/learner-brief/', learner_brief, name='learner_brief'),
     path("display-currency/", set_display_currency, name="set_display_currency"),
     path('admin-dashboard/user/<int:user_id>/lesson-records/', admin_lesson_records, name='admin_user_lesson_records'),
