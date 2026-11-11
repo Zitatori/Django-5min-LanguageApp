@@ -17,33 +17,34 @@ from django.contrib.auth import get_user_model
 from core.services.study_notes import LANGUAGES, StudyGenerationError, collect_history, request_study_note
 
 
-class StudyLessonChoice(forms.ModelChoiceField):
+class StudyLessonChoice(forms.ModelMultipleChoiceField):
     def label_from_instance(self, lesson):
-        return '{} · {} · #{}'.format(timezone.localtime(lesson.end_at).strftime('%Y-%m-%d %H:%M'), _(lesson.request.language.name), lesson.pk)
+        return '{} · {} · {}'.format(timezone.localtime(lesson.end_at).strftime('%Y-%m-%d %H:%M'), _(lesson.request.language.name), lesson.tutor.user.first_name or lesson.tutor.user.username)
 
 
 class StudyNoteForm(forms.Form):
-    lesson = StudyLessonChoice(queryset=QuickLessonMatch.objects.none(), label=gettext_lazy('Lesson'), required=False)
+    lesson = StudyLessonChoice(queryset=QuickLessonMatch.objects.none(), label=gettext_lazy('Lessons to review'), widget=forms.CheckboxSelectMultiple, required=True)
 
     def __init__(self, *args, user, gold=False, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['lesson'].required = not gold
+        self.fields['lesson'].required = True
         self.fields['lesson'].queryset = completed_lessons().filter(
             request__student__user=user, request__purpose='lesson',
             student_joined_at__isnull=False, tutor_joined_at__isnull=False,
             end_at__lte=timezone.now(), request__language__code__in=LANGUAGES,
-        ).exclude(conversationnote__conversation_not_held=True).select_related('request__language').order_by('-end_at', '-pk')
+        ).exclude(conversationnote__conversation_not_held=True).select_related('request__language', 'tutor__user').order_by('-end_at', '-pk')
 
     def clean(self):
         data = super().clean()
-        lesson = data.get('lesson')
-        if lesson:
-            data['target_language'] = lesson.request.language.code
-        elif not data.get('target_language'):
-            self.add_error('target_language', gettext_lazy('This field is required.'))
+        lessons = data.get('lesson')
+        if lessons:
+            languages = {lesson.request.language.code for lesson in lessons}
+            if len(languages) != 1:
+                self.add_error('lesson', _('Choose lessons in the same study language.'))
+            else:
+                data['target_language'] = languages.pop()
         return data
 
-    target_language = forms.ChoiceField(required=False, label=gettext_lazy('Study language'), choices=[(k, gettext_lazy(v)) for k, v in LANGUAGES.items()])
     explanation_language = forms.ChoiceField(label=gettext_lazy('Explanation language'), choices=[(k, gettext_lazy(v)) for k, v in LANGUAGES.items()])
     include_private_notes = forms.BooleanField(label=gettext_lazy('Include my private notes'), required=False, initial=False)
     request_token = forms.CharField(widget=forms.HiddenInput)
@@ -60,9 +61,8 @@ def study_notes(request):
     gold = GoldMembership.objects.filter(user=request.user, expires_at__gt=timezone.now()).exists()
     form = StudyNoteForm(request.POST if request.method == 'POST' else None, user=request.user, gold=gold, initial={
         'request_token': new_token(request.user),
-        'lesson': request.GET.get('lesson') if request.GET.get('lesson', '').isdigit() else None,
+        'lesson': [request.GET['lesson']] if request.GET.get('lesson', '').isdigit() else [],
         'explanation_language': getattr(request, 'LANGUAGE_CODE', 'en').split('-')[0],
-        'target_language': 'ja',
     })
     error, status = '', 200
     if request.method == 'POST':
@@ -82,7 +82,7 @@ def study_notes(request):
                     error, status = _('This request was already submitted. Reload to start a new request.'), 409
                 else:
                     data = form.cleaned_data
-                    history, level, ids = collect_history(request.user, data['target_language'], data['include_private_notes'], lesson_id=data['lesson'].pk if data.get('lesson') else None)
+                    history, level, ids = collect_history(request.user, data['target_language'], data['include_private_notes'], lesson_ids=[lesson.pk for lesson in data['lesson']])
                     if not history:
                         error = _('No lesson notes are available for this language yet. Complete a lesson and save notes first.')
                     else:
@@ -93,12 +93,18 @@ def study_notes(request):
                                 # Serialize the allowance check across requests/workers for this learner.
                                 get_user_model().objects.select_for_update().get(pk=request.user.pk)
                                 if not gold:
-                                    saved = StudyNote.objects.filter(user=request.user, format='study_note', lesson=data['lesson'], status='ready').first()
-                                    if saved:
-                                        return redirect('study_note_detail', pk=saved.pk)
+                                    selected_ids = set(ids)
+                                    for saved in StudyNote.objects.filter(user=request.user, format='study_note', status='ready').only('pk', 'source_lesson_ids', 'lesson_id'):
+                                        used_ids = set(saved.source_lesson_ids or ([saved.lesson_id] if saved.lesson_id else []))
+                                        if selected_ids == used_ids:
+                                            return redirect('study_note_detail', pk=saved.pk)
+                                        if selected_ids & used_ids:
+                                            raise forms.ValidationError(_('Some selected lessons already have study notes. Open the saved notes or select unused lessons.'))
                                 note = StudyNote.objects.create(user=request.user, request_key=key,
-                                    lesson=data.get('lesson'), target_language=data['target_language'], explanation_language=data['explanation_language'],
+                                    lesson=data['lesson'][0] if len(data['lesson']) == 1 else None, target_language=data['target_language'], explanation_language=data['explanation_language'],
                                     include_private_notes=data['include_private_notes'], learner_level=level, source_lesson_ids=ids)
+                        except forms.ValidationError as exc:
+                            error = exc.messages[0]
                         except IntegrityError:
                             error, status = _('A study note is already being generated. Please wait, then reload.'), 409
                         else:

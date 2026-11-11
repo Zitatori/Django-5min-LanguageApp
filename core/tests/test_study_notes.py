@@ -41,7 +41,7 @@ class StudyNoteTests(TestCase):
         return match
 
     def data(self, **changes):
-        data = {'request_token': new_token(self.user), 'target_language': 'ja', 'explanation_language': 'fr'}
+        data = {'lesson': [self.match.pk], 'request_token': new_token(self.user), 'target_language': 'ja', 'explanation_language': 'fr'}
         data.update(changes)
         return data
 
@@ -77,9 +77,9 @@ class StudyNoteTests(TestCase):
         self.gold.save()
         self.user.is_staff = True
         self.user.save()
-        self.assertEqual(self.client.post(self.url, self.data()).status_code, 400)
+        self.assertEqual(self.client.post(self.url, self.data(lesson=[])).status_code, 400)
         self.gold.delete()
-        self.assertEqual(self.client.post(self.url, self.data()).status_code, 400)
+        self.assertEqual(self.client.post(self.url, self.data(lesson=[])).status_code, 400)
         self.assertContains(self.client.get(self.url), 'id="study-form"')
         api.assert_not_called()
 
@@ -126,8 +126,41 @@ class StudyNoteTests(TestCase):
 
     @patch('core.views.study_notes.request_study_note')
     def test_no_history_and_wrong_language_do_not_call_api(self, api):
-        self.assertContains(self.client.post(self.url, self.data(target_language='es')), 'No lesson notes', status_code=200)
+        self.assertEqual(self.client.post(self.url, self.data(lesson=[])).status_code, 400)
         api.assert_not_called()
+
+    @patch('core.views.study_notes.request_study_note', return_value=(SHEET, USAGE))
+    def test_multiple_selection_includes_all_and_preserves_free_allowance(self, api):
+        self.gold.delete()
+        selected = [self.match] + [self.lesson(self.student) for _ in range(5)]
+        ids = [m.pk for m in selected]
+        response = self.client.post(self.url, self.data(lesson=ids))
+        self.assertEqual(response.status_code, 302)
+        note = StudyNote.objects.get(status='ready')
+        self.assertEqual(set(note.source_lesson_ids), set(ids))
+        self.assertIsNone(note.lesson_id)
+        self.assertEqual(len(api.call_args.args[3]), 6)
+        self.assertTrue(all('private_notes' not in row for row in api.call_args.args[3]))
+        self.assertEqual(self.client.post(self.url, self.data(lesson=list(reversed(ids)))).url, response.url)
+        new_lesson = self.lesson(self.student)
+        blocked = self.client.post(self.url, self.data(lesson=[ids[0], new_lesson.pk]))
+        self.assertContains(blocked, 'already have study notes')
+        self.assertEqual(api.call_count, 1)
+
+    @patch('core.views.study_notes.request_study_note')
+    def test_mixed_language_and_foreign_selection_rejected(self, api):
+        english = LessonLanguage.objects.create(code='en', name='English')
+        other_language = self.lesson(self.student, english)
+        foreign = self.lesson(StudentProfile.objects.create(user=self.other))
+        for lesson in [other_language, foreign]:
+            self.assertEqual(self.client.post(self.url, self.data(lesson=[self.match.pk, lesson.pk])).status_code, 400)
+        api.assert_not_called()
+
+    def test_picker_has_no_target_language_or_technical_lesson_number(self):
+        response = self.client.get(self.url)
+        self.assertContains(response, 'type="checkbox" name="lesson"')
+        self.assertNotContains(response, 'name="target_language"')
+        self.assertNotContains(response, ' · #')
 
     def test_only_own_latest_five_completed_matching_lessons(self):
         old_id = self.match.pk
@@ -182,7 +215,7 @@ class StudyNoteTests(TestCase):
 
     @patch('core.views.study_notes.request_study_note')
     def test_invalid_languages_token_and_foreign_token(self, api):
-        for data in [self.data(target_language='xx'), self.data(request_token='invalid'), self.data(request_token=new_token(self.other))]:
+        for data in [self.data(explanation_language='xx'), self.data(request_token='invalid'), self.data(request_token=new_token(self.other))]:
             self.assertEqual(self.client.post(self.url, data).status_code, 400)
         api.assert_not_called()
 

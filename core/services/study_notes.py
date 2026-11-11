@@ -143,7 +143,7 @@ def redact(text, identifiers):
     return text
 
 
-def collect_history(user, language, include_private, lesson_id=None):
+def collect_history(user, language, include_private, lesson_id=None, lesson_ids=None):
     matches_query = completed_lessons().filter(
         request__student__user=user, request__language__code=language,
         request__purpose='lesson', student_joined_at__isnull=False,
@@ -154,7 +154,9 @@ def collect_history(user, language, include_private, lesson_id=None):
     )).order_by('-started_at', '-pk')
     if lesson_id is not None:
         matches_query = matches_query.filter(pk=lesson_id)
-    matches = list(matches_query[:5])
+    if lesson_ids is not None:
+        matches_query = matches_query.filter(pk__in=lesson_ids)
+    matches = list(matches_query if lesson_ids is not None else matches_query[:5])
     identifiers = [user.username, user.first_name, user.last_name, user.email]
     for match in matches:
         tutor = match.tutor.user

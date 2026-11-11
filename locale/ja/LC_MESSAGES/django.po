@@ -1442,6 +1442,33 @@ msgid ""
 " AI review materials."
 msgstr "生徒にも共有されます。講師向けの「生徒の会話メモ」とAI復習教材の作成に使われます。"
 
+msgid "Lessons to review"
+msgstr "復習するレッスン"
+
+msgid "Choose lessons in the same study language."
+msgstr "同じ学習言語のレッスンを選んでください。"
+
+msgid ""
+"Some selected lessons already have study notes. Open the saved notes or "
+"select unused lessons."
+msgstr "選択したレッスンの一部は復習ノートを作成済みです。保存済みのノートを開くか、未作成のレッスンを選んでください。"
+
+msgid ""
+"Select one or more lessons in the same language to review together. The "
+"study language is detected automatically."
+msgstr "同じ言語のレッスンを1つ以上選ぶと、まとめて復習できます。学習対象言語は自動で決まります。"
+
+msgid ""
+"We send notes from your selected lessons to OpenAI to create one combined "
+"review. Private notes are included only with your permission. We do not "
+"record or monitor conversations."
+msgstr ""
+"選択したレッスンのメモをOpenAIに送り、1つの復習教材にまとめます。プライベートメモは許可した場合のみ含まれます。会話の録音・監視は行いません。"
+
+msgid "%(count)s lesson reviewed"
+msgid_plural "%(count)s lessons reviewed"
+msgstr[0] "%(count)sレッスンを復習"
+
 #~ msgid "Step 1"
 #~ msgstr "ステップ1"
 

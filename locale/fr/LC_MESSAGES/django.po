@@ -1560,6 +1560,40 @@ msgstr ""
 "Partagé avec l’élève. Utilisé pour les repères destinés aux tuteurs et les "
 "supports de révision IA."
 
+msgid "Lessons to review"
+msgstr "Leçons à réviser"
+
+msgid "Choose lessons in the same study language."
+msgstr "Choisissez des leçons dans la même langue."
+
+msgid ""
+"Some selected lessons already have study notes. Open the saved notes or "
+"select unused lessons."
+msgstr ""
+"Certaines leçons ont déjà une fiche. Consultez les fiches enregistrées ou "
+"choisissez des leçons sans fiche."
+
+msgid ""
+"Select one or more lessons in the same language to review together. The "
+"study language is detected automatically."
+msgstr ""
+"Sélectionnez une ou plusieurs leçons dans la même langue pour les réviser "
+"ensemble. La langue étudiée est détectée automatiquement."
+
+msgid ""
+"We send notes from your selected lessons to OpenAI to create one combined "
+"review. Private notes are included only with your permission. We do not "
+"record or monitor conversations."
+msgstr ""
+"Les notes des leçons sélectionnées sont envoyées à OpenAI pour créer une "
+"fiche commune. Vos notes privées ne sont incluses qu’avec votre accord. Les "
+"conversations ne sont ni enregistrées ni surveillées."
+
+msgid "%(count)s lesson reviewed"
+msgid_plural "%(count)s lessons reviewed"
+msgstr[0] "%(count)s leçon révisée"
+msgstr[1] "%(count)s leçons révisées"
+
 #~ msgid "Step 1"
 #~ msgstr "Étape 1"
 
