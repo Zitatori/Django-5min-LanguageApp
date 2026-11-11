@@ -1,3 +1,4 @@
+from core.services.study_display import localized_study_content
 """Read-only administrator access to saved learning materials (never raw private notes)."""
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -30,7 +31,7 @@ def admin_study_note_detail(request, user_id, pk):
     note = get_object_or_404(StudyNote.objects.select_related('user', 'lesson'),
         user_id=user_id, pk=pk, status='ready')
     template = 'core/cheatsheet_detail.html' if note.format == 'cheatsheet' else 'core/study_note_detail.html'
-    return render(request, template, {'note': note, 'sheet': note.content,
+    return render(request, template, {'note': note, 'sheet': localized_study_content(note.content, note.explanation_language),
         'admin_review': True, 'learner': note.user,
         'target_name': _(LANGUAGES.get(note.target_language, note.target_language)),
         'explanation_name': _(LANGUAGES.get(note.explanation_language, note.explanation_language))})

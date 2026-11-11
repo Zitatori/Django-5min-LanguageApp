@@ -1,3 +1,4 @@
+from core.services.study_display import localized_study_content
 from core.services.lesson_lifecycle import completed_lessons
 """Owner-only lesson cheatsheets; existing Gold and generation lock are reused."""
 import uuid
@@ -117,5 +118,5 @@ def cheatsheet_detail(request, pk):
     own = StudyNote.objects.filter(user=request.user, format='cheatsheet', status='ready')
     previous = own.filter(Q(created_at__lt=note.created_at) | Q(created_at=note.created_at, pk__lt=note.pk)).order_by('-created_at', '-pk').first()
     following = own.filter(Q(created_at__gt=note.created_at) | Q(created_at=note.created_at, pk__gt=note.pk)).order_by('created_at', 'pk').first()
-    return render(request, 'core/cheatsheet_detail.html', {'note': note, 'sheet': note.content,
+    return render(request, 'core/cheatsheet_detail.html', {'note': note, 'sheet': localized_study_content(note.content, note.explanation_language),
         'previous': previous, 'following': following})

@@ -1,3 +1,4 @@
+from core.services.study_display import localized_study_content
 from core.services.lesson_lifecycle import completed_lessons
 import uuid
 from datetime import timedelta
@@ -130,5 +131,5 @@ def study_note_detail(request, pk):
     note = get_object_or_404(StudyNote, pk=pk, user=request.user, status='ready')
     if note.format == 'cheatsheet':
         return redirect('cheatsheet_detail', pk=note.pk)
-    return render(request, 'core/study_note_detail.html', {'note': note, 'sheet': note.content,
+    return render(request, 'core/study_note_detail.html', {'note': note, 'sheet': localized_study_content(note.content, note.explanation_language),
         'target_name': _(LANGUAGES[note.target_language]), 'explanation_name': _(LANGUAGES[note.explanation_language])})

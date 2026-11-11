@@ -2155,3 +2155,27 @@ msgstr "I like …"
 
 msgid "I like … because …"
 msgstr "I like … because …"
+
+msgid "Learner conversation brief"
+msgstr "Learner conversation brief"
+
+msgid "Preparing a summary of past conversations…"
+msgstr "Preparing a summary of past conversations…"
+
+msgid "Past tutor notes"
+msgstr "Past tutor notes"
+
+msgid ""
+"Please use the past tutor notes below. A summary is temporarily unavailable."
+msgstr ""
+"Please use the past tutor notes below. A summary is temporarily unavailable."
+
+msgid "Based on tutor notes; confirm details naturally with the learner."
+msgstr "Based on tutor notes; confirm details naturally with the learner."
+
+msgid ""
+"Shared with the student. Used for the tutor’s learner conversation brief and"
+" AI review materials."
+msgstr ""
+"Shared with the student. Used for the tutor’s learner conversation brief and"
+" AI review materials."

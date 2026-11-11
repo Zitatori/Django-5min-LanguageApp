@@ -63,7 +63,7 @@ class ConversationNotesTests(TestCase):
 
     def test_not_held_can_save_empty_without_generating(self):
         from unittest.mock import patch
-        with patch('core.views.lesson.generate_for_note') as generate:
+        with patch('core.services.question_generation.generate_for_note') as generate:
             response = self.client.post(self.url, {'conversation_not_held': 'on'})
         self.assertEqual(response.status_code, 302)
         note = ConversationNote.objects.get(match=self.match)

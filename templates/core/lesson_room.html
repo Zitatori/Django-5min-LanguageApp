@@ -72,16 +72,18 @@
   {% if not is_student %}
   <div class="lr-notes-wrap" id="lr-notes-wrap">
     <button class="lr-notes-toggle" id="lr-notes-toggle" type="button">
-      ✨ {% trans "Next questions" %}
+      ✨ {% trans "Learner conversation brief" %}
       <span class="lr-notes-chevron" id="lr-notes-chevron">▾</span>
     </button>
     <div class="lr-notes-panel lr-notes-panel-guide" id="lr-notes-panel" style="display:none;">
       <section class="lr-note-card lr-note-card-questions lr-note-tab-content active" data-note-content="questions">
-        <p class="lr-notes-prev-label">✨ {% trans "Next questions" %}{% if question_note.questions_level %} · {{ question_note.questions_level }}{% endif %}</p>
-        {% if question_note.suggested_questions %}
-        <ol class="lr-suggested-questions">
-          {% for question in question_note.suggested_questions %}<li>{{ question }}</li>{% endfor %}
-        </ol>
+        <p class="lr-notes-prev-label">✨ {% trans "Learner conversation brief" %}</p>
+        {% if previous_notes %}
+        <p id="learner-brief-status" role="status">{% trans 'Preparing a summary of past conversations…' %}</p>
+        <ul id="learner-brief-facts" class="lr-suggested-questions"></ul>
+        <details><summary>{% trans 'Past tutor notes' %}</summary>
+        {% for note in previous_notes %}<p><small>{{ note.created_at|date:"DATE_FORMAT" }}</small><br>{{ note.conversation_content }}</p>{% endfor %}
+        </details>
         {% else %}
         <ol class="lr-suggested-questions">
           {% if match.request.language.code == 'ja' %}
@@ -1164,4 +1166,27 @@ document.addEventListener('submit', function(e) {
 })();
 </script>
 
+
+{% if not is_student and previous_notes %}
+<script>
+(async function () {
+  const status = document.getElementById('learner-brief-status');
+  const fallback = "{% trans 'Please use the past tutor notes below. A summary is temporarily unavailable.' as brief_fallback %}{{ brief_fallback|escapejs }}";
+  try {
+    const response = await fetch("{% url 'learner_brief' match.id %}", {
+      method:'POST', headers:{'X-CSRFToken':'{{ csrf_token }}'}, credentials:'same-origin'
+    });
+    if (!response.ok) throw new Error('unavailable');
+    const data = await response.json();
+    if (data.status !== 'ready' || !data.facts.length) throw new Error('unavailable');
+    for (const fact of data.facts) {
+      const item = document.createElement('li');
+      item.textContent = fact.text + ' (' + fact.date + ')';
+      document.getElementById('learner-brief-facts').appendChild(item);
+    }
+    status.textContent = "{% trans 'Based on tutor notes; confirm details naturally with the learner.' as brief_notice %}{{ brief_notice|escapejs }}";
+  } catch (_) { status.textContent = fallback; }
+})();
+</script>
+{% endif %}
 {% endblock %}

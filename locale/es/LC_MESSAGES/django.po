@@ -1516,6 +1516,33 @@ msgstr "Me gusta …"
 msgid "I like … because …"
 msgstr "Me gusta … porque …"
 
+msgid "Learner conversation brief"
+msgstr "Resumen del estudiante"
+
+msgid "Preparing a summary of past conversations…"
+msgstr "Preparando un resumen de las conversaciones anteriores…"
+
+msgid "Past tutor notes"
+msgstr "Notas anteriores de los tutores"
+
+msgid ""
+"Please use the past tutor notes below. A summary is temporarily unavailable."
+msgstr ""
+"El resumen no está disponible. Consulta las notas de los tutores a "
+"continuación."
+
+msgid "Based on tutor notes; confirm details naturally with the learner."
+msgstr ""
+"Basado en las notas de los tutores; confirma los detalles durante la "
+"conversación."
+
+msgid ""
+"Shared with the student. Used for the tutor’s learner conversation brief and"
+" AI review materials."
+msgstr ""
+"Se comparte con el estudiante. Se utiliza para el resumen destinado a los "
+"tutores y el material de repaso con IA."
+
 #~ msgid "Step 1"
 #~ msgstr "Paso 1"
 

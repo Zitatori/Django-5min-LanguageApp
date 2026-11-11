@@ -1421,6 +1421,27 @@ msgstr "…が好きです。"
 msgid "I like … because …"
 msgstr "…が好きです。理由は…です。"
 
+msgid "Learner conversation brief"
+msgstr "生徒の会話メモ"
+
+msgid "Preparing a summary of past conversations…"
+msgstr "過去の会話を整理しています…"
+
+msgid "Past tutor notes"
+msgstr "過去の講師メモ"
+
+msgid ""
+"Please use the past tutor notes below. A summary is temporarily unavailable."
+msgstr "現在要約を表示できません。下の過去の講師メモをご確認ください。"
+
+msgid "Based on tutor notes; confirm details naturally with the learner."
+msgstr "講師の記録をもとにしています。現在も同じか、会話の中で確認してください。"
+
+msgid ""
+"Shared with the student. Used for the tutor’s learner conversation brief and"
+" AI review materials."
+msgstr "生徒にも共有されます。講師向けの「生徒の会話メモ」とAI復習教材の作成に使われます。"
+
 #~ msgid "Step 1"
 #~ msgstr "ステップ1"
 

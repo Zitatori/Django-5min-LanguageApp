@@ -237,7 +237,7 @@ msgstr "Membre"
 
 #: templates/core/profile.html:179
 msgid "Active until"
-msgstr "Valide jusqu'au"
+msgstr "Valable jusqu’au"
 
 #: templates/core/profile.html:186
 msgid "Your Points"
@@ -1527,6 +1527,38 @@ msgstr "J’aime …"
 
 msgid "I like … because …"
 msgstr "J’aime … parce que …"
+
+msgid "Select a tutor"
+msgstr "Choisissez un tuteur"
+
+msgid "Level"
+msgstr "Niveau"
+
+msgid "Learner conversation brief"
+msgstr "Repères sur l’élève"
+
+msgid "Preparing a summary of past conversations…"
+msgstr "Synthèse des conversations précédentes…"
+
+msgid "Past tutor notes"
+msgstr "Notes précédentes des tuteurs"
+
+msgid ""
+"Please use the past tutor notes below. A summary is temporarily unavailable."
+msgstr ""
+"La synthèse est indisponible. Consultez les notes des tuteurs ci-dessous."
+
+msgid "Based on tutor notes; confirm details naturally with the learner."
+msgstr ""
+"Synthèse des notes des tuteurs ; confirmez les détails naturellement avec "
+"l’élève."
+
+msgid ""
+"Shared with the student. Used for the tutor’s learner conversation brief and"
+" AI review materials."
+msgstr ""
+"Partagé avec l’élève. Utilisé pour les repères destinés aux tuteurs et les "
+"supports de révision IA."
 
 #~ msgid "Step 1"
 #~ msgstr "Étape 1"

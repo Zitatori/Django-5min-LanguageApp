@@ -5,7 +5,7 @@ from django.http import HttpResponseForbidden
 from django.contrib import messages
 from django.db import transaction
 from django.utils.translation import gettext as _
-from core.services.question_generation import generate_for_note
+from core.services.learner_brief import brief_history
 from core.forms import ConversationNoteForm
 
 from django.contrib.auth.decorators import login_required
@@ -98,12 +98,7 @@ def lesson_room(request, match_id: int):
         is_first_session = False
     else:
         after_lesson_url = reverse('lesson_note', args=[match.id])
-        previous_notes = list(
-            ConversationNote.objects.filter(
-                student=match.request.student,
-                match__request__language=match.request.language,
-            ).select_related('tutor__user').order_by("-created_at")[:5]
-        )
+        previous_notes = brief_history(match.request.student_id, match.request.language_id)
         is_first_session = len(previous_notes) == 0
 
     context = {
@@ -213,13 +208,8 @@ def lesson_note(request, match_id: int):
                     note=data['talked_about'], talked_about=data['talked_about'],
                     learner_level=data['learner_level'], next_conversation=data['next_conversation'],
                     conversation_not_held=data['conversation_not_held'],
-                    questions_status='unavailable' if data['conversation_not_held'] else 'pending',
+                    questions_status='retired',
                 )
-        if not saved_note.conversation_not_held:
-            generate_for_note(saved_note)
-            saved_note.refresh_from_db()
-            if saved_note.questions_status == "unavailable":
-                messages.info(request, _("Note saved. Suggested questions are currently unavailable."))
         return redirect("tutor_dashboard")
 
     previous_notes = ConversationNote.objects.filter(
