@@ -1,0 +1,9 @@
+{% load i18n %}
+<form method="post" action="{% url 'set_display_currency' %}" style="display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:12px 0;">
+{% csrf_token %}<input type="hidden" name="next" value="{{ request.get_full_path }}">
+<label for="display-currency">{% trans 'Display currency' %}</label>
+<select name="currency" id="display-currency" style="max-width:100%;padding:8px;font-size:16px;">
+{% for code, label in display_currency_choices %}<option value="{{ code }}" {% if code == display_currency %}selected{% endif %}>{{ code }} — {{ label }}</option>{% endfor %}
+</select><button type="submit" class="btn">{% trans 'Apply' %}</button>
+</form>
+{% if converted_price %}<p style="font-size:13px;color:#64748b;">{% blocktrans with rate=display_rate_label %}Estimated conversion at a fixed rate: CHF 1 = {{ rate }}. The final payment amount and currency are confirmed by email.{% endblocktrans %}</p>{% endif %}

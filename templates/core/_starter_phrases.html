@@ -1,0 +1,4 @@
+{% load i18n %}
+<p>{% trans 'Use these phrases when you need help. Replace … with your own words.' %}</p>
+<p class="starter-hint">{% trans 'Pronunciation is a guide; accents may vary.' %}</p>
+{% for phrase, reading, meaning in conversation_phrases %}<p class="starter-item"><strong>{{ phrase }}</strong><br><span class="starter-reading">{{ reading }}</span><br><span>{{ meaning }}</span></p>{% endfor %}
