@@ -1,3 +1,4 @@
+from core.services.phrases import conversation_phrases
 from django.db import transaction
 from core.services.lesson_lifecycle import active_calls, completed_lessons, PRESENCE_SECONDS
 from core.services.learner_levels import self_level
@@ -374,6 +375,7 @@ def create_request(request):
     tutors_by_language_json = json.dumps(tutors_by_language)
 
     return render(request, "core/create_request.html", {
+        "starter_kits": [(lang.pk, conversation_phrases(lang.code, self_level(request.user, lang.code))) for lang, *_rest in languages_with_count],
         "languages_with_count": languages_with_count,
         "matches": matches,
         "total_lessons": total_lessons,

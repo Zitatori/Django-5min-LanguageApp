@@ -1496,6 +1496,26 @@ msgstr ""
 "Conversión orientativa a tipo fijo: 1 CHF = %(rate)s. El importe y la moneda"
 " del pago se confirman por correo electrónico."
 
+msgid "Conversation starter kit"
+msgstr "Kit para empezar a conversar"
+
+msgid "Use these phrases when you need help. Replace … with your own words."
+msgstr ""
+"Utiliza estas frases si necesitas ayuda. Sustituye … por tus propias "
+"palabras."
+
+msgid "Pronunciation is a guide; accents may vary."
+msgstr "La pronunciación es orientativa; los acentos pueden variar."
+
+msgid "My name is …"
+msgstr "Me llamo …"
+
+msgid "I like …"
+msgstr "Me gusta …"
+
+msgid "I like … because …"
+msgstr "Me gusta … porque …"
+
 #~ msgid "Step 1"
 #~ msgstr "Paso 1"
 

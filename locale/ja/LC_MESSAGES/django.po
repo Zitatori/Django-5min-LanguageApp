@@ -1403,6 +1403,24 @@ msgid ""
 "amount and currency are confirmed by email."
 msgstr "固定レートによる目安：1 CHF = %(rate)s。実際のお支払い金額と通貨はメールでご案内します。"
 
+msgid "Conversation starter kit"
+msgstr "会話スターターキット"
+
+msgid "Use these phrases when you need help. Replace … with your own words."
+msgstr "困ったらこのフレーズを使ってみましょう。「…」には自分の名前や好きなものを入れてください。"
+
+msgid "Pronunciation is a guide; accents may vary."
+msgstr "読み方は目安です。地域によって発音が異なる場合があります。"
+
+msgid "My name is …"
+msgstr "私の名前は…です。"
+
+msgid "I like …"
+msgstr "…が好きです。"
+
+msgid "I like … because …"
+msgstr "…が好きです。理由は…です。"
+
 #~ msgid "Step 1"
 #~ msgstr "ステップ1"
 

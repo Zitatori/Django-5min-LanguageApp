@@ -1508,6 +1508,26 @@ msgstr ""
 "Conversion indicative à taux fixe : 1 CHF = %(rate)s. Le montant et la "
 "devise du paiement sont confirmés par e-mail."
 
+msgid "Conversation starter kit"
+msgstr "Kit pour démarrer la conversation"
+
+msgid "Use these phrases when you need help. Replace … with your own words."
+msgstr ""
+"Utilisez ces phrases si vous avez besoin d’aide. Remplacez … par vos propres"
+" mots."
+
+msgid "Pronunciation is a guide; accents may vary."
+msgstr "La prononciation est indicative ; les accents peuvent varier."
+
+msgid "My name is …"
+msgstr "Je m’appelle …"
+
+msgid "I like …"
+msgstr "J’aime …"
+
+msgid "I like … because …"
+msgstr "J’aime … parce que …"
+
 #~ msgid "Step 1"
 #~ msgstr "Étape 1"
 

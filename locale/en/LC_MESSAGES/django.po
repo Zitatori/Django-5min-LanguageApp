@@ -2137,3 +2137,21 @@ msgid ""
 msgstr ""
 "Estimated conversion at a fixed rate: CHF 1 = %(rate)s. The final payment "
 "amount and currency are confirmed by email."
+
+msgid "Conversation starter kit"
+msgstr "Conversation starter kit"
+
+msgid "Use these phrases when you need help. Replace … with your own words."
+msgstr "Use these phrases when you need help. Replace … with your own words."
+
+msgid "Pronunciation is a guide; accents may vary."
+msgstr "Pronunciation is a guide; accents may vary."
+
+msgid "My name is …"
+msgstr "My name is …"
+
+msgid "I like …"
+msgstr "I like …"
+
+msgid "I like … because …"
+msgstr "I like … because …"
