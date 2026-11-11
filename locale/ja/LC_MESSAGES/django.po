@@ -71,11 +71,9 @@ msgstr "5分お話ししましょう"
 
 #: templates/core/create_request.html:222
 msgid ""
-"Select the language you want to practice. If any tutors are online, you will "
-"be randomly matched."
-msgstr ""
-"練習したい言語を選択してください。オンラインの講師がいれば、自動でランダムに"
-"マッチングされます。"
+"Select the language you want to practice. If any tutors are online, you will"
+" be randomly matched."
+msgstr "練習したい言語を選択してください。オンラインの講師がいれば、自動でランダムにマッチングされます。"
 
 #: templates/core/create_request.html:224
 #| msgid "End lesson"
@@ -100,7 +98,8 @@ msgstr "オフライン"
 msgid "Start a 5-Minute Lesson"
 msgstr "5分レッスンスタート"
 
-#: templates/core/create_request.html:277 templates/core/student_history.html:7
+#: templates/core/create_request.html:277
+#: templates/core/student_history.html:7
 msgid "My Lesson History"
 msgstr "レッスン履歴"
 
@@ -115,8 +114,8 @@ msgstr "5分オンラインレッスン"
 
 #: templates/core/home.html:13
 msgid ""
-"A super-light conversation platform for people who want to talk with someone "
-"right now."
+"A super-light conversation platform for people who want to talk with someone"
+" right now."
 msgstr "今すぐ誰かと会話したい人向けの超軽量会話プラットフォーム"
 
 #: templates/core/home.html:17
@@ -181,8 +180,8 @@ msgstr "カメラまたはマイクにアクセスできません。ブラウザ
 #| msgid ""
 #| "Could not access camera/microphone. Please check your browser settings."
 msgid ""
-"Camera/microphone permission was denied. Please allow access in your browser "
-"settings and reload."
+"Camera/microphone permission was denied. Please allow access in your browser"
+" settings and reload."
 msgstr "カメラまたはマイクにアクセスできません。ブラウザ設定を確認してください"
 
 #: templates/core/lesson_room.html:438
@@ -212,7 +211,8 @@ msgstr "カメラオフ"
 msgid "Nickname"
 msgstr "ニックネーム"
 
-msgid "Shown to your partner during lessons. Leave blank to use your username."
+msgid ""
+"Shown to your partner during lessons. Leave blank to use your username."
 msgstr "レッスン中に相手に表示されます。空欄の場合はユーザー名が使われます。"
 
 msgid "Save"
@@ -338,7 +338,8 @@ msgstr "受取予定"
 
 #: templates/core/profile.html
 #, python-format
-msgid "You need at least %(min_withdrawal)s pt to withdraw. Current: %(current)s pt"
+msgid ""
+"You need at least %(min_withdrawal)s pt to withdraw. Current: %(current)s pt"
 msgstr "出金には最低 %(min_withdrawal)s pt 必要です（現在: %(current)s pt）"
 
 #: templates/core/profile.html:249
@@ -445,8 +446,14 @@ msgid "You can pay by bank transfer or PayPal."
 msgstr "銀行振込またはPayPalで支払えます。"
 
 #: templates/core/purchase_points.html
-msgid "Please email <a href=\"mailto:zitatori@gmail.com?subject=QuickLesson%20points%20purchase\">zitatori@gmail.com</a> for payment details."
-msgstr "支払い先の案内は <a href=\"mailto:zitatori@gmail.com?subject=QuickLesson%20points%20purchase\">zitatori@gmail.com</a> までメールしてください。"
+msgid ""
+"Please email <a "
+"href=\"mailto:zitatori@gmail.com?subject=QuickLesson%20points%20purchase\">zitatori@gmail.com</a>"
+" for payment details."
+msgstr ""
+"支払い先の案内は <a "
+"href=\"mailto:zitatori@gmail.com?subject=QuickLesson%20points%20purchase\">zitatori@gmail.com</a>"
+" までメールしてください。"
 
 #: templates/core/purchase_points.html
 msgid "For payment details, please email"
@@ -458,7 +465,9 @@ msgstr "購入したいポイント数をメールに書いてください。"
 
 #: templates/core/purchase_points.html
 #, python-format
-msgid "Please include your username (%(username)s) and how many points you want to purchase."
+msgid ""
+"Please include your username (%(username)s) and how many points you want to "
+"purchase."
 msgstr "ユーザー名（%(username)s）と購入したいポイント数をメールに書いてください。"
 
 #: templates/core/purchase_points.html
@@ -466,7 +475,8 @@ msgid "After payment is confirmed, Admin will add student points."
 msgstr "支払い確認後、Adminが生徒ポイントを付与します。"
 
 #: templates/core/purchase_points.html
-msgid "Bank transfer and PayPal are available. Payment details are sent by email."
+msgid ""
+"Bank transfer and PayPal are available. Payment details are sent by email."
 msgstr "銀行振込・PayPalで対応中。支払い先はメールでご案内します。"
 
 #: templates/core/request_detail.html:8
@@ -642,7 +652,9 @@ msgstr "すでにアカウントをお持ちですか？"
 msgid "Log in here"
 msgstr "こちらからログイン"
 
-msgid "To add a teaching language, an interview is required. Please email your available times to"
+msgid ""
+"To add a teaching language, an interview is required. Please email your "
+"available times to"
 msgstr "担当言語を追加する場合は面接が必要です。空いている日時を以下のメールアドレスまでお知らせください："
 
 msgid "No tutors available at your preferred time?"
@@ -684,77 +696,6 @@ msgstr "出金申請は3営業日以内に処理されます。"
 msgid "Today's earnings"
 msgstr "本日追加分"
 
-#~ msgid "Step 1"
-#~ msgstr "ステップ1"
-
-#~ msgid "Select a language"
-#~ msgstr "言語を選択"
-
-#~ msgid "Cancel"
-#~ msgstr "キャンセル"
-
-#~ msgid "5-minute lesson room"
-#~ msgstr "5分レッスンルーム"
-
-#~ msgid ""
-#~ "First, we only set up your camera and a placeholder for the remote video "
-#~ "to design the layout."
-#~ msgstr "まずはカメラと相手映像のプレースホルダーのみ表示しています"
-
-#~ msgid "Remaining time"
-#~ msgstr "残り時間"
-
-#~ msgid "Your browser does not support the video tag."
-#~ msgstr "このブラウザはvideoタグに対応していません"
-
-#~ msgid "Camera OFF"
-#~ msgstr "カメラOFF"
-
-#~ msgid "Mic OFF"
-#~ msgstr "マイクOFF"
-
-#~ msgid "The 5-minute lesson will end."
-#~ msgstr "5分レッスンが終了します"
-
-#~ msgid "Reason"
-#~ msgstr "理由"
-
-#~ msgid "Camera ON"
-#~ msgstr "カメラON"
-
-#~ msgid "Mic ON"
-#~ msgstr "マイクON"
-
-#~ msgid "This browser does not support getUserMedia."
-#~ msgstr "このブラウザはgetUserMediaに対応していません"
-
-#~ msgid ""
-#~ "When you go online, you’ll be available for 5-minute lesson matching."
-#~ msgstr "オンラインにすると5分レッスンのマッチング対象になります"
-
-#~ msgid "You are discoverable now."
-#~ msgstr "現在、生徒から見つけられる状態です"
-
-#~ msgid "You are not discoverable."
-#~ msgstr "現在、オフライン状態です"
-
-#~ msgid ""
-#~ "Waiting for a student… We’ll move you to the lesson room automatically "
-#~ "when matched."
-#~ msgstr "生徒を待機中です。マッチすると自動でレッスンルームへ移動します"
-
-#~ msgid "Switch online to start matching."
-#~ msgstr "オンラインにしてマッチングを開始してください"
-
-#~ msgid "Matching in progress…"
-#~ msgstr "マッチング中..."
-
-#~ msgid "Hi"
-#~ msgstr "こんにちは"
-
-#~ msgid "Languages I can teach"
-#~ msgstr "担当できる言語"
-
 msgid "Founder"
 msgstr "創設者"
 
@@ -776,22 +717,30 @@ msgstr "マイク入力を検出しました"
 msgid "Speak to test your microphone"
 msgstr "話してマイクをテストしてください"
 
-msgid "Camera or microphone permission was denied. Please allow access in your browser settings and try again."
+msgid ""
+"Camera or microphone permission was denied. Please allow access in your "
+"browser settings and try again."
 msgstr "カメラまたはマイクの権限が拒否されました。ブラウザ設定で許可してから再度お試しください。"
 
-msgid "Camera or microphone was not found. Please connect a device and try again."
+msgid ""
+"Camera or microphone was not found. Please connect a device and try again."
 msgstr "カメラまたはマイクが見つかりません。デバイスを接続してから再度お試しください。"
 
-msgid "Camera or microphone is already in use by another app. Please close other apps and try again."
+msgid ""
+"Camera or microphone is already in use by another app. Please close other "
+"apps and try again."
 msgstr "カメラまたはマイクが他のアプリで使用中です。他のアプリを閉じてから再度お試しください。"
 
-msgid "The selected camera or microphone cannot be used. Please try another device."
+msgid ""
+"The selected camera or microphone cannot be used. Please try another device."
 msgstr "選択されたカメラまたはマイクを使用できません。別のデバイスをお試しください。"
 
 msgid "This browser does not support camera and microphone checks."
 msgstr "このブラウザはカメラ・マイクチェックに対応していません。"
 
-msgid "Could not start the device check. Please check your browser permissions and connected devices."
+msgid ""
+"Could not start the device check. Please check your browser permissions and "
+"connected devices."
 msgstr "デバイスチェックを開始できませんでした。ブラウザの権限と接続済みデバイスを確認してください。"
 
 msgid "Camera and microphone check"
@@ -875,8 +824,11 @@ msgstr "まだ講師コメントはありません。"
 msgid "Referral bonus"
 msgstr "紹介ボーナス"
 
-msgid "Invite a friend and tell them your username (%(username)s). When that person has at least one 5-minute conversation, you will receive 5 student points."
-msgstr "友だちを紹介して、あなたのユーザー名（%(username)s）を伝えてください。その人が5分会話を1回以上したら、紹介者に生徒ポイント5ptをプレゼントします。"
+msgid ""
+"Invite a friend and tell them your username (%(username)s). When that person"
+" has at least one 5-minute conversation, you will receive 5 student points."
+msgstr ""
+"友だちを紹介して、あなたのユーザー名（%(username)s）を伝えてください。その人が5分会話を1回以上したら、紹介者に生徒ポイント5ptをプレゼントします。"
 
 msgid "Email address"
 msgstr "メールアドレス"
@@ -961,7 +913,9 @@ msgid "This request was already submitted. Reload to start a new request."
 msgstr "この生成リクエストは送信済みです。新しく生成するには再読み込みしてください。"
 
 #: AI study notes
-msgid "No lesson notes are available for this language yet. Complete a lesson and save notes first."
+msgid ""
+"No lesson notes are available for this language yet. Complete a lesson and "
+"save notes first."
 msgstr "この言語のレッスンノートがまだありません。レッスンを受けてノートを保存してからお試しください。"
 
 #: AI study notes
@@ -969,16 +923,28 @@ msgid "A study note is already being generated. Please wait, then reload."
 msgstr "復習ノートを生成中です。少し待ってから再読み込みしてください。"
 
 #: AI study notes
-msgid "Study notes could not be generated. Please try again later. Your lesson notes are safe."
+msgid ""
+"Study notes could not be generated. Please try again later. Your lesson "
+"notes are safe."
 msgstr "復習ノートを生成できませんでした。時間をおいてお試しください。元のレッスンノートは保存されています。"
 
 #: AI study notes
-msgid "We send notes from your latest five completed lessons in the selected language to OpenAI, including your level and your tutor's next-conversation comments. Private notes are sent only if you opt in below. We do not record or monitor conversations."
-msgstr "選択した言語の直近5回の受講済みレッスンについて、レベル・講師のノート・次回へのコメントをOpenAIに送信します。プライベートメモは下で選択した場合のみ送信します。会話の録音・モニタリングは行いません。"
+msgid ""
+"We send notes from your latest five completed lessons in the selected "
+"language to OpenAI, including your level and your tutor's next-conversation "
+"comments. Private notes are sent only if you opt in below. We do not record "
+"or monitor conversations."
+msgstr ""
+"選択した言語の直近5回の受講済みレッスンについて、レベル・講師のノート・次回へのコメントをOpenAIに送信します。プライベートメモは下で選択した場合のみ送信します。会話の録音・モニタリングは行いません。"
 
 #: AI study notes
-msgid "Account names and email fields are not sent. Known identifiers in notes are masked, but this cannot detect every personal detail. Remove sensitive information from your notes before generating. Generated materials are saved privately in QuickLesson and can be read without another API call."
-msgstr "アカウントの氏名・メールアドレスの項目は送信しません。ノート内の既知の識別情報は伏せますが、すべての個人情報を検出できるわけではありません。生成前に機密情報を取り除いてください。教材はQuickLessonに本人専用で保存され、再閲覧時にはAPIを呼び出しません。"
+msgid ""
+"Account names and email fields are not sent. Known identifiers in notes are "
+"masked, but this cannot detect every personal detail. Remove sensitive "
+"information from your notes before generating. Generated materials are saved"
+" privately in QuickLesson and can be read without another API call."
+msgstr ""
+"アカウントの氏名・メールアドレスの項目は送信しません。ノート内の既知の識別情報は伏せますが、すべての個人情報を検出できるわけではありません。生成前に機密情報を取り除いてください。教材はQuickLessonに本人専用で保存され、再閲覧時にはAPIを呼び出しません。"
 
 #: AI study notes
 msgid "OpenAI data handling"
@@ -1025,7 +991,9 @@ msgid "What to learn next"
 msgstr "次に学ぶべき内容"
 
 #: AI study notes
-msgid "AI-generated materials may contain mistakes. Check anything uncertain with your tutor. Answers below are practice examples."
+msgid ""
+"AI-generated materials may contain mistakes. Check anything uncertain with "
+"your tutor. Answers below are practice examples."
 msgstr "AI教材には誤りが含まれる場合があります。不明な点は講師に確認してください。以下の回答は練習用の例です。"
 
 #: AI study notes
@@ -1297,122 +1265,94 @@ msgstr "正解"
 msgid "There is not enough recorded lesson content for a review quiz."
 msgstr "レッスンの記録が不足しているため、復習クイズは作成されませんでした。"
 
-
 msgid "Retry"
 msgstr "再試行"
-
 
 msgid "Try another tutor"
 msgstr "別の講師を試す"
 
-
 msgid "Back to dashboard"
 msgstr "ダッシュボードに戻る"
 
-
 msgid "Waiting…"
 msgstr "接続を待っています…"
-
 
 msgid ""
 "Connection could not be established. Check your connection and camera "
 "permissions, then retry or choose another tutor."
 msgstr "接続できませんでした。通信状態とカメラの許可を確認して再試行するか、別の講師を選んでください。"
 
-
 msgid ""
 "The call server could not be reached. Please check your connection and "
 "retry."
 msgstr "通話サーバーに接続できません。通信状態を確認して再試行してください。"
 
-
 msgid "30 seconds left — time to say goodbye and thank your partner."
 msgstr "残り30秒です。お互いにお礼と最後の挨拶をしましょう。"
-
 
 msgid "Helpful phrases"
 msgstr "会話に役立つフレーズ"
 
-
 msgid "Please say that again."
 msgstr "もう一度お願いします。"
-
 
 msgid "Please speak slowly."
 msgstr "ゆっくり話してください。"
 
-
 msgid "I don’t understand."
 msgstr "分かりません。"
-
 
 msgid "How about you?"
 msgstr "あなたはどうですか？"
 
-
 msgid "Congratulations! You spoke %(study_language)s for five minutes!"
 msgstr "おめでとうございます！%(study_language)sで5分間話しました！"
-
 
 msgid "Well done for practising today!"
 msgstr "今日も会話練習、お疲れさまでした！"
 
-
 msgid "Next session (your local time)"
 msgstr "次回セッション（現在地の時間）"
-
 
 msgid "A tutor is now available. Choose a tutor to start."
 msgstr "講師が空きました。講師を選んで始めましょう。"
 
-
 msgid "Choose a tutor"
 msgstr "講師を選ぶ"
-
 
 msgid "online"
 msgstr "オンライン"
 
-
 msgid "Select the language and tutor you want to practice with."
 msgstr "練習したい言語と講師を選んでください。"
-
 
 msgid "No tutors online for this language."
 msgstr "現在、この言語の講師はオンラインではありません。"
 
-
 msgid "Gold member"
 msgstr "Gold会員"
 
-
 msgid "Can express subtle nuances precisely and naturally"
 msgstr "細かいニュアンスまで正確かつ自然に表現できる"
-
 
 msgid ""
 "Share this invitation link with a friend. Your referral is filled in "
 "automatically at signup."
 msgstr "この紹介リンクを友達に送ってください。登録時に紹介者が自動で記録されます。"
 
-
 msgid "Invitation link"
 msgstr "紹介リンク"
-
 
 msgid "Copy link"
 msgstr "リンクをコピー"
 
-
 msgid "Copied"
 msgstr "コピーしました"
-
 
 msgid ""
 "When your friend completes a five-minute conversation, contact us to request"
 " the existing 5-point referral bonus."
 msgstr "友達が5分間の会話を終えたら、紹介特典の5ポイントについて運営にご連絡ください。"
-
 
 msgid ""
 "Join published sessions while tutors are available. To arrange your two "
@@ -1421,22 +1361,114 @@ msgid ""
 msgstr ""
 "公開中のセッションに、講師が対応できる時間に参加できます。週2回・各30分の希望枠はメールでご相談ください。対応可能な時間をメールで確認します。"
 
-
 msgid ""
 "To activate Gold: email us, receive payment instructions, then wait for our "
 "activation confirmation after payment is checked."
 msgstr "Goldの有効化：メールで申し込み → 支払い案内を受け取る → 入金確認後、有効化の連絡を受け取る。"
 
-
 msgid "%(n)s lesson"
 msgid_plural "%(n)s lessons"
 msgstr[0] "%(n)sレッスン"
-
 
 msgid "Welcome bonus: %(n)s point"
 msgid_plural "Welcome bonus: %(n)s points"
 msgstr[0] "登録特典：%(n)sポイント"
 
-
 msgid "Lesson #%(number)s"
 msgstr "レッスン #%(number)s"
+
+msgid "Display currency"
+msgstr "表示通貨"
+
+msgid "Japanese yen"
+msgstr "日本円"
+
+msgid "Swiss franc"
+msgstr "スイスフラン"
+
+msgid "US dollar"
+msgstr "米ドル"
+
+msgid "Euro"
+msgstr "ユーロ"
+
+msgid "Apply"
+msgstr "適用"
+
+msgid "%(price)s per month"
+msgstr "月額 %(price)s"
+
+msgid ""
+"Estimated conversion at a fixed rate: CHF 1 = %(rate)s. The final payment "
+"amount and currency are confirmed by email."
+msgstr "固定レートによる目安：1 CHF = %(rate)s。実際のお支払い金額と通貨はメールでご案内します。"
+
+#~ msgid "Step 1"
+#~ msgstr "ステップ1"
+
+#~ msgid "Select a language"
+#~ msgstr "言語を選択"
+
+#~ msgid "Cancel"
+#~ msgstr "キャンセル"
+
+#~ msgid "5-minute lesson room"
+#~ msgstr "5分レッスンルーム"
+
+#~ msgid ""
+#~ "First, we only set up your camera and a placeholder for the remote video to "
+#~ "design the layout."
+#~ msgstr "まずはカメラと相手映像のプレースホルダーのみ表示しています"
+
+#~ msgid "Remaining time"
+#~ msgstr "残り時間"
+
+#~ msgid "Your browser does not support the video tag."
+#~ msgstr "このブラウザはvideoタグに対応していません"
+
+#~ msgid "Camera OFF"
+#~ msgstr "カメラOFF"
+
+#~ msgid "Mic OFF"
+#~ msgstr "マイクOFF"
+
+#~ msgid "The 5-minute lesson will end."
+#~ msgstr "5分レッスンが終了します"
+
+#~ msgid "Reason"
+#~ msgstr "理由"
+
+#~ msgid "Camera ON"
+#~ msgstr "カメラON"
+
+#~ msgid "Mic ON"
+#~ msgstr "マイクON"
+
+#~ msgid "This browser does not support getUserMedia."
+#~ msgstr "このブラウザはgetUserMediaに対応していません"
+
+#~ msgid "When you go online, you’ll be available for 5-minute lesson matching."
+#~ msgstr "オンラインにすると5分レッスンのマッチング対象になります"
+
+#~ msgid "You are discoverable now."
+#~ msgstr "現在、生徒から見つけられる状態です"
+
+#~ msgid "You are not discoverable."
+#~ msgstr "現在、オフライン状態です"
+
+#~ msgid ""
+#~ "Waiting for a student… We’ll move you to the lesson room automatically when "
+#~ "matched."
+#~ msgstr "生徒を待機中です。マッチすると自動でレッスンルームへ移動します"
+
+#~ msgid "Switch online to start matching."
+#~ msgstr "オンラインにしてマッチングを開始してください"
+
+#~ msgid "Matching in progress…"
+#~ msgstr "マッチング中..."
+
+#~ msgid "Hi"
+#~ msgstr "こんにちは"
+
+#~ msgid "Languages I can teach"
+#~ msgstr "担当できる言語"

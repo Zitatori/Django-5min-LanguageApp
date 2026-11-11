@@ -124,8 +124,8 @@ msgstr ""
 
 #: venv/lib/python3.12/site-packages/django/core/validators.py:267
 msgid ""
-"Enter a valid “slug” consisting of Unicode letters, numbers, underscores, or "
-"hyphens."
+"Enter a valid “slug” consisting of Unicode letters, numbers, underscores, or"
+" hyphens."
 msgstr ""
 
 #: venv/lib/python3.12/site-packages/django/core/validators.py:281
@@ -325,15 +325,15 @@ msgstr ""
 #: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1489
 #, python-format
 msgid ""
-"“%(value)s” value has an invalid format. It must be in YYYY-MM-DD HH:MM[:ss[."
-"uuuuuu]][TZ] format."
+"“%(value)s” value has an invalid format. It must be in YYYY-MM-DD "
+"HH:MM[:ss[.uuuuuu]][TZ] format."
 msgstr ""
 
 #: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1497
 #, python-format
 msgid ""
-"“%(value)s” value has the correct format (YYYY-MM-DD HH:MM[:ss[.uuuuuu]]"
-"[TZ]) but it is an invalid date/time."
+"“%(value)s” value has the correct format (YYYY-MM-DD "
+"HH:MM[:ss[.uuuuuu]][TZ]) but it is an invalid date/time."
 msgstr ""
 
 #: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1502
@@ -352,8 +352,8 @@ msgstr ""
 #: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1789
 #, python-format
 msgid ""
-"“%(value)s” value has an invalid format. It must be in [DD] [[HH:]MM:]ss[."
-"uuuuuu] format."
+"“%(value)s” value has an invalid format. It must be in [DD] "
+"[[HH:]MM:]ss[.uuuuuu] format."
 msgstr ""
 
 #: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1793
@@ -378,8 +378,10 @@ msgstr "Estimated payout"
 
 #: templates/core/profile.html
 #, python-format
-msgid "You need at least %(min_withdrawal)s pt to withdraw. Current: %(current)s pt"
-msgstr "You need at least %(min_withdrawal)s pt to withdraw. Current: %(current)s pt"
+msgid ""
+"You need at least %(min_withdrawal)s pt to withdraw. Current: %(current)s pt"
+msgstr ""
+"You need at least %(min_withdrawal)s pt to withdraw. Current: %(current)s pt"
 
 #: templates/core/profile.html
 msgid "To avoid missed requests, please email"
@@ -500,8 +502,14 @@ msgid "You can pay by bank transfer or PayPal."
 msgstr "You can pay by bank transfer or PayPal."
 
 #: templates/core/purchase_points.html
-msgid "Please email <a href=\"mailto:zitatori@gmail.com?subject=QuickLesson%20points%20purchase\">zitatori@gmail.com</a> for payment details."
-msgstr "Please email <a href=\"mailto:zitatori@gmail.com?subject=QuickLesson%20points%20purchase\">zitatori@gmail.com</a> for payment details."
+msgid ""
+"Please email <a "
+"href=\"mailto:zitatori@gmail.com?subject=QuickLesson%20points%20purchase\">zitatori@gmail.com</a>"
+" for payment details."
+msgstr ""
+"Please email <a "
+"href=\"mailto:zitatori@gmail.com?subject=QuickLesson%20points%20purchase\">zitatori@gmail.com</a>"
+" for payment details."
 
 #: templates/core/purchase_points.html
 msgid "For payment details, please email"
@@ -513,16 +521,22 @@ msgstr "Please include how many points you want to purchase."
 
 #: templates/core/purchase_points.html
 #, python-format
-msgid "Please include your username (%(username)s) and how many points you want to purchase."
-msgstr "Please include your username (%(username)s) and how many points you want to purchase."
+msgid ""
+"Please include your username (%(username)s) and how many points you want to "
+"purchase."
+msgstr ""
+"Please include your username (%(username)s) and how many points you want to "
+"purchase."
 
 #: templates/core/purchase_points.html
 msgid "After payment is confirmed, Admin will add student points."
 msgstr "After payment is confirmed, Admin will add student points."
 
 #: templates/core/purchase_points.html
-msgid "Bank transfer and PayPal are available. Payment details are sent by email."
-msgstr "Bank transfer and PayPal are available. Payment details are sent by email."
+msgid ""
+"Bank transfer and PayPal are available. Payment details are sent by email."
+msgstr ""
+"Bank transfer and PayPal are available. Payment details are sent by email."
 
 #: templates/core/purchase_points.html
 msgid "Back to Profile"
@@ -676,7 +690,8 @@ msgid "Many-to-many relationship"
 msgstr ""
 
 #. Translators: If found as last label character, these punctuation
-#. characters will prevent the default label_suffix to be appended to the label
+#. characters will prevent the default label_suffix to be appended to the
+#. label
 #: venv/lib/python3.12/site-packages/django/forms/boundfield.py:184
 msgid ":?.!"
 msgstr ""
@@ -726,7 +741,8 @@ msgstr ""
 
 #: venv/lib/python3.12/site-packages/django/forms/fields.py:625
 #, python-format
-msgid "Ensure this filename has at most %(max)d character (it has %(length)d)."
+msgid ""
+"Ensure this filename has at most %(max)d character (it has %(length)d)."
 msgid_plural ""
 "Ensure this filename has at most %(max)d characters (it has %(length)d)."
 msgstr[0] ""
@@ -834,7 +850,8 @@ msgid "The inline value did not match the parent instance."
 msgstr ""
 
 #: venv/lib/python3.12/site-packages/django/forms/models.py:1429
-msgid "Select a valid choice. That choice is not one of the available choices."
+msgid ""
+"Select a valid choice. That choice is not one of the available choices."
 msgstr ""
 
 #: venv/lib/python3.12/site-packages/django/forms/models.py:1568
@@ -1294,11 +1311,11 @@ msgstr ""
 
 #: venv/lib/python3.12/site-packages/django/views/csrf.py:127
 msgid ""
-"If you are using the <meta name=\"referrer\" content=\"no-referrer\"> tag or "
-"including the “Referrer-Policy: no-referrer” header, please remove them. The "
-"CSRF protection requires the “Referer” header to do strict referer checking. "
-"If you’re concerned about privacy, use alternatives like <a rel=\"noreferrer"
-"\" …> for links to third-party sites."
+"If you are using the <meta name=\"referrer\" content=\"no-referrer\"> tag or"
+" including the “Referrer-Policy: no-referrer” header, please remove them. "
+"The CSRF protection requires the “Referer” header to do strict referer "
+"checking. If you’re concerned about privacy, use alternatives like <a "
+"rel=\"noreferrer\" …> for links to third-party sites."
 msgstr ""
 
 #: venv/lib/python3.12/site-packages/django/views/csrf.py:136
@@ -1349,8 +1366,8 @@ msgstr ""
 #: venv/lib/python3.12/site-packages/django/views/generic/dates.py:652
 #, python-format
 msgid ""
-"Future %(verbose_name_plural)s not available because %(class_name)s."
-"allow_future is False."
+"Future %(verbose_name_plural)s not available because "
+"%(class_name)s.allow_future is False."
 msgstr ""
 
 #: venv/lib/python3.12/site-packages/django/views/generic/dates.py:692
@@ -1406,10 +1423,10 @@ msgstr ""
 #: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:221
 #, python-format
 msgid ""
-"You are seeing this page because <a href=\"https://docs.djangoproject.com/en/"
-"%(version)s/ref/settings/#debug\" target=\"_blank\" rel=\"noopener"
-"\">DEBUG=True</a> is in your settings file and you have not configured any "
-"URLs."
+"You are seeing this page because <a "
+"href=\"https://docs.djangoproject.com/en/%(version)s/ref/settings/#debug\" "
+"target=\"_blank\" rel=\"noopener\">DEBUG=True</a> is in your settings file "
+"and you have not configured any URLs."
 msgstr ""
 
 #: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:229
@@ -1487,23 +1504,39 @@ msgstr "Microphone input detected"
 msgid "Speak to test your microphone"
 msgstr "Speak to test your microphone"
 
-msgid "Camera or microphone permission was denied. Please allow access in your browser settings and try again."
-msgstr "Camera or microphone permission was denied. Please allow access in your browser settings and try again."
+msgid ""
+"Camera or microphone permission was denied. Please allow access in your "
+"browser settings and try again."
+msgstr ""
+"Camera or microphone permission was denied. Please allow access in your "
+"browser settings and try again."
 
-msgid "Camera or microphone was not found. Please connect a device and try again."
-msgstr "Camera or microphone was not found. Please connect a device and try again."
+msgid ""
+"Camera or microphone was not found. Please connect a device and try again."
+msgstr ""
+"Camera or microphone was not found. Please connect a device and try again."
 
-msgid "Camera or microphone is already in use by another app. Please close other apps and try again."
-msgstr "Camera or microphone is already in use by another app. Please close other apps and try again."
+msgid ""
+"Camera or microphone is already in use by another app. Please close other "
+"apps and try again."
+msgstr ""
+"Camera or microphone is already in use by another app. Please close other "
+"apps and try again."
 
-msgid "The selected camera or microphone cannot be used. Please try another device."
-msgstr "The selected camera or microphone cannot be used. Please try another device."
+msgid ""
+"The selected camera or microphone cannot be used. Please try another device."
+msgstr ""
+"The selected camera or microphone cannot be used. Please try another device."
 
 msgid "This browser does not support camera and microphone checks."
 msgstr "This browser does not support camera and microphone checks."
 
-msgid "Could not start the device check. Please check your browser permissions and connected devices."
-msgstr "Could not start the device check. Please check your browser permissions and connected devices."
+msgid ""
+"Could not start the device check. Please check your browser permissions and "
+"connected devices."
+msgstr ""
+"Could not start the device check. Please check your browser permissions and "
+"connected devices."
 
 msgid "Camera and microphone check"
 msgstr "Camera and microphone check"
@@ -1586,8 +1619,12 @@ msgstr "No tutor comment yet."
 msgid "Referral bonus"
 msgstr "Referral bonus"
 
-msgid "Invite a friend and tell them your username (%(username)s). When that person has at least one 5-minute conversation, you will receive 5 student points."
-msgstr "Invite a friend and tell them your username (%(username)s). When that person has at least one 5-minute conversation, you will receive 5 student points."
+msgid ""
+"Invite a friend and tell them your username (%(username)s). When that person"
+" has at least one 5-minute conversation, you will receive 5 student points."
+msgstr ""
+"Invite a friend and tell them your username (%(username)s). When that person"
+" has at least one 5-minute conversation, you will receive 5 student points."
 
 msgid "Nickname (shown during lessons)"
 msgstr "Nickname (shown during lessons)"
@@ -1675,24 +1712,48 @@ msgid "This request was already submitted. Reload to start a new request."
 msgstr "This request was already submitted. Reload to start a new request."
 
 #: AI study notes
-msgid "No lesson notes are available for this language yet. Complete a lesson and save notes first."
-msgstr "No lesson notes are available for this language yet. Complete a lesson and save notes first."
+msgid ""
+"No lesson notes are available for this language yet. Complete a lesson and "
+"save notes first."
+msgstr ""
+"No lesson notes are available for this language yet. Complete a lesson and "
+"save notes first."
 
 #: AI study notes
 msgid "A study note is already being generated. Please wait, then reload."
 msgstr "A study note is already being generated. Please wait, then reload."
 
 #: AI study notes
-msgid "Study notes could not be generated. Please try again later. Your lesson notes are safe."
-msgstr "Study notes could not be generated. Please try again later. Your lesson notes are safe."
+msgid ""
+"Study notes could not be generated. Please try again later. Your lesson "
+"notes are safe."
+msgstr ""
+"Study notes could not be generated. Please try again later. Your lesson "
+"notes are safe."
 
 #: AI study notes
-msgid "We send notes from your latest five completed lessons in the selected language to OpenAI, including your level and your tutor's next-conversation comments. Private notes are sent only if you opt in below. We do not record or monitor conversations."
-msgstr "We send notes from your latest five completed lessons in the selected language to OpenAI, including your level and your tutor's next-conversation comments. Private notes are sent only if you opt in below. We do not record or monitor conversations."
+msgid ""
+"We send notes from your latest five completed lessons in the selected "
+"language to OpenAI, including your level and your tutor's next-conversation "
+"comments. Private notes are sent only if you opt in below. We do not record "
+"or monitor conversations."
+msgstr ""
+"We send notes from your latest five completed lessons in the selected "
+"language to OpenAI, including your level and your tutor's next-conversation "
+"comments. Private notes are sent only if you opt in below. We do not record "
+"or monitor conversations."
 
 #: AI study notes
-msgid "Account names and email fields are not sent. Known identifiers in notes are masked, but this cannot detect every personal detail. Remove sensitive information from your notes before generating. Generated materials are saved privately in QuickLesson and can be read without another API call."
-msgstr "Account names and email fields are not sent. Known identifiers in notes are masked, but this cannot detect every personal detail. Remove sensitive information from your notes before generating. Generated materials are saved privately in QuickLesson and can be read without another API call."
+msgid ""
+"Account names and email fields are not sent. Known identifiers in notes are "
+"masked, but this cannot detect every personal detail. Remove sensitive "
+"information from your notes before generating. Generated materials are saved"
+" privately in QuickLesson and can be read without another API call."
+msgstr ""
+"Account names and email fields are not sent. Known identifiers in notes are "
+"masked, but this cannot detect every personal detail. Remove sensitive "
+"information from your notes before generating. Generated materials are saved"
+" privately in QuickLesson and can be read without another API call."
 
 #: AI study notes
 msgid "OpenAI data handling"
@@ -1739,8 +1800,12 @@ msgid "What to learn next"
 msgstr "What to learn next"
 
 #: AI study notes
-msgid "AI-generated materials may contain mistakes. Check anything uncertain with your tutor. Answers below are practice examples."
-msgstr "AI-generated materials may contain mistakes. Check anything uncertain with your tutor. Answers below are practice examples."
+msgid ""
+"AI-generated materials may contain mistakes. Check anything uncertain with "
+"your tutor. Answers below are practice examples."
+msgstr ""
+"AI-generated materials may contain mistakes. Check anything uncertain with "
+"your tutor. Answers below are practice examples."
 
 #: AI study notes
 msgid "No specific grammar was recorded in these lessons."
@@ -2032,18 +2097,43 @@ msgstr "Correct answer"
 msgid "There is not enough recorded lesson content for a review quiz."
 msgstr "There is not enough recorded lesson content for a review quiz."
 
-
 msgid "%(n)s lesson"
 msgid_plural "%(n)s lessons"
 msgstr[0] "%(n)s lesson"
 msgstr[1] "%(n)s lessons"
-
 
 msgid "Welcome bonus: %(n)s point"
 msgid_plural "Welcome bonus: %(n)s points"
 msgstr[0] "Welcome bonus: %(n)s point"
 msgstr[1] "Welcome bonus: %(n)s points"
 
-
 msgid "Lesson #%(number)s"
 msgstr "Lesson #%(number)s"
+
+msgid "Display currency"
+msgstr "Display currency"
+
+msgid "Japanese yen"
+msgstr "Japanese yen"
+
+msgid "Swiss franc"
+msgstr "Swiss franc"
+
+msgid "US dollar"
+msgstr "US dollar"
+
+msgid "Euro"
+msgstr "Euro"
+
+msgid "Apply"
+msgstr "Apply"
+
+msgid "%(price)s per month"
+msgstr "%(price)s per month"
+
+msgid ""
+"Estimated conversion at a fixed rate: CHF 1 = %(rate)s. The final payment "
+"amount and currency are confirmed by email."
+msgstr ""
+"Estimated conversion at a fixed rate: CHF 1 = %(rate)s. The final payment "
+"amount and currency are confirmed by email."

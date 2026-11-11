@@ -102,22 +102,18 @@
     <span class="current-balance">{% trans "Current Balance" %}: {{ balance.balance }} pt</span>
   </div>
 
+  {% include "core/_display_currency.html" %}
   <div class="tier-grid">
     {% for tier in tiers %}
-    <div class="tier-card" onclick="selectTier(this, {{ tier.points }}, {{ tier.price_chf }})">
+    <div class="tier-card" data-price="{{ tier.display_price }}" onclick="selectTier(this, {{ tier.points }})">
       <div class="pts">{{ tier.points }}<span class="unit"> pt</span></div>
-      {% if purchase_language|slice:":2" == 'ja' %}
-      <div class="price">{{ tier.price_jpy_display }}円</div>
-      <div class="per">{{ tier.price_jpy_display }}円 / {{ tier.points }}pt</div>
-      {% else %}
-      <div class="price">CHF {{ tier.price_chf|floatformat:0 }}</div>
-      <div class="per">CHF {{ tier.price_chf|floatformat:0 }} / {{ tier.points }}pt</div>
-      {% endif %}
+      <div class="price">{{ tier.display_price }}</div>
+      <div class="per">{{ tier.display_price }} / {{ tier.points }}pt</div>
     </div>
     {% endfor %}
   </div>
 
-  {% if purchase_language|slice:":2" == 'ja' %}<p class="manual-note">1 CHF＝190円で換算しています。支払いの詳細はメールでご案内します。</p>{% endif %}
+
 
   <button
     id="purchase-btn"
@@ -153,11 +149,11 @@
 <script>
 let selectedPoints = null;
 let selectedPrice = null;
-function selectTier(el, points, price) {
+function selectTier(el, points) {
   document.querySelectorAll('.tier-card').forEach(c => c.classList.remove('selected'));
   el.classList.add('selected');
   selectedPoints = points;
-  selectedPrice = price;
+  selectedPrice = el.dataset.price;
   const btn = document.getElementById('purchase-btn');
   btn.classList.add('active');
   btn.textContent = `${btn.dataset.label} (${points} pt)`;
@@ -167,11 +163,7 @@ document.getElementById('purchase-btn').addEventListener('click', () => {
   if (!selectedPoints) return;
   const box = document.getElementById('manual-payment-box');
   const selected = document.getElementById('manual-selected');
-  {% if purchase_language|slice:":2" == 'ja' %}
-  selected.textContent = `${selectedPoints} pt / ${(selectedPrice * 190).toLocaleString('ja-JP')}円`;
-  {% else %}
-  selected.textContent = `${selectedPoints} pt / CHF ${selectedPrice}`;
-  {% endif %}
+  selected.textContent = `${selectedPoints} pt / ${selectedPrice}`;
   box.classList.add('open');
   box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 });

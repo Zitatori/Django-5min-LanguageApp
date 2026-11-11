@@ -47,6 +47,7 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "core.context_processors.gold_status",
+                "core.services.pricing.pricing_context",
             ],
         },
     },
@@ -114,4 +115,12 @@ LOGGING = {
     'disable_existing_loggers': False,
     'handlers': {'study_console': {'class': 'logging.StreamHandler'}},
     'loggers': {'core.services.study_notes': {'handlers': ['study_console'], 'level': 'INFO', 'propagate': False}},
+}
+
+# Display-only fixed exchange rates; actual payments remain manually confirmed.
+GOLD_MONTHLY_PRICE_CHF = '100'
+DISPLAY_CURRENCY_RATES = {
+    'JPY': os.getenv('DISPLAY_CHF_TO_JPY', '190'),
+    'USD': os.getenv('DISPLAY_CHF_TO_USD', '1.2'),
+    'EUR': os.getenv('DISPLAY_CHF_TO_EUR', '1.1'),
 }

@@ -1,3 +1,4 @@
+from core.views.currency import set_display_currency
 from core.views.learner_levels import learner_levels
 from core.views.admin import admin_lesson_records
 from django.urls import path
@@ -13,6 +14,7 @@ from core.views.profile import profile, purchase_points, request_withdrawal, tra
 
 
 urlpatterns = [
+    path("display-currency/", set_display_currency, name="set_display_currency"),
     path('admin-dashboard/user/<int:user_id>/lesson-records/', admin_lesson_records, name='admin_user_lesson_records'),
     path('admin-dashboard/match/<int:match_id>/lesson-records/', admin_lesson_records, name='admin_match_lesson_records'),
     path('admin-dashboard/user/<int:user_id>/study-notes/', admin_study_notes, name='admin_study_notes'),

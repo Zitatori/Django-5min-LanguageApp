@@ -2,6 +2,7 @@
 {% load display_names i18n %}
 
 {% block content %}
+{% include "core/_display_currency.html" %}
 <section class="card">
 <h3>{% trans "My learning level" %}</h3>
 <p>{% trans "Choose your level for each language. It is saved for future lessons and AI materials. You can change it anytime." %}</p>
@@ -387,7 +388,7 @@
 {% if not is_gold %}
 <div class="card gold-sub-card">
   <p class="gold-sub-title">&#x1F451; {% trans "Gold membership" %}</p>
-  <p class="gold-sub-desc">{% trans "CHF 100 per month" %}</p>
+  <p class="gold-sub-desc">{% blocktrans with price=gold_display_price %}{{ price }} per month{% endblocktrans %}</p>
   <p>{% trans 'Join published sessions while tutors are available. To arrange your two weekly 30-minute sessions, email us your preferred times. We confirm availability by email.' %}</p>
   <p>{% trans 'To activate Gold: email us, receive payment instructions, then wait for our activation confirmation after payment is checked.' %}</p>
   <ul class="gold-sub-benefits">

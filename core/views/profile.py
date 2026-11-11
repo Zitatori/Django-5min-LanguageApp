@@ -1,3 +1,4 @@
+from core.services.pricing import display_currency, price_label
 from django.db import transaction
 from django.core import signing
 from django.urls import reverse
@@ -164,7 +165,7 @@ def purchase_points(request):
         {'points': 100, 'price_chf': 100},
     ]
     for tier in TIERS:
-        tier['price_jpy_display'] = format(tier['price_chf'] * 190, ',')
+        tier['display_price'] = price_label(tier['price_chf'], display_currency(request))
     balance = _get_or_create_balance(request.user)
     return render(request, 'core/purchase_points.html', {
         'tiers':   TIERS,

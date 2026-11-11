@@ -66,8 +66,8 @@ msgstr "Parler pendant 5 minutes"
 
 #: templates/core/create_request.html:222
 msgid ""
-"Select the language you want to practice. If any tutors are online, you will "
-"be randomly matched."
+"Select the language you want to practice. If any tutors are online, you will"
+" be randomly matched."
 msgstr ""
 "Choisissez la langue que vous souhaitez pratiquer. Si des professeurs sont "
 "en ligne, vous serez associé aléatoirement."
@@ -95,7 +95,8 @@ msgstr "Hors ligne"
 msgid "Start a 5-Minute Lesson"
 msgstr "Commencer une leçon de 5 minutes"
 
-#: templates/core/create_request.html:277 templates/core/student_history.html:7
+#: templates/core/create_request.html:277
+#: templates/core/student_history.html:7
 msgid "My Lesson History"
 msgstr "Historique des leçons"
 
@@ -110,8 +111,8 @@ msgstr "Leçons en ligne de 5 minutes"
 
 #: templates/core/home.html:13
 msgid ""
-"A super-light conversation platform for people who want to talk with someone "
-"right now."
+"A super-light conversation platform for people who want to talk with someone"
+" right now."
 msgstr ""
 "Une plateforme de conversation ultra légère pour les personnes qui veulent "
 "parler avec quelqu’un immédiatement."
@@ -182,8 +183,8 @@ msgstr ""
 #| msgid ""
 #| "Could not access camera/microphone. Please check your browser settings."
 msgid ""
-"Camera/microphone permission was denied. Please allow access in your browser "
-"settings and reload."
+"Camera/microphone permission was denied. Please allow access in your browser"
+" settings and reload."
 msgstr ""
 "Impossible d’accéder à la caméra ou au microphone. Vérifiez les paramètres "
 "du navigateur."
@@ -215,8 +216,11 @@ msgstr "Caméra désactivée"
 msgid "Nickname"
 msgstr "Pseudo"
 
-msgid "Shown to your partner during lessons. Leave blank to use your username."
-msgstr "Affiché à votre partenaire pendant les leçons. Laissez vide pour utiliser votre nom d'utilisateur."
+msgid ""
+"Shown to your partner during lessons. Leave blank to use your username."
+msgstr ""
+"Affiché à votre partenaire pendant les leçons. Laissez vide pour utiliser "
+"votre nom d'utilisateur."
 
 msgid "Save"
 msgstr "Enregistrer"
@@ -261,7 +265,9 @@ msgstr "Points professeur"
 
 #: templates/core/profile.html
 msgid "Earned from teaching. Withdraw as cash or move to Student Points."
-msgstr "Points gagnés en enseignant. Vous pouvez les retirer en argent ou les déplacer vers les points étudiant."
+msgstr ""
+"Points gagnés en enseignant. Vous pouvez les retirer en argent ou les "
+"déplacer vers les points étudiant."
 
 #: templates/core/profile.html
 msgid "Move to Student Points"
@@ -333,7 +339,8 @@ msgstr "Vous pouvez retirer. Les retraits de 50 pt ou plus sont sans frais."
 
 #: templates/core/profile.html
 msgid "You can withdraw. Withdrawals under 50 pt have a 5 pt fee."
-msgstr "Vous pouvez retirer. Les retraits de moins de 50 pt ont 5 pt de frais."
+msgstr ""
+"Vous pouvez retirer. Les retraits de moins de 50 pt ont 5 pt de frais."
 
 #: templates/core/profile.html
 msgid "Estimated payout"
@@ -341,8 +348,11 @@ msgstr "Montant estimé"
 
 #: templates/core/profile.html
 #, python-format
-msgid "You need at least %(min_withdrawal)s pt to withdraw. Current: %(current)s pt"
-msgstr "Vous avez besoin d'au moins %(min_withdrawal)s pt pour retirer. Actuel : %(current)s pt"
+msgid ""
+"You need at least %(min_withdrawal)s pt to withdraw. Current: %(current)s pt"
+msgstr ""
+"Vous avez besoin d'au moins %(min_withdrawal)s pt pour retirer. Actuel : "
+"%(current)s pt"
 
 #: templates/core/profile.html:249
 msgid "Membership"
@@ -380,7 +390,8 @@ msgstr "Nous contacter pour Gold"
 #: templates/core/profile.html
 #, python-format
 msgid "Please include your username (%(username)s) when you contact us."
-msgstr "Indiquez votre nom d'utilisateur (%(username)s) lorsque vous nous contactez."
+msgstr ""
+"Indiquez votre nom d'utilisateur (%(username)s) lorsque vous nous contactez."
 
 #: templates/core/profile.html:265
 msgid "Transaction History"
@@ -448,8 +459,14 @@ msgid "You can pay by bank transfer or PayPal."
 msgstr "Vous pouvez payer par virement bancaire ou PayPal."
 
 #: templates/core/purchase_points.html
-msgid "Please email <a href=\"mailto:zitatori@gmail.com?subject=QuickLesson%20points%20purchase\">zitatori@gmail.com</a> for payment details."
-msgstr "Envoyez un e-mail à <a href=\"mailto:zitatori@gmail.com?subject=QuickLesson%20points%20purchase\">zitatori@gmail.com</a> pour recevoir les informations de paiement."
+msgid ""
+"Please email <a "
+"href=\"mailto:zitatori@gmail.com?subject=QuickLesson%20points%20purchase\">zitatori@gmail.com</a>"
+" for payment details."
+msgstr ""
+"Envoyez un e-mail à <a "
+"href=\"mailto:zitatori@gmail.com?subject=QuickLesson%20points%20purchase\">zitatori@gmail.com</a>"
+" pour recevoir les informations de paiement."
 
 #: templates/core/purchase_points.html
 msgid "For payment details, please email"
@@ -461,16 +478,23 @@ msgstr "Indiquez le nombre de points que vous souhaitez acheter."
 
 #: templates/core/purchase_points.html
 #, python-format
-msgid "Please include your username (%(username)s) and how many points you want to purchase."
-msgstr "Indiquez votre nom d'utilisateur (%(username)s) et le nombre de points que vous souhaitez acheter."
+msgid ""
+"Please include your username (%(username)s) and how many points you want to "
+"purchase."
+msgstr ""
+"Indiquez votre nom d'utilisateur (%(username)s) et le nombre de points que "
+"vous souhaitez acheter."
 
 #: templates/core/purchase_points.html
 msgid "After payment is confirmed, Admin will add student points."
 msgstr "Après confirmation du paiement, Admin ajoutera les points étudiant."
 
 #: templates/core/purchase_points.html
-msgid "Bank transfer and PayPal are available. Payment details are sent by email."
-msgstr "Le virement bancaire et PayPal sont disponibles. Les informations de paiement sont envoyées par e-mail."
+msgid ""
+"Bank transfer and PayPal are available. Payment details are sent by email."
+msgstr ""
+"Le virement bancaire et PayPal sont disponibles. Les informations de "
+"paiement sont envoyées par e-mail."
 
 #: templates/core/request_detail.html:8
 msgid "Matching Result"
@@ -553,8 +577,7 @@ msgstr "Recherche d’un professeur disponible…"
 #: templates/core/request_detail.html:46
 #, fuzzy
 #| msgid ""
-#| "This page will automatically update as soon as an available Guide is "
-#| "found."
+#| "This page will automatically update as soon as an available Guide is found."
 msgid ""
 "This page will automatically update as soon as an available tutor is found."
 msgstr ""
@@ -651,8 +674,12 @@ msgstr "Vous avez déjà un compte ?"
 msgid "Log in here"
 msgstr "Connectez-vous ici"
 
-msgid "To add a teaching language, an interview is required. Please email your available times to"
-msgstr "Pour ajouter une langue d'enseignement, un entretien est requis. Veuillez envoyer vos disponibilités à"
+msgid ""
+"To add a teaching language, an interview is required. Please email your "
+"available times to"
+msgstr ""
+"Pour ajouter une langue d'enseignement, un entretien est requis. Veuillez "
+"envoyer vos disponibilités à"
 
 msgid "No tutors available at your preferred time?"
 msgstr "Aucun tuteur disponible à l'heure souhaitée ?"
@@ -688,90 +715,11 @@ msgid "~Xmin free"
 msgstr "libre dans ~Xmin"
 
 msgid "Withdrawal requests are processed within 3 business days."
-msgstr "Les demandes de retrait sont traitées dans un délai de 3 jours ouvrables."
+msgstr ""
+"Les demandes de retrait sont traitées dans un délai de 3 jours ouvrables."
 
 msgid "Today's earnings"
 msgstr "Gains du jour"
-
-#~ msgid "Step 1"
-#~ msgstr "Étape 1"
-
-#~ msgid "Select a language"
-#~ msgstr "Choisissez une langue"
-
-#~ msgid "Cancel"
-#~ msgstr "Annuler"
-
-#~ msgid "5-minute lesson room"
-#~ msgstr "Salle de leçon de 5 minutes"
-
-#~ msgid ""
-#~ "First, we only set up your camera and a placeholder for the remote video "
-#~ "to design the layout."
-#~ msgstr ""
-#~ "Pour l’instant, seule votre caméra et un emplacement vidéo distant sont "
-#~ "affichés afin de préparer l’interface."
-
-#~ msgid "Remaining time"
-#~ msgstr "Temps restant"
-
-#~ msgid "Your browser does not support the video tag."
-#~ msgstr "Votre navigateur ne prend pas en charge la balise vidéo."
-
-#~ msgid "Camera OFF"
-#~ msgstr "Caméra OFF"
-
-#~ msgid "Mic OFF"
-#~ msgstr "Micro OFF"
-
-#~ msgid "The 5-minute lesson will end."
-#~ msgstr "La leçon de 5 minutes va se terminer."
-
-#~ msgid "Reason"
-#~ msgstr "Raison"
-
-#~ msgid "Camera ON"
-#~ msgstr "Caméra ON"
-
-#~ msgid "Mic ON"
-#~ msgstr "Micro ON"
-
-#~ msgid "This browser does not support getUserMedia."
-#~ msgstr "Ce navigateur ne prend pas en charge getUserMedia."
-
-#~ msgid "Guide Dashboard"
-#~ msgstr "Tableau de bord professeur"
-
-#~ msgid ""
-#~ "When you go online, you’ll be available for 5-minute lesson matching."
-#~ msgstr ""
-#~ "Lorsque vous êtes en ligne, vous serez disponible pour les leçons de 5 "
-#~ "minutes."
-
-#~ msgid "You are discoverable now."
-#~ msgstr "Vous êtes maintenant visible."
-
-#~ msgid "You are not discoverable."
-#~ msgstr "Vous n’êtes pas visible."
-
-#~ msgid ""
-#~ "Waiting for a student… We’ll move you to the lesson room automatically "
-#~ "when matched."
-#~ msgstr ""
-#~ "En attente d’un étudiant… Vous serez automatiquement redirigé vers la "
-#~ "salle lorsqu’un matching sera trouvé."
-
-#~ msgid "Switch online to start matching."
-#~ msgstr "Passez en ligne pour commencer le matching."
-
-#~ msgid "Matching in progress…"
-#~ msgstr "Matching en cours…"
-
-#~ msgid "Hi"
-#~ msgstr "Bonjour"
-
-#~ msgid "Languages I can teach"
-#~ msgstr "Langues que je peux enseigner"
 
 msgid "Founder"
 msgstr "Fondateur"
@@ -794,29 +742,49 @@ msgstr "Entrée micro détectée"
 msgid "Speak to test your microphone"
 msgstr "Parlez pour tester votre micro"
 
-msgid "Camera or microphone permission was denied. Please allow access in your browser settings and try again."
-msgstr "L'autorisation caméra ou micro a été refusée. Autorisez l'accès dans les réglages du navigateur puis réessayez."
+msgid ""
+"Camera or microphone permission was denied. Please allow access in your "
+"browser settings and try again."
+msgstr ""
+"L'autorisation caméra ou micro a été refusée. Autorisez l'accès dans les "
+"réglages du navigateur puis réessayez."
 
-msgid "Camera or microphone was not found. Please connect a device and try again."
-msgstr "Aucune caméra ou aucun micro n'a été trouvé. Connectez un appareil puis réessayez."
+msgid ""
+"Camera or microphone was not found. Please connect a device and try again."
+msgstr ""
+"Aucune caméra ou aucun micro n'a été trouvé. Connectez un appareil puis "
+"réessayez."
 
-msgid "Camera or microphone is already in use by another app. Please close other apps and try again."
-msgstr "La caméra ou le micro est déjà utilisé par une autre application. Fermez les autres applications puis réessayez."
+msgid ""
+"Camera or microphone is already in use by another app. Please close other "
+"apps and try again."
+msgstr ""
+"La caméra ou le micro est déjà utilisé par une autre application. Fermez les"
+" autres applications puis réessayez."
 
-msgid "The selected camera or microphone cannot be used. Please try another device."
-msgstr "La caméra ou le micro sélectionné ne peut pas être utilisé. Essayez un autre appareil."
+msgid ""
+"The selected camera or microphone cannot be used. Please try another device."
+msgstr ""
+"La caméra ou le micro sélectionné ne peut pas être utilisé. Essayez un autre"
+" appareil."
 
 msgid "This browser does not support camera and microphone checks."
 msgstr "Ce navigateur ne prend pas en charge la vérification caméra et micro."
 
-msgid "Could not start the device check. Please check your browser permissions and connected devices."
-msgstr "Impossible de démarrer la vérification des appareils. Vérifiez les autorisations du navigateur et les appareils connectés."
+msgid ""
+"Could not start the device check. Please check your browser permissions and "
+"connected devices."
+msgstr ""
+"Impossible de démarrer la vérification des appareils. Vérifiez les "
+"autorisations du navigateur et les appareils connectés."
 
 msgid "Camera and microphone check"
 msgstr "Vérification de la caméra et du micro"
 
 msgid "This check is optional. You can go online without completing it."
-msgstr "Cette vérification est facultative. Vous pouvez passer en ligne sans la terminer."
+msgstr ""
+"Cette vérification est facultative. Vous pouvez passer en ligne sans la "
+"terminer."
 
 msgid "Camera"
 msgstr "Caméra"
@@ -837,7 +805,9 @@ msgid "Done"
 msgstr "Terminé"
 
 msgid "This check is optional. You can start a lesson without completing it."
-msgstr "Cette vérification est facultative. Vous pouvez démarrer une leçon sans la terminer."
+msgstr ""
+"Cette vérification est facultative. Vous pouvez démarrer une leçon sans la "
+"terminer."
 
 msgid "First time"
 msgstr "Première fois"
@@ -893,8 +863,13 @@ msgstr "Pas encore de commentaire du professeur."
 msgid "Referral bonus"
 msgstr "Bonus de parrainage"
 
-msgid "Invite a friend and tell them your username (%(username)s). When that person has at least one 5-minute conversation, you will receive 5 student points."
-msgstr "Invitez une personne et donnez-lui votre nom d'utilisateur (%(username)s). Quand cette personne aura eu au moins une conversation de 5 minutes, vous recevrez 5 points élève."
+msgid ""
+"Invite a friend and tell them your username (%(username)s). When that person"
+" has at least one 5-minute conversation, you will receive 5 student points."
+msgstr ""
+"Invitez une personne et donnez-lui votre nom d'utilisateur (%(username)s). "
+"Quand cette personne aura eu au moins une conversation de 5 minutes, vous "
+"recevrez 5 points élève."
 
 msgid "Email address"
 msgstr "Adresse e-mail"
@@ -928,7 +903,9 @@ msgstr "Fiches de révision IA"
 
 #: AI study notes
 msgid "AI creates personalized review materials from your past lessons."
-msgstr "L’IA crée des supports de révision personnalisés à partir de vos leçons passées."
+msgstr ""
+"L’IA crée des supports de révision personnalisés à partir de vos leçons "
+"passées."
 
 #: AI study notes
 msgid "Unlimited generation for Gold members, at no extra charge."
@@ -976,27 +953,54 @@ msgstr "Rechargez cette page et réessayez."
 
 #: AI study notes
 msgid "This request was already submitted. Reload to start a new request."
-msgstr "Cette demande a déjà été envoyée. Rechargez pour en lancer une nouvelle."
+msgstr ""
+"Cette demande a déjà été envoyée. Rechargez pour en lancer une nouvelle."
 
 #: AI study notes
-msgid "No lesson notes are available for this language yet. Complete a lesson and save notes first."
-msgstr "Aucune note disponible pour cette langue. Terminez une leçon et enregistrez des notes avant de réessayer."
+msgid ""
+"No lesson notes are available for this language yet. Complete a lesson and "
+"save notes first."
+msgstr ""
+"Aucune note disponible pour cette langue. Terminez une leçon et enregistrez "
+"des notes avant de réessayer."
 
 #: AI study notes
 msgid "A study note is already being generated. Please wait, then reload."
 msgstr "Une fiche est déjà en cours de génération. Patientez, puis rechargez."
 
 #: AI study notes
-msgid "Study notes could not be generated. Please try again later. Your lesson notes are safe."
-msgstr "La génération a échoué. Réessayez plus tard. Vos notes de cours sont conservées."
+msgid ""
+"Study notes could not be generated. Please try again later. Your lesson "
+"notes are safe."
+msgstr ""
+"La génération a échoué. Réessayez plus tard. Vos notes de cours sont "
+"conservées."
 
 #: AI study notes
-msgid "We send notes from your latest five completed lessons in the selected language to OpenAI, including your level and your tutor's next-conversation comments. Private notes are sent only if you opt in below. We do not record or monitor conversations."
-msgstr "Nous envoyons à OpenAI les notes de vos cinq dernières leçons terminées dans la langue choisie, votre niveau et les commentaires du professeur pour la prochaine conversation. Les notes privées sont envoyées uniquement avec votre accord ci-dessous. Les conversations ne sont ni enregistrées ni surveillées."
+msgid ""
+"We send notes from your latest five completed lessons in the selected "
+"language to OpenAI, including your level and your tutor's next-conversation "
+"comments. Private notes are sent only if you opt in below. We do not record "
+"or monitor conversations."
+msgstr ""
+"Nous envoyons à OpenAI les notes de vos cinq dernières leçons terminées dans"
+" la langue choisie, votre niveau et les commentaires du professeur pour la "
+"prochaine conversation. Les notes privées sont envoyées uniquement avec "
+"votre accord ci-dessous. Les conversations ne sont ni enregistrées ni "
+"surveillées."
 
 #: AI study notes
-msgid "Account names and email fields are not sent. Known identifiers in notes are masked, but this cannot detect every personal detail. Remove sensitive information from your notes before generating. Generated materials are saved privately in QuickLesson and can be read without another API call."
-msgstr "Les champs de nom et d’adresse e-mail du compte ne sont pas envoyés. Les identifiants connus dans les notes sont masqués, sans garantie de détecter chaque détail personnel. Retirez les informations sensibles avant la génération. Les fiches sont enregistrées de façon privée dans QuickLesson et leur consultation ne déclenche aucun appel API."
+msgid ""
+"Account names and email fields are not sent. Known identifiers in notes are "
+"masked, but this cannot detect every personal detail. Remove sensitive "
+"information from your notes before generating. Generated materials are saved"
+" privately in QuickLesson and can be read without another API call."
+msgstr ""
+"Les champs de nom et d’adresse e-mail du compte ne sont pas envoyés. Les "
+"identifiants connus dans les notes sont masqués, sans garantie de détecter "
+"chaque détail personnel. Retirez les informations sensibles avant la "
+"génération. Les fiches sont enregistrées de façon privée dans QuickLesson et"
+" leur consultation ne déclenche aucun appel API."
 
 #: AI study notes
 msgid "OpenAI data handling"
@@ -1043,8 +1047,13 @@ msgid "What to learn next"
 msgstr "Que travailler ensuite"
 
 #: AI study notes
-msgid "AI-generated materials may contain mistakes. Check anything uncertain with your tutor. Answers below are practice examples."
-msgstr "Les fiches générées par IA peuvent contenir des erreurs. Vérifiez les points incertains avec votre professeur. Les réponses ci-dessous sont des exemples d’entraînement."
+msgid ""
+"AI-generated materials may contain mistakes. Check anything uncertain with "
+"your tutor. Answers below are practice examples."
+msgstr ""
+"Les fiches générées par IA peuvent contenir des erreurs. Vérifiez les points"
+" incertains avec votre professeur. Les réponses ci-dessous sont des exemples"
+" d’entraînement."
 
 #: AI study notes
 msgid "No specific grammar was recorded in these lessons."
@@ -1342,22 +1351,17 @@ msgstr "Bonne réponse"
 msgid "There is not enough recorded lesson content for a review quiz."
 msgstr "Le contenu consigné est insuffisant pour créer un quiz de révision."
 
-
 msgid "Retry"
 msgstr "Réessayer"
-
 
 msgid "Try another tutor"
 msgstr "Essayer un autre tuteur"
 
-
 msgid "Back to dashboard"
 msgstr "Retour au tableau de bord"
 
-
 msgid "Waiting…"
 msgstr "En attente…"
-
 
 msgid ""
 "Connection could not be established. Check your connection and camera "
@@ -1366,79 +1370,61 @@ msgstr ""
 "La connexion n’a pas pu être établie. Vérifiez votre connexion et "
 "l’autorisation de la caméra, puis réessayez ou choisissez un autre tuteur."
 
-
 msgid ""
 "The call server could not be reached. Please check your connection and "
 "retry."
 msgstr ""
 "Le serveur d’appel est inaccessible. Vérifiez votre connexion et réessayez."
 
-
 msgid "30 seconds left — time to say goodbye and thank your partner."
 msgstr ""
 "Il reste 30 secondes : remerciez votre partenaire et dites-lui au revoir."
 
-
 msgid "Helpful phrases"
 msgstr "Expressions utiles"
-
 
 msgid "Please say that again."
 msgstr "Pouvez-vous répéter, s’il vous plaît ?"
 
-
 msgid "Please speak slowly."
 msgstr "Parlez lentement, s’il vous plaît."
-
 
 msgid "I don’t understand."
 msgstr "Je ne comprends pas."
 
-
 msgid "How about you?"
 msgstr "Et vous ?"
-
 
 msgid "Congratulations! You spoke %(study_language)s for five minutes!"
 msgstr "Bravo ! Vous avez parlé en %(study_language)s pendant cinq minutes !"
 
-
 msgid "Well done for practising today!"
 msgstr "Bravo pour votre pratique d’aujourd’hui !"
 
-
 msgid "Next session (your local time)"
 msgstr "Prochaine session (heure locale)"
-
 
 msgid "A tutor is now available. Choose a tutor to start."
 msgstr ""
 "Un tuteur est maintenant disponible. Choisissez un tuteur pour commencer."
 
-
 msgid "Choose a tutor"
 msgstr "Choisir un tuteur"
-
 
 msgid "online"
 msgstr "en ligne"
 
-
 msgid "Select the language and tutor you want to practice with."
 msgstr "Choisissez la langue et le tuteur avec qui vous souhaitez pratiquer."
-
 
 msgid "No tutors online for this language."
 msgstr "Aucun tuteur en ligne pour cette langue pour le moment."
 
-
 msgid "Gold member"
 msgstr "Membre Gold"
 
-
 msgid "Can express subtle nuances precisely and naturally"
 msgstr "Peut exprimer les nuances subtiles avec précision et naturel"
-
 
 msgid ""
 "Share this invitation link with a friend. Your referral is filled in "
@@ -1447,18 +1433,14 @@ msgstr ""
 "Partagez ce lien avec un ami. Le parrainage est renseigné automatiquement à "
 "l’inscription."
 
-
 msgid "Invitation link"
 msgstr "Lien d’invitation"
-
 
 msgid "Copy link"
 msgstr "Copier le lien"
 
-
 msgid "Copied"
 msgstr "Copié"
-
 
 msgid ""
 "When your friend completes a five-minute conversation, contact us to request"
@@ -1466,7 +1448,6 @@ msgid ""
 msgstr ""
 "Après la première conversation de cinq minutes de votre ami, contactez-nous "
 "pour demander les 5 points de parrainage."
-
 
 msgid ""
 "Join published sessions while tutors are available. To arrange your two "
@@ -1478,7 +1459,6 @@ msgstr ""
 "horaires souhaités par e-mail. Nous confirmerons les disponibilités par "
 "e-mail."
 
-
 msgid ""
 "To activate Gold: email us, receive payment instructions, then wait for our "
 "activation confirmation after payment is checked."
@@ -1487,18 +1467,122 @@ msgstr ""
 "paiement, puis attendez la confirmation d’activation après vérification du "
 "paiement."
 
-
 msgid "%(n)s lesson"
 msgid_plural "%(n)s lessons"
 msgstr[0] "%(n)s leçon"
 msgstr[1] "%(n)s leçons"
-
 
 msgid "Welcome bonus: %(n)s point"
 msgid_plural "Welcome bonus: %(n)s points"
 msgstr[0] "Cadeau de bienvenue : %(n)s point"
 msgstr[1] "Cadeau de bienvenue : %(n)s points"
 
-
 msgid "Lesson #%(number)s"
 msgstr "Leçon n° %(number)s"
+
+msgid "Display currency"
+msgstr "Devise d’affichage"
+
+msgid "Japanese yen"
+msgstr "Yen japonais"
+
+msgid "Swiss franc"
+msgstr "Franc suisse"
+
+msgid "US dollar"
+msgstr "Dollar américain"
+
+msgid "Euro"
+msgstr "Euro"
+
+msgid "Apply"
+msgstr "Appliquer"
+
+msgid "%(price)s per month"
+msgstr "%(price)s par mois"
+
+msgid ""
+"Estimated conversion at a fixed rate: CHF 1 = %(rate)s. The final payment "
+"amount and currency are confirmed by email."
+msgstr ""
+"Conversion indicative à taux fixe : 1 CHF = %(rate)s. Le montant et la "
+"devise du paiement sont confirmés par e-mail."
+
+#~ msgid "Step 1"
+#~ msgstr "Étape 1"
+
+#~ msgid "Select a language"
+#~ msgstr "Choisissez une langue"
+
+#~ msgid "Cancel"
+#~ msgstr "Annuler"
+
+#~ msgid "5-minute lesson room"
+#~ msgstr "Salle de leçon de 5 minutes"
+
+#~ msgid ""
+#~ "First, we only set up your camera and a placeholder for the remote video to "
+#~ "design the layout."
+#~ msgstr ""
+#~ "Pour l’instant, seule votre caméra et un emplacement vidéo distant sont "
+#~ "affichés afin de préparer l’interface."
+
+#~ msgid "Remaining time"
+#~ msgstr "Temps restant"
+
+#~ msgid "Your browser does not support the video tag."
+#~ msgstr "Votre navigateur ne prend pas en charge la balise vidéo."
+
+#~ msgid "Camera OFF"
+#~ msgstr "Caméra OFF"
+
+#~ msgid "Mic OFF"
+#~ msgstr "Micro OFF"
+
+#~ msgid "The 5-minute lesson will end."
+#~ msgstr "La leçon de 5 minutes va se terminer."
+
+#~ msgid "Reason"
+#~ msgstr "Raison"
+
+#~ msgid "Camera ON"
+#~ msgstr "Caméra ON"
+
+#~ msgid "Mic ON"
+#~ msgstr "Micro ON"
+
+#~ msgid "This browser does not support getUserMedia."
+#~ msgstr "Ce navigateur ne prend pas en charge getUserMedia."
+
+#~ msgid "Guide Dashboard"
+#~ msgstr "Tableau de bord professeur"
+
+#~ msgid "When you go online, you’ll be available for 5-minute lesson matching."
+#~ msgstr ""
+#~ "Lorsque vous êtes en ligne, vous serez disponible pour les leçons de 5 "
+#~ "minutes."
+
+#~ msgid "You are discoverable now."
+#~ msgstr "Vous êtes maintenant visible."
+
+#~ msgid "You are not discoverable."
+#~ msgstr "Vous n’êtes pas visible."
+
+#~ msgid ""
+#~ "Waiting for a student… We’ll move you to the lesson room automatically when "
+#~ "matched."
+#~ msgstr ""
+#~ "En attente d’un étudiant… Vous serez automatiquement redirigé vers la salle "
+#~ "lorsqu’un matching sera trouvé."
+
+#~ msgid "Switch online to start matching."
+#~ msgstr "Passez en ligne pour commencer le matching."
+
+#~ msgid "Matching in progress…"
+#~ msgstr "Matching en cours…"
+
+#~ msgid "Hi"
+#~ msgstr "Bonjour"
+
+#~ msgid "Languages I can teach"
+#~ msgstr "Langues que je peux enseigner"
