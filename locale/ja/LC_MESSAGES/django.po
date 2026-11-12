@@ -1520,6 +1520,23 @@ msgstr "勉強したい言語は？"
 msgid "Choose one or more languages."
 msgstr "1つ以上選択してください（複数選択可）。"
 
+msgid "Plan to attend"
+msgstr "出席予定"
+
+msgid "Planning to attend — cancel"
+msgstr "出席予定を解除"
+
+msgid "Planned attendees"
+msgstr "出席予定人数"
+
+msgid "Log in to plan attendance"
+msgstr "ログインして出席予定を登録"
+
+msgid ""
+"This is an attendance estimate, not a reservation. You can cancel anytime "
+"before the session ends."
+msgstr "参加人数を把握するための目安です。予約ではありません。セッション終了前なら解除できます。"
+
 #~ msgid "Step 1"
 #~ msgstr "ステップ1"
 

@@ -15,7 +15,10 @@ from core.views.profile import profile, purchase_points, request_withdrawal, tra
 
 
 
+from core.views.home import session_attendance
+
 urlpatterns = [
+    path('sessions/<int:session_id>/attendance/', session_attendance, name='session_attendance'),
     path('lesson-notes/<int:note_id>/translation/', note_translation, name='note_translation'),
     path('lesson/<int:match_id>/learner-brief/', learner_brief, name='learner_brief'),
     path("display-currency/", set_display_currency, name="set_display_currency"),

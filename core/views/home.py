@@ -1,6 +1,11 @@
 from zoneinfo import ZoneInfo
 
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
+from django.views.decorators.cache import never_cache
+from django.db.models import Count
+from django.http import HttpResponseBadRequest, HttpResponseForbidden
 from django.utils import timezone
 
 from core.models import UpcomingSession
@@ -26,17 +31,25 @@ def _session_display(s):
     }
 
 
+@never_cache
 def home(request):
     now = timezone.now()
     sessions_qs = (
         UpcomingSession.objects
         .filter(is_published=True, end_time__gt=now)
+        .annotate(planned_count=Count('planned_students'))
         .order_by('start_time')[:10]
     )
 
-    sessions = [_session_display(s) for s in sessions_qs]
+    student = getattr(request.user, 'studentprofile', None) if request.user.is_authenticated else None
+    planned = set(student.planned_sessions.values_list('pk', flat=True)) if student else set()
+    sessions = []
+    for session in sessions_qs:
+        session.is_planned = session.pk in planned
+        sessions.append(_session_display(session))
 
     return render(request, "core/home.html", {
+        'can_plan_attendance': student is not None,
         'next_session':      sessions[0] if sessions else None,
         'other_sessions':    sessions[1:],
     })
@@ -44,3 +57,19 @@ def home(request):
 
 def privacy(request):
     return render(request, "core/privacy.html")
+
+@login_required
+@require_POST
+def session_attendance(request, session_id):
+    student = getattr(request.user, 'studentprofile', None)
+    if student is None:
+        return HttpResponseForbidden()
+    session = get_object_or_404(UpcomingSession, pk=session_id, is_published=True, end_time__gt=timezone.now())
+    attending = request.POST.get('attending')
+    if attending == 'yes':
+        session.planned_students.add(student)
+    elif attending == 'no':
+        session.planned_students.remove(student)
+    else:
+        return HttpResponseBadRequest()
+    return redirect('home')

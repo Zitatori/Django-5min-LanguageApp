@@ -2,6 +2,7 @@ from django.db import models
 
 
 class UpcomingSession(models.Model):
+    planned_students = models.ManyToManyField('StudentProfile', blank=True, related_name='planned_sessions')
     # 開始・終了はUTC保存（フォームではJST入力→変換）
     start_time = models.DateTimeField()
     end_time   = models.DateTimeField()

@@ -2270,3 +2270,22 @@ msgstr "Which languages would you like to learn?"
 
 msgid "Choose one or more languages."
 msgstr "Choose one or more languages."
+
+msgid "Plan to attend"
+msgstr "Plan to attend"
+
+msgid "Planning to attend — cancel"
+msgstr "Planning to attend — cancel"
+
+msgid "Planned attendees"
+msgstr "Planned attendees"
+
+msgid "Log in to plan attendance"
+msgstr "Log in to plan attendance"
+
+msgid ""
+"This is an attendance estimate, not a reservation. You can cancel anytime "
+"before the session ends."
+msgstr ""
+"This is an attendance estimate, not a reservation. You can cancel anytime "
+"before the session ends."

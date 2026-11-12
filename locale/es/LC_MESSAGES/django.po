@@ -1631,6 +1631,25 @@ msgstr "¿Qué idiomas te gustaría aprender?"
 msgid "Choose one or more languages."
 msgstr "Elige uno o varios idiomas."
 
+msgid "Plan to attend"
+msgstr "Tengo previsto asistir"
+
+msgid "Planning to attend — cancel"
+msgstr "Asistencia prevista — cancelar"
+
+msgid "Planned attendees"
+msgstr "Asistentes previstos"
+
+msgid "Log in to plan attendance"
+msgstr "Inicia sesión para indicar tu asistencia"
+
+msgid ""
+"This is an attendance estimate, not a reservation. You can cancel anytime "
+"before the session ends."
+msgstr ""
+"Es una estimación de asistencia, no una reserva. Puedes cancelar antes de "
+"que termine la sesión."
+
 #~ msgid "Step 1"
 #~ msgstr "Paso 1"
 

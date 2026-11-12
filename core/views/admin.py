@@ -155,7 +155,7 @@ def admin_dashboard(request):
     gold_requests = GoldSubscriptionRequest.objects.select_related('user').filter(
         status=GoldSubscriptionRequest.STATUS_PENDING
     )
-    all_sessions = UpcomingSession.objects.order_by('start_time')
+    all_sessions = UpcomingSession.objects.annotate(planned_count=Count('planned_students')).order_by('start_time')
     CET = ZoneInfo('Europe/Zurich')
     sessions_display = []
     for s in all_sessions:

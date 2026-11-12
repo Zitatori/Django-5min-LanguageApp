@@ -66,6 +66,7 @@
           </span>
         {% endfor %}
       </div>
+      {% include "core/_session_attendance.html" with session=next_session.obj %}
       {% if next_session.obj.note %}
       <div class="hs-note">{{ next_session.obj.note }}</div>
       {% endif %}
@@ -103,6 +104,7 @@
         <span class="hs-other-tz hs-other-tz-cet">{% trans "European Time" %}</span>
       </div>
     </div>
+    {% include "core/_session_attendance.html" with session=s.obj %}
     <div class="hs-other-chips">
       {% for code, name, count in s.obj.language_counts %}
         <span class="hs-other-chip">
@@ -121,6 +123,13 @@
 {% endif %}
 
 <style>
+  .session-attendance { margin-top: 14px; min-width: 0; }
+  .attendance-star { display: inline-flex; align-items: center; min-height: 44px; padding: 10px 16px; box-sizing: border-box; border: 2px solid #c7d2fe; border-radius: 12px; background: #fff; color: #3730a3; font: inherit; font-weight: 700; cursor: pointer; text-decoration: none; white-space: normal; text-align: left; }
+  .attendance-star[aria-pressed="true"] { background: #fef3c7; color: #78350f; border-color: #f59e0b; }
+  .attendance-star:focus-visible { outline: 3px solid #818cf8; outline-offset: 3px; }
+  .attendance-star:hover { border-color: #6366f1; }
+  .session-attendance small { display: block; font-size: 12px; line-height: 1.5; max-width: 35em; margin-top: 6px; }
+
   /* ── ステップリスト ── */
   .home-steps { display: flex; flex-direction: column; gap: 14px; }
   .home-step  { display: flex; align-items: flex-start; gap: 12px; font-size: 14px; color: #374151; line-height: 1.5; }
