@@ -1538,3 +1538,15 @@ msgstr[0] "%(count)sレッスンを復習"
 
 #~ msgid "Languages I can teach"
 #~ msgstr "担当できる言語"
+
+#, python-format
+msgid "with your nickname (%(nickname)s) for Gold."
+msgstr "Gold希望の旨とニックネーム（%(nickname)s）を添えてご連絡ください。"
+
+#, python-format
+msgid "Please include your nickname (%(nickname)s) when you contact us."
+msgstr "お問い合わせの際はニックネーム（%(nickname)s）をお知らせください。"
+
+#, python-format
+msgid "Nickname: %(nickname)s\nAccount email: %(email)s"
+msgstr "ニックネーム：%(nickname)s\n登録メールアドレス：%(email)s"

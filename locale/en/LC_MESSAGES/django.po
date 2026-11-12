@@ -2213,3 +2213,15 @@ msgid "%(count)s lesson reviewed"
 msgid_plural "%(count)s lessons reviewed"
 msgstr[0] "%(count)s lesson reviewed"
 msgstr[1] "%(count)s lessons reviewed"
+
+#, python-format
+msgid "with your nickname (%(nickname)s) for Gold."
+msgstr "with your nickname (%(nickname)s) for Gold."
+
+#, python-format
+msgid "Please include your nickname (%(nickname)s) when you contact us."
+msgstr "Please include your nickname (%(nickname)s) when you contact us."
+
+#, python-format
+msgid "Nickname: %(nickname)s\nAccount email: %(email)s"
+msgstr "Nickname: %(nickname)s\nAccount email: %(email)s"

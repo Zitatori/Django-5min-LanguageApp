@@ -7,6 +7,8 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
 from django.shortcuts import render, redirect
 from django.utils import timezone
+from django.utils.translation import gettext as _
+from core.templatetags.display_names import display_name
 from core.models import PointBalance, PointTransaction, WithdrawalRequest
 from core.models import GoldMembership, GoldSubscriptionRequest
 
@@ -48,7 +50,17 @@ def profile(request):
         user=request.user, status=GoldSubscriptionRequest.STATUS_PENDING
     ).exists()
 
+    nickname = request.user.first_name.strip() or display_name(request.user)
+    gold_mailto = 'mailto:zitatori@gmail.com?' + urlencode({
+        'subject': 'QuickLesson Gold membership',
+        'body': _('Nickname: %(nickname)s\nAccount email: %(email)s') % {
+            'nickname': nickname, 'email': request.user.email,
+        },
+    })
+
     return render(request, 'core/profile.html', {
+        'gold_nickname': nickname,
+        'gold_mailto': gold_mailto,
         'balance':            balance,
         'referral_link': request.build_absolute_uri(reverse('signup')) + '?' + urlencode({'ref': signing.dumps(request.user.pk, salt='referral-link')}),
         'transactions':       transactions,

@@ -401,17 +401,17 @@
     <span class="gold-pending-sm">&#x23F3; {% trans "Request pending — we'll activate it shortly." %}</span>
     <p class="gold-mail-note">
       {% trans "To avoid missed requests, please email" %}
-      <a href="mailto:zitatori@gmail.com?subject=QuickLesson%20Gold%20membership">zitatori@gmail.com</a>
-      {% blocktrans trimmed with username=request.user.first_name|default:request.user.username %}
-        with your username ({{ username }}) for Gold.
+      <a href="{{ gold_mailto }}">zitatori@gmail.com</a>
+      {% blocktrans trimmed with nickname=gold_nickname %}
+        with your nickname ({{ nickname }}) for Gold.
       {% endblocktrans %}
     </p>
   {% else %}
-    <a class="btn-gold-full" href="mailto:zitatori@gmail.com?subject=QuickLesson%20Gold%20membership">&#x1F451; {% trans "Email us about Gold" %}</a>
+    <a class="btn-gold-full" href="{{ gold_mailto }}">&#x1F451; {% trans "Email us about Gold" %}</a>
     <p class="gold-mail-note">
       {% trans "Bank transfer and PayPal are available. Payment details are sent by email." %}<br>
-      {% blocktrans trimmed with username=request.user.first_name|default:request.user.username %}
-        Please include your username ({{ username }}) when you contact us.
+      {% blocktrans trimmed with nickname=gold_nickname %}
+        Please include your nickname ({{ nickname }}) when you contact us.
       {% endblocktrans %}
     </p>
   {% endif %}

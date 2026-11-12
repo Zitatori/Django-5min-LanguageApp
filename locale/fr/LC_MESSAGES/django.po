@@ -1672,3 +1672,15 @@ msgstr[1] "%(count)s leçons révisées"
 
 #~ msgid "Languages I can teach"
 #~ msgstr "Langues que je peux enseigner"
+
+#, python-format
+msgid "with your nickname (%(nickname)s) for Gold."
+msgstr "en indiquant votre pseudonyme (%(nickname)s) pour Gold."
+
+#, python-format
+msgid "Please include your nickname (%(nickname)s) when you contact us."
+msgstr "Veuillez indiquer votre pseudonyme (%(nickname)s) lorsque vous nous contactez."
+
+#, python-format
+msgid "Nickname: %(nickname)s\nAccount email: %(email)s"
+msgstr "Pseudonyme : %(nickname)s\nAdresse e-mail du compte : %(email)s"
