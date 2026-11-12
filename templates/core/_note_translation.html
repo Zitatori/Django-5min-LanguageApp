@@ -1,0 +1,6 @@
+{% load i18n %}
+{% if translation_error %}<p role="alert">{{ translation_error }}</p>{% else %}
+<p><small>{% trans 'AI translation and reading aids. The original tutor comment remains unchanged.' %}</small></p>
+{% if record_translation.talked_about.translation %}<strong>{% trans 'What we talked about' %}</strong><p style="white-space:pre-wrap">{{ record_translation.talked_about.translation }}</p>{% if record_translation.talked_about.reading %}<p style="white-space:pre-wrap">{{ record_translation.talked_about.reading }}<br>{{ record_translation.talked_about.romaji }}</p>{% endif %}{% endif %}
+{% if record_translation.advice.translation %}<strong>{% trans 'Study advice' %}</strong><p style="white-space:pre-wrap">{{ record_translation.advice.translation }}</p>{% if record_translation.advice.reading %}<p style="white-space:pre-wrap">{{ record_translation.advice.reading }}<br>{{ record_translation.advice.romaji }}</p>{% endif %}{% endif %}
+{% endif %}
