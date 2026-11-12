@@ -1,15 +1,17 @@
+from django.db import transaction
 from django.core import signing
 from django.contrib.auth.models import User
 from django.contrib.auth import login
 from django.shortcuts import redirect, render
 
 from core.forms import SignupForm
-from core.models import StudentProfile, TutorProfile, UserProfile
+from core.models import StudentProfile, TutorProfile, UserProfile, LessonLanguage
 from core.models import PointBalance, PointTransaction
 
 SIGNUP_BONUS_POINTS = 2
 
 
+@transaction.atomic
 def signup(request):
     token = request.GET.get('ref') or request.session.get('referral_token')
     referrer = None
@@ -27,7 +29,12 @@ def signup(request):
         if form.is_valid():
             user = form.save()
 
-            StudentProfile.objects.get_or_create(user=user)
+            student, _ = StudentProfile.objects.get_or_create(user=user)
+            language_names = {'ja': 'Japanese', 'en': 'English', 'fr': 'French', 'es': 'Spanish'}
+            student.learning_languages.set([
+                LessonLanguage.objects.get_or_create(code=code, defaults={'name': language_names[code]})[0]
+                for code in form.cleaned_data['learning_languages']
+            ])
 
             referral = referrer.username if referrer else form.cleaned_data.get("referral_source", "").strip()
             profile, _ = UserProfile.objects.get_or_create(user=user)

@@ -2264,3 +2264,9 @@ msgstr ""
 
 msgid "Bank transfer, PayPal and TWINT are available."
 msgstr "Bank transfer, PayPal and TWINT are available."
+
+msgid "Which languages would you like to learn?"
+msgstr "Which languages would you like to learn?"
+
+msgid "Choose one or more languages."
+msgstr "Choose one or more languages."

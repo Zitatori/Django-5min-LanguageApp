@@ -1514,6 +1514,12 @@ msgstr "送金前に、送金する通貨と確定金額をメールでご確認
 msgid "Bank transfer, PayPal and TWINT are available."
 msgstr "銀行振込・PayPal・TWINTをご利用いただけます。"
 
+msgid "Which languages would you like to learn?"
+msgstr "勉強したい言語は？"
+
+msgid "Choose one or more languages."
+msgstr "1つ以上選択してください（複数選択可）。"
+
 #~ msgid "Step 1"
 #~ msgstr "ステップ1"
 

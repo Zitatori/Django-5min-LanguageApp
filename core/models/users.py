@@ -39,6 +39,7 @@ class TutorProfile(models.Model):
 
 
 class StudentProfile(models.Model):
+    learning_languages = models.ManyToManyField(LessonLanguage, blank=True, related_name="interested_students")
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     native_language = models.ForeignKey(
         LessonLanguage,

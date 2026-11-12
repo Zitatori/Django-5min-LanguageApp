@@ -17,6 +17,14 @@ class SignupForm(UserCreationForm):
         label=_("Nickname (shown during lessons)"),
         widget=forms.TextInput(attrs={"placeholder": _("e.g. Mika, Tom...")}),
     )
+    learning_languages = forms.MultipleChoiceField(
+        label=_("Which languages would you like to learn?"),
+        choices=[('ja', _("Japanese")), ('en', _("English")),
+                 ('fr', _("French")), ('es', _("Spanish"))],
+        widget=forms.CheckboxSelectMultiple,
+        help_text=_("Choose one or more languages."),
+        required=True,
+    )
     referral_source = forms.CharField(
         required=False,
         max_length=300,
@@ -27,7 +35,7 @@ class SignupForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ("email", "display_name", "password1", "password2")
+        fields = ("email", "display_name", "learning_languages", "password1", "password2")
 
     def clean_email(self):
         email = self.cleaned_data["email"]
