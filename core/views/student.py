@@ -301,8 +301,6 @@ def create_request(request):
 
     for match in matches:
         match.tutor_comment = notes_by_match.get(match.id)
-        cached = translations.get(match.tutor_comment.pk) if match.tutor_comment else None
-        match.record_translation = cached.content if cached and cached.fingerprint == source_hash(match.tutor_comment) else None
 
     # 表示用（オンラインカウント）: 猶予期間中のみ除外
     consecutive_exclude = _get_display_exclude_ids(student_profile)
