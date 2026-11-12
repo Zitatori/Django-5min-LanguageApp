@@ -1,0 +1,16 @@
+{% load i18n %}
+<div class="session-attendance">
+{% if can_plan_attendance %}
+<form method="post" action="{% url 'session_attendance' session.pk %}">
+{% csrf_token %}
+<input type="hidden" name="attending" value="{% if session.is_planned %}no{% else %}yes{% endif %}">
+<button type="submit" class="attendance-star" aria-pressed="{{ session.is_planned|yesno:'true,false' }}">
+{% if session.is_planned %}★ {% trans "Planning to attend — cancel" %}{% else %}☆ {% trans "Plan to attend" %}{% endif %}
+</button>
+</form>
+<small>{% trans "This is an attendance estimate, not a reservation. You can cancel anytime before the session ends." %}</small>
+{% elif not user.is_authenticated %}
+<a class="attendance-star" href="{% url 'login' %}?next={% url 'home' %}">☆ {% trans "Log in to plan attendance" %}</a>
+{% endif %}
+{% if user.is_staff %}<p>★ {% trans "Planned attendees" %}: {{ session.planned_count }}</p>{% endif %}
+</div>
