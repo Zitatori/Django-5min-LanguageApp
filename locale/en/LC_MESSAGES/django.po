@@ -2223,5 +2223,44 @@ msgid "Please include your nickname (%(nickname)s) when you contact us."
 msgstr "Please include your nickname (%(nickname)s) when you contact us."
 
 #, python-format
-msgid "Nickname: %(nickname)s\nAccount email: %(email)s"
-msgstr "Nickname: %(nickname)s\nAccount email: %(email)s"
+msgid ""
+"Nickname: %(nickname)s\n"
+"Account email: %(email)s"
+msgstr ""
+"Nickname: %(nickname)s\n"
+"Account email: %(email)s"
+
+msgid "Payment details"
+msgstr "Payment details"
+
+msgid "Bank: MUFG Bank; Takenotsuka branch (661)"
+msgstr "Bank: MUFG Bank; Takenotsuka branch (661)"
+
+msgid "Ordinary account: 0307779"
+msgstr "Ordinary account: 0307779"
+
+msgid "Account holder"
+msgstr "Account holder"
+
+msgid "Bank transfers are checked within 3 business days."
+msgstr "Bank transfers are checked within 3 business days."
+
+msgid "PayPal and TWINT payments are checked within 24 hours."
+msgstr "PayPal and TWINT payments are checked within 24 hours."
+
+msgid ""
+"After paying, email us your nickname, account email, purchase and payment "
+"method. Points or Gold are activated after payment is verified."
+msgstr ""
+"After paying, email us your nickname, account email, purchase and payment "
+"method. Points or Gold are activated after payment is verified."
+
+msgid ""
+"Before sending payment, confirm the transfer currency and final amount with "
+"us by email."
+msgstr ""
+"Before sending payment, confirm the transfer currency and final amount with "
+"us by email."
+
+msgid "Bank transfer, PayPal and TWINT are available."
+msgstr "Bank transfer, PayPal and TWINT are available."

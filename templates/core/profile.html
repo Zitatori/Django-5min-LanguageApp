@@ -397,6 +397,7 @@
     <li>{% trans "Unlimited points" %}</li>
     <li>{% trans "A Gold badge appears after your name" %}</li>
   </ul>
+  {% include "core/_payment_details.html" %}
   {% if gold_request_pending %}
     <span class="gold-pending-sm">&#x23F3; {% trans "Request pending — we'll activate it shortly." %}</span>
     <p class="gold-mail-note">
@@ -409,7 +410,7 @@
   {% else %}
     <a class="btn-gold-full" href="{{ gold_mailto }}">&#x1F451; {% trans "Email us about Gold" %}</a>
     <p class="gold-mail-note">
-      {% trans "Bank transfer and PayPal are available. Payment details are sent by email." %}<br>
+      {% trans "Bank transfer, PayPal and TWINT are available." %}<br>
       {% blocktrans trimmed with nickname=gold_nickname %}
         Please include your nickname ({{ nickname }}) when you contact us.
       {% endblocktrans %}

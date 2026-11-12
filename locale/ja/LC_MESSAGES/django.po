@@ -1469,6 +1469,51 @@ msgid "%(count)s lesson reviewed"
 msgid_plural "%(count)s lessons reviewed"
 msgstr[0] "%(count)sレッスンを復習"
 
+#, python-format
+msgid "with your nickname (%(nickname)s) for Gold."
+msgstr "Gold希望の旨とニックネーム（%(nickname)s）を添えてご連絡ください。"
+
+#, python-format
+msgid "Please include your nickname (%(nickname)s) when you contact us."
+msgstr "お問い合わせの際はニックネーム（%(nickname)s）をお知らせください。"
+
+#, python-format
+msgid ""
+"Nickname: %(nickname)s\n"
+"Account email: %(email)s"
+msgstr ""
+"ニックネーム：%(nickname)s\n"
+"登録メールアドレス：%(email)s"
+
+msgid "Bank: MUFG Bank; Takenotsuka branch (661)"
+msgstr "三菱UFJ銀行・竹ノ塚支店（661）"
+
+msgid "Ordinary account: 0307779"
+msgstr "普通預金：0307779"
+
+msgid "Account holder"
+msgstr "口座名義"
+
+msgid "Bank transfers are checked within 3 business days."
+msgstr "銀行振込は3営業日以内に入金を確認します。"
+
+msgid "PayPal and TWINT payments are checked within 24 hours."
+msgstr "PayPal・TWINTは24時間以内に入金を確認します。"
+
+msgid ""
+"After paying, email us your nickname, account email, purchase and payment "
+"method. Points or Gold are activated after payment is verified."
+msgstr ""
+"お支払い後、ニックネーム・登録メールアドレス・購入内容・支払い方法をメールでお知らせください。入金確認後にポイントを付与、またはGoldを有効化します。"
+
+msgid ""
+"Before sending payment, confirm the transfer currency and final amount with "
+"us by email."
+msgstr "送金前に、送金する通貨と確定金額をメールでご確認ください。"
+
+msgid "Bank transfer, PayPal and TWINT are available."
+msgstr "銀行振込・PayPal・TWINTをご利用いただけます。"
+
 #~ msgid "Step 1"
 #~ msgstr "ステップ1"
 
@@ -1538,15 +1583,3 @@ msgstr[0] "%(count)sレッスンを復習"
 
 #~ msgid "Languages I can teach"
 #~ msgstr "担当できる言語"
-
-#, python-format
-msgid "with your nickname (%(nickname)s) for Gold."
-msgstr "Gold希望の旨とニックネーム（%(nickname)s）を添えてご連絡ください。"
-
-#, python-format
-msgid "Please include your nickname (%(nickname)s) when you contact us."
-msgstr "お問い合わせの際はニックネーム（%(nickname)s）をお知らせください。"
-
-#, python-format
-msgid "Nickname: %(nickname)s\nAccount email: %(email)s"
-msgstr "ニックネーム：%(nickname)s\n登録メールアドレス：%(email)s"

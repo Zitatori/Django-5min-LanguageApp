@@ -125,20 +125,11 @@
 
   <div id="manual-payment-box" class="manual-box">
     <strong id="manual-selected">{% trans "Selected points" %}</strong>
-    <div class="manual-methods">
-      <span class="manual-method">{% trans "Bank transfer" %}</span>
-      <span class="manual-method">PayPal</span>
-    </div>
-    {% trans "You can pay by bank transfer or PayPal." %}<br>
-    {% trans "For payment details, please email" %} <a href="mailto:zitatori@gmail.com?subject=QuickLesson%20points%20purchase">zitatori@gmail.com</a>.<br>
-    {% blocktrans trimmed with username=request.user.username %}
-      Please include your username ({{ username }}) and how many points you want to purchase.
-    {% endblocktrans %}<br>
-    {% trans "After payment is confirmed, Admin will add student points." %}
+    {% include "core/_payment_details.html" %}
   </div>
 
   <p class="manual-note">
-    {% trans "Bank transfer and PayPal are available. Payment details are sent by email." %}
+    {% trans "Bank transfer, PayPal and TWINT are available." %}
   </p>
 </div>
 

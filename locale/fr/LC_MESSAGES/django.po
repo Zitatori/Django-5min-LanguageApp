@@ -1594,6 +1594,57 @@ msgid_plural "%(count)s lessons reviewed"
 msgstr[0] "%(count)s leçon révisée"
 msgstr[1] "%(count)s leçons révisées"
 
+#, python-format
+msgid "with your nickname (%(nickname)s) for Gold."
+msgstr "en indiquant votre pseudonyme (%(nickname)s) pour Gold."
+
+#, python-format
+msgid "Please include your nickname (%(nickname)s) when you contact us."
+msgstr ""
+"Veuillez indiquer votre pseudonyme (%(nickname)s) lorsque vous nous "
+"contactez."
+
+#, python-format
+msgid ""
+"Nickname: %(nickname)s\n"
+"Account email: %(email)s"
+msgstr ""
+"Pseudonyme : %(nickname)s\n"
+"Adresse e-mail du compte : %(email)s"
+
+msgid "Bank: MUFG Bank; Takenotsuka branch (661)"
+msgstr "Banque MUFG ; agence Takenotsuka (661)"
+
+msgid "Ordinary account: 0307779"
+msgstr "Compte ordinaire : 0307779"
+
+msgid "Account holder"
+msgstr "Titulaire du compte"
+
+msgid "Bank transfers are checked within 3 business days."
+msgstr "Les virements bancaires sont vérifiés sous 3 jours ouvrés."
+
+msgid "PayPal and TWINT payments are checked within 24 hours."
+msgstr "Les paiements PayPal et TWINT sont vérifiés sous 24 heures."
+
+msgid ""
+"After paying, email us your nickname, account email, purchase and payment "
+"method. Points or Gold are activated after payment is verified."
+msgstr ""
+"Après le paiement, envoyez-nous votre pseudonyme, l’e-mail du compte, votre "
+"achat et le mode de paiement. Les points ou Gold sont activés après "
+"vérification du paiement."
+
+msgid ""
+"Before sending payment, confirm the transfer currency and final amount with "
+"us by email."
+msgstr ""
+"Avant le paiement, confirmez avec nous par e-mail la devise et le montant "
+"final à envoyer."
+
+msgid "Bank transfer, PayPal and TWINT are available."
+msgstr "Virement bancaire, PayPal et TWINT sont disponibles."
+
 #~ msgid "Step 1"
 #~ msgstr "Étape 1"
 
@@ -1672,15 +1723,3 @@ msgstr[1] "%(count)s leçons révisées"
 
 #~ msgid "Languages I can teach"
 #~ msgstr "Langues que je peux enseigner"
-
-#, python-format
-msgid "with your nickname (%(nickname)s) for Gold."
-msgstr "en indiquant votre pseudonyme (%(nickname)s) pour Gold."
-
-#, python-format
-msgid "Please include your nickname (%(nickname)s) when you contact us."
-msgstr "Veuillez indiquer votre pseudonyme (%(nickname)s) lorsque vous nous contactez."
-
-#, python-format
-msgid "Nickname: %(nickname)s\nAccount email: %(email)s"
-msgstr "Pseudonyme : %(nickname)s\nAdresse e-mail du compte : %(email)s"
