@@ -161,7 +161,7 @@
 <p id="connection-error-text"></p><button class="btn" id="connection-retry" type="button">{% trans 'Retry' %}</button>
 <button class="btn" id="connection-back" type="button">{% if is_student %}{% trans 'Try another tutor' %}{% else %}{% trans 'Back to dashboard' %}{% endif %}</button></div>
 <p id="wrap-up" hidden role="status" style="position:fixed;top:80px;left:10%;right:10%;text-align:center;z-index:90;background:#172554;color:white;border-radius:12px;padding:8px;">{% trans '30 seconds left — time to say goodbye and thank your partner.' %}</p>
-{% if is_student and conversation_phrases %}<details class="call-phrases"><summary>📖 {% trans 'Conversation starter kit' %}</summary>{% include 'core/_starter_phrases.html' %}</details>{% endif %}
+{% if is_student and conversation_phrases %}<details class="call-phrases"><summary>📖 {% trans 'Hint' %}</summary>{% include 'core/_starter_phrases.html' %}</details>{% endif %}
 <style>.call-phrases {position:fixed;top:125px;left:12px;z-index:80;max-width:min(310px,80vw);max-height:40vh;overflow:auto;background:#fff;color:#172554;padding:10px;border-radius:12px;font-size:14px}.call-phrases summary{cursor:pointer}.call-phrases p{margin:10px 0}</style>
 <style>
   /* ルームはヘッダー直下から全画面 */

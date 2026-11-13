@@ -1708,6 +1708,12 @@ msgstr ""
 msgid "Preparing translation…"
 msgstr "Traduction en cours…"
 
+msgid "Native"
+msgstr "Natif"
+
+msgid "Hint"
+msgstr "Aide"
+
 #~ msgid "Step 1"
 #~ msgstr "Étape 1"
 

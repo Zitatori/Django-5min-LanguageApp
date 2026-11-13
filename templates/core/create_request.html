@@ -481,11 +481,7 @@
       </div>
       <p id="selected-next-session" role="status" style="font-size:14px;"></p>
       <div id="tutor-list" class="cr-tutor-grid"></div>
-      {% for language_id, conversation_phrases in starter_kits %}
-      <details class="starter-kit" data-starter-language="{{ language_id }}" hidden open style="margin:16px 0;padding:14px;border:1px solid #cbd5e1;border-radius:12px;overflow-wrap:anywhere;">
-      <summary>📖 {% trans 'Conversation starter kit' %}</summary>
-      {% include 'core/_starter_phrases.html' %}
-      </details>{% endfor %}
+
 
       <div class="cr-btns">
         <button type="submit" id="cr-start-btn" class="cr-btn-start" disabled>🎯 {% trans "Start a 5-Minute Lesson" %}</button>
@@ -748,7 +744,6 @@
   // 言語クリック → Step 2へ
   function goToTutors(el, langId, langLabel, langName) {
     currentLangId = String(langId);
-    document.querySelectorAll("[data-starter-language]").forEach(kit => { kit.hidden = kit.dataset.starterLanguage !== currentLangId; });
     langInput.value = langId;
     // Step 2 ヘッダーにフラグ＋言語名をセット
     const flagMap = {English:'fi-gb', French:'fi-fr', Spanish:'fi-es', Japanese:'fi-jp'};

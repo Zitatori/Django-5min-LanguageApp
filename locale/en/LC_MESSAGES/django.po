@@ -2326,3 +2326,9 @@ msgstr ""
 
 msgid "Preparing translation…"
 msgstr "Preparing translation…"
+
+msgid "Native"
+msgstr "Native"
+
+msgid "Hint"
+msgstr "Hint"

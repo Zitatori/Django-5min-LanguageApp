@@ -1571,6 +1571,12 @@ msgstr "講師のコメントのみを翻訳します。プライベートメモ
 msgid "Preparing translation…"
 msgstr "翻訳しています…"
 
+msgid "Native"
+msgstr "ネイティブ"
+
+msgid "Hint"
+msgstr "ヒント"
+
 #~ msgid "Step 1"
 #~ msgstr "ステップ1"
 

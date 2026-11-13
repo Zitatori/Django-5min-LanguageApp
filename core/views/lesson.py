@@ -101,10 +101,11 @@ def lesson_room(request, match_id: int):
         previous_notes = brief_history(match.request.student_id, match.request.language_id)
         is_first_session = len(previous_notes) == 0
 
+    selected_level = self_level(match.request.student.user, match.request.language.code)
     context = {
-        "conversation_phrases": conversation_phrases(match.request.language.code, self_level(match.request.student.user, match.request.language.code)),
+        "conversation_phrases": conversation_phrases(match.request.language.code, selected_level) if is_student and selected_level in ("A1", "A2") else [],
         "match": match,
-        "self_selected_level": self_level(match.request.student.user, match.request.language.code),
+        "self_selected_level": selected_level,
         "remaining_seconds": remaining_seconds,
         "timer_end_at": match.end_at,
         "after_lesson_url": after_lesson_url,
