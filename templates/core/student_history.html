@@ -35,14 +35,7 @@
             <td data-label="{% trans 'Language' %}">{% trans match.request.language.name %}</td>
             <td class="student-note-cell" data-label="{% trans 'Lesson notes' %}">
               {% include "core/_student_lesson_record.html" %}
-              {% if match.tutor_comment %}
-              <details class="record-translation"><summary>{% trans 'Translation and reading help' %}</summary>
-              <form class="translation-form" method="post" action="{% url 'note_translation' match.tutor_comment.pk %}">{% csrf_token %}
-              <label>{% trans 'Explanation language' %}<select name="language" style="max-width:100%;font-size:16px;">{% get_current_language as current_language %}{% get_available_languages as languages %}{% for code,name in languages %}<option value="{{ code }}" {% if code == current_language %}selected{% endif %}>{{ name }}</option>{% endfor %}</select></label>
-              <p><small>{% trans 'Only the tutor comments are sent for translation. Your private notes are not included.' %}</small></p>
-              <button type="submit" class="btn">{% trans 'Show translation and readings' %}</button>
-              </form><div class="translation-result" aria-live="polite">{% if match.record_translation %}{% include 'core/_note_translation.html' with record_translation=match.record_translation %}{% endif %}</div>
-              </details>{% endif %}
+
             </td>
           </tr>
         {% endfor %}
@@ -52,14 +45,5 @@
     <p class="text-muted">{% trans "No lesson history yet." %}</p>
   {% endif %}
 </div>
-<script>
-document.querySelectorAll('.translation-form').forEach(form => form.addEventListener('submit', async event => {
- event.preventDefault(); const button=form.querySelector('button'); if(button.disabled) return; button.disabled=true;
- const result=form.nextElementSibling; result.textContent="{% trans 'Preparing translation…' as translating %}{{ translating|escapejs }}";
- try { const response=await fetch(form.action,{method:'POST',body:new FormData(form),credentials:'same-origin'});
- const html=await response.text(); if([200,400,503].includes(response.status)) result.innerHTML=html; else throw new Error();
- } catch (_) { result.textContent="{% trans 'Translation is temporarily unavailable. Your original notes are safe. Please try again.' as translation_failed %}{{ translation_failed|escapejs }}"; }
- finally {button.disabled=false;}
-}));
-</script>
+
 {% endblock %}
