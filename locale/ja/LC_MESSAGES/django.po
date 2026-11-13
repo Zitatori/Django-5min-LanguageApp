@@ -1537,6 +1537,23 @@ msgid ""
 "before the session ends."
 msgstr "参加人数を把握するための目安です。予約ではありません。セッション終了前なら解除できます。"
 
+msgid "In the press"
+msgstr "メディア掲載"
+
+msgid "From Tokyo to Fully: the story behind QuickLesson"
+msgstr "東京からフュリーへ：QuickLesson誕生のストーリー"
+
+msgid ""
+"Meet Misuzu, the founder of QuickLesson, who taught herself to code in "
+"Fully. Journal de Fully tells how her experience learning languages inspired"
+" five-minute conversations that connect people across cultures."
+msgstr ""
+"フュリーで独学でプログラミングを学んだQuickLesson創設者、美鈴。語学学習の経験から、5分間の会話で人と文化をつなぐサービスを生み出した背景が、Journal"
+" de Fullyで紹介されています。"
+
+msgid "Read the article (French)"
+msgstr "記事を読む（フランス語）"
+
 #~ msgid "Step 1"
 #~ msgstr "ステップ1"
 

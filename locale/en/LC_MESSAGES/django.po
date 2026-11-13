@@ -2289,3 +2289,21 @@ msgid ""
 msgstr ""
 "This is an attendance estimate, not a reservation. You can cancel anytime "
 "before the session ends."
+
+msgid "In the press"
+msgstr "In the press"
+
+msgid "From Tokyo to Fully: the story behind QuickLesson"
+msgstr "From Tokyo to Fully: the story behind QuickLesson"
+
+msgid ""
+"Meet Misuzu, the founder of QuickLesson, who taught herself to code in "
+"Fully. Journal de Fully tells how her experience learning languages inspired"
+" five-minute conversations that connect people across cultures."
+msgstr ""
+"Meet Misuzu, the founder of QuickLesson, who taught herself to code in "
+"Fully. Journal de Fully tells how her experience learning languages inspired"
+" five-minute conversations that connect people across cultures."
+
+msgid "Read the article (French)"
+msgstr "Read the article (French)"

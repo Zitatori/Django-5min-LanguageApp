@@ -75,6 +75,16 @@
   {% endif %}
 
 </div>{# /home-grid #}
+
+{% if not user.is_authenticated %}
+<aside class="card press-preview" aria-labelledby="press-title">
+  <div class="press-source">📰 Journal de Fully · {% trans "In the press" %}</div>
+  <h2 id="press-title">{% trans "From Tokyo to Fully: the story behind QuickLesson" %}</h2>
+  <p>{% trans "Meet Misuzu, the founder of QuickLesson, who taught herself to code in Fully. Journal de Fully tells how her experience learning languages inspired five-minute conversations that connect people across cultures." %}</p>
+  <a href="https://www.journaldefully.ch/rubriques/habitants-de-fully/de-tokyo-a-fully-elle-apprend-a-coder-seule-pour-revolutionner-la-pratique-des-langues-en-5-minutes/3370/" target="_blank" rel="noopener noreferrer">{% trans "Read the article (French)" %} ↗</a>
+</aside>
+{% endif %}
+
 <div style="max-width: 1400px; margin: 32px auto; padding: 0 16px;">
   <img
     {% if home_language|slice:":2" == 'fr' %}
@@ -123,6 +133,15 @@
 {% endif %}
 
 <style>
+  .hs-next-card .session-attendance small { color: #e0e7ff; }
+  .hs-next-card .session-attendance > p { color: #fff; }
+  .press-preview { margin: 24px 0; border: 1px solid #c7d2fe; border-left: 5px solid #6366f1; background: #fff; color: #111827; }
+  .press-preview p { color: #475569; line-height: 1.7; }
+  .press-preview h2 { font-size: clamp(20px, 3vw, 26px); line-height: 1.4; margin: 10px 0; }
+  .press-preview .press-source { color: #4338ca; font-weight: 700; font-size: 14px; }
+  .press-preview a { display: inline-flex; min-height: 44px; align-items: center; padding: 10px 16px; box-sizing: border-box; border-radius: 10px; background: #4338ca; color: #fff; font-weight: 700; text-decoration: none; }
+  .press-preview a:focus-visible { outline: 3px solid #818cf8; outline-offset: 3px; }
+
   .session-attendance { margin-top: 14px; min-width: 0; }
   .attendance-star { display: inline-flex; align-items: center; min-height: 44px; padding: 10px 16px; box-sizing: border-box; border: 2px solid #c7d2fe; border-radius: 12px; background: #fff; color: #3730a3; font: inherit; font-weight: 700; cursor: pointer; text-decoration: none; white-space: normal; text-align: left; }
   .attendance-star[aria-pressed="true"] { background: #fef3c7; color: #78350f; border-color: #f59e0b; }

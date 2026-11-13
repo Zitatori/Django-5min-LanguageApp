@@ -1670,6 +1670,25 @@ msgstr ""
 "C’est une estimation de participation, pas une réservation. Vous pouvez "
 "annuler avant la fin de la session."
 
+msgid "In the press"
+msgstr "Dans la presse"
+
+msgid "From Tokyo to Fully: the story behind QuickLesson"
+msgstr "De Tokyo à Fully : l’histoire de QuickLesson"
+
+msgid ""
+"Meet Misuzu, the founder of QuickLesson, who taught herself to code in "
+"Fully. Journal de Fully tells how her experience learning languages inspired"
+" five-minute conversations that connect people across cultures."
+msgstr ""
+"Journal de Fully présente Misuzu, fondatrice de QuickLesson, qui a appris à "
+"coder en autodidacte à Fully. Son parcours dans l’apprentissage des langues "
+"lui a inspiré des conversations de cinq minutes pour rapprocher les "
+"personnes et les cultures."
+
+msgid "Read the article (French)"
+msgstr "Lire l’article (en français)"
+
 #~ msgid "Step 1"
 #~ msgstr "Étape 1"
 
