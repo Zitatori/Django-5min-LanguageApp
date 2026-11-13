@@ -1195,7 +1195,7 @@ document.addEventListener('submit', function(e) {
     if (data.status !== 'ready' || !data.facts.length) throw new Error('unavailable');
     for (const fact of data.facts) {
       const item = document.createElement('li');
-      item.textContent = fact.text + ' (' + fact.date + ')';
+      item.textContent = fact.text;
       document.getElementById('learner-brief-facts').appendChild(item);
     }
     status.textContent = "{% trans 'Based on tutor notes; confirm details naturally with the learner.' as brief_notice %}{{ brief_notice|escapejs }}";
