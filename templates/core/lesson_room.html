@@ -6,7 +6,6 @@
 <div class="lr-room" id="lr-room">
 
   {# ── パートナー映像（背景全面） ── #}
-  {% if not is_student and self_selected_level %}<div style="position:absolute;top:12px;left:16px;right:100px;overflow-wrap:anywhere;max-height:80px;overflow:auto;z-index:12;background:#111827;color:white;padding:8px;border-radius:8px;">{% trans "Learner-selected level" %}: {{ self_selected_level|level_label }}</div>{% endif %}
   <video id="remoteVideo" class="lr-remote" autoplay playsinline></video>
 
   {# リモート映像が来るまでのアバタープレースホルダー #}
@@ -71,6 +70,7 @@
   {# ── Conversation Notes（講師のみ・左上セッションバッジ下） ── #}
   {% if not is_student %}
   <div class="lr-notes-wrap" id="lr-notes-wrap">
+    {% if self_selected_level %}<div class="lr-learner-level">{% trans "Learner-selected level" %}: {{ self_selected_level|level_label }}</div>{% endif %}
     <button class="lr-notes-toggle" id="lr-notes-toggle" type="button">
       ✨ {% trans "Learner conversation brief" %}
       <span class="lr-notes-chevron" id="lr-notes-chevron">▾</span>
@@ -413,6 +413,20 @@
     z-index: 10;
     width: 220px;
     max-width: calc(100vw - 32px);
+  }
+  .lr-learner-level {
+    box-sizing: border-box;
+    width: 100%;
+    max-height: 96px;
+    overflow: auto;
+    overflow-wrap: anywhere;
+    margin-bottom: 8px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: rgba(17,24,39,0.92);
+    color: #fff;
+    font-size: 13px;
+    line-height: 1.5;
   }
   .lr-notes-toggle {
     display: flex; align-items: center; gap: 6px;
