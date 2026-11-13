@@ -1577,6 +1577,17 @@ msgstr "ネイティブ"
 msgid "Hint"
 msgstr "ヒント"
 
+msgid ""
+"To activate Gold: pay using the details below, then notify us by email. We "
+"will activate Gold after verifying your payment."
+msgstr "Goldの有効化：下記の支払い先へ入金 → メールで支払い完了を連絡 → 入金確認後にGoldを有効化します。"
+
+msgid "Notify us after payment"
+msgstr "支払い完了をメールで知らせる"
+
+msgid "Pay first using the payment details above, then notify us by email."
+msgstr "上記の支払い先へ入金後、メールで支払い完了をお知らせください。"
+
 #~ msgid "Step 1"
 #~ msgstr "ステップ1"
 

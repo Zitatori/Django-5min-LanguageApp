@@ -2332,3 +2332,16 @@ msgstr "Native"
 
 msgid "Hint"
 msgstr "Hint"
+
+msgid ""
+"To activate Gold: pay using the details below, then notify us by email. We "
+"will activate Gold after verifying your payment."
+msgstr ""
+"To activate Gold: pay using the details below, then notify us by email. We "
+"will activate Gold after verifying your payment."
+
+msgid "Notify us after payment"
+msgstr "Notify us after payment"
+
+msgid "Pay first using the payment details above, then notify us by email."
+msgstr "Pay first using the payment details above, then notify us by email."

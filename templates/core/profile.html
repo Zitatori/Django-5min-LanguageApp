@@ -390,7 +390,7 @@
   <p class="gold-sub-title">&#x1F451; {% trans "Gold membership" %}</p>
   <p class="gold-sub-desc">{% blocktrans with price=gold_display_price %}{{ price }} per month{% endblocktrans %}</p>
   <p>{% trans 'Join published sessions while tutors are available. To arrange your two weekly 30-minute sessions, email us your preferred times. We confirm availability by email.' %}</p>
-  <p>{% trans 'To activate Gold: email us, receive payment instructions, then wait for our activation confirmation after payment is checked.' %}</p>
+  <p>{% trans 'To activate Gold: pay using the details below, then notify us by email. We will activate Gold after verifying your payment.' %}</p>
   <ul class="gold-sub-benefits">
     <li>{% trans "Unlimited participation in existing sessions" %}</li>
     <li>{% trans "Choose your preferred times for two 30-minute sessions per week" %}</li>
@@ -408,7 +408,7 @@
       {% endblocktrans %}
     </p>
   {% else %}
-    <a class="btn-gold-full" href="{{ gold_mailto }}">&#x1F451; {% trans "Email us about Gold" %}</a>
+    <a class="btn-gold-full" href="{{ gold_mailto }}">&#x1F451; {% trans "Notify us after payment" %}</a>
     <p class="gold-mail-note">
       {% trans "Bank transfer, PayPal and TWINT are available." %}<br>
       {% blocktrans trimmed with nickname=gold_nickname %}

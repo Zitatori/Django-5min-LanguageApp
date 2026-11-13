@@ -1693,6 +1693,19 @@ msgstr "Nativo"
 msgid "Hint"
 msgstr "Ayuda"
 
+msgid ""
+"To activate Gold: pay using the details below, then notify us by email. We "
+"will activate Gold after verifying your payment."
+msgstr ""
+"Para activar Gold: paga con los datos indicados abajo y avísanos por correo."
+" Activaremos Gold tras verificar el pago."
+
+msgid "Notify us after payment"
+msgstr "Notificar el pago por correo"
+
+msgid "Pay first using the payment details above, then notify us by email."
+msgstr "Paga con los datos indicados arriba y después avísanos por correo."
+
 #~ msgid "Step 1"
 #~ msgstr "Paso 1"
 
