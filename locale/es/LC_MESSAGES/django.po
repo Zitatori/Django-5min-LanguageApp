@@ -1706,6 +1706,77 @@ msgstr "Notificar el pago por correo"
 msgid "Pay first using the payment details above, then notify us by email."
 msgstr "Paga con los datos indicados arriba y después avísanos por correo."
 
+msgid "Your learning progress"
+msgstr "Tu progreso"
+
+msgid "Conversations this week"
+msgstr "Conversaciones esta semana"
+
+msgid "Minutes practised in total"
+msgstr "Minutos practicados en total"
+
+msgid "Two conversations completed!"
+msgstr "¡Has completado dos conversaciones!"
+
+msgid ""
+"Your free lessons are complete. Revisit your notes anytime, or buy points "
+"when you are ready for another conversation."
+msgstr ""
+"Has terminado tus clases gratuitas. Puedes repasar tus notas cuando quieras "
+"y comprar puntos cuando quieras conversar de nuevo."
+
+msgid "Keep learning"
+msgstr "Seguir aprendiendo"
+
+msgid "See sessions and plan to attend"
+msgstr "Ver sesiones e indicar asistencia"
+
+msgid "New session times will appear on the home page when published."
+msgstr "Las nuevas sesiones aparecerán en el inicio cuando se publiquen."
+
+msgid "Learning continuation"
+msgstr "Continuidad del aprendizaje"
+
+msgid "Completed at least two lessons"
+msgstr "Personas con al menos dos clases completadas"
+
+msgid "Opened point purchase after lesson two"
+msgstr "Personas que abrieron la compra tras la segunda clase"
+
+msgid "Purchased points after lesson two"
+msgstr "Personas que compraron puntos tras la segunda clase"
+
+msgid "Completed a third lesson"
+msgstr "Personas que completaron una tercera clase"
+
+msgid "Other ended or old connection attempts (not completed lessons)"
+msgstr "Otros intentos finalizados o antiguos (no son clases completadas)"
+
+msgid "Cancelled requests without a match"
+msgstr "Solicitudes canceladas sin emparejamiento"
+
+msgid ""
+"Two-point signup users only. Purchase-page visits are recorded from this "
+"feature onward. These counts show behaviour, not the reason for leaving."
+msgstr ""
+"Solo usuarios con dos puntos de bienvenida. Las visitas a la compra se "
+"registran desde esta función. Estos datos no determinan el motivo del "
+"abandono."
+
+msgid ""
+"Connection attempts are shown separately. They are not counted as completed "
+"lessons. Tutor availability and payment delays may also affect return "
+"visits."
+msgstr ""
+"Los intentos de conexión se muestran aparte. La disponibilidad de tutores y "
+"los plazos de pago también pueden influir en el regreso."
+
+msgid "Buy points"
+msgstr "Comprar puntos"
+
+msgid "Next session"
+msgstr "Próxima sesión"
+
 #~ msgid "Step 1"
 #~ msgstr "Paso 1"
 

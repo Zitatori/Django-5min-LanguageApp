@@ -171,6 +171,10 @@ def transfer_points(request):
 
 @login_required
 def purchase_points(request):
+    from core.models import LearningEvent
+    from core.services.lesson_lifecycle import completed_lessons
+    if completed_lessons().filter(request__student__user=request.user, request__purpose='lesson').distinct().count() >= 2:
+        LearningEvent.objects.get_or_create(user=request.user, kind='purchase_view_after_two')
     TIERS = [
         {'points': 10,  'price_chf': 10},
         {'points': 50,  'price_chf': 50},

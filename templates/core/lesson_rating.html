@@ -3,8 +3,10 @@
 
 {% block content %}
 <div class="card rating-card">
+<div class="lesson-celebration">
+<div class="celebration-bird" aria-hidden="true">🐧<span>✨</span></div>
 <p role="status">{% trans match.request.language.name as study_language %}{% if full_lesson %}{% blocktrans %}Congratulations! You spoke {{ study_language }} for five minutes!{% endblocktrans %}{% else %}{% trans 'Well done for practising today!' %}{% endif %}</p>
-<p><a href="{% url 'study_notes' %}?lesson={{ match.pk }}">{% trans 'AI Study Notes' %}</a></p>
+</div>
   <h2 class="card-title rating-title">{% trans "Rate this lesson" %}</h2>
   <p class="card-subtitle rating-subtitle">
     {{ match.tutor.user|display_name }} · {% trans match.request.language.name %}
@@ -55,9 +57,17 @@
       <a href="{% url 'home' %}" class="rating-skip">{% trans "Skip" %}</a>
     </form>
   {% endif %}
+{% include "core/_learning_progress.html" %}
 </div>
 
 <style>
+  .lesson-celebration {padding:8px 0 4px;color:#3730a3;font-weight:700}
+  .celebration-bird {position:relative;width:90px;margin:auto;font-size:52px;animation:bird-hop .65s ease-in-out 3}
+  .celebration-bird span {position:absolute;right:-12px;top:0;font-size:28px;animation:star-glow 1s ease-in-out 2}
+  @keyframes bird-hop {0%,100% {transform:translateY(0) rotate(0)} 45% {transform:translateY(-12px) rotate(-8deg)}}
+  @keyframes star-glow {0%,100% {opacity:.3;transform:scale(.8)} 50% {opacity:1;transform:scale(1.15)}}
+  @media(prefers-reduced-motion:reduce) {.celebration-bird,.celebration-bird span{animation:none}}
+
   .rating-card {
     max-width: 440px;
     margin: 36px auto;

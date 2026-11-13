@@ -2345,3 +2345,74 @@ msgstr "Notify us after payment"
 
 msgid "Pay first using the payment details above, then notify us by email."
 msgstr "Pay first using the payment details above, then notify us by email."
+
+msgid "Your learning progress"
+msgstr "Your learning progress"
+
+msgid "Conversations this week"
+msgstr "Conversations this week"
+
+msgid "Minutes practised in total"
+msgstr "Minutes practised in total"
+
+msgid "Two conversations completed!"
+msgstr "Two conversations completed!"
+
+msgid ""
+"Your free lessons are complete. Revisit your notes anytime, or buy points "
+"when you are ready for another conversation."
+msgstr ""
+"Your free lessons are complete. Revisit your notes anytime, or buy points "
+"when you are ready for another conversation."
+
+msgid "Keep learning"
+msgstr "Keep learning"
+
+msgid "See sessions and plan to attend"
+msgstr "See sessions and plan to attend"
+
+msgid "New session times will appear on the home page when published."
+msgstr "New session times will appear on the home page when published."
+
+msgid "Learning continuation"
+msgstr "Learning continuation"
+
+msgid "Completed at least two lessons"
+msgstr "Completed at least two lessons"
+
+msgid "Opened point purchase after lesson two"
+msgstr "Opened point purchase after lesson two"
+
+msgid "Purchased points after lesson two"
+msgstr "Purchased points after lesson two"
+
+msgid "Completed a third lesson"
+msgstr "Completed a third lesson"
+
+msgid "Other ended or old connection attempts (not completed lessons)"
+msgstr "Other ended or old connection attempts (not completed lessons)"
+
+msgid "Cancelled requests without a match"
+msgstr "Cancelled requests without a match"
+
+msgid ""
+"Two-point signup users only. Purchase-page visits are recorded from this "
+"feature onward. These counts show behaviour, not the reason for leaving."
+msgstr ""
+"Two-point signup users only. Purchase-page visits are recorded from this "
+"feature onward. These counts show behaviour, not the reason for leaving."
+
+msgid ""
+"Connection attempts are shown separately. They are not counted as completed "
+"lessons. Tutor availability and payment delays may also affect return "
+"visits."
+msgstr ""
+"Connection attempts are shown separately. They are not counted as completed "
+"lessons. Tutor availability and payment delays may also affect return "
+"visits."
+
+msgid "Buy points"
+msgstr "Buy points"
+
+msgid "Next session"
+msgstr "Next session"

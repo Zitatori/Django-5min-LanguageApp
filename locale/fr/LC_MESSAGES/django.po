@@ -1727,6 +1727,81 @@ msgstr "Signaler le paiement par e-mail"
 msgid "Pay first using the payment details above, then notify us by email."
 msgstr "Payez avec les coordonnées ci-dessus, puis informez-nous par e-mail."
 
+msgid "Your learning progress"
+msgstr "Vos progrès"
+
+msgid "Conversations this week"
+msgstr "Conversations cette semaine"
+
+msgid "Minutes practised in total"
+msgstr "Minutes pratiquées au total"
+
+msgid "Two conversations completed!"
+msgstr "Deux conversations terminées !"
+
+msgid ""
+"Your free lessons are complete. Revisit your notes anytime, or buy points "
+"when you are ready for another conversation."
+msgstr ""
+"Vos leçons gratuites sont terminées. Retrouvez vos notes à tout moment et "
+"achetez des points lorsque vous souhaitez reprendre la conversation."
+
+msgid "Keep learning"
+msgstr "Continuer à apprendre"
+
+msgid "See sessions and plan to attend"
+msgstr "Voir les sessions et prévoir de participer"
+
+msgid "New session times will appear on the home page when published."
+msgstr ""
+"Les nouvelles sessions apparaîtront sur l’accueil dès leur publication."
+
+msgid "Learning continuation"
+msgstr "Suivi de la poursuite des leçons"
+
+msgid "Completed at least two lessons"
+msgstr "Élèves ayant terminé au moins deux leçons"
+
+msgid "Opened point purchase after lesson two"
+msgstr "Élèves ayant consulté l’achat de points après la deuxième leçon"
+
+msgid "Purchased points after lesson two"
+msgstr "Élèves ayant acheté des points après la deuxième leçon"
+
+msgid "Completed a third lesson"
+msgstr "Élèves ayant terminé une troisième leçon"
+
+msgid "Other ended or old connection attempts (not completed lessons)"
+msgstr ""
+"Autres tentatives de connexion terminées ou anciennes (hors leçons "
+"terminées)"
+
+msgid "Cancelled requests without a match"
+msgstr "Demandes annulées sans mise en relation"
+
+msgid ""
+"Two-point signup users only. Purchase-page visits are recorded from this "
+"feature onward. These counts show behaviour, not the reason for leaving."
+msgstr ""
+"Utilisateurs ayant reçu deux points à l’inscription uniquement. Les visites "
+"de la page d’achat sont enregistrées à partir de cette fonctionnalité. Ces "
+"chiffres ne permettent pas de déterminer les raisons d’abandon."
+
+msgid ""
+"Connection attempts are shown separately. They are not counted as completed "
+"lessons. Tutor availability and payment delays may also affect return "
+"visits."
+msgstr ""
+"Les tentatives de connexion sont séparées des leçons terminées. La "
+"disponibilité des tuteurs et les délais de paiement peuvent aussi influencer"
+" le retour."
+
+msgid "Buy points"
+msgstr "Acheter des points"
+
+msgid "Next session"
+msgstr "Prochaine session"
+
 #~ msgid "Step 1"
 #~ msgstr "Étape 1"
 

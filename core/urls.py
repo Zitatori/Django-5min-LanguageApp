@@ -1,3 +1,4 @@
+from core.views.learning_retention import learning_retention
 from core.views.note_translation import note_translation
 from core.views.learner_brief import learner_brief
 from core.views.currency import set_display_currency
@@ -18,6 +19,7 @@ from core.views.profile import profile, purchase_points, request_withdrawal, tra
 from core.views.home import session_attendance
 
 urlpatterns = [
+    path("dashboard/learning-retention/", learning_retention, name="learning_retention"),
     path('sessions/<int:session_id>/attendance/', session_attendance, name='session_attendance'),
     path('lesson-notes/<int:note_id>/translation/', note_translation, name='note_translation'),
     path('lesson/<int:match_id>/learner-brief/', learner_brief, name='learner_brief'),

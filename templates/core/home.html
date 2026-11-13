@@ -8,7 +8,8 @@
   <p>{% trans "AI creates personalized review materials from your past lessons." %}</p>
 </div>
 
-<div class="home-grid">
+{% if user.is_authenticated %}{% include "core/_learning_progress.html" %}{% endif %}
+<div class="home-grid" id="upcoming-sessions">
   <div class="card home-hero-card">
     <div class="home-hero-tag">&#9889; {% trans "5-minute lesson" %}</div>
     <h2 class="card-title" style="font-size:22px; margin:10px 0 8px;">{% trans "5-Minute Online Lessons" %}</h2>

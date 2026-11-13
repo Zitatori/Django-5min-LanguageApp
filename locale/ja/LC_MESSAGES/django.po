@@ -1588,6 +1588,70 @@ msgstr "支払い完了をメールで知らせる"
 msgid "Pay first using the payment details above, then notify us by email."
 msgstr "上記の支払い先へ入金後、メールで支払い完了をお知らせください。"
 
+msgid "Your learning progress"
+msgstr "学習の実績"
+
+msgid "Conversations this week"
+msgstr "今週の会話回数"
+
+msgid "Minutes practised in total"
+msgstr "これまで話した分数"
+
+msgid "Two conversations completed!"
+msgstr "2回の会話を達成しました！"
+
+msgid ""
+"Your free lessons are complete. Revisit your notes anytime, or buy points "
+"when you are ready for another conversation."
+msgstr "無料レッスンを使い切りました。いつでもノートで復習できます。次の会話をしたいときにポイントをご購入ください。"
+
+msgid "Keep learning"
+msgstr "学習を続ける"
+
+msgid "See sessions and plan to attend"
+msgstr "予定を確認して出席予定を付ける"
+
+msgid "New session times will appear on the home page when published."
+msgstr "新しいセッションの予定は、公開され次第ホーム画面に表示されます。"
+
+msgid "Learning continuation"
+msgstr "学習継続の状況"
+
+msgid "Completed at least two lessons"
+msgstr "2回以上の会話を完了した人数"
+
+msgid "Opened point purchase after lesson two"
+msgstr "2回目以降にポイント購入画面を開いた人数"
+
+msgid "Purchased points after lesson two"
+msgstr "2回目以降にポイントを購入した人数"
+
+msgid "Completed a third lesson"
+msgstr "3回目の会話を完了した人数"
+
+msgid "Other ended or old connection attempts (not completed lessons)"
+msgstr "未成立などの終了済み・古い接続試行（完了レッスン以外）"
+
+msgid "Cancelled requests without a match"
+msgstr "マッチングせずキャンセルされたリクエスト数"
+
+msgid ""
+"Two-point signup users only. Purchase-page visits are recorded from this "
+"feature onward. These counts show behaviour, not the reason for leaving."
+msgstr "登録特典が2ポイントの利用者が対象です。購入画面の閲覧は本機能導入後から記録します。この集計だけで離脱理由は断定できません。"
+
+msgid ""
+"Connection attempts are shown separately. They are not counted as completed "
+"lessons. Tutor availability and payment delays may also affect return "
+"visits."
+msgstr "接続試行は完了レッスンと分けて表示します。講師の空き状況や入金確認の待ち時間も再訪に影響する可能性があります。"
+
+msgid "Buy points"
+msgstr "ポイントを購入"
+
+msgid "Next session"
+msgstr "次のセッション"
+
 #~ msgid "Step 1"
 #~ msgstr "ステップ1"
 

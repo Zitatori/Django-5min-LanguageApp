@@ -6,3 +6,4 @@ from .gold import GoldMembership, GoldSubscriptionRequest
 from .sessions import UpcomingSession
 from .notes import ConversationNote, LessonNoteTranslation
 from .study_notes import StudyNote
+from .engagement import LearningEvent

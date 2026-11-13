@@ -1,0 +1,7 @@
+{% extends 'base.html' %}{% load i18n %}
+{% block content %}<div class="card">
+<h2>{% trans 'Learning continuation' %}</h2>
+<p>{% trans 'Two-point signup users only. Purchase-page visits are recorded from this feature onward. These counts show behaviour, not the reason for leaving.' %}</p>
+<dl>{% for label,count in rows %}<dt>{{ label }}</dt><dd><strong>{{ count }}</strong></dd>{% endfor %}</dl>
+<p>{% trans 'Connection attempts are shown separately. They are not counted as completed lessons. Tutor availability and payment delays may also affect return visits.' %}</p>
+<a href="{% url 'admin_dashboard' %}">{% trans 'Back' %}</a></div>{% endblock %}

@@ -8,6 +8,7 @@ from django.db.models import Count
 from django.http import HttpResponseBadRequest, HttpResponseForbidden
 from django.utils import timezone
 
+from core.services.learning_progress import learning_progress
 from core.models import UpcomingSession
 
 JST = ZoneInfo('Asia/Tokyo')
@@ -50,6 +51,7 @@ def home(request):
 
     return render(request, "core/home.html", {
         'can_plan_attendance': student is not None,
+        'learning_progress': learning_progress(request.user) if student else None,
         'next_session':      sessions[0] if sessions else None,
         'other_sessions':    sessions[1:],
     })

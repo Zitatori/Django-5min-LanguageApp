@@ -1,3 +1,4 @@
+from core.services.learning_progress import learning_progress
 from core.services.phrases import conversation_phrases
 from core.services.learner_levels import self_level
 from core.services.lesson_lifecycle import active_calls, completed_lessons, settle_points
@@ -177,7 +178,7 @@ def lesson_rating(request, match_id: int):
             QuickLessonMatch.objects.filter(pk=match.pk).update(**updates)
         return redirect("create_request")
 
-    return render(request, "core/lesson_rating.html", {"match": match, "full_lesson": (match.end_at-match.started_at).total_seconds() >= 295})
+    return render(request, "core/lesson_rating.html", {"match": match, "learning_progress": learning_progress(request.user, match.request.language.code), "full_lesson": (match.end_at-match.started_at).total_seconds() >= 295})
 
 
 @login_required

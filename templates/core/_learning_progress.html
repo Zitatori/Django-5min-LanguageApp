@@ -1,0 +1,30 @@
+{% load i18n %}
+{% if learning_progress %}
+<section class="learning-progress" aria-label="{% trans 'Your learning progress' %}">
+  <div class="progress-metrics">
+    <span>💬 {% trans 'Conversations this week' %}: <strong>{{ learning_progress.weekly }}</strong></span>
+    <span>✨ {% trans 'Minutes practised in total' %}: <strong>{{ learning_progress.minutes }}</strong></span>
+  </div>
+  {% if learning_progress.trial_finished %}
+  <h3>🎉 {% trans 'Two conversations completed!' %}</h3>
+  <p>{% trans 'Your free lessons are complete. Revisit your notes anytime, or buy points when you are ready for another conversation.' %}</p>
+  <a class="btn" href="{% url 'purchase_points' %}">{% trans 'Buy points' %}</a>
+  {% endif %}
+  <nav class="progress-links" aria-label="{% trans 'Keep learning' %}">
+    <a href="{% url 'study_notes' %}{% if match %}?lesson={{ match.pk }}{% endif %}">✨ {% trans 'AI Study Notes' %}</a>
+    <a href="{% url 'student_history' %}">{% trans 'My Lesson History' %}</a>
+  </nav>
+  {% if learning_progress.next_session %}
+  <p>{% trans 'Next session' %}: <time class="progress-local-time" datetime="{{ learning_progress.next_session.start_time|date:'c' }}">{{ learning_progress.next_session.start_time|date:'DATETIME_FORMAT' }}</time></p>
+  <a href="{% url 'home' %}#upcoming-sessions">☆ {% trans 'See sessions and plan to attend' %}</a>
+  {% else %}<p>{% trans 'New session times will appear on the home page when published.' %}</p>{% endif %}
+</section>
+<style>
+.learning-progress {padding:18px; margin:16px 0; background:#f0f9ff; border:1px solid #bae6fd; border-radius:16px; color:#172554; overflow-wrap:anywhere; text-align:left}
+.progress-metrics,.progress-links {display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center}
+.progress-links {margin:14px 0}.learning-progress a {display:inline-flex;align-items:center;min-height:44px}.learning-progress .btn{color:#fff}
+</style>
+<script>
+document.querySelectorAll('.progress-local-time').forEach(el => { const date=new Date(el.dateTime); if (!Number.isNaN(date.getTime())) el.textContent=new Intl.DateTimeFormat(document.documentElement.lang || undefined,{dateStyle:'medium',timeStyle:'short',timeZoneName:undefined}).format(date); });
+</script>
+{% endif %}
