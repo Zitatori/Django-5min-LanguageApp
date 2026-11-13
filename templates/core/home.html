@@ -62,7 +62,7 @@
             {% elif code == 'es' %}<span class="fi fi-es hs-fi"></span>
             {% elif code == 'ja' %}<span class="fi fi-jp hs-fi"></span>
             {% endif %}
-            {{ name }} × {{ count }}
+            {% if code == 'ja' %}日本語{% elif code == 'es' %}Español{% elif code == 'fr' %}Français{% elif code == 'en' %}English{% else %}{{ name }}{% endif %} × {{ count }}
           </span>
         {% endfor %}
       </div>
@@ -123,7 +123,7 @@
           {% elif code == 'es' %}<span class="fi fi-es" style="width:14px;height:10px;border-radius:2px;flex-shrink:0;"></span>
           {% elif code == 'ja' %}<span class="fi fi-jp" style="width:14px;height:10px;border-radius:2px;flex-shrink:0;"></span>
           {% endif %}
-          {{ name }} × {{ count }}
+          {% if code == 'ja' %}日本語{% elif code == 'es' %}Español{% elif code == 'fr' %}Français{% elif code == 'en' %}English{% else %}{{ name }}{% endif %} × {{ count }}
         </span>
       {% endfor %}
     </div>

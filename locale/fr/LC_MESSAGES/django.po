@@ -1689,6 +1689,25 @@ msgstr ""
 msgid "Read the article (French)"
 msgstr "Lire l’article (en français)"
 
+msgid "Translate tutor notes"
+msgstr "Traduire les notes du tuteur"
+
+msgid "Show translation"
+msgstr "Afficher la traduction"
+
+msgid "AI translation. The original tutor comment remains unchanged."
+msgstr "Traduction par IA. Le commentaire original du tuteur reste inchangé."
+
+msgid ""
+"Only the tutor comments are sent for translation. Your private notes are not"
+" included."
+msgstr ""
+"Seuls les commentaires du tuteur sont envoyés pour traduction. Vos notes "
+"privées ne sont pas incluses."
+
+msgid "Preparing translation…"
+msgstr "Traduction en cours…"
+
 #~ msgid "Step 1"
 #~ msgstr "Étape 1"
 

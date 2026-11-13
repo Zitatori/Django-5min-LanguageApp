@@ -2307,3 +2307,22 @@ msgstr ""
 
 msgid "Read the article (French)"
 msgstr "Read the article (French)"
+
+msgid "Translate tutor notes"
+msgstr "Translate tutor notes"
+
+msgid "Show translation"
+msgstr "Show translation"
+
+msgid "AI translation. The original tutor comment remains unchanged."
+msgstr "AI translation. The original tutor comment remains unchanged."
+
+msgid ""
+"Only the tutor comments are sent for translation. Your private notes are not"
+" included."
+msgstr ""
+"Only the tutor comments are sent for translation. Your private notes are not"
+" included."
+
+msgid "Preparing translation…"
+msgstr "Preparing translation…"

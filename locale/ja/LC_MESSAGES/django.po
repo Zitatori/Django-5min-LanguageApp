@@ -1554,6 +1554,23 @@ msgstr ""
 msgid "Read the article (French)"
 msgstr "記事を読む（フランス語）"
 
+msgid "Translate tutor notes"
+msgstr "講師のノートを翻訳"
+
+msgid "Show translation"
+msgstr "翻訳を表示"
+
+msgid "AI translation. The original tutor comment remains unchanged."
+msgstr "AIによる翻訳です。講師の原文はそのまま残ります。"
+
+msgid ""
+"Only the tutor comments are sent for translation. Your private notes are not"
+" included."
+msgstr "講師のコメントのみを翻訳します。プライベートメモは送信しません。"
+
+msgid "Preparing translation…"
+msgstr "翻訳しています…"
+
 #~ msgid "Step 1"
 #~ msgstr "ステップ1"
 
