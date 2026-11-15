@@ -1652,6 +1652,29 @@ msgstr "ポイントを購入"
 msgid "Next session"
 msgstr "次のセッション"
 
+msgid "One-page study sheet"
+msgstr "1枚の復習シート"
+
+msgid "View all details"
+msgstr "詳しい内容を見る"
+
+msgid "Print / Save as PDF"
+msgstr "印刷・PDF保存"
+
+msgid ""
+"A concise selection from your saved note. Full comments and additional "
+"learning materials are available in the detailed view."
+msgstr "保存済みのノートから要点をまとめたシートです。コメント全文とその他の学習内容は「詳しい内容を見る」から確認できます。"
+
+msgid "To save a PDF, choose Save as PDF in the print window."
+msgstr "印刷画面で「PDFとして保存」を選ぶと保存できます。"
+
+msgid "No tutor comments are available for this note."
+msgstr "このノートに対応する講師コメントはありません。"
+
+msgid "AI-generated materials may contain mistakes."
+msgstr "AIが作成した教材には誤りが含まれる場合があります。"
+
 #~ msgid "Step 1"
 #~ msgstr "ステップ1"
 

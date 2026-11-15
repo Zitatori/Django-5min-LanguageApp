@@ -1802,6 +1802,33 @@ msgstr "Acheter des points"
 msgid "Next session"
 msgstr "Prochaine session"
 
+msgid "One-page study sheet"
+msgstr "Ma fiche de révision"
+
+msgid "View all details"
+msgstr "Voir tous les détails"
+
+msgid "Print / Save as PDF"
+msgstr "Imprimer / Enregistrer en PDF"
+
+msgid ""
+"A concise selection from your saved note. Full comments and additional "
+"learning materials are available in the detailed view."
+msgstr ""
+"Une sélection de votre fiche enregistrée. Les commentaires complets et les "
+"autres contenus sont disponibles dans la vue détaillée."
+
+msgid "To save a PDF, choose Save as PDF in the print window."
+msgstr ""
+"Pour obtenir un PDF, choisissez « Enregistrer au format PDF » dans la "
+"fenêtre d’impression."
+
+msgid "No tutor comments are available for this note."
+msgstr "Aucun commentaire du tuteur n’est disponible pour cette fiche."
+
+msgid "AI-generated materials may contain mistakes."
+msgstr "Les contenus générés par l’IA peuvent contenir des erreurs."
+
 #~ msgid "Step 1"
 #~ msgstr "Étape 1"
 
