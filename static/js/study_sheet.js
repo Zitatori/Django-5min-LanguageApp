@@ -3,8 +3,10 @@
   const answers = document.querySelector('.sheet-answers');
   let answersWereOpen = false;
   function preparePrint() {
-    answersWereOpen = answers.open;
-    answers.open = true;
+    if (answers) {
+      answersWereOpen = answers.open;
+      answers.open = true;
+    }
     sheet.style.setProperty('--sheet-print-scale', '1');
     // Print styles are active during beforeprint. Fit the actual content, not a fixed crop.
     const availableHeight = 276 * 96 / 25.4;
@@ -13,7 +15,7 @@
   }
   window.addEventListener('beforeprint', preparePrint);
   window.addEventListener('afterprint', () => {
-    answers.open = answersWereOpen;
+    if (answers) answers.open = answersWereOpen;
     sheet.style.removeProperty('--sheet-print-scale');
   });
   document.getElementById('sheet-print').addEventListener('click', async () => {

@@ -64,3 +64,21 @@ class StudySheetTests(TestCase):
             self.assertContains(response, label)
             self.assertNotContains(response, '<script>alert(1)</script>')
             self.assertContains(response, '&lt;script&gt;')
+
+    def test_empty_quiz_section_is_hidden_in_both_views(self):
+        note = self.saved()
+        url = reverse('study_note_detail', args=[note.pk])
+        for quiz in ([], None):
+            note.content = dict(SHEET, quiz=quiz)
+            note.save()
+            for suffix in ('', '?view=full'):
+                response = self.client.get(url + suffix)
+                self.assertNotContains(response, 'Quiz de révision')
+                self.assertNotContains(response, 'class="sheet-answers"')
+                self.assertNotContains(response, 'class="study-quiz"')
+        note.content = dict(SHEET, quiz=[{'question':'Test question', 'options':[{'text':'A'},{'text':'B'},{'text':'C'}], 'correct_index':0, 'explanation':'Test explanation'}])
+        note.save()
+        for suffix in ('', '?view=full'):
+            response = self.client.get(url + suffix)
+            self.assertContains(response, 'Quiz de révision')
+            self.assertContains(response, 'Test question')
