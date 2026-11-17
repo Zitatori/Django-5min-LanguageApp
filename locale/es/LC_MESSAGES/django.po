@@ -1803,6 +1803,12 @@ msgstr "No hay comentarios del tutor disponibles para esta nota."
 msgid "AI-generated materials may contain mistakes."
 msgstr "Los contenidos generados por IA pueden contener errores."
 
+msgid "View attendees"
+msgstr "Ver participantes"
+
+msgid "No planned attendees yet."
+msgstr "Todavía no hay participantes previstos."
+
 #~ msgid "Step 1"
 #~ msgstr "Paso 1"
 

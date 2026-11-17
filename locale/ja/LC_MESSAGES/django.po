@@ -1675,6 +1675,12 @@ msgstr "このノートに対応する講師コメントはありません。"
 msgid "AI-generated materials may contain mistakes."
 msgstr "AIが作成した教材には誤りが含まれる場合があります。"
 
+msgid "View attendees"
+msgstr "参加予定者を見る"
+
+msgid "No planned attendees yet."
+msgstr "出席予定者はまだいません。"
+
 #~ msgid "Step 1"
 #~ msgstr "ステップ1"
 

@@ -46,8 +46,10 @@
         const button = document.getElementById(id);
         return [id, button.style.cssText, button.textContent];
       });
+      const openAttendees = Array.from(document.querySelectorAll('.session-attendees[open]'), el => el.id);
       const position = [window.scrollX, window.scrollY];
       incoming.forEach((section, index) => current[index].replaceWith(document.importNode(section, true)));
+      openAttendees.forEach(id => { const details = document.getElementById(id); if (details) details.open = true; });
       USER_MATCHES = data.user_matches;
       MATCH_NOTES = data.match_notes;
       STUDENT_NOTES = data.student_notes;

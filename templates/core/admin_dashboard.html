@@ -4,6 +4,14 @@
 {% block content %}
 <p><a href="{% url 'learning_retention' %}">{% trans "Learning continuation" %} →</a></p>
 <style>
+.session-attendees summary {cursor:pointer;list-style:none;display:inline-block;padding:9px 12px;border:1px solid #a5b4fc;border-radius:9px;background:#eef2ff;color:#3730a3;font-weight:600;min-height:44px;}
+.session-attendees summary::after {content:" ▾";}
+.session-attendees[open] summary::after {content:" ▴";}
+.session-attendees summary:focus-visible {outline:3px solid #6366f1;outline-offset:2px;}
+.session-attendees ul {list-style:none;padding:0;margin:8px 0;max-height:240px;overflow:auto;min-width:180px;max-width:260px;white-space:normal;}
+.session-attendees li {padding:8px;border-bottom:1px solid #e5e7eb;overflow-wrap:anywhere;}
+.session-attendees li span {display:block;font-size:12px;color:#4b5563;}
+
   .admin-section { margin-bottom: 2rem; }
   .table { width: 100%; border-collapse: collapse; font-size: 14px; }
   .table th { text-align: left; padding: 8px 12px; border-bottom: 2px solid #e5e7eb; color: #6b7280; font-weight: 500; }
@@ -113,7 +121,12 @@
         </td>
         <td style="font-size:12px; color:#6b7280;">{{ sd.obj.note|default:"—" }}</td>
         <td>
-          ★ {{ sd.obj.planned_count }}
+          <details class="session-attendees" id="session-attendees-{{ sd.obj.pk }}">
+            <summary>★ {{ sd.obj.planned_count }} · {% trans "View attendees" %}</summary>
+            <ul>{% for student in sd.obj.planned_students.all %}
+              <li><strong>{% if student.user.first_name %}{{ student.user.first_name }}{% else %}{{ student.user|display_name }}{% endif %}</strong><span>{{ student.user.email|default:"—" }}</span></li>
+            {% empty %}<li>{% trans "No planned attendees yet." %}</li>{% endfor %}</ul>
+          </details>
         </td>
         <td>
           {% if sd.obj.is_published %}

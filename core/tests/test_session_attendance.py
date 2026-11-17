@@ -52,3 +52,36 @@ class AttendanceTests(TestCase):
         response=self.client.get(reverse('admin_dashboard'))
         self.assertEqual(response.status_code,200)
         self.assertEqual(response.context['sessions_display'][0]['obj'].planned_count,1)
+
+    def test_admin_attendee_identity_and_cancellation(self):
+        self.user.first_name='Attendance Nickname'
+        self.user.email='attendance-only@example.com'
+        self.user.save()
+        self.session.planned_students.add(self.student)
+        admin=User.objects.create_user('staff-viewer',is_staff=True)
+        self.client.force_login(admin)
+        response=self.client.get(reverse('admin_dashboard'))
+        self.assertContains(response,'Attendance Nickname')
+        self.assertContains(response,'id="session-attendees-{}"'.format(self.session.pk))
+        section=response.content.decode().split('id="session-attendees-{}"'.format(self.session.pk))[1].split('</details>')[0]
+        self.assertIn('attendance-only@example.com',section)
+        self.session.planned_students.remove(self.student)
+        response=self.client.get(reverse('admin_dashboard'))
+        section=response.content.decode().split('id="session-attendees-{}"'.format(self.session.pk))[1].split('</details>')[0]
+        self.assertNotIn('Attendance Nickname',section)
+        self.assertNotIn('attendance-only@example.com',section)
+
+    def test_attendee_list_is_admin_only(self):
+        from core.models import UserProfile, TutorProfile
+        self.session.planned_students.add(self.student)
+        self.user.email='hidden-attendee@example.com';self.user.save()
+        self.assertEqual(self.client.get(reverse('admin_dashboard')).status_code,403)
+        outsider=User.objects.create_user('outsider')
+        TutorProfile.objects.create(user=outsider)
+        self.client.force_login(outsider)
+        self.assertEqual(self.client.get(reverse('admin_dashboard')).status_code,403)
+        self.assertNotContains(self.client.get(reverse('home')),'hidden-attendee@example.com')
+        UserProfile.objects.update_or_create(user=outsider,defaults={'role':'Admin'})
+        self.assertEqual(self.client.get(reverse('admin_dashboard')).status_code,200)
+        self.client.logout()
+        self.assertEqual(self.client.get(reverse('admin_dashboard')).status_code,302)

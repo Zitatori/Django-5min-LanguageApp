@@ -1829,6 +1829,12 @@ msgstr "Aucun commentaire du tuteur n’est disponible pour cette fiche."
 msgid "AI-generated materials may contain mistakes."
 msgstr "Les contenus générés par l’IA peuvent contenir des erreurs."
 
+msgid "View attendees"
+msgstr "Voir les participants"
+
+msgid "No planned attendees yet."
+msgstr "Aucun participant prévu pour le moment."
+
 #~ msgid "Step 1"
 #~ msgstr "Étape 1"
 

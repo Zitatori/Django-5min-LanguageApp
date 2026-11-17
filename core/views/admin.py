@@ -13,7 +13,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from functools import wraps
 from django.http import JsonResponse
 from django.utils import timezone
-from django.db.models import Case, When, Value, IntegerField, Count, Q
+from django.db.models import Case, When, Value, IntegerField, Count, Q, Prefetch
 from core.models import TutorProfile, QuickLessonMatch, LessonLanguage, QuickLessonRequest
 from core.models import PointBalance, PointTransaction, WithdrawalRequest
 from core.models import GoldMembership, GoldSubscriptionRequest
@@ -155,7 +155,10 @@ def admin_dashboard(request):
     gold_requests = GoldSubscriptionRequest.objects.select_related('user').filter(
         status=GoldSubscriptionRequest.STATUS_PENDING
     )
-    all_sessions = UpcomingSession.objects.annotate(planned_count=Count('planned_students')).order_by('start_time')
+    from core.models import StudentProfile
+    all_sessions = UpcomingSession.objects.annotate(planned_count=Count('planned_students')).prefetch_related(
+        Prefetch('planned_students', queryset=StudentProfile.objects.select_related('user').order_by('user__first_name', 'user__username', 'pk'))
+    ).order_by('start_time')
     CET = ZoneInfo('Europe/Zurich')
     sessions_display = []
     for s in all_sessions:
