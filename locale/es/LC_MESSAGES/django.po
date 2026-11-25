@@ -1900,6 +1900,18 @@ msgstr "Elige un paquete"
 msgid "Optional: share any comments about this lesson…"
 msgstr "Opcional: comparte tus comentarios sobre esta lección…"
 
+#: templates/core/lesson_note.html
+msgid "Conversation Notes"
+msgstr "Notas de conversación"
+
+#: templates/core/lesson_note.html
+msgid "Previous Notes"
+msgstr "Notas anteriores"
+
+#: templates/core/lesson_note.html
+msgid "Save Note"
+msgstr "Guardar nota"
+
 #~ msgid "Step 1"
 #~ msgstr "Paso 1"
 

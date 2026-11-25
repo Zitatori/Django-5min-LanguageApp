@@ -1770,6 +1770,18 @@ msgstr "パックを選ぶ"
 msgid "Optional: share any comments about this lesson…"
 msgstr "任意：このレッスンの感想を講師に伝えましょう…"
 
+#: templates/core/lesson_note.html
+msgid "Conversation Notes"
+msgstr "会話メモ"
+
+#: templates/core/lesson_note.html
+msgid "Previous Notes"
+msgstr "これまでのメモ"
+
+#: templates/core/lesson_note.html
+msgid "Save Note"
+msgstr "メモを保存"
+
 #~ msgid "Step 1"
 #~ msgstr "ステップ1"
 

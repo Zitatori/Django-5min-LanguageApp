@@ -1926,6 +1926,18 @@ msgstr "Choisis un pack"
 msgid "Optional: share any comments about this lesson…"
 msgstr "Facultatif : un mot sur cette leçon…"
 
+#: templates/core/lesson_note.html
+msgid "Conversation Notes"
+msgstr "Notes de conversation"
+
+#: templates/core/lesson_note.html
+msgid "Previous Notes"
+msgstr "Notes précédentes"
+
+#: templates/core/lesson_note.html
+msgid "Save Note"
+msgstr "Enregistrer la note"
+
 #~ msgid "Step 1"
 #~ msgstr "Étape 1"
 
