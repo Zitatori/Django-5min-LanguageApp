@@ -23,13 +23,13 @@
   </div>
 
   {# ── 相手がカメラオフ時のオーバーレイ ── #}
-  <div id="remote-cam-off" style="display:none; position:absolute; top:0; left:0; right:0; bottom:0; background:rgba(15,15,15,0.88); z-index:4; align-items:center; justify-content:center; flex-direction:column; gap:10px; pointer-events:none;">
+  <div id="remote-cam-off" style="display:none; position:absolute; top:0; left:0; right:0; bottom:0; background:rgba(28,42,82,0.92); z-index:4; align-items:center; justify-content:center; flex-direction:column; gap:10px; pointer-events:none;">
     <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
       <path d="M15 10l4.553-2.069A1 1 0 0121 8.82v6.36a1 1 0 01-1.447.89L15 14"/>
       <rect x="3" y="8" width="12" height="8" rx="2"/>
       <line x1="1" y1="1" x2="23" y2="23"/>
     </svg>
-    <p style="color:var(--ink-soft); font-size:13px; margin:0;">{% trans "Camera off" %}</p>
+    <p style="color:#fff; font-size:14px; font-weight:800; margin:0;">{% trans "Camera off" %}</p>
   </div>
 
   {# ── タイマー（上部オーバーレイ） ── #}
@@ -157,356 +157,204 @@
 
 </div>
 
-<div id="connection-error" hidden role="alert" style="position:fixed;inset:20% 5% auto;z-index:1000;background:#fff;color:#172554;padding:24px;border-radius:16px;max-width:600px;margin:auto;">
+<div id="connection-error" hidden role="alert">
 <p id="connection-error-text"></p><button class="btn" id="connection-retry" type="button">{% trans 'Retry' %}</button>
-<button class="btn" id="connection-back" type="button">{% if is_student %}{% trans 'Try another tutor' %}{% else %}{% trans 'Back to dashboard' %}{% endif %}</button></div>
-<p id="wrap-up" hidden role="status" style="position:fixed;top:80px;left:10%;right:10%;text-align:center;z-index:90;background:#172554;color:white;border-radius:12px;padding:8px;">{% trans '30 seconds left — time to say goodbye and thank your partner.' %}</p>
+<button class="btn btn-secondary" id="connection-back" type="button">{% if is_student %}{% trans 'Try another tutor' %}{% else %}{% trans 'Back to dashboard' %}{% endif %}</button></div>
+<p id="wrap-up" hidden role="status">{% trans '30 seconds left — time to say goodbye and thank your partner.' %}</p>
 {% if is_student and conversation_phrases %}<details class="call-phrases"><summary>📖 {% trans 'Hint' %}</summary>{% include 'core/_starter_phrases.html' %}</details>{% endif %}
-<style>.call-phrases {position:fixed;top:125px;left:12px;z-index:80;max-width:min(310px,80vw);max-height:40vh;overflow:auto;background:#fff;color:#172554;padding:10px;border-radius:12px;font-size:14px}.call-phrases summary{cursor:pointer}.call-phrases p{margin:10px 0}</style>
 <style>
-  /* ルームはヘッダー直下から全画面 */
-  .container { margin: 0 !important; padding: 0 !important; max-width: 100% !important; }
+  /* ── Lesson room · kawaii design ── */
+  .call-phrases {
+    position: fixed; top: calc(var(--lr-top, 66px) + 150px); left: calc(var(--lr-left, 0px) + 24px); z-index: 80;
+    max-width: min(310px, 80vw); max-height: 40vh; overflow: auto; padding: 10px 12px;
+    background: var(--cloud); color: var(--ink); border: 2px solid var(--ink); border-radius: 18px; box-shadow: 0 3px 0 var(--ink); font-size: 14px;
+  }
+  .call-phrases summary { cursor: pointer; font-weight: 900; }
+  .call-phrases p { margin: 10px 0; }
+
+  /* The call takes the whole content area; hide the phone tab bar during a lesson. */
+  .tabbar { display: none !important; }
+  .main { padding-bottom: 0 !important; }
+  .main > .container { margin: 0 !important; padding: 0 !important; max-width: 100% !important; }
+  :root { --lr-left: 0px; --lr-gap: 10px; }
+  @media (min-width: 720px) { :root { --lr-left: 96px; --lr-gap: 16px; } }
+  @media (min-width: 1100px) { :root { --lr-left: 260px; } }
 
   .lr-room {
     position: fixed;
-    top: 54px; /* ヘッダー高さ */
-    left: 0; right: 0; bottom: 0;
-    background: #0a0a0a;
+    top: calc(var(--lr-top, 66px) + var(--lr-gap));
+    left: calc(var(--lr-left) + var(--lr-gap));
+    right: var(--lr-gap);
+    bottom: var(--lr-gap);
     overflow: hidden;
+    background: var(--ink);
+    border: 2px solid var(--ink);
+    border-radius: 28px;
+    box-shadow: var(--edge);
   }
 
-  /* パートナー映像 */
-  .lr-remote {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    /* Preserve the entire camera frame across portrait and landscape devices. */
-    object-fit: contain;
-    object-position: center;
-    z-index: 1;
-  }
+  /* Partner video */
+  .lr-remote { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: center; z-index: 1; }
 
-  /* アバタープレースホルダー */
+  /* Placeholder until the partner's video arrives */
   .lr-remote-placeholder {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    z-index: 2;
-    background: linear-gradient(160deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    position: absolute; inset: 0; z-index: 2;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+    background: linear-gradient(180deg, #ffe0e7 0%, #ffd1dc 100%);
   }
   .lr-remote-placeholder.hidden { display: none; }
   .lr-avatar {
-    width: 88px; height: 88px;
-    border-radius: 50%;
-    background: #1e40af;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 36px; font-weight: 700; color: #fff;
+    width: 120px; height: 120px; display: grid; place-items: center;
+    background: var(--lang-en); color: var(--ink); border: 2px solid var(--ink); border-radius: 50%;
+    font-family: var(--font-display); font-size: 44px; font-weight: 900;
   }
   .lr-partner-name {
-    font-size: 14px; color: var(--ink-soft);
-    display: flex; align-items: center; gap: 6px;
+    display: flex; align-items: center; gap: 6px; padding: 4px 14px;
+    background: var(--cloud); color: var(--ink); border: 2px solid var(--ink); border-radius: var(--r-pill);
+    font-size: 15px; font-weight: 900;
   }
 
-  /* パートナーバッジ */
-  .lr-partner-badge {
-    font-size: 10px; font-weight: 700;
-    padding: 2px 7px; border-radius: 99px;
-    letter-spacing: 0.04em; flex-shrink: 0;
-  }
-  .lr-pbadge-dev {
-    background: var(--blush);
-    color: var(--ink);
-    animation: founder-glow 2.5s ease-in-out infinite;
-  }
-  @keyframes founder-glow {
-    0%,100% { box-shadow: 0 0 6px rgba(236,72,153,0.5), 0 0 12px rgba(99,102,241,0.3); }
-    50%      { box-shadow: 0 0 10px rgba(236,72,153,0.8), 0 0 20px rgba(99,102,241,0.5); }
-  }
-  .lr-pbadge-admin {
-    background: rgba(255,255,255,0.15);
-    color: var(--line);
-    border: 1px solid rgba(255,255,255,0.25);
-  }
-  .lr-pbadge-gold {
-    background: var(--sun);
-    color: var(--ink);
-    box-shadow: 0 0 6px rgba(251,191,36,0.5);
-  }
+  /* Partner badges */
+  .lr-partner-badge { flex-shrink: 0; padding: 1px 8px; border: 2px solid var(--ink); border-radius: var(--r-pill); font-size: 11px; font-weight: 900; color: var(--ink); }
+  .lr-pbadge-dev { background: var(--blush); }
+  .lr-pbadge-admin { background: var(--ink); color: #fff; }
+  .lr-pbadge-gold { background: var(--sun); }
 
-  /* タイマーオーバーレイ */
+  /* Timer */
   .lr-timer-overlay {
-    position: absolute;
-    top: 16px; left: 50%; transform: translateX(-50%);
-    z-index: 10;
-    background: rgba(0,0,0,0.55);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 99px;
-    padding: 7px 20px;
-    display: flex; align-items: center; gap: 9px;
-    white-space: nowrap;
+    position: absolute; top: 14px; left: 50%; transform: translateX(-50%); z-index: 10;
+    display: flex; align-items: center; gap: 9px; padding: 5px 16px 5px 8px; white-space: nowrap;
+    background: var(--cloud); border: 2px solid var(--ink); border-radius: var(--r-pill); box-shadow: 0 3px 0 var(--ink);
   }
-  .lr-timer-dot {
-    width: 8px; height: 8px;
-    background: var(--blue);
-    border-radius: 50%;
-    flex-shrink: 0;
-    transition: background 0.5s;
-  }
+  .lr-timer-dot { width: 14px; height: 14px; flex-shrink: 0; background: var(--blue); border: 2px solid var(--ink); border-radius: 50%; transition: background .5s; }
   .lr-timer-dot.yellow { background: var(--sun); }
-  .lr-timer-dot.red    { background: var(--bad); animation: td-blink 0.8s ease-in-out infinite; }
-  @keyframes td-blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
-  .lr-timer-text {
-    font-size: 22px; font-weight: 700;
-    font-family: var(--font-display);
-    color: #f4f4f5;
-    letter-spacing: 0.03em;
-    min-width: 60px; text-align: center;
-    transition: color 0.4s;
+  .lr-timer-dot.red { background: var(--bad); animation: td-blink .8s ease-in-out infinite; }
+  @keyframes td-blink { 0%, 100% { opacity: 1; } 50% { opacity: .25; } }
+  .lr-timer-text { min-width: 60px; text-align: center; font-family: var(--font-display); font-size: 22px; font-weight: 900; color: var(--ink); font-variant-numeric: tabular-nums; }
+  @media (max-width: 559px) {
+    .lr-timer-overlay { left: auto; right: 12px; transform: none; max-width: calc(100% - 150px); padding: 4px 12px 4px 6px; }
+    .lr-timer-text { font-size: 17px; white-space: normal; text-align: left; }
   }
-  .lr-timer-text.yellow { color: var(--sun); }
-  .lr-timer-text.red    { color: #f87171; }
-  #timer-overlay.yellow { border-color: rgba(251,191,36,0.4); background: rgba(30,20,0,0.65); }
-  #timer-overlay.red    { border-color: rgba(239,68,68,0.4);  background: rgba(30,0,0,0.65); }
+  .lr-timer-overlay.yellow { background: var(--sun-soft); }
+  .lr-timer-overlay.red { background: var(--bad-soft); }
+  .lr-timer-text.red { color: #a32025; }
 
-  /* 残り5秒の大カウントダウン */
-  .lr-final-countdown {
-    position: absolute;
-    inset: 0;
-    z-index: 20;
-    display: flex; align-items: center; justify-content: center;
-    pointer-events: none;
-  }
+  /* Last five seconds */
+  .lr-final-countdown { position: absolute; inset: 0; z-index: 20; display: flex; align-items: center; justify-content: center; pointer-events: none; }
   .lr-final-countdown span {
-    font-size: 180px; font-weight: 900;
-    color: rgba(248,113,113,0.9);
-    font-family: var(--font-display);
-    text-shadow: 0 0 60px rgba(239,68,68,0.6), 0 0 120px rgba(239,68,68,0.3);
-    animation: fc-pop 0.25s cubic-bezier(0.34,1.56,0.64,1) both;
-    line-height: 1;
+    font-family: var(--font-display); font-size: 180px; font-weight: 900; line-height: 1; color: var(--sun);
+    -webkit-text-stroke: 4px var(--ink); paint-order: stroke fill; text-shadow: 0 6px 0 var(--ink);
+    animation: fc-pop .25s cubic-bezier(.34, 1.56, .64, 1) both;
   }
-  @keyframes fc-pop {
-    from { transform: scale(0.6); opacity: 0; }
-    to   { transform: scale(1);   opacity: 1; }
-  }
+  @keyframes fc-pop { from { transform: scale(.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-  /* セッション情報（左上） */
-  .lr-session-badge {
-    position: absolute;
-    top: 16px; left: 16px;
-    z-index: 10;
-    display: flex; flex-direction: column; gap: 6px;
-    max-width: 200px;
-  }
-  .lr-fi-sm { width: 20px; height: 15px; border-radius: 3px; flex-shrink: 0; }
+  /* Session info (top left) */
+  .lr-session-badge { position: absolute; top: 14px; left: 14px; z-index: 10; display: flex; flex-direction: column; gap: 6px; max-width: 220px; }
+  .lr-fi-sm { width: 22px !important; height: 22px; border-radius: 50%; border: 2px solid var(--ink); background-size: cover; flex-shrink: 0; }
   .lr-badge-lang {
-    display: inline-flex; align-items: center; gap: 7px;
-    background: rgba(0,0,0,0.65);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 10px;
-    padding: 7px 13px;
-    font-size: 15px; font-weight: 700; color: #93c5fd;
-    align-self: flex-start;
+    align-self: flex-start; display: inline-flex; align-items: center; gap: 7px; padding: 4px 12px 4px 5px;
+    background: var(--cloud); color: var(--ink); border: 2px solid var(--ink); border-radius: var(--r-pill);
+    font-size: 14px; font-weight: 900;
   }
   .lr-badge-partner-card {
-    background: rgba(0,0,0,0.65);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 10px;
-    padding: 9px 13px;
-    display: flex; flex-direction: column; gap: 3px;
+    display: flex; flex-direction: column; gap: 2px; padding: 8px 12px;
+    background: var(--cloud); border: 2px solid var(--ink); border-radius: 16px;
   }
-  .lr-partner-role-label {
-    font-size: 11px; font-weight: 700;
-    color: #a78bfa;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-  }
-  .lr-partner-name-main {
-    font-size: 17px; font-weight: 700; color: #fff;
-    display: flex; align-items: center; gap: 6px;
-    flex-wrap: wrap;
-    line-height: 1.3;
-  }
+  .lr-partner-role-label { font-size: 12px; font-weight: 800; color: var(--ink-soft); }
+  .lr-partner-name-main { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 17px; font-weight: 900; line-height: 1.3; color: var(--ink); }
 
-  /* 自分の映像PiP */
+  /* Self view */
   .lr-pip-wrap {
-    position: absolute;
-    bottom: 90px; right: 16px;
-    z-index: 10;
-    width: 100px; height: 140px;
-    border-radius: 14px;
-    overflow: hidden;
-    border: 2px solid rgba(255,255,255,0.2);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.6);
-    background: var(--ink);
+    position: absolute; bottom: 96px; right: 14px; z-index: 10; width: 104px; height: 140px; overflow: hidden;
+    background: var(--blue-soft); border: 2px solid var(--ink); border-radius: 18px;
   }
-  .lr-pip {
-    width: 100%; height: 100%;
-    /* Preserve the entire camera frame across portrait and landscape devices. */
-    object-fit: contain;
-    object-position: center;
-  }
-  @media (orientation: landscape) {
-    .lr-pip-wrap { width: 80px; height: 104px; bottom: 76px; }
-  }
-  @media (max-width: 400px) {
-    .lr-pip-wrap { width: 84px; height: 116px; }
-  }
+  .lr-pip { width: 100%; height: 100%; object-fit: contain; object-position: center; }
+  @media (min-width: 720px) { .lr-pip-wrap { width: 150px; height: 112px; } }
+  @media (orientation: landscape) and (max-height: 500px) { .lr-pip-wrap { width: 80px; height: 104px; bottom: 76px; } }
 
-  /* コントロールバー */
+  /* Controls */
   .lr-controls {
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    z-index: 10;
-    padding: 16px 24px 28px;
-    background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
+    position: absolute; bottom: 0; left: 0; right: 0; z-index: 10;
+    display: flex; align-items: center; justify-content: center; gap: 16px; padding: 14px 24px 18px;
   }
   .lr-ctrl-btn {
-    width: 56px; height: 56px;
-    border-radius: 50%;
-    border: none;
-    background: rgba(255,255,255,0.15);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(255,255,255,0.2);
-    font-size: 22px;
-    cursor: pointer;
-    transition: transform 0.1s, background 0.15s;
-    display: flex; align-items: center; justify-content: center;
+    width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; cursor: pointer;
+    color: var(--ink); background: var(--cloud); border: 2px solid var(--ink); border-radius: 50%; box-shadow: var(--edge);
     -webkit-tap-highlight-color: transparent;
   }
-  .lr-ctrl-btn:active { transform: scale(0.9); }
-  .lr-ctrl-btn.lr-ctrl-end {
-    width: 64px; height: 64px;
-    font-size: 24px;
-    background: var(--bad);
-    border-color: var(--bad);
-  }
-  .lr-ctrl-btn.lr-muted {
-    background: rgba(239,68,68,0.25);
-    border-color: rgba(239,68,68,0.6);
-  }
-  @media (orientation: landscape) {
-    .lr-controls { padding: 10px 24px 16px; gap: 16px; }
-    .lr-ctrl-btn { width: 48px; height: 48px; font-size: 18px; }
-    .lr-ctrl-btn.lr-ctrl-end { width: 56px; height: 56px; font-size: 20px; }
+  .lr-ctrl-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--ink); }
+  .lr-ctrl-btn.lr-ctrl-end { width: 76px; border-radius: var(--r-pill); background: var(--bad); color: #fff; }
+  .lr-ctrl-btn.lr-muted { background: var(--ink); color: #fff; }
+  @media (orientation: landscape) and (max-height: 500px) {
+    .lr-controls { padding: 8px 24px 12px; gap: 14px; }
+    .lr-ctrl-btn { width: 48px; height: 48px; }
+    .lr-ctrl-btn.lr-ctrl-end { width: 64px; }
   }
 
-  /* ── Conversation Notes（講師専用） ── */
-  .lr-notes-wrap {
-    position: absolute;
-    top: 140px; left: 16px;
-    z-index: 10;
-    width: 220px;
-    max-width: calc(100vw - 32px);
-  }
+  /* Tutor-only conversation brief */
+  .lr-notes-wrap { position: absolute; top: 150px; left: 14px; z-index: 10; width: 240px; max-width: calc(100% - 28px); }
   .lr-learner-level {
-    box-sizing: border-box;
-    width: 100%;
-    max-height: 96px;
-    overflow: auto;
-    overflow-wrap: anywhere;
-    margin-bottom: 8px;
-    padding: 10px 12px;
-    border-radius: 10px;
-    background: rgba(17,24,39,0.92);
-    color: #fff;
-    font-size: 13px;
-    line-height: 1.5;
+    width: 100%; max-height: 96px; overflow: auto; overflow-wrap: anywhere; margin-bottom: 8px; padding: 8px 12px;
+    background: var(--sun-soft); color: var(--ink); border: 2px solid var(--ink); border-radius: 14px; font-size: 13px; font-weight: 700; line-height: 1.5;
   }
   .lr-notes-toggle {
-    display: flex; align-items: center; gap: 6px;
-    background: rgba(0,0,0,0.65);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 10px;
-    padding: 7px 13px;
-    font-size: 13px; font-weight: 700; color: #c4b5fd;
-    cursor: pointer;
-    width: 100%;
+    width: 100%; display: flex; align-items: center; gap: 6px; padding: 8px 12px; cursor: pointer;
+    font: inherit; font-size: 14px; font-weight: 900; color: var(--ink); background: var(--sun);
+    border: 2px solid var(--ink); border-radius: var(--r-pill); box-shadow: 0 3px 0 var(--ink);
     -webkit-tap-highlight-color: transparent;
   }
-  .lr-notes-chevron { margin-left: auto; font-size: 11px; transition: transform 0.2s; }
+  .lr-notes-chevron { margin-left: auto; font-size: 12px; transition: transform .2s; }
   .lr-notes-chevron.open { transform: rotate(180deg); }
   .lr-notes-panel {
-    margin-top: 6px;
-    background: rgba(0,0,0,0.75);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 10px;
-    padding: 12px 13px;
-    max-height: 260px;
-    overflow-y: auto;
+    margin-top: 8px; padding: 12px; max-height: 260px; overflow-y: auto;
+    background: var(--cloud); color: var(--ink); border: 2px solid var(--ink); border-radius: 18px;
   }
-  .lr-notes-panel-guide {
-    width: 640px;
-    max-width: calc(100vw - 32px);
-    max-height: max(100px, calc(100dvh - 310px));
-    box-sizing: border-box;
-    padding: 8px;
-  }
-  .lr-note-card {
-    padding: 10px;
-    margin-bottom: 8px;
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 8px;
-  }
+  .lr-notes-panel-guide { width: 560px; max-width: calc(100vw - var(--lr-left) - 64px); max-height: max(100px, calc(100dvh - 330px)); padding: 10px; }
+  .lr-room * { box-sizing: border-box; }
+  .lr-note-card { padding: 10px 12px; margin-bottom: 8px; background: var(--sky); border-radius: 14px; }
   .lr-note-card:last-child { margin-bottom: 0; }
   .lr-note-card .lr-notes-prev-label { margin-top: 0; }
-  .lr-notes-empty { color: var(--ink-soft); font-size: 13px; margin: 0; }
-  .lr-note-tabs { display:flex; gap:5px; margin-bottom:8px; }
-  .lr-note-tab { flex:1; border:1px solid rgba(255,255,255,.16); border-radius:7px; padding:7px 5px; background:rgba(255,255,255,.06); color:var(--line); font-size:11px; font-weight:700; cursor:pointer; }
-  .lr-note-tab.active { background:var(--blue); border-color:var(--blue); color:#fff; }
-  .lr-note-tab-content[hidden] { display:none; }
-  .lr-first-session-guide {
-    display: block;
-    color: #bfdbfe;
-    font-size: 12px;
-    line-height: 1.5;
-  }
-  .lr-first-session-guide img {
-    display: block;
-    width: 100%;
-    height: auto;
-    border-radius: 6px;
-  }
-  .lr-first-session-guide span {
-    display: block;
-    margin-top: 6px;
-  }
-  .lr-suggested-questions { padding-left: 22px; color: var(--line); font-size: 14px; line-height: 1.6; }
-  .lr-suggested-questions li { margin-bottom: 7px; }
-  .lr-notes-prev-label {
-    margin-top: 16px;
-    font-size: 11px; font-weight: 700; color: #a78bfa;
-    letter-spacing: 0.05em; text-transform: uppercase;
-    margin-bottom: 8px;
-  }
-  .lr-notes-item {
-    padding: 7px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
-  }
+  .lr-notes-empty { margin: 0; color: var(--ink-soft); font-size: 13px; }
+  .lr-note-tabs { display: flex; gap: 5px; margin-bottom: 8px; }
+  .lr-note-tab { flex: 1; padding: 7px 5px; cursor: pointer; font-size: 12px; font-weight: 800; color: var(--ink); background: var(--cloud); border: 2px solid var(--line); border-radius: var(--r-pill); }
+  .lr-note-tab.active { background: var(--blue); border-color: var(--ink); color: #fff; }
+  .lr-note-tab-content[hidden] { display: none; }
+  .lr-first-session-guide { display: block; font-size: 13px; line-height: 1.5; }
+  .lr-first-session-guide img { display: block; width: 100%; height: auto; border-radius: 12px; }
+  .lr-first-session-guide span { display: block; margin-top: 6px; }
+  .lr-suggested-questions { padding-left: 22px; color: var(--ink); font-size: 15px; font-weight: 700; line-height: 1.6; }
+  .lr-suggested-questions li { margin-bottom: 6px; }
+  .lr-notes-panel details summary { cursor: pointer; font-weight: 800; }
+  .lr-notes-prev-label { margin: 16px 0 8px; font-size: 13px; font-weight: 900; color: var(--ink-soft); }
+  .lr-notes-item { padding: 7px 0; border-bottom: 2px dashed var(--line); }
   .lr-notes-item:last-child { border-bottom: none; }
-  .lr-notes-meta { font-size: 10px; color: var(--ink-soft); margin-bottom: 3px; font-weight: 600; }
-  .lr-notes-body { font-size: 13px; color: var(--line); line-height: 1.5; white-space: pre-wrap; }
+  .lr-notes-meta { margin-bottom: 3px; font-size: 12px; font-weight: 700; color: var(--ink-soft); }
+  .lr-notes-body { font-size: 14px; line-height: 1.5; white-space: pre-wrap; color: var(--ink); }
+
+  /* Connection error and wrap-up notices */
+  #connection-error:not([hidden]) {
+    position: fixed; inset: 25% 16px auto; z-index: 1000; display: grid; gap: 10px; max-width: 480px; margin: auto; padding: 20px;
+    background: var(--cloud); color: var(--ink); border: 2px solid var(--ink); border-radius: var(--r-card); box-shadow: var(--edge);
+  }
+  #connection-error p { margin: 0; font-weight: 800; }
+  #connection-error .btn + .btn { margin-left: 0; }
+  #wrap-up:not([hidden]) {
+    position: fixed; top: calc(var(--lr-top, 66px) + 70px); left: calc(var(--lr-left) + 24px); right: 24px; z-index: 90;
+    margin: 0 auto; max-width: 520px; padding: 8px 16px; text-align: center; font-weight: 900;
+    background: var(--sun); color: var(--ink); border: 2px solid var(--ink); border-radius: var(--r-pill); box-shadow: 0 3px 0 var(--ink);
+  }
 </style>
+<script>
+  // Keep the call stage just under the top bar, whatever its height.
+  (function () {
+    function place() {
+      var bar = document.querySelector('.topbar');
+      if (bar) document.documentElement.style.setProperty('--lr-top', bar.getBoundingClientRect().height + 'px');
+    }
+    place();
+    window.addEventListener('resize', place);
+  })();
+</script>
 
 <script>
 // Notes panel toggle（講師専用）
@@ -781,13 +629,13 @@ document.addEventListener('submit', function(e) {
       "bottom:96px",
       "transform:translateX(-50%)",
       "z-index:20",
-      "border:0",
+      "border:2px solid #1c2a52",
       "border-radius:999px",
       "padding:12px 18px",
-      "background:#ffffff",
-      "color:#111827",
-      "font-weight:700",
-      "box-shadow:0 12px 32px rgba(0,0,0,.28)",
+      "background:#ffcf33",
+      "color:#1c2a52",
+      "font-weight:900",
+      "box-shadow:0 4px 0 #1c2a52",
     ].join(";");
     audioUnlockButton.addEventListener("click", () => {
       ensureRemotePlayback("audio unlock tap");
@@ -1071,7 +919,7 @@ document.addEventListener('submit', function(e) {
       const placeholder = document.getElementById("remote-placeholder");
       if (placeholder) {
         const errEl = document.createElement("p");
-        errEl.style.cssText = "color:#f87171;font-size:14px;text-align:center;padding:0 20px;margin-top:8px;";
+        errEl.style.cssText = "color:#a32025;font-size:14px;font-weight:800;text-align:center;padding:0 20px;margin-top:8px;";
         errEl.textContent = "⚠ " + msg;
         placeholder.appendChild(errEl);
       }
