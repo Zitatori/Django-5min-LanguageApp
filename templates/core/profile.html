@@ -54,7 +54,7 @@
 <div class="pf">
   <div class="pf-head">
     <div class="pf-who">
-      <img class="pf-mascot" src="{% static 'icons/mascot.svg' %}" alt="">
+      <img class="pf-mascot" src="{% static 'icons/mascot-happy.svg' %}" alt="">
       <div class="pf-who-text">
         <h1 class="h1">{{ request.user|display_name }}</h1>
         <span class="pf-handle">{% if is_gold %}👑 Gold{% elif request.user.is_superuser %}🚀 {% trans "Founder" %}{% elif request.user.is_staff %}Admin{% else %}{% trans "Student" %}{% endif %}</span>
