@@ -1762,6 +1762,10 @@ msgstr "まだフィードバックはありません。"
 msgid "Email address (or username)"
 msgstr "メールアドレス（またはユーザー名）"
 
+#: templates/core/purchase_points.html
+msgid "Choose a pack"
+msgstr "パックを選ぶ"
+
 #~ msgid "Step 1"
 #~ msgstr "ステップ1"
 

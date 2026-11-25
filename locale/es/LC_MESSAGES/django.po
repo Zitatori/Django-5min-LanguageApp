@@ -1892,6 +1892,10 @@ msgstr "Aún no hay comentarios."
 msgid "Email address (or username)"
 msgstr "Correo electrónico (o nombre de usuario)"
 
+#: templates/core/purchase_points.html
+msgid "Choose a pack"
+msgstr "Elige un paquete"
+
 #~ msgid "Step 1"
 #~ msgstr "Paso 1"
 

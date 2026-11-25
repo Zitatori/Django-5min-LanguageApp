@@ -1,162 +1,152 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n static %}
 
 {% block content %}
-{% get_current_language as purchase_language %}
-<style>
-  .purchase-header {
-    text-align: center;
-    margin-bottom: 1.5rem;
-  }
-  .purchase-header h2 { font-size: 22px; font-weight: 700; color: var(--ink); }
-  .purchase-header p  { color: var(--ink-soft); font-size: 14px; margin-top: 4px; }
-  .current-balance {
-    display: inline-block;
-    background: var(--blue-soft);
-    color: #5b21b6;
-    border-radius: 99px;
-    padding: 4px 16px;
-    font-size: 13px;
-    font-weight: 600;
-    margin-top: 8px;
-  }
-  .tier-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-  }
-  .tier-card {
-    border: 2px solid var(--line);
-    border-radius: 16px;
-    padding: 1.5rem 1rem;
-    text-align: center;
-    cursor: pointer;
-    transition: border-color 0.15s, box-shadow 0.15s;
-  }
-  .tier-card:hover, .tier-card.selected {
-    border-color: var(--blue);
-    box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
-  }
-  .tier-card .pts  { font-size: 36px; font-weight: 700; color: var(--blue); }
-  .tier-card .unit { font-size: 16px; color: var(--blue); }
-  .tier-card .price { font-size: 18px; font-weight: 600; color: var(--ink); margin-top: 8px; }
-  .tier-card .per  { font-size: 12px; color: var(--ink-soft); margin-top: 2px; }
+<div class="bp">
 
-  .manual-note {
-    text-align: center;
-    color: var(--ink-soft);
-    font-size: 13px;
-    margin-top: 1.5rem;
+  <a class="bp-back" href="{% url 'profile' %}">← {% trans "Back to Profile" %}</a>
+
+  <div class="bp-split">
+  <div class="bp-col">
+
+    {# ── Header + balance ── #}
+    <section class="card sticker bp-head" aria-labelledby="bp-title">
+      <div class="bp-head-text">
+        <h1 class="h1" id="bp-title">{% trans "Buy Points" %}</h1>
+        <p>{% trans "Use points to take lessons with a tutor." %}</p>
+      </div>
+      <div class="bp-balance">
+        <span class="eyebrow">{% trans "Current Balance" %}</span>
+        <span class="bp-big">{{ balance.balance }}<small> pt</small></span>
+      </div>
+    </section>
+
+    {# ── Packs ── #}
+    <section class="card" aria-labelledby="bp-packs">
+      <h2 class="h2" id="bp-packs">1 · {% trans "Choose a pack" %}</h2>
+      <div class="bp-tiers" role="group" aria-labelledby="bp-packs">
+        {% for tier in tiers %}
+        <button type="button" class="bp-tier" aria-pressed="false"
+                data-points="{{ tier.points }}" data-price="{{ tier.display_price }}">
+          <span class="bp-coin" aria-hidden="true">pt</span>
+          <span class="bp-pts">{{ tier.points }}<small> pt</small></span>
+          <span class="bp-price">{{ tier.display_price }}</span>
+        </button>
+        {% endfor %}
+      </div>
+      <div class="bp-currency">{% include "core/_display_currency.html" %}</div>
+      <button type="button" id="purchase-btn" class="btn" disabled data-label="{% trans 'View payment instructions' %}">
+        {% trans "View payment instructions" %}
+      </button>
+    </section>
+
+  </div>
+  <div class="bp-col">
+
+    {# ── Payment ── #}
+    <section id="manual-payment-box" class="card sun bp-pay" aria-labelledby="bp-pay-title" hidden>
+      <h2 class="h2" id="bp-pay-title">2 · {% trans "Payment details" %}</h2>
+      <span class="chip bp-selected" id="manual-selected">{% trans "Selected points" %}</span>
+      {% include "core/_payment_details.html" %}
+    </section>
+
+    <section class="card tint bp-hint" id="bp-hint">
+      <img src="{% static 'icons/quicklesson-character-180.png' %}" alt="">
+      <p>{% trans "Bank transfer, PayPal and TWINT are available." %}</p>
+    </section>
+
+  </div>
+  </div>
+</div>
+
+<style>
+  .bp { display: grid; gap: 16px; min-width: 0; }
+  .bp *, .bp *::before, .bp *::after { box-sizing: border-box; }
+  .bp .card { margin: 0; min-width: 0; display: grid; gap: 14px; }
+  .bp-back { justify-self: start; color: var(--blue); font-weight: 900; text-decoration: none; }
+  .bp-back:hover { text-decoration: underline; }
+  .bp-split { display: grid; gap: 16px; }
+  .bp-col { display: grid; gap: 16px; align-content: start; min-width: 0; }
+  @media (min-width: 1100px) {
+    .bp-split { grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: 24px; align-items: start; }
+    .bp-col { gap: 24px; }
   }
-  .manual-box {
-    display: none;
-    margin-top: 1.25rem;
-    padding: 16px 18px;
-    border-radius: 16px;
-    background: var(--sky);
-    border: 1.5px solid var(--line);
-    color: var(--ink);
-    font-size: 14px;
-    line-height: 1.7;
+
+  .bp-head { grid-template-columns: 1fr auto; align-items: center; }
+  .bp-head-text { display: grid; gap: 4px; }
+  .bp-head-text p { margin: 0; color: var(--ink-soft); font-weight: 700; }
+  .bp-balance {
+    display: grid; justify-items: center; gap: 2px; padding: 10px 16px;
+    background: var(--sun-soft); border: 2px solid var(--ink); border-radius: 20px;
   }
-  .manual-box.open { display: block; }
-  .manual-box strong { color: var(--ink); }
-  .manual-box a { color: var(--blue-deep); font-weight: 700; text-decoration: none; }
-  .manual-box a:hover { text-decoration: underline; }
-  .manual-methods {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin: 10px 0;
+  .bp-big { font-family: var(--font-display); font-size: 34px; font-weight: 900; line-height: 1; font-variant-numeric: tabular-nums; }
+  .bp-big small, .bp-pts small { font-size: .5em; }
+
+  .bp-tiers { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .bp-tier {
+    position: relative; display: grid; justify-items: center; gap: 6px; padding: 16px 8px 14px;
+    background: var(--cloud); color: var(--ink); font: inherit; cursor: pointer;
+    border: 2px solid var(--line); border-radius: 22px;
+    transition: transform .15s, border-color .15s, box-shadow .15s;
   }
-  .manual-method {
-    display: inline-flex;
-    align-items: center;
-    border-radius: 999px;
-    background: var(--blue-soft);
-    color: var(--blue-deep);
-    border: 1px solid var(--line);
-    padding: 3px 10px;
-    font-size: 12px;
-    font-weight: 700;
+  .bp-tier:hover { border-color: var(--ink); transform: translateY(-2px); }
+  .bp-tier[aria-pressed="true"] { background: var(--sun-soft); border-color: var(--ink); box-shadow: var(--edge); }
+  .bp-coin {
+    width: 36px; height: 36px; display: grid; place-items: center;
+    background: var(--sun); border: 2px solid var(--ink); border-radius: 50%;
+    font-size: 12px; font-weight: 900;
   }
-  .btn-purchase {
-    display: block; width: 100%; padding: 14px;
-    background: var(--blue);
-    color: white; border: none;
-    border-radius: 999px; font-size: 16px; font-weight: 600;
-    cursor: pointer; opacity: 0.45; pointer-events: none;
-    transition: opacity 0.15s, transform 0.12s, box-shadow 0.15s;
-    box-shadow: 0 2px 8px rgba(99,102,241,0.25);
+  .bp-pts { font-family: var(--font-display); font-size: 30px; font-weight: 900; line-height: 1; font-variant-numeric: tabular-nums; }
+  .bp-price { font-weight: 900; color: var(--ink-soft); }
+  .bp-currency form { margin: 0 !important; }
+  .bp #purchase-btn { width: 100%; }
+  .bp #purchase-btn:disabled { opacity: .5; cursor: not-allowed; box-shadow: none; transform: none; }
+
+  .bp-pay[hidden] { display: none; }
+  .bp-selected { justify-self: start; background: var(--cloud); border: 2px solid var(--ink); font-size: 15px; }
+  .bp-pay .payment-details { margin-top: 0 !important; }
+  .bp-pay .payment-details > h3 { display: none; }
+  .bp-hint { grid-template-columns: 64px 1fr; align-items: center; }
+  .bp-hint img { width: 64px; height: 64px; background: var(--cloud); border: 2px solid var(--ink); border-radius: 20px; }
+  .bp-hint p { margin: 0; font-weight: 800; }
+  .bp-hint[hidden] { display: none; }
+
+  @media (max-width: 560px) {
+    .bp-head { grid-template-columns: 1fr; }
+    .bp-balance { justify-self: start; justify-items: start; }
+    .bp-tiers { grid-template-columns: 1fr; }
+    .bp-tier { grid-template-columns: auto 1fr auto; justify-items: start; align-items: center; padding: 12px 14px; }
+    .bp-pts { font-size: 24px; }
   }
-  .btn-purchase.active { opacity: 1; pointer-events: auto; }
-  .btn-purchase.active:hover { opacity:0.92; transform:translateY(-1px); box-shadow:0 4px 14px rgba(99,102,241,0.35); }
-  .btn-purchase.active:active { transform:scale(0.97); }
 </style>
 
-<div class="card">
-  <div class="purchase-header">
-    <h2>💳 {% trans "Buy Points" %}</h2>
-    <p>{% trans "Use points to take lessons with a tutor." %}</p>
-    <span class="current-balance">{% trans "Current Balance" %}: {{ balance.balance }} pt</span>
-  </div>
-
-  {% include "core/_display_currency.html" %}
-  <div class="tier-grid">
-    {% for tier in tiers %}
-    <div class="tier-card" data-price="{{ tier.display_price }}" onclick="selectTier(this, {{ tier.points }})">
-      <div class="pts">{{ tier.points }}<span class="unit"> pt</span></div>
-      <div class="price">{{ tier.display_price }}</div>
-      <div class="per">{{ tier.display_price }} / {{ tier.points }}pt</div>
-    </div>
-    {% endfor %}
-  </div>
-
-
-
-  <button
-    id="purchase-btn"
-    class="btn-purchase"
-    data-label="{% trans 'View payment instructions' %}"
-  >
-    {% trans "View payment instructions" %}
-  </button>
-
-  <div id="manual-payment-box" class="manual-box">
-    <strong id="manual-selected">{% trans "Selected points" %}</strong>
-    {% include "core/_payment_details.html" %}
-  </div>
-
-  <p class="manual-note">
-    {% trans "Bank transfer, PayPal and TWINT are available." %}
-  </p>
-</div>
-
-<div style="text-align:center; margin-top:1rem;">
-  <a href="{% url 'profile' %}" style="color:var(--blue); font-size:14px;">← {% trans "Back to Profile" %}</a>
-</div>
-
 <script>
-let selectedPoints = null;
-let selectedPrice = null;
-function selectTier(el, points) {
-  document.querySelectorAll('.tier-card').forEach(c => c.classList.remove('selected'));
-  el.classList.add('selected');
-  selectedPoints = points;
-  selectedPrice = el.dataset.price;
+(function () {
   const btn = document.getElementById('purchase-btn');
-  btn.classList.add('active');
-  btn.textContent = `${btn.dataset.label} (${points} pt)`;
-}
-
-document.getElementById('purchase-btn').addEventListener('click', () => {
-  if (!selectedPoints) return;
   const box = document.getElementById('manual-payment-box');
+  const hint = document.getElementById('bp-hint');
   const selected = document.getElementById('manual-selected');
-  selected.textContent = `${selectedPoints} pt / ${selectedPrice}`;
-  box.classList.add('open');
-  box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-});
+  let selectedPoints = null;
+  let selectedPrice = null;
+
+  document.querySelectorAll('.bp-tier').forEach(function (tier) {
+    tier.addEventListener('click', function () {
+      document.querySelectorAll('.bp-tier').forEach(function (t) { t.setAttribute('aria-pressed', 'false'); });
+      tier.setAttribute('aria-pressed', 'true');
+      selectedPoints = tier.dataset.points;
+      selectedPrice = tier.dataset.price;
+      btn.disabled = false;
+      btn.textContent = btn.dataset.label + ' (' + selectedPoints + ' pt)';
+    });
+  });
+
+  btn.addEventListener('click', function () {
+    if (!selectedPoints) return;
+    selected.textContent = selectedPoints + ' pt / ' + selectedPrice;
+    box.hidden = false;
+    if (hint) hint.hidden = true;
+    box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  });
+})();
 </script>
 {% endblock %}

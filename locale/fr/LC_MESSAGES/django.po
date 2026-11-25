@@ -1918,6 +1918,10 @@ msgstr "Pas encore d'avis."
 msgid "Email address (or username)"
 msgstr "Adresse e-mail (ou nom d'utilisateur)"
 
+#: templates/core/purchase_points.html
+msgid "Choose a pack"
+msgstr "Choisis un pack"
+
 #~ msgid "Step 1"
 #~ msgstr "Étape 1"
 
