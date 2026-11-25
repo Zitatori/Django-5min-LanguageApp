@@ -588,7 +588,7 @@ msgstr "オンライン"
 
 #: templates/core/tutor_dashboard.html:47
 msgid "Total Lessons"
-msgstr ""
+msgstr "担当したレッスン"
 
 #: templates/core/tutor_dashboard.html:71
 #, fuzzy
@@ -1733,6 +1733,30 @@ msgstr "こんにちは、<b>%(name)s</b>さん！"
 #: templates/core/study_notes.html
 msgid "How your data is used"
 msgstr "データの使われ方"
+
+#: templates/core/tutor_dashboard.html
+msgid "Your status"
+msgstr "あなたのステータス"
+
+#: templates/core/tutor_dashboard.html
+msgid "Students can be matched with you now."
+msgstr "今、生徒とマッチングできます。"
+
+#: templates/core/tutor_dashboard.html
+msgid "Go online to receive students."
+msgstr "オンラインにすると生徒とマッチングできます。"
+
+#: templates/core/tutor_dashboard.html
+msgid "No lessons yet."
+msgstr "まだレッスンはありません。"
+
+#: templates/core/_recent_lessons.html
+msgid "Student feedback"
+msgstr "生徒からのフィードバック"
+
+#: templates/core/_recent_lessons.html
+msgid "No feedback yet."
+msgstr "まだフィードバックはありません。"
 
 #~ msgid "Step 1"
 #~ msgstr "ステップ1"
