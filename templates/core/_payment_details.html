@@ -2,7 +2,7 @@
 <style>
   .payment-details details {
     margin: 12px 0;
-    border: 2px solid #c7d2fe;
+    border: 2px solid var(--line);
     border-radius: 12px;
     background: #fff;
     overflow: hidden;
@@ -17,8 +17,8 @@
     padding: 12px 16px;
     list-style: none;
     cursor: pointer;
-    color: #3730a3;
-    background: #eef2ff;
+    color: var(--ink);
+    background: var(--blue-soft);
     font-weight: 700;
     line-height: 1.5;
     -webkit-tap-highlight-color: transparent;
@@ -35,16 +35,16 @@
     margin: -5px 3px 0;
   }
   .payment-details details[open] summary {
-    background: #e0e7ff;
-    border-bottom: 1px solid #c7d2fe;
+    background: var(--blue-soft);
+    border-bottom: 1px solid var(--line);
   }
   .payment-details details[open] summary::after {
     transform: rotate(225deg);
     margin-top: 5px;
   }
-  .payment-details summary:hover { background: #e0e7ff; }
+  .payment-details summary:hover { background: var(--blue-soft); }
   .payment-details summary:focus-visible {
-    outline: 3px solid #4f46e5;
+    outline: 3px solid var(--blue-deep);
     outline-offset: -4px;
   }
   .payment-details details > p { margin: 12px 16px; }

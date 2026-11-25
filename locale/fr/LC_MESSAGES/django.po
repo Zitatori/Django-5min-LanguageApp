@@ -1842,6 +1842,39 @@ msgstr ""
 "La connexion au serveur a été interrompue. Reconnexion en cours… Si le "
 "problème persiste, rechargez cette page."
 
+
+#: templates/base.html
+msgid "Home"
+msgstr "Accueil"
+
+#: templates/base.html
+msgid "Talk"
+msgstr "Parler"
+
+#: templates/base.html
+msgid "Review"
+msgstr "Réviser"
+
+#: templates/base.html
+msgid "History"
+msgstr "Historique"
+
+#: templates/base.html
+msgid "Me"
+msgstr "Moi"
+
+#: templates/base.html
+msgid "Navigation"
+msgstr "Navigation"
+
+#: templates/base.html
+msgid "My Point"
+msgstr "Mes points"
+
+#: templates/base.html
+msgid "Five minutes is enough to start talking."
+msgstr "Cinq minutes suffisent pour commencer à parler."
+
 #~ msgid "Step 1"
 #~ msgstr "Étape 1"
 
