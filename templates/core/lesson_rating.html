@@ -61,7 +61,7 @@
 </div>
 
 <style>
-  .lesson-celebration {padding:8px 0 4px;color:#3730a3;font-weight:700}
+  .lesson-celebration {padding:8px 0 4px;color:var(--ink);font-weight:700}
   .celebration-bird {position:relative;width:140px;margin:auto;animation:bird-hop .65s ease-in-out 3}
   .celebration-bird img {display:block;width:100%;height:auto;object-fit:contain}
   .celebration-bird span {position:absolute;right:-12px;top:0;font-size:28px;animation:star-glow 1s ease-in-out 2}
@@ -84,12 +84,12 @@
   .rating-result-stars {
     font-size: 44px;
     line-height: 1;
-    color: #f59e0b;
+    color: var(--sun);
     margin: 22px 0 12px;
     letter-spacing: 0;
   }
   .rating-thanks {
-    color: #6b7280;
+    color: var(--ink-soft);
     margin: 0;
   }
   .rating-options {
@@ -106,7 +106,7 @@
     justify-content: center;
     width: 54px;
     height: 58px;
-    color: #d1d5db;
+    color: var(--line);
     cursor: pointer;
     transition: color 0.14s ease, transform 0.12s ease, filter 0.14s ease;
   }
@@ -122,16 +122,16 @@
   }
   .rating-option:hover {
     transform: translateY(-2px) scale(1.04);
-    color: #fbbf24;
+    color: var(--sun);
   }
   .rating-option.filled {
-    color: #f59e0b;
+    color: var(--sun);
     filter: drop-shadow(0 7px 10px rgba(245, 158, 11, .22));
   }
   .rating-helper {
     min-height: 20px;
     margin-top: 14px;
-    color: #6b7280;
+    color: var(--ink-soft);
     font-size: 13px;
     font-weight: 600;
   }
@@ -148,12 +148,12 @@
   .rating-skip {
     display: inline-block;
     margin-top: 12px;
-    color: #6b7280;
+    color: var(--ink-soft);
     font-size: 14px;
     text-decoration: none;
   }
   .rating-skip:hover {
-    color: #374151;
+    color: var(--ink);
   }
   .feedback-area {
     margin-top: 18px;
@@ -162,7 +162,7 @@
   .feedback-textarea {
     width: 100%;
     padding: 10px 12px;
-    border: 1.5px solid #e5e7eb;
+    border: 1.5px solid var(--line);
     border-radius: 10px;
     font-size: 14px;
     font-family: inherit;
@@ -173,26 +173,26 @@
   }
   .feedback-textarea:focus {
     outline: none;
-    border-color: #6366f1;
+    border-color: var(--blue);
     box-shadow: 0 0 0 3px rgba(99,102,241,0.12);
   }
   .feedback-charcount {
     font-size: 12px;
-    color: #9ca3af;
+    color: var(--ink-soft);
     text-align: right;
     margin-top: 4px;
   }
   .rating-feedback-display {
     font-size: 14px;
-    color: #6b7280;
+    color: var(--ink-soft);
     margin: 12px auto 0;
     max-width: 340px;
     line-height: 1.6;
     white-space: pre-wrap;
   }
   @media (prefers-color-scheme: dark) {
-    .feedback-textarea { background: #1f2937; border-color: #374151; color: #f3f4f6; }
-    .feedback-textarea:focus { border-color: #818cf8; }
+    .feedback-textarea { background: var(--ink); border-color: var(--ink); color: var(--sky); }
+    .feedback-textarea:focus { border-color: var(--blue); }
   }
   @media (max-width: 520px) {
     .rating-card {

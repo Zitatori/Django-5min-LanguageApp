@@ -8,11 +8,11 @@
     text-align: center;
     margin-bottom: 1.5rem;
   }
-  .purchase-header h2 { font-size: 22px; font-weight: 700; color: #1f2937; }
-  .purchase-header p  { color: #6b7280; font-size: 14px; margin-top: 4px; }
+  .purchase-header h2 { font-size: 22px; font-weight: 700; color: var(--ink); }
+  .purchase-header p  { color: var(--ink-soft); font-size: 14px; margin-top: 4px; }
   .current-balance {
     display: inline-block;
-    background: #ede9fe;
+    background: var(--blue-soft);
     color: #5b21b6;
     border-radius: 99px;
     padding: 4px 16px;
@@ -27,7 +27,7 @@
     margin-bottom: 1.5rem;
   }
   .tier-card {
-    border: 2px solid #e5e7eb;
+    border: 2px solid var(--line);
     border-radius: 16px;
     padding: 1.5rem 1rem;
     text-align: center;
@@ -35,17 +35,17 @@
     transition: border-color 0.15s, box-shadow 0.15s;
   }
   .tier-card:hover, .tier-card.selected {
-    border-color: #6366f1;
+    border-color: var(--blue);
     box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
   }
-  .tier-card .pts  { font-size: 36px; font-weight: 700; color: #6366f1; }
-  .tier-card .unit { font-size: 16px; color: #6366f1; }
-  .tier-card .price { font-size: 18px; font-weight: 600; color: #1f2937; margin-top: 8px; }
-  .tier-card .per  { font-size: 12px; color: #9ca3af; margin-top: 2px; }
+  .tier-card .pts  { font-size: 36px; font-weight: 700; color: var(--blue); }
+  .tier-card .unit { font-size: 16px; color: var(--blue); }
+  .tier-card .price { font-size: 18px; font-weight: 600; color: var(--ink); margin-top: 8px; }
+  .tier-card .per  { font-size: 12px; color: var(--ink-soft); margin-top: 2px; }
 
   .manual-note {
     text-align: center;
-    color: #6b7280;
+    color: var(--ink-soft);
     font-size: 13px;
     margin-top: 1.5rem;
   }
@@ -54,15 +54,15 @@
     margin-top: 1.25rem;
     padding: 16px 18px;
     border-radius: 16px;
-    background: #f8fafc;
-    border: 1.5px solid #e5e7eb;
-    color: #374151;
+    background: var(--sky);
+    border: 1.5px solid var(--line);
+    color: var(--ink);
     font-size: 14px;
     line-height: 1.7;
   }
   .manual-box.open { display: block; }
-  .manual-box strong { color: #111827; }
-  .manual-box a { color: #4f46e5; font-weight: 700; text-decoration: none; }
+  .manual-box strong { color: var(--ink); }
+  .manual-box a { color: var(--blue-deep); font-weight: 700; text-decoration: none; }
   .manual-box a:hover { text-decoration: underline; }
   .manual-methods {
     display: flex;
@@ -74,16 +74,16 @@
     display: inline-flex;
     align-items: center;
     border-radius: 999px;
-    background: #eef2ff;
-    color: #4338ca;
-    border: 1px solid #c7d2fe;
+    background: var(--blue-soft);
+    color: var(--blue-deep);
+    border: 1px solid var(--line);
     padding: 3px 10px;
     font-size: 12px;
     font-weight: 700;
   }
   .btn-purchase {
     display: block; width: 100%; padding: 14px;
-    background: linear-gradient(135deg, #6366f1 0%, #818cf8 100%);
+    background: var(--blue);
     color: white; border: none;
     border-radius: 999px; font-size: 16px; font-weight: 600;
     cursor: pointer; opacity: 0.45; pointer-events: none;
@@ -134,7 +134,7 @@
 </div>
 
 <div style="text-align:center; margin-top:1rem;">
-  <a href="{% url 'profile' %}" style="color:#6366f1; font-size:14px;">← {% trans "Back to Profile" %}</a>
+  <a href="{% url 'profile' %}" style="color:var(--blue); font-size:14px;">← {% trans "Back to Profile" %}</a>
 </div>
 
 <script>

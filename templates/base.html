@@ -7,9 +7,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>QuickLesson</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Zen+Maru+Gothic:wght@500;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'css/kawaii.css' %}">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.2.3/css/flag-icons.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
 
   <link rel="icon" type="image/x-icon" sizes="16x16 32x32 48x48" href="{% static 'icons/quicklesson-rounded.ico' %}">
   <link rel="icon" type="image/png" sizes="32x32" href="{% static 'icons/quicklesson-rounded-32.png' %}">
@@ -17,27 +20,85 @@
 
   <!-- PWA -->
   <link rel="manifest" href="{% static 'manifest.json' %}?v=rounded-20261016">
-  <meta name="theme-color" content="#6366f1">
+  <meta name="theme-color" content="#2f6bff">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="QuickLesson">
   <link rel="apple-touch-icon" href="{% static 'icons/quicklesson-apple-180.png' %}">
-<style>.header-badge{flex-shrink:0;max-width:none;}.header-user,.header-user-info{min-width:0;flex-wrap:wrap;}</style>
 </head>
 
+{% with url_name=request.resolver_match.url_name %}
 <body>
-  <header class="header">
-    <div class="header-neon-line"></div>
-    <div class="header-inner">
-      <div class="header-title">
-        <a href="{% url 'home' %}">Quick<span>Lesson</span></a>
-      </div>
+<div class="app{% if not user.is_authenticated %} guest{% endif %}">
 
-      <!-- デスクトップ nav -->
-      <nav class="header-nav">
-        <form action="{% url 'set_language' %}" method="post" style="display:inline;">
+  {# ── Icons (one copy, reused by sidebar and tab bar) ── #}
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h14V9.5"/><path d="M10 20v-6h4v6"/></symbol>
+      <symbol id="i-talk" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-12.3 7.4L3 21l2.1-5.6A8.5 8.5 0 1 1 21 11.5Z"/></symbol>
+      <symbol id="i-review" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2Z"/><path d="M22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7Z"/></symbol>
+      <symbol id="i-tutor" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/></symbol>
+      <symbol id="i-me" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+      <symbol id="i-history" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></symbol>
+      <symbol id="i-admin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6Z"/></symbol>
+      <symbol id="i-logout" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></symbol>
+    </defs>
+  </svg>
+
+  {% if user.is_authenticated %}
+  {# ── Desktop sidebar ── #}
+  <aside class="sidebar" aria-label="{% trans 'Navigation' %}">
+    <a href="{% url 'home' %}" class="side-logo logo" aria-label="QuickLesson">
+      <img class="logo-mark" src="{% static 'icons/quicklesson-character-180.png' %}" alt=""><span class="word">Quick<b>Lesson</b></span>
+    </a>
+    <nav class="side-nav">
+      <a class="side-item" href="{% url 'home' %}" {% if url_name == 'home' %}aria-current="page"{% endif %}>
+        <svg><use href="#i-home"/></svg><span>{% trans "Home" %}</span>
+      </a>
+      <a class="side-item" href="{% url 'create_request' %}" {% if url_name == 'create_request' or url_name == 'request_detail' or url_name == 'lesson_room' or url_name == 'lesson_rating' or url_name == 'lesson_note' %}aria-current="page"{% endif %}>
+        <svg><use href="#i-talk"/></svg><span>{% trans "Talk" %}</span>
+      </a>
+      <a class="side-item" href="{% url 'study_notes' %}" {% if url_name == 'study_notes' or url_name == 'study_note_detail' or url_name == 'cheatsheets' or url_name == 'cheatsheet_detail' or url_name == 'learning_retention' %}aria-current="page"{% endif %}>
+        <svg><use href="#i-review"/></svg><span>{% trans "Review" %}</span>
+      </a>
+      {% if can_access_tutor_dashboard %}
+      <a class="side-item" href="{% url 'tutor_dashboard' %}" {% if url_name == 'tutor_dashboard' %}aria-current="page"{% endif %}>
+        <svg><use href="#i-tutor"/></svg><span>{% trans "Tutor" %}</span>
+      </a>
+      {% endif %}
+      <a class="side-item" href="{% url 'profile' %}" {% if url_name == 'profile' or url_name == 'purchase_points' or url_name == 'learner_levels' %}aria-current="page"{% endif %}>
+        <svg><use href="#i-me"/></svg><span>{% trans "Me" %}</span>
+      </a>
+      {% if user.is_staff %}
+      <a class="side-item" href="{% url 'admin_dashboard' %}" {% if url_name|slice:':5' == 'admin' %}aria-current="page"{% endif %}>
+        <svg><use href="#i-admin"/></svg><span>Admin</span>
+      </a>
+      {% endif %}
+    </nav>
+    <div class="side-spacer"></div>
+    <div class="side-cta">
+      <span>{% trans "Five minutes is enough to start talking." %}</span>
+      <a href="{% url 'create_request' %}" class="btn btn-sunny btn-sm">{% trans "Start a 5-Minute Lesson Now" %}</a>
+    </div>
+    <div class="side-user">
+      <span class="avatar" aria-hidden="true">{{ user|display_name|slice:":1"|upper }}</span>
+      <span class="who">
+        <span>{{ user|display_name }}</span>
+        <small>
+          {% if is_gold %}👑 Gold{% elif user.is_superuser %}🚀 {% trans "Founder" %}{% elif user.is_staff %}Admin{% else %}{% trans "Student" %}{% endif %}
+        </small>
+      </span>
+    </div>
+  </aside>
+  {% endif %}
+
+  <div class="main">
+    <header class="topbar">
+      <a href="{% url 'home' %}" class="logo"><img class="logo-mark" src="{% static 'icons/quicklesson-character-180.png' %}" alt=""><span>Quick<b>Lesson</b></span></a>
+      <div class="topbar-right">
+        <form action="{% url 'set_language' %}" method="post" class="lang-form">
           {% csrf_token %}
-          <select name="language" onchange="this.form.submit()">
+          <select name="language" class="lang-select" onchange="this.form.submit()" aria-label="{% trans 'Language' %}">
             <option value="ja" {% if request.LANGUAGE_CODE == "ja" %}selected{% endif %}>日本語</option>
             <option value="en" {% if request.LANGUAGE_CODE == "en" %}selected{% endif %}>English</option>
             <option value="es" {% if request.LANGUAGE_CODE == "es" %}selected{% endif %}>Español</option>
@@ -46,75 +107,52 @@
           <input type="hidden" name="next" value="{{ request.path }}">
         </form>
         {% if user.is_authenticated %}
-          <span class="header-username">
-            {{ user|display_name }}
-            {% if is_gold %}<span class="header-badge header-badge-gold">&#x1F451; Gold</span>{% endif %}
-            {% if user.is_superuser %}<span class="header-badge header-badge-dev">🚀 {% trans "Founder" %}</span>
-            {% elif user.is_staff %}<span class="header-badge header-badge-admin">Admin</span>
-            {% endif %}
-          </span>
-          <a href="{% url 'profile' %}" class="header-points-link">
-            💰{% if nav_points == '∞' %} ∞{% elif nav_points is not None %} {{ nav_points }}pt{% else %} {% trans "My Point" %}{% endif %}
+          {% if is_gold %}<span class="role-badge gold d-only">👑 Gold</span>
+          {% elif user.is_superuser %}<span class="role-badge founder d-only">🚀 {% trans "Founder" %}</span>
+          {% elif user.is_staff %}<span class="role-badge admin d-only">Admin</span>{% endif %}
+          <a href="{% url 'profile' %}" class="points-pill" aria-label="{% trans 'My Point' %}">
+            <span class="coin">pt</span>
+            <span class="num">{% if nav_points == '∞' %}∞{% elif nav_points is not None %}{{ nav_points }}{% else %}–{% endif %}</span>
           </a>
-          <a href="{% url 'create_request' %}">{% trans "Student" %}</a>
-          {% if can_access_tutor_dashboard %}<a href="{% url 'tutor_dashboard' %}">{% trans "Tutor" %}</a>{% endif %}
-          <a href="{% url 'logout' %}">{% trans "Log out" %}</a>
+          <a href="{% url 'logout' %}" class="icon-btn" aria-label="{% trans 'Log out' %}" title="{% trans 'Log out' %}">
+            <svg width="18" height="18"><use href="#i-logout"/></svg>
+          </a>
         {% else %}
-          <a href="{% url 'login' %}">{% trans "Log In" %}</a>
-          <a href="{% url 'signup' %}" class="btn-signup-header">{% trans "Sign Up" %}</a>
+          <a href="{% url 'login' %}" class="top-link">{% trans "Log In" %}</a>
+          <a href="{% url 'signup' %}" class="btn btn-sunny btn-sm">{% trans "Sign Up" %}</a>
         {% endif %}
-      </nav>
+      </div>
+    </header>
 
-      <!-- ハンバーガーボタン（モバイルのみ） -->
-      <button class="burger" id="burger" aria-label="menu">
-        <span></span><span></span><span></span>
-      </button>
-    </div>
+    <main class="container {% block container_class %}{% endblock %}">
+      {% block content %}{% endblock %}
+    </main>
+  </div>
 
-    <!-- モバイルメニュー -->
-    <div class="mobile-menu" id="mobile-menu">
-      <form action="{% url 'set_language' %}" method="post">
-        {% csrf_token %}
-        <select name="language" onchange="this.form.submit()">
-          <option value="ja" {% if request.LANGUAGE_CODE == "ja" %}selected{% endif %}>日本語</option>
-          <option value="en" {% if request.LANGUAGE_CODE == "en" %}selected{% endif %}>English</option>
-          <option value="es" {% if request.LANGUAGE_CODE == "es" %}selected{% endif %}>Español</option>
-          <option value="fr" {% if request.LANGUAGE_CODE == "fr" %}selected{% endif %}>Français</option>
-        </select>
-        <input type="hidden" name="next" value="{{ request.path }}">
-      </form>
-      {% if user.is_authenticated %}
-        <span class="header-username">
-          {{ user|display_name }}
-          {% if is_gold %}<span class="header-badge header-badge-gold">&#x1F451; Gold</span>
-          {% elif user.is_superuser %}<span class="header-badge header-badge-dev">🚀 {% trans "Founder" %}</span>
-          {% elif user.is_staff %}<span class="header-badge header-badge-admin">Admin</span>
-          {% endif %}
-        </span>
-        <a href="{% url 'profile' %}" class="header-points-link">
-          💰{% if nav_points == '∞' %} ∞{% elif nav_points is not None %} {{ nav_points }}pt{% else %} {% trans "My Point" %}{% endif %}
-        </a>
-        <a href="{% url 'create_request' %}">{% trans "Student" %}</a>
-        {% if can_access_tutor_dashboard %}<a href="{% url 'tutor_dashboard' %}">{% trans "Tutor" %}</a>{% endif %}
-        <a href="{% url 'logout' %}">{% trans "Log out" %}</a>
-      {% else %}
-        <a href="{% url 'login' %}">{% trans "Log In" %}</a>
-        <a href="{% url 'signup' %}" class="btn-signup-header">{% trans "Sign Up" %}</a>
-      {% endif %}
-    </div>
-  </header>
+  {% if user.is_authenticated %}
+  {# ── Mobile tab bar ── #}
+  <nav class="tabbar" aria-label="{% trans 'Navigation' %}" style="--tabs: {% if can_access_tutor_dashboard %}5{% else %}4{% endif %}">
+    <a class="tab" href="{% url 'home' %}" {% if url_name == 'home' %}aria-current="page"{% endif %}>
+      <span class="ico"><svg><use href="#i-home"/></svg></span>{% trans "Home" %}
+    </a>
+    <a class="tab" href="{% url 'create_request' %}" {% if url_name == 'create_request' or url_name == 'request_detail' or url_name == 'lesson_room' or url_name == 'lesson_rating' or url_name == 'lesson_note' %}aria-current="page"{% endif %}>
+      <span class="ico"><svg><use href="#i-talk"/></svg></span>{% trans "Talk" %}
+    </a>
+    <a class="tab" href="{% url 'study_notes' %}" {% if url_name == 'study_notes' or url_name == 'study_note_detail' or url_name == 'cheatsheets' or url_name == 'cheatsheet_detail' or url_name == 'learning_retention' %}aria-current="page"{% endif %}>
+      <span class="ico"><svg><use href="#i-review"/></svg></span>{% trans "Review" %}
+    </a>
+    {% if can_access_tutor_dashboard %}
+    <a class="tab" href="{% url 'tutor_dashboard' %}" {% if url_name == 'tutor_dashboard' %}aria-current="page"{% endif %}>
+      <span class="ico"><svg><use href="#i-tutor"/></svg></span>{% trans "Tutor" %}
+    </a>
+    {% endif %}
+    <a class="tab" href="{% url 'profile' %}" {% if url_name == 'profile' or url_name == 'purchase_points' or url_name == 'learner_levels' %}aria-current="page"{% endif %}>
+      <span class="ico"><svg><use href="#i-me"/></svg></span>{% trans "Me" %}
+    </a>
+  </nav>
+  {% endif %}
 
-  <script>
-    const burger = document.getElementById('burger');
-    const mobileMenu = document.getElementById('mobile-menu');
-    burger.addEventListener('click', () => {
-      mobileMenu.classList.toggle('open');
-      burger.classList.toggle('open');
-    });
-  </script>
-
-  <main class="container {% block container_class %}{% endblock %}">
-    {% block content %}{% endblock %}
-  </main>
+</div>
 </body>
+{% endwith %}
 </html>

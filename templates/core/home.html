@@ -1,92 +1,246 @@
 {% extends "base.html" %}
-{% load i18n static %}
+{% load i18n static display_names %}
 
 {% block content %}
 {% get_current_language as home_language %}
-<div class="card">
-  <a href="{% url 'study_notes' %}" style="font-weight:700;">✨ {% trans "AI Study Notes" %}</a>
-  <p>{% trans "AI creates personalized review materials from your past lessons." %}</p>
-</div>
+<style>
+  .hm { display: grid; gap: 16px; }
+  .hm .card, .hm .hero { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+  .hm * { box-sizing: border-box; }
+  .hm-split { display: grid; gap: 16px; }
+  .hm-col { display: grid; gap: 16px; align-content: start; min-width: 0; }
+  @media (min-width: 1100px) {
+    .hm-split { grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr); gap: 24px; align-items: start; }
+  }
+  .hm-card-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 
-{% if user.is_authenticated %}{% include "core/_learning_progress.html" %}{% endif %}
-<div class="home-grid" id="upcoming-sessions">
-  <div class="card home-hero-card">
-    <div class="home-hero-tag">&#9889; {% trans "5-minute lesson" %}</div>
-    <h2 class="card-title" style="font-size:22px; margin:10px 0 8px;">{% trans "5-Minute Online Lessons" %}</h2>
-    <p class="card-subtitle" style="margin-bottom:20px; line-height:1.6;">
-      {% trans "A super-light conversation platform for people who want to talk with someone right now." %}
-    </p>
+  /* Greeting */
+  .greet { display: grid; grid-template-columns: 88px 1fr; align-items: center; gap: 12px; }
+  .greet img { width: 88px; height: 88px; border-radius: 26px; border: 2px solid var(--ink); background: var(--sun-soft); animation: hm-bob 3s ease-in-out infinite; transform-origin: 50% 100%; }
+  @keyframes hm-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+  .bubble { position: relative; padding: 10px 14px; background: var(--cloud); border: 2px solid var(--ink); border-radius: 20px; font-weight: 800; }
+  .bubble::before { content: ""; position: absolute; left: -10px; top: 50%; width: 16px; height: 16px; background: var(--cloud); border-left: 2px solid var(--ink); border-bottom: 2px solid var(--ink); transform: translateY(-50%) rotate(45deg); }
+  .bubble b { color: var(--blue); }
+  .bubble span { display: block; color: var(--ink-soft); font-size: 14px; font-weight: 700; }
+  .stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 12px; }
+  .stat { display: grid; padding: 10px 8px; text-align: center; background: var(--sky); border-radius: 18px; }
+  .stat strong { font-family: var(--font-display); font-size: 26px; font-weight: 900; line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .stat span { color: var(--ink-soft); font-size: 12.5px; font-weight: 700; line-height: 1.3; }
+  .hm-links { display: flex; flex-wrap: wrap; gap: 8px 16px; margin-top: 12px; }
+  .hm-links a { display: inline-flex; align-items: center; min-height: 44px; }
+  .hm-trial { margin-top: 12px; padding: 12px; background: var(--sun-soft); border: 2px solid var(--ink); border-radius: 18px; }
+  .hm-trial h3 { margin: 0 0 4px; font-size: 18px; }
+  .hm-trial p { margin: 0 0 10px; }
 
-    {% if user.is_authenticated %}
-      <p style="font-size:14px; color:#374151; margin-bottom:16px;">{% trans "Select a language and start a 5-minute lesson." %}</p>
-      <button class="btn" style="width:100%;" onclick="window.location.href='{% url "create_request" %}'">
-        &#127919; {% trans "Start a 5-Minute Lesson Now" %}
-      </button>
-      {% if can_access_tutor_dashboard %}
-      <a href="{% url "tutor_dashboard" %}" class="btn btn-secondary" style="width:100%; margin-top:10px; margin-left:0; box-sizing:border-box; text-align:center;">
-        {% trans "Tutor Dashboard" %}
-      </a>
-      {% endif %}
-    {% else %}
-      <p style="font-size:14px; color:#374151; margin-bottom:16px;">{% trans "You need to log in to start a lesson." %}</p>
-      <div style="display:flex; gap:10px; flex-wrap:wrap;">
-        <button class="btn" style="flex:1;" onclick="window.location.href='{% url "login" %}'">
-          {% trans "Log In" %}
-        </button>
-        <a href="{% url "signup" %}" class="btn btn-outline" style="flex:1; text-align:center;">
-          {% trans "Sign Up" %}
-        </a>
-      </div>
-    {% endif %}
-  </div>
+  /* Start card */
+  .hm-start { display: grid; gap: 10px; }
+  .hm-start-top { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; }
+  .hm-start-top img { width: 64px; height: 64px; border-radius: 20px; border: 2px solid var(--ink); }
+  .hm-start p { margin: 0; color: var(--ink-soft); }
+  .hm-start .btn { width: 100%; }
+  .hm-btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .hm-btn-row .btn { flex: 1; margin: 0; }
 
-  {# ── Next Session (right column on desktop) ── #}
-  {% if next_session %}
-  <div class="card hs-next-card">
-    <div class="hs-next-eyebrow">⚡ {% trans "Next Session" %}</div>
-    <div class="hs-next-body">
-      {% trans "l, j F Y" as date_fmt %}
-      <div class="hs-next-date">{{ next_session.jst_date|date:date_fmt }}</div>
-      <div class="hs-next-time">
-        {{ next_session.jst_time }}–{{ next_session.jst_end_time }}
-        <span class="hs-tz-badge">{% trans "Japan Time" %}</span>
+  /* Next session (hero) */
+  .hm-next { display: grid; gap: 12px; }
+  .hm-next h2 { color: #fff; margin: 0; }
+  .hm-next .eyebrow { color: #fff; }
+  .times { display: grid; gap: 4px; }
+  .time-row { display: flex; align-items: baseline; flex-wrap: wrap; gap: 10px; }
+  .time-row strong { font-family: var(--font-display); font-size: 30px; font-weight: 900; line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .time-row.second strong { font-size: 20px; }
+  .time-row span { font-size: 14px; font-weight: 700; }
+  .chip.on-hero { color: #fff; background: #ffffff29; border-color: #ffffff59; }
+  .hm-flag { width: 18px !important; height: 18px; border-radius: 50%; border: 1.5px solid var(--ink); background-size: cover; flex: none; }
+  .hm-next-note { margin: 0; padding-left: 10px; border-left: 3px solid #ffffff80; font-size: 14px; font-weight: 700; }
+
+  /* Attendance button (partial: core/_session_attendance.html) */
+  .session-attendance { min-width: 0; }
+  .session-attendance form { gap: 0; }
+  .attendance-star {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%;
+    min-height: 48px; padding: 12px 18px; cursor: pointer; text-align: center; text-decoration: none !important;
+    font: inherit; font-weight: 800; color: var(--ink) !important; background: var(--cloud);
+    border: 2px solid var(--ink); border-radius: var(--r-pill); box-shadow: var(--edge);
+  }
+  .attendance-star[aria-pressed="true"] { background: var(--sun); }
+  .attendance-star:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--ink); }
+  .session-attendance small { display: block; margin-top: 8px; font-size: 12.5px; line-height: 1.5; }
+  .session-attendance > p { margin: 8px 0 0; font-weight: 800; }
+  .hero .session-attendance small, .hero .session-attendance > p { color: #fff; }
+  .hm-row .session-attendance small { display: none; }
+  .hm-row .attendance-star { width: auto; min-height: 40px; padding: 7px 14px; font-size: 14px; box-shadow: 0 3px 0 var(--ink); }
+  .hm-row .session-attendance > p { font-size: 13px; color: var(--ink-soft); }
+
+  /* AI notes */
+  .hm-ai { display: grid; gap: 6px; color: var(--ink) !important; text-decoration: none !important; }
+  .hm-ai:hover { border-color: var(--ink); }
+  .hm-ai h3 { margin: 0; }
+  .hm-ai p { margin: 0; color: var(--ink-soft); font-size: 14px; font-weight: 600; }
+  .hm-arrow { font-size: 20px; font-weight: 900; }
+
+  /* Upcoming sessions */
+  .hm-row { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-top: 2px dashed var(--line); flex-wrap: wrap; }
+  .hm-row:first-child { border-top: 0; }
+  .date-tile { width: 56px; flex: none; overflow: hidden; text-align: center; background: var(--cloud); border: 2px solid var(--ink); border-radius: 16px; }
+  .date-tile small { display: block; padding: 2px 0; background: var(--blue); color: #fff; font-size: 11px; font-weight: 800; text-transform: uppercase; }
+  .date-tile b { display: block; font-family: var(--font-display); font-size: 22px; font-weight: 900; line-height: 1.3; }
+  .hm-row-main { flex: 1; min-width: 160px; display: grid; gap: 4px; }
+  .hm-row-time { font-weight: 900; font-variant-numeric: tabular-nums; }
+  .hm-row-time span { color: var(--ink-soft); font-size: 14px; font-weight: 700; }
+  .hm-row-langs { display: flex; flex-wrap: wrap; gap: 6px; }
+  .hm-row-langs .chip { padding: 2px 8px 2px 3px; font-size: 12.5px; }
+
+  /* Press (guests) */
+  .press-preview { border-color: var(--ink); box-shadow: var(--edge); }
+  .press-preview p { line-height: 1.7; }
+  .press-preview h2 { font-family: var(--font-display); font-size: clamp(20px, 3vw, 26px); line-height: 1.4; margin: 10px 0; }
+  .press-source { color: var(--ink-soft); font-weight: 800; font-size: 14px; }
+  .press-preview a.btn { width: auto; }
+
+  .hm-howto img { width: 100%; height: auto; display: block; border: 2px solid var(--ink); border-radius: var(--r-card); }
+</style>
+
+<div class="hm">
+<div class="hm-split">
+<div class="hm-col">
+
+  {% if user.is_authenticated %}
+  {# ── Greeting + progress ── #}
+  <section class="card" aria-label="{% trans 'Your learning progress' %}">
+    <div class="greet">
+      <img src="{% static 'icons/quicklesson-character-180.png' %}" alt="">
+      <div class="bubble">
+        {% blocktrans with name=user|display_name %}Hello, <b>{{ name }}</b>!{% endblocktrans %}
+        <span>{% trans "Select a language and start a 5-minute lesson." %}</span>
       </div>
-      <div class="hs-next-time-cet">
-        {{ next_session.cet_time }}–{{ next_session.cet_end_time }}
-        <span class="hs-tz-badge-cet">{% trans "European Time" %}</span>
-      </div>
-      <div class="hs-lang-chips">
-        {% for code, name, count in next_session.obj.language_counts %}
-          <span class="hs-lang-chip">
-            {% if code == 'en' %}<span class="fi fi-gb hs-fi"></span>
-            {% elif code == 'fr' %}<span class="fi fi-fr hs-fi"></span>
-            {% elif code == 'es' %}<span class="fi fi-es hs-fi"></span>
-            {% elif code == 'ja' %}<span class="fi fi-jp hs-fi"></span>
-            {% endif %}
-            {% if code == 'ja' %}日本語{% elif code == 'es' %}Español{% elif code == 'fr' %}Français{% elif code == 'en' %}English{% else %}{{ name }}{% endif %} × {{ count }}
-          </span>
-        {% endfor %}
-      </div>
-      {% include "core/_session_attendance.html" with session=next_session.obj %}
-      {% if next_session.obj.note %}
-      <div class="hs-note">{{ next_session.obj.note }}</div>
-      {% endif %}
     </div>
-  </div>
+    {% if learning_progress %}
+    <div class="stats">
+      <div class="stat"><strong>{{ learning_progress.minutes }}</strong><span>{% trans 'Minutes practised in total' %}</span></div>
+      <div class="stat"><strong>{{ learning_progress.weekly }}</strong><span>{% trans 'Conversations this week' %}</span></div>
+    </div>
+    {% if learning_progress.trial_finished %}
+    <div class="hm-trial">
+      <h3>🎉 {% trans 'Two conversations completed!' %}</h3>
+      <p>{% trans 'Your free lessons are complete. Revisit your notes anytime, or buy points when you are ready for another conversation.' %}</p>
+      <a class="btn btn-sm" href="{% url 'purchase_points' %}">{% trans 'Buy points' %}</a>
+    </div>
+    {% endif %}
+    <nav class="hm-links" aria-label="{% trans 'Keep learning' %}">
+      <a href="{% url 'study_notes' %}">✨ {% trans 'AI Study Notes' %}</a>
+      <a href="{% url 'student_history' %}">{% trans 'My Lesson History' %}</a>
+    </nav>
+    {% endif %}
+  </section>
   {% endif %}
 
-</div>{# /home-grid #}
+  {# ── Start a lesson ── #}
+  <section class="card sticker hm-start" aria-labelledby="hm-start-title">
+    <div class="hm-start-top">
+      <div style="display:grid;gap:4px;">
+        <span class="eyebrow">⚡ {% trans "5-minute lesson" %}</span>
+        <h2 class="h2" id="hm-start-title">{% trans "5-Minute Online Lessons" %}</h2>
+      </div>
+      <img src="{% static 'icons/quicklesson-rounded-192.png' %}" alt="">
+    </div>
+    <p>{% trans "A super-light conversation platform for people who want to talk with someone right now." %}</p>
+    {% if user.is_authenticated %}
+      <a class="btn btn-sunny" href="{% url 'create_request' %}">🎯 {% trans "Start a 5-Minute Lesson Now" %}</a>
+      {% if can_access_tutor_dashboard %}
+      <a href="{% url 'tutor_dashboard' %}" class="btn btn-secondary">{% trans "Tutor Dashboard" %}</a>
+      {% endif %}
+    {% else %}
+      <p>{% trans "You need to log in to start a lesson." %}</p>
+      <div class="hm-btn-row">
+        <a class="btn" href="{% url 'login' %}">{% trans "Log In" %}</a>
+        <a class="btn btn-sunny" href="{% url 'signup' %}">{% trans "Sign Up" %}</a>
+      </div>
+    {% endif %}
+  </section>
 
-{% if not user.is_authenticated %}
-<aside class="card press-preview" aria-labelledby="press-title">
-  <div class="press-source">📰 Journal de Fully · {% trans "In the press" %}</div>
-  <h2 id="press-title">{% trans "From Tokyo to Fully: the story behind QuickLesson" %}</h2>
-  <p>{% trans "Meet Misuzu, the founder of QuickLesson, who taught herself to code in Fully. Journal de Fully tells how her experience learning languages inspired five-minute conversations that connect people across cultures." %}</p>
-  <a href="https://www.journaldefully.ch/rubriques/habitants-de-fully/de-tokyo-a-fully-elle-apprend-a-coder-seule-pour-revolutionner-la-pratique-des-langues-en-5-minutes/3370/" target="_blank" rel="noopener noreferrer">{% trans "Read the article (French)" %} ↗</a>
-</aside>
-{% endif %}
+  {% if not user.is_authenticated %}
+  <aside class="card press-preview" aria-labelledby="press-title">
+    <div class="press-source">📰 Journal de Fully · {% trans "In the press" %}</div>
+    <h2 id="press-title">{% trans "From Tokyo to Fully: the story behind QuickLesson" %}</h2>
+    <p>{% trans "Meet Misuzu, the founder of QuickLesson, who taught herself to code in Fully. Journal de Fully tells how her experience learning languages inspired five-minute conversations that connect people across cultures." %}</p>
+    <a class="btn btn-secondary btn-sm" href="https://www.journaldefully.ch/rubriques/habitants-de-fully/de-tokyo-a-fully-elle-apprend-a-coder-seule-pour-revolutionner-la-pratique-des-langues-en-5-minutes/3370/" target="_blank" rel="noopener noreferrer">{% trans "Read the article (French)" %} ↗</a>
+  </aside>
+  {% endif %}
 
-<div style="max-width: 1400px; margin: 32px auto; padding: 0 16px;">
+</div>{# /hm-col left #}
+<div class="hm-col" id="upcoming-sessions">
+
+  {# ── Next session ── #}
+  {% if next_session %}
+  <section class="hero hm-next" aria-labelledby="hm-next-title">
+    <span class="eyebrow">⚡ {% trans "Next Session" %}</span>
+    {% trans "l, j F Y" as date_fmt %}
+    <h2 class="h2" id="hm-next-title">{{ next_session.jst_date|date:date_fmt }}</h2>
+    <div class="times">
+      <div class="time-row"><strong>{{ next_session.jst_time }}–{{ next_session.jst_end_time }}</strong><span>{% trans "Japan Time" %}</span></div>
+      <div class="time-row second"><strong>{{ next_session.cet_time }}–{{ next_session.cet_end_time }}</strong><span>{% trans "European Time" %}</span></div>
+    </div>
+    {% if next_session.obj.language_counts %}
+    <div class="chips">
+      {% for code, name, count in next_session.obj.language_counts %}
+        <span class="chip on-hero">
+          {% if code == 'en' %}<span class="fi fi-gb hm-flag"></span>{% elif code == 'fr' %}<span class="fi fi-fr hm-flag"></span>{% elif code == 'es' %}<span class="fi fi-es hm-flag"></span>{% elif code == 'ja' %}<span class="fi fi-jp hm-flag"></span>{% endif %}
+          {% if code == 'ja' %}日本語{% elif code == 'es' %}Español{% elif code == 'fr' %}Français{% elif code == 'en' %}English{% else %}{{ name }}{% endif %} × {{ count }}
+        </span>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% if next_session.obj.note %}<p class="hm-next-note">{{ next_session.obj.note }}</p>{% endif %}
+    {% include "core/_session_attendance.html" with session=next_session.obj %}
+  </section>
+  {% endif %}
+
+  {# ── AI study notes ── #}
+  <a class="card tint hm-ai" href="{% url 'study_notes' %}">
+    <div class="hm-card-head">
+      <span class="chip sun">✨ {% trans "AI Study Notes" %}</span>
+      <span class="hm-arrow" aria-hidden="true">→</span>
+    </div>
+    <p>{% trans "AI creates personalized review materials from your past lessons." %}</p>
+  </a>
+
+  {# ── Upcoming sessions ── #}
+  {% if other_sessions %}
+  <section class="card" aria-labelledby="hm-upcoming-title">
+    <div class="hm-card-head">
+      <h2 class="h2" id="hm-upcoming-title">{% trans "Upcoming Sessions" %}</h2>
+      <span class="chip outline">{% trans "Japan Time" %}</span>
+    </div>
+    <div>
+      {% for s in other_sessions %}
+      <div class="hm-row">
+        <div class="date-tile">
+          <small>{{ s.jst_date|date:"D" }}</small>
+          <b>{{ s.jst_date|date:"j" }}</b>
+        </div>
+        <div class="hm-row-main">
+          <span class="hm-row-time">{{ s.jst_time }}–{{ s.jst_end_time }} <span>· {% trans "European Time" %} {{ s.cet_time }}–{{ s.cet_end_time }}</span></span>
+          <span class="hm-row-langs">
+            {% for code, name, count in s.obj.language_counts %}
+              <span class="chip">
+                {% if code == 'en' %}<span class="fi fi-gb hm-flag"></span>{% elif code == 'fr' %}<span class="fi fi-fr hm-flag"></span>{% elif code == 'es' %}<span class="fi fi-es hm-flag"></span>{% elif code == 'ja' %}<span class="fi fi-jp hm-flag"></span>{% endif %}
+                {% if code == 'ja' %}日本語{% elif code == 'es' %}Español{% elif code == 'fr' %}Français{% elif code == 'en' %}English{% else %}{{ name }}{% endif %} × {{ count }}
+              </span>
+            {% endfor %}
+          </span>
+        </div>
+        {% include "core/_session_attendance.html" with session=s.obj %}
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+</div>{# /hm-col right #}
+</div>{# /hm-split #}
+
+<section class="hm-howto" aria-label="QuickLesson">
   <img
     {% if home_language|slice:":2" == 'fr' %}
     src="{% static 'images/quicklesson-how-it-works-fr.png' %}?v=20261113"
@@ -95,225 +249,7 @@
     src="{% static 'images/quicklesson-how-it-works.png' %}"
     alt="QuickLessonの使い方"
     {% endif %}
-    style="width: 100%; height: auto; display: block; border-radius: 16px;"
   >
+</section>
 </div>
-
-{# ── Other Sessions (below the main grid, compact) ── #}
-{% if other_sessions %}
-<div class="card hs-other-card" style="margin-top:20px;">
-  {% for s in other_sessions %}
-  <div class="hs-other-row">
-    <div class="hs-other-left">
-      <div class="hs-other-date">{{ s.jst_date|date:"n月j日（D）" }}</div>
-      <div class="hs-other-time">
-        {{ s.jst_time }}–{{ s.jst_end_time }}
-        <span class="hs-other-tz">{% trans "Japan Time" %}</span>
-      </div>
-      <div class="hs-other-time hs-other-cet">
-        {{ s.cet_time }}–{{ s.cet_end_time }}
-        <span class="hs-other-tz hs-other-tz-cet">{% trans "European Time" %}</span>
-      </div>
-    </div>
-    {% include "core/_session_attendance.html" with session=s.obj %}
-    <div class="hs-other-chips">
-      {% for code, name, count in s.obj.language_counts %}
-        <span class="hs-other-chip">
-          {% if code == 'en' %}<span class="fi fi-gb" style="width:14px;height:10px;border-radius:2px;flex-shrink:0;"></span>
-          {% elif code == 'fr' %}<span class="fi fi-fr" style="width:14px;height:10px;border-radius:2px;flex-shrink:0;"></span>
-          {% elif code == 'es' %}<span class="fi fi-es" style="width:14px;height:10px;border-radius:2px;flex-shrink:0;"></span>
-          {% elif code == 'ja' %}<span class="fi fi-jp" style="width:14px;height:10px;border-radius:2px;flex-shrink:0;"></span>
-          {% endif %}
-          {% if code == 'ja' %}日本語{% elif code == 'es' %}Español{% elif code == 'fr' %}Français{% elif code == 'en' %}English{% else %}{{ name }}{% endif %} × {{ count }}
-        </span>
-      {% endfor %}
-    </div>
-  </div>
-  {% endfor %}
-</div>
-{% endif %}
-
-<style>
-  .hs-next-card .session-attendance small { color: #e0e7ff; }
-  .hs-next-card .session-attendance > p { color: #fff; }
-  .press-preview { margin: 24px 0; border: 1px solid #c7d2fe; border-left: 5px solid #6366f1; background: #fff; color: #111827; }
-  .press-preview p { color: #475569; line-height: 1.7; }
-  .press-preview h2 { font-size: clamp(20px, 3vw, 26px); line-height: 1.4; margin: 10px 0; }
-  .press-preview .press-source { color: #4338ca; font-weight: 700; font-size: 14px; }
-  .press-preview a { display: inline-flex; min-height: 44px; align-items: center; padding: 10px 16px; box-sizing: border-box; border-radius: 10px; background: #4338ca; color: #fff; font-weight: 700; text-decoration: none; }
-  .press-preview a:focus-visible { outline: 3px solid #818cf8; outline-offset: 3px; }
-
-  .session-attendance { margin-top: 14px; min-width: 0; }
-  .attendance-star { display: inline-flex; align-items: center; min-height: 44px; padding: 10px 16px; box-sizing: border-box; border: 2px solid #c7d2fe; border-radius: 12px; background: #fff; color: #3730a3; font: inherit; font-weight: 700; cursor: pointer; text-decoration: none; white-space: normal; text-align: left; }
-  .attendance-star[aria-pressed="true"] { background: #fef3c7; color: #78350f; border-color: #f59e0b; }
-  .attendance-star:focus-visible { outline: 3px solid #818cf8; outline-offset: 3px; }
-  .attendance-star:hover { border-color: #6366f1; }
-  .session-attendance small { display: block; font-size: 12px; line-height: 1.5; max-width: 35em; margin-top: 6px; }
-
-  /* ── ステップリスト ── */
-  .home-steps { display: flex; flex-direction: column; gap: 14px; }
-  .home-step  { display: flex; align-items: flex-start; gap: 12px; font-size: 14px; color: #374151; line-height: 1.5; }
-  .home-step-num {
-    flex-shrink: 0;
-    width: 28px; height: 28px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #6366f1, #818cf8);
-    color: #fff; font-size: 13px; font-weight: 700;
-    display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 2px 6px rgba(99,102,241,0.35);
-  }
-  .home-step p { margin: 0; padding-top: 4px; }
-
-  /* ── ヒーロータグ ── */
-  .home-hero-tag {
-    display: inline-flex; align-items: center; gap: 5px;
-    background: #ede9fe; color: #6d28d9;
-    font-size: 11px; font-weight: 700; letter-spacing: 0.05em;
-    padding: 3px 10px; border-radius: 99px;
-    margin-bottom: 4px;
-  }
-
-  /* ── PC 2カラムグリッド: ヒーロー左 + 次のセッション右 ── */
-  @media (min-width: 900px) {
-    .home-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 28px;
-      align-items: start;
-    }
-    .home-grid > .card { margin-bottom: 0; }
-    /* 次のセッションがないときはヒーローを全幅に */
-    .home-grid:not(:has(.hs-next-card)) .home-hero-card {
-      grid-column: 1 / -1;
-    }
-    .home-hero-card { padding: 28px; }
-  }
-
-  /* ── Next Session card ── */
-  .hs-next-card {
-    background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
-    border: none;
-  }
-  .hs-next-eyebrow {
-    font-size: 11px; font-weight: 700; letter-spacing: 0.07em;
-    color: #a5b4fc; margin-bottom: 12px; text-transform: uppercase;
-  }
-  .hs-next-date {
-    font-size: 18px; font-weight: 700; color: #e0e7ff; margin-bottom: 6px;
-  }
-  .hs-next-time {
-    font-size: 22px; font-weight: 800; color: #fff;
-    display: flex; align-items: center; gap: 10px;
-    line-height: 1.2; margin-bottom: 6px;
-  }
-  .hs-next-time-cet {
-    font-size: 22px; font-weight: 800; color: #a5b4fc;
-    display: flex; align-items: center; gap: 10px;
-    margin-bottom: 14px;
-  }
-  .hs-tz-badge {
-    font-size: 11px; font-weight: 700;
-    background: rgba(255,255,255,0.15);
-    border: 1px solid rgba(255,255,255,0.2);
-    color: #c7d2fe; padding: 3px 10px; border-radius: 99px;
-  }
-  .hs-tz-badge-cet {
-    font-size: 11px; font-weight: 700;
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.15);
-    color: #818cf8; padding: 3px 10px; border-radius: 99px;
-  }
-  .hs-lang-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
-  .hs-lang-chip {
-    display: inline-flex; align-items: center; gap: 6px;
-    background: rgba(255,255,255,0.12);
-    border: 1px solid rgba(255,255,255,0.2);
-    color: #e0e7ff; font-size: 13px; font-weight: 600;
-    padding: 4px 12px; border-radius: 99px;
-  }
-  .hs-note {
-    font-size: 12px; color: #818cf8;
-    border-left: 2px solid rgba(129,140,248,0.4);
-    padding-left: 10px; margin-top: 8px;
-  }
-  .hs-fi { width: 20px; height: 14px; border-radius: 2px; flex-shrink: 0; }
-
-  /* ── Upcoming Sessions list ── */
-  .hs-session-list { display: flex; flex-direction: column; gap: 0; }
-  .hs-session-row {
-    display: flex; align-items: flex-start; gap: 16px;
-    padding: 12px 0; border-bottom: 1px solid #f3f4f6;
-  }
-  .hs-session-row:last-child { border-bottom: none; padding-bottom: 0; }
-  .hs-session-left { flex-shrink: 0; width: 110px; }
-  .hs-session-date {
-    font-size: 11px; font-weight: 600; color: #6b7280; margin-bottom: 3px;
-  }
-  .hs-session-time-sm {
-    font-size: 14px; font-weight: 700; color: #111827;
-    display: flex; align-items: center; gap: 5px; margin-bottom: 2px;
-  }
-  .hs-cet-row { color: #6b7280; font-size: 13px; font-weight: 500; }
-  .hs-tz-badge-sm {
-    font-size: 10px; font-weight: 700;
-    background: #ede9fe; color: #6d28d9;
-    padding: 2px 6px; border-radius: 99px;
-  }
-  .hs-tz-cet {
-    background: #f0fdf4; color: #166534;
-  }
-  .hs-session-right { flex: 1; padding-top: 2px; }
-  .hs-session-lang-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 4px; }
-  .hs-lang-chip-sm {
-    display: inline-flex; align-items: center; gap: 5px;
-    background: #f3f4f6; border: 1px solid #e5e7eb;
-    color: #374151; font-size: 12px; font-weight: 600;
-    padding: 3px 9px; border-radius: 99px;
-  }
-  .hs-fi-sm { width: 16px; height: 12px; border-radius: 2px; flex-shrink: 0; }
-  .hs-session-note {
-    font-size: 12px; color: #9ca3af;
-    border-left: 2px solid #e5e7eb; padding-left: 8px; margin-top: 4px;
-  }
-
-  /* ── Other Sessions (2件目以降) ── */
-  .hs-other-card {
-    background: #fafafa;
-    border: 1px solid #f0f0f0;
-    padding: 4px 0;
-  }
-  .hs-other-row {
-    display: flex; flex-wrap: wrap; align-items: flex-start; gap: 14px;
-    padding: 10px 16px;
-    border-bottom: 1px solid #f3f4f6;
-  }
-  .hs-other-row:last-child { border-bottom: none; }
-  .hs-other-left { flex-shrink: 0; min-width: 130px; }
-  .hs-other-date {
-    font-size: 11px; font-weight: 700; color: #6b7280;
-    margin-bottom: 3px; letter-spacing: 0.01em;
-  }
-  .hs-other-time {
-    font-size: 13px; font-weight: 700; color: #111827;
-    display: flex; align-items: center; gap: 5px; margin-bottom: 2px;
-  }
-  .hs-other-cet { color: #6b7280; font-weight: 500; font-size: 12px; }
-  .hs-other-tz {
-    font-size: 10px; font-weight: 700;
-    background: #ede9fe; color: #6d28d9;
-    padding: 1px 6px; border-radius: 99px;
-  }
-  .hs-other-tz-cet { background: #f0fdf4; color: #166534; }
-  .hs-other-chips {
-    flex: 1; display: flex; flex-wrap: wrap; gap: 5px; align-items: flex-start; padding-top: 2px;
-  }
-  .hs-other-chip {
-    display: inline-flex; align-items: center; gap: 4px;
-    background: #f3f4f6; border: 1px solid #e5e7eb;
-    color: #374151; font-size: 11px; font-weight: 600;
-    padding: 2px 8px; border-radius: 99px;
-  }
-
-</style>
-
 {% endblock %}

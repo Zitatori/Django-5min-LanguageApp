@@ -111,15 +111,15 @@
 
   {% if active_matches %}
     {% for match in active_matches %}
-      <div style="padding:12px; border:1px solid #e5e7eb; border-radius:12px; margin-bottom:12px;">
+      <div style="padding:12px; border:1px solid var(--line); border-radius:12px; margin-bottom:12px;">
         <p><strong>Student:</strong>
-          {% with u=match.request.student.user %}{% if u.first_name %}{{ u.first_name }} <span style="color:#9ca3af; font-size:.85em;">({{ u|display_name }})</span>{% else %}{{ u|display_name }}{% endif %}
+          {% with u=match.request.student.user %}{% if u.first_name %}{{ u.first_name }} <span style="color:var(--ink-soft); font-size:.85em;">({{ u|display_name }})</span>{% else %}{{ u|display_name }}{% endif %}
           {% if u.gold_membership.is_active %}<span class="header-badge header-badge-gold">&#x1F451; Gold</span>
           {% elif u.is_superuser %}<span class="header-badge header-badge-dev">🚀 {% trans "Founder" %}</span>
           {% elif u.is_staff %}<span class="header-badge header-badge-admin">Admin</span>
           {% endif %}{% endwith %}
         </p>
-        <p style="font-size:12px; color:#6b7280; margin-top:4px;">
+        <p style="font-size:12px; color:var(--ink-soft); margin-top:4px;">
           {% if match.previous_conversation_count %}
             {% blocktrans with count=match.previous_conversation_count %}Previous conversations: {{ count }}{% endblocktrans %}
           {% else %}
@@ -176,7 +176,7 @@
 
   {# 言語未設定の警告 #}
   {% if not tutor.languages.all %}
-  <div style="background:#fef3c7; border:1.5px solid #fde68a; border-radius:10px; padding:10px 14px; margin-bottom:14px; font-size:13px; color:#92400e;">
+  <div style="background:var(--sun-soft); border:1.5px solid #fde68a; border-radius:10px; padding:10px 14px; margin-bottom:14px; font-size:13px; color:#92400e;">
     ⚠️ {% trans "No teaching languages set — students cannot find you. Please contact an admin." %}
   </div>
   {% endif %}
@@ -285,7 +285,7 @@
     appearance: none;
     border: 1.5px solid #d7d9ff;
     background: #fff;
-    color: #4f46e5;
+    color: var(--blue-deep);
     font-size: 13px;
     font-weight: 800;
     border-radius: 999px;
@@ -296,14 +296,14 @@
   }
   .td-device-check-btn:hover {
     transform: translateY(-1px);
-    border-color: #818cf8;
+    border-color: var(--blue);
     box-shadow: 0 12px 24px rgba(99,102,241,0.18);
   }
   .td-online-pill {
     display: inline-flex;
     align-items: center;
     gap: 7px;
-    background: #dcfce7;
+    background: var(--ok-soft);
     color: #15803d;
     font-size: 13px;
     font-weight: 600;
@@ -314,7 +314,7 @@
   .td-dot {
     width: 8px;
     height: 8px;
-    background: #16a34a;
+    background: var(--ok);
     border-radius: 50%;
     animation: td-pulse 1.5s ease-in-out infinite;
     flex-shrink: 0;
@@ -326,8 +326,8 @@
   .td-offline-pill {
     display: inline-flex;
     align-items: center;
-    background: #f3f4f6;
-    color: #6b7280;
+    background: var(--sky);
+    color: var(--ink-soft);
     font-size: 13px;
     font-weight: 600;
     padding: 5px 12px;
@@ -340,7 +340,7 @@
     align-items: center;
     gap: 10px;
     font-size: 13px;
-    color: #6b7280;
+    color: var(--ink-soft);
     cursor: pointer;
   }
   .td-toggle-on { color: #15803d; font-weight: 700; }
@@ -349,7 +349,7 @@
     position: absolute;
     inset: 0;
     border-radius: 99px;
-    background: #d1d5db;
+    background: var(--line);
     transition: background 0.2s;
     cursor: pointer;
   }
@@ -363,7 +363,7 @@
     transition: transform 0.2s;
     box-shadow: 0 1px 4px rgba(0,0,0,0.2);
   }
-  #online-toggle:checked + .td-slider { background: #22c55e; }
+  #online-toggle:checked + .td-slider { background: var(--ok); }
   #online-toggle:checked + .td-slider::before { transform: translateX(24px); }
 
   /* ── 任意デバイスチェック ── */
@@ -396,8 +396,8 @@
     height: 36px;
     border: 0;
     border-radius: 50%;
-    background: #f3f4f6;
-    color: #6b7280;
+    background: var(--sky);
+    color: var(--ink-soft);
     font-size: 24px;
     line-height: 1;
     cursor: pointer;
@@ -407,11 +407,11 @@
     margin: 0 0 6px;
     font-size: 24px;
     font-weight: 900;
-    color: #111827;
+    color: var(--ink);
   }
   .td-device-head p {
     margin: 0;
-    color: #6b7280;
+    color: var(--ink-soft);
     font-size: 14px;
     line-height: 1.5;
   }
@@ -421,10 +421,10 @@
     gap: 14px;
   }
   .td-device-panel {
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--line);
     border-radius: 14px;
     padding: 14px;
-    background: #f8fafc;
+    background: var(--sky);
   }
   .td-device-panel:first-child { grid-row: span 2; }
   .td-device-panel-head {
@@ -435,7 +435,7 @@
     margin-bottom: 12px;
   }
   .td-device-panel-head strong {
-    color: #111827;
+    color: var(--ink);
     font-size: 15px;
   }
   .td-device-status {
@@ -443,15 +443,15 @@
     align-items: center;
     gap: 5px;
     border-radius: 999px;
-    background: #eef2ff;
-    color: #4f46e5;
+    background: var(--blue-soft);
+    color: var(--blue-deep);
     font-size: 11px;
     font-weight: 800;
     padding: 5px 9px;
     white-space: nowrap;
   }
   .td-device-status.is-ok {
-    background: #dcfce7;
+    background: var(--ok-soft);
     color: #15803d;
   }
   .td-device-status.is-ok::before { content: "✓"; }
@@ -460,36 +460,36 @@
     aspect-ratio: 4 / 3;
     display: block;
     border-radius: 12px;
-    background: #111827;
+    background: var(--ink);
     object-fit: cover;
   }
   .td-mic-meter {
     height: 16px;
     overflow: hidden;
     border-radius: 999px;
-    background: #e5e7eb;
+    background: var(--line);
   }
   .td-mic-meter span {
     display: block;
     width: 0%;
     height: 100%;
     border-radius: inherit;
-    background: linear-gradient(90deg, #22c55e, #6366f1);
+    background: linear-gradient(90deg, var(--ok), var(--blue));
     transition: width 0.08s linear;
   }
   .td-device-help {
     margin: 10px 0 0;
-    color: #6b7280;
+    color: var(--ink-soft);
     font-size: 13px;
     line-height: 1.5;
   }
   .td-device-secondary {
     width: 100%;
     margin-top: 12px;
-    border: 1.5px solid #c7d2fe;
+    border: 1.5px solid var(--line);
     border-radius: 12px;
     background: #fff;
-    color: #4f46e5;
+    color: var(--blue-deep);
     font-weight: 900;
     padding: 12px 14px;
     cursor: pointer;
@@ -499,7 +499,7 @@
     margin-top: 16px;
     border: 0;
     border-radius: 999px;
-    background: #6366f1;
+    background: var(--blue);
     color: #fff;
     font-weight: 900;
     padding: 14px 18px;
@@ -522,22 +522,22 @@
   .td-stats-card { padding: 14px 20px; }
   .td-stats-grid { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
   .td-stat-total { display: flex; flex-direction: column; gap: 2px; min-width: 64px; }
-  .td-stat-big { font-size: 30px; font-weight: 800; color: #111827; line-height: 1; }
-  .td-stat-lbl { font-size: 11px; font-weight: 600; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.06em; }
+  .td-stat-big { font-size: 30px; font-weight: 800; color: var(--ink); line-height: 1; }
+  .td-stat-lbl { font-size: 11px; font-weight: 600; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.06em; }
   .td-stat-langs { display: flex; gap: 8px; flex-wrap: wrap; }
   .td-stat-lang {
     display: flex; align-items: center; gap: 5px;
-    background: #f8fafc; border: 1px solid #e5e7eb;
+    background: var(--sky); border: 1px solid var(--line);
     border-radius: 8px; padding: 6px 10px;
   }
   .td-slc-flag { width: 20px; height: 14px; border-radius: 2px; flex-shrink: 0; }
-  .td-slc-num { font-size: 15px; font-weight: 800; color: #111827; }
-  .td-slc-name { font-size: 11px; font-weight: 600; color: #6b7280; }
+  .td-slc-num { font-size: 15px; font-weight: 800; color: var(--ink); }
+  .td-slc-name { font-size: 11px; font-weight: 600; color: var(--ink-soft); }
 
   /* ── 言語カードグリッド ── */
   .td-lang-label {
     font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
-    text-transform: uppercase; color: #9ca3af; margin: 0 0 10px;
+    text-transform: uppercase; color: var(--ink-soft); margin: 0 0 10px;
   }
   .td-lang-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 18px; }
   .td-lang-card {
@@ -566,7 +566,7 @@
   .td-lc-name { font-size: 14px; font-weight: 700; color: #fff; position:relative; z-index:1; text-shadow: 0 1px 3px rgba(0,0,0,0.2); }
 
   .td-wave-box {
-    background: #f8fafc;
+    background: var(--sky);
     border: 1px dashed #cbd5e1;
     border-radius: 12px;
     padding: 18px 20px;
@@ -584,7 +584,7 @@
     display: block;
     width: 4px;
     border-radius: 4px;
-    background: #6366f1;
+    background: var(--blue);
     animation: td-wave 1s ease-in-out infinite;
   }
   .td-wave span:nth-child(1) { height: 10px; animation-delay: 0s; }
@@ -601,8 +601,8 @@
     flex-direction: column;
     gap: 3px;
   }
-  .td-wave-text strong { font-size: 14px; font-weight: 600; color: #111827; }
-  .td-wave-text span   { font-size: 12px; color: #6b7280; }
+  .td-wave-text strong { font-size: 14px; font-weight: 600; color: var(--ink); }
+  .td-wave-text span   { font-size: 12px; color: var(--ink-soft); }
 
   /* ── Empty State ── */
   .td-empty-state {
@@ -611,7 +611,7 @@
     align-items: center;
     padding: 28px 0;
     gap: 6px;
-    color: #9ca3af;
+    color: var(--ink-soft);
   }
   .td-empty-icon { font-size: 36px; margin-bottom: 4px; }
   .td-empty-state p { font-size: 13px; }
@@ -621,20 +621,20 @@
     display: flex;
     align-items: flex-start;
     gap: 8px;
-    background: #f8fafc;
-    border: 1px solid #e5e7eb;
+    background: var(--sky);
+    border: 1px solid var(--line);
     border-radius: 10px;
     padding: 12px 14px;
     font-size: 12px;
-    color: #6b7280;
+    color: var(--ink-soft);
     line-height: 1.5;
     margin-bottom: 16px;
   }
   .td-lang-notice-icon { flex-shrink: 0; font-size: 15px; }
   .td-lang-notice-body { display: flex; flex-direction: column; gap: 8px; }
   .td-lang-form-links { display: flex; flex-wrap: wrap; gap: 8px 12px; }
-  .td-lang-notice-link { color: #6366f1; text-decoration: underline; font-weight: 700; }
-  .td-lang-notice-link:hover { color: #4f46e5; }
+  .td-lang-notice-link { color: var(--blue); text-decoration: underline; font-weight: 700; }
+  .td-lang-notice-link:hover { color: var(--blue-deep); }
 
   /* ── PC 2カラムレイアウト ── */
   @media (min-width: 900px) {
