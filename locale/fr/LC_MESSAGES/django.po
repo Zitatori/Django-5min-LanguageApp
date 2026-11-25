@@ -514,7 +514,7 @@ msgstr "Recherche en cours"
 
 #: templates/core/request_detail.html:19
 msgid "Canceled"
-msgstr "Annulé"
+msgstr "Annulée"
 
 #: templates/core/request_detail.html:24
 msgid "Selected language"
@@ -1937,6 +1937,10 @@ msgstr "Notes précédentes"
 #: templates/core/lesson_note.html
 msgid "Save Note"
 msgstr "Enregistrer la note"
+
+#: templates/core/request_detail.html
+msgid "Entering lesson room…"
+msgstr "Entrée dans la salle de leçon…"
 
 #~ msgid "Step 1"
 #~ msgstr "Étape 1"

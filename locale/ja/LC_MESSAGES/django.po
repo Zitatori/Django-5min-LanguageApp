@@ -496,10 +496,8 @@ msgid "Matching"
 msgstr "マッチング中"
 
 #: templates/core/request_detail.html:19
-#, fuzzy
-#| msgid "Cancel"
 msgid "Canceled"
-msgstr "キャンセル"
+msgstr "キャンセル済み"
 
 #: templates/core/request_detail.html:24
 msgid "Selected language"
@@ -1785,6 +1783,10 @@ msgstr "メモを保存"
 #: templates/core/_student_lesson_record.html
 msgid "Level"
 msgstr "レベル"
+
+#: templates/core/request_detail.html
+msgid "Entering lesson room…"
+msgstr "レッスンルームに入室しています…"
 
 #~ msgid "Step 1"
 #~ msgstr "ステップ1"

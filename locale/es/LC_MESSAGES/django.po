@@ -513,7 +513,7 @@ msgstr "Buscando profesor"
 
 #: templates/core/request_detail.html:19
 msgid "Canceled"
-msgstr "Cancelado"
+msgstr "Cancelada"
 
 #: templates/core/request_detail.html:24
 msgid "Selected language"
@@ -1915,6 +1915,10 @@ msgstr "Guardar nota"
 #: templates/core/_student_lesson_record.html
 msgid "Level"
 msgstr "Nivel"
+
+#: templates/core/request_detail.html
+msgid "Entering lesson room…"
+msgstr "Entrando en la sala de la lección…"
 
 #~ msgid "Step 1"
 #~ msgstr "Paso 1"
