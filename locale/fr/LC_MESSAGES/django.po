@@ -1922,6 +1922,10 @@ msgstr "Adresse e-mail (ou nom d'utilisateur)"
 msgid "Choose a pack"
 msgstr "Choisis un pack"
 
+#: templates/core/lesson_rating.html
+msgid "Optional: share any comments about this lesson…"
+msgstr "Facultatif : un mot sur cette leçon…"
+
 #~ msgid "Step 1"
 #~ msgstr "Étape 1"
 
