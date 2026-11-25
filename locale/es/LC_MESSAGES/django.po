@@ -1912,6 +1912,10 @@ msgstr "Notas anteriores"
 msgid "Save Note"
 msgstr "Guardar nota"
 
+#: templates/core/_student_lesson_record.html
+msgid "Level"
+msgstr "Nivel"
+
 #~ msgid "Step 1"
 #~ msgstr "Paso 1"
 

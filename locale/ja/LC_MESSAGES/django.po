@@ -1782,6 +1782,10 @@ msgstr "これまでのメモ"
 msgid "Save Note"
 msgstr "メモを保存"
 
+#: templates/core/_student_lesson_record.html
+msgid "Level"
+msgstr "レベル"
+
 #~ msgid "Step 1"
 #~ msgstr "ステップ1"
 
