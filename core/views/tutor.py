@@ -5,6 +5,7 @@ from django.shortcuts import render
 from datetime import timedelta
 from django.utils import timezone
 from django.views.decorators.http import require_POST
+from django.views.decorators.cache import never_cache
 from core.models import LessonLanguage, TutorProfile, QuickLessonMatch
 from django.http import JsonResponse
 from core.tutor_access import tutor_access_required
@@ -12,6 +13,7 @@ from core.tutor_access import tutor_access_required
 
 @login_required
 @tutor_access_required
+@never_cache
 def tutor_dashboard(request):
     tutor_profile, _ = TutorProfile.objects.get_or_create(user=request.user)
 
@@ -85,6 +87,7 @@ def _active_match_for_tutor(tutor_profile, now=None):
 
 @login_required
 @tutor_access_required
+@never_cache
 def tutor_match_status(request):
     """ポーリング兼ハートビート。呼ばれるたびに last_ping_at を更新。"""
     from django.urls import reverse

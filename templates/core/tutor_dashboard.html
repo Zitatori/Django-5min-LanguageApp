@@ -25,6 +25,7 @@
       {% trans "Check camera and microphone" %}
     </button>
 
+    <p id="presence-error" role="alert" hidden style="color:#991b1b;background:#fff1f2;padding:12px;border-radius:10px;max-width:420px;">{% trans "Connection to the server was lost. Reconnecting… If this continues, reload this page." %}</p>
     <form method="post" id="online-form" style="margin:0;">
       {% csrf_token %}
       {% if tutor.is_online %}
@@ -775,33 +776,43 @@
     setTimeout(() => notice.remove(), 8000);
   }
 
+  let pollBusy = false;
+  let movingToRoom = false;
+  async function pollStatus() {
+    if (pollBusy || movingToRoom || !toggle || !toggle.checked) return;
+    pollBusy = true;
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10000);
+    const errorNotice = document.getElementById('presence-error');
+    try {
+      const res = await fetch("{% url 'tutor_match_status' %}", {
+        cache: 'no-store', credentials: 'same-origin', signal: controller.signal
+      });
+      if (!res.ok || res.redirected) throw new Error('Status unavailable');
+      const data = await res.json();
+      if (typeof data.matched !== 'boolean') throw new Error('Invalid status');
+      errorNotice.hidden = true;
+      if (data.matched) {
+        movingToRoom = true;
+        stopPolling();
+        playMatchSound(); flashScreen(); showMatchedRedirectNotice();
+        setTimeout(() => { window.location.href = data.room_url; }, 900);
+      } else if (data.auto_offlined) {
+        stopPolling();
+        // Reload the authoritative form action and status, not just the checkbox.
+        window.location.reload();
+      }
+    } catch (e) {
+      errorNotice.hidden = false;
+    } finally {
+      clearTimeout(timeout);
+      pollBusy = false;
+    }
+  }
   function startPolling() {
-    if (pollInterval) return;
-    pollInterval = setInterval(async () => {
-      try {
-        const res  = await fetch("{% url 'tutor_match_status' %}");
-        const data = await res.json();
-        if (data.matched) {
-          clearInterval(pollInterval);
-          playMatchSound();
-          flashScreen();
-          showMatchedRedirectNotice();
-          document.title = "🔔 " + document.title;
-          setTimeout(() => {
-            if (data.room_url) {
-              window.location.href = data.room_url;
-            } else {
-              window.location.reload();
-            }
-          }, 900);
-        } else if (data.auto_offlined) {
-          clearInterval(pollInterval);
-          pollInterval = null;
-          if (toggle) toggle.checked = false;
-          showAutoOfflineNotice();
-        }
-      } catch (e) { console.error("Polling error:", e); }
-    }, 3000);
+    if (pollInterval || movingToRoom) return;
+    pollStatus();
+    pollInterval = setInterval(pollStatus, 3000);
   }
 
   function stopPolling() {
@@ -988,16 +999,11 @@
   // ビーコンは使わない: モバイルで誤発火してオフライン化される問題があるため削除
   // オフライン化は明示的なトグル操作のみ。タイムアウト(30分)がクラッシュ時のフォールバック。
 
-  // スマホのスリープ・アプリ切替からの復帰時に即pingして last_ping_at を更新
-  window.addEventListener('pageshow', (e) => {
-    if (e.persisted && toggle && toggle.checked) {
-      fetch("{% url 'tutor_match_status' %}").catch(() => {});
-    }
-  });
+  // Revalidate server state immediately after returning from a cached page or network outage.
+  window.addEventListener('pageshow', () => { startPolling(); pollStatus(); });
+  window.addEventListener('online', () => { startPolling(); pollStatus(); });
   document.addEventListener('visibilitychange', () => {
-    if (!document.hidden && toggle && toggle.checked) {
-      fetch("{% url 'tutor_match_status' %}").catch(() => {});
-    }
+    if (!document.hidden) { startPolling(); pollStatus(); }
   });
 })();
 </script>

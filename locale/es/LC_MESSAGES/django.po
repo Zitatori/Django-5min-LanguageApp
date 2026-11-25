@@ -1809,6 +1809,13 @@ msgstr "Ver participantes"
 msgid "No planned attendees yet."
 msgstr "Todavía no hay participantes previstos."
 
+msgid ""
+"Connection to the server was lost. Reconnecting… If this continues, reload "
+"this page."
+msgstr ""
+"Se perdió la conexión con el servidor. Reconectando… Si el problema "
+"continúa, vuelve a cargar esta página."
+
 #~ msgid "Step 1"
 #~ msgstr "Paso 1"
 

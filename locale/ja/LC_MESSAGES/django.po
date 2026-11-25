@@ -1681,6 +1681,11 @@ msgstr "参加予定者を見る"
 msgid "No planned attendees yet."
 msgstr "出席予定者はまだいません。"
 
+msgid ""
+"Connection to the server was lost. Reconnecting… If this continues, reload "
+"this page."
+msgstr "サーバーとの通信が途切れています。再接続中です。改善しない場合は、このページを再読み込みしてください。"
+
 #~ msgid "Step 1"
 #~ msgstr "ステップ1"
 
