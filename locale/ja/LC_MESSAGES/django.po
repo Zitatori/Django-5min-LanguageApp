@@ -1729,6 +1729,11 @@ msgstr "今後のセッション"
 msgid "Hello, <b>%(name)s</b>!"
 msgstr "こんにちは、<b>%(name)s</b>さん！"
 
+
+#: templates/core/study_notes.html
+msgid "How your data is used"
+msgstr "データの使われ方"
+
 #~ msgid "Step 1"
 #~ msgstr "ステップ1"
 

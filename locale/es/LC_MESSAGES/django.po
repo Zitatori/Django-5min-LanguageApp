@@ -1859,6 +1859,11 @@ msgstr "Próximas sesiones"
 msgid "Hello, <b>%(name)s</b>!"
 msgstr "¡Hola, <b>%(name)s</b>!"
 
+
+#: templates/core/study_notes.html
+msgid "How your data is used"
+msgstr "Cómo se usan tus datos"
+
 #~ msgid "Step 1"
 #~ msgstr "Paso 1"
 

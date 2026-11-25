@@ -2,3 +2,39 @@
 @media(max-width:600px){.sheet-paper{width:100%;border-radius:0;margin-bottom:0}#study-sheet{padding:20px 16px;font-size:14px}.sheet-heading img{width:82px;height:90px}h1{font-size:23px}.sheet-brand{font-size:20px}.sheet-vocabulary{grid-template-columns:repeat(2,minmax(0,1fr))}.sheet-grammar,.sheet-quizzes{grid-template-columns:1fr}.word-card p,.translation{font-size:13px}.pronunciation,.study-romaji,.study-reading{font-size:12px}.sheet-toolbar button{margin-left:0}.sheet-footer{flex-wrap:wrap}.sheet-quiz label{min-height:44px}}
 @page{size:A4 portrait;margin:10mm}
 @media print{body{background:white}.sheet-toolbar,.sheet-help,.no-print{display:none!important}.sheet-paper{width:190mm;margin:0;border-radius:0;box-shadow:none;overflow:visible}#study-sheet{width:190mm;padding:4mm;font-size:11px;zoom:var(--sheet-print-scale,1);print-color-adjust:exact;-webkit-print-color-adjust:exact}.sheet-heading img{width:100px;height:100px}h1{font-size:24px}.sheet-vocabulary{grid-template-columns:repeat(5,minmax(0,1fr))}.sheet-grammar{grid-template-columns:repeat(2,minmax(0,1fr))}.sheet-quizzes{grid-template-columns:repeat(3,minmax(0,1fr))}.sheet-section{margin-top:12px}.sheet-answers{display:block}.sheet-answers>span{display:inline-block!important}.sheet-answers summary{display:none}.sheet-footer p{font-size:9px}}
+
+/* ── Kawaii redesign: "fiche" look (screen and print) ── */
+body{background:#eaf3ff;color:#1c2a52;font-family:"Nunito","Zen Maru Gothic",system-ui,-apple-system,sans-serif}
+a{color:#2f6bff;font-weight:800}
+h1,h2,h3,.sheet-brand,.word-term{font-family:"Zen Maru Gothic","Hiragino Maru Gothic ProN",system-ui,sans-serif}
+button{border:2px solid #1c2a52;background:#fff;color:#1c2a52;border-radius:999px;font-weight:800;box-shadow:0 3px 0 #1c2a52}
+button:active{transform:translateY(2px);box-shadow:0 1px 0 #1c2a52}
+.sheet-toolbar button{background:#ffcf33;color:#1c2a52;border:2px solid #1c2a52}
+.sheet-help{color:#5b6a8f}
+.sheet-paper{border:2px solid #1c2a52;border-radius:24px;box-shadow:0 4px 0 #1c2a52}
+#study-sheet{padding:0}
+.sheet-heading{background:#fff3c4;border-bottom:2px solid #1c2a52;padding:18px 22px}
+.sheet-heading img{width:96px;height:96px}
+.sheet-brand span{color:#2f6bff}
+.sheet-eyebrow{color:#5b6a8f;font-weight:800}
+h1{font-weight:900}
+.sheet-level{background:#ffcf33;border:2px solid #1c2a52;font-weight:900}
+.sheet-section{margin:0;padding:16px 22px;border-top:2px dashed #cfdcf6}
+.sheet-heading+.sheet-section{border-top:0}
+h2{font-weight:900}
+h2>span{background:#2f6bff;color:#fff;border:2px solid #1c2a52;border-radius:12px;width:32px;height:32px;font-weight:900}
+.teacher-section{background:#fff;border:0;border-radius:0}
+.teacher-record{background:#eaf3ff;border-radius:16px;padding:10px 12px}
+.teacher-record+.teacher-record{border-top:0;margin-top:8px;padding-top:10px}
+.sheet-meta{color:#5b6a8f}
+.teacher-translation{border-left:0;padding:8px 10px;margin-top:6px;background:#fff3c4;border-radius:12px;color:#1c2a52}
+.word-card{background:#fff;border:2px solid #cfdcf6;border-radius:16px}
+.grammar-card{border:2px solid #cfdcf6;border-radius:16px}
+rt,.pronunciation,.study-romaji,.study-reading,.translation{color:#5b6a8f}
+.example{background:#eaf3ff;border-radius:12px}
+.study-quiz{background:#fff;border:2px solid #cfdcf6;border-radius:16px}
+.quiz-feedback{background:#dcf6ea;color:#0d6b4a;border-radius:12px}
+.sheet-footer{margin:0;padding:10px 22px 16px;border-top:2px dashed #cfdcf6;color:#5b6a8f}
+button:focus-visible,a:focus-visible,summary:focus-visible{outline-color:#ffcf33}
+@media(max-width:600px){.sheet-paper{border-left:0;border-right:0;border-radius:0}.sheet-heading,.sheet-section{padding-left:16px;padding-right:16px}}
+@media print{.sheet-paper{border:0;box-shadow:none}.sheet-heading{padding:4mm}.sheet-section{padding:3mm 4mm}.sheet-footer{padding:2mm 4mm}}
