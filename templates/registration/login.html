@@ -23,9 +23,9 @@
     <button type="submit" class="btn" style="width:100%; margin-top:8px;">{% trans "Log In" %}</button>
   </form>
 
-  <p style="margin-top:16px; text-align:center; font-size:14px; color:#6b7280;">
+  <p style="margin-top:16px; text-align:center; font-size:14px; color:var(--ink-soft);">
     {% trans "Don't have an account?" %}
-    <a href="{% url 'signup' %}" style="color:#6366f1; font-weight:600;">{% trans "Create an account" %}</a>
+    <a href="{% url 'signup' %}" style="color:var(--blue); font-weight:600;">{% trans "Create an account" %}</a>
   </p>
 </div>
 
@@ -37,14 +37,14 @@
     display: block;
     font-weight: 700;
     font-size: 14px;
-    color: #111827;
+    color: var(--ink);
     margin-bottom: 6px;
   }
   .signup-field input[type="text"],
   .signup-field input[type="password"] {
     width: 100%;
     padding: 10px 12px;
-    border: 1.5px solid #e5e7eb;
+    border: 1.5px solid var(--line);
     border-radius: 10px;
     font-size: 15px;
     box-sizing: border-box;
@@ -52,12 +52,12 @@
   }
   .signup-field input:focus {
     outline: none;
-    border-color: #6366f1;
+    border-color: var(--blue);
   }
   .signup-error {
     margin: 6px 0 0;
     font-size: 13px;
-    color: #dc2626;
+    color: var(--bad);
     font-weight: 500;
   }
 </style>

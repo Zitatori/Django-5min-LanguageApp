@@ -4,46 +4,46 @@
 {% block content %}
 <p><a href="{% url 'learning_retention' %}">{% trans "Learning continuation" %} →</a></p>
 <style>
-.session-attendees summary {cursor:pointer;list-style:none;display:inline-block;padding:9px 12px;border:1px solid #a5b4fc;border-radius:9px;background:#eef2ff;color:#3730a3;font-weight:600;min-height:44px;}
+.session-attendees summary {cursor:pointer;list-style:none;display:inline-block;padding:9px 12px;border:1px solid var(--line);border-radius:9px;background:var(--blue-soft);color:var(--ink);font-weight:600;min-height:44px;}
 .session-attendees summary::after {content:" ▾";}
 .session-attendees[open] summary::after {content:" ▴";}
-.session-attendees summary:focus-visible {outline:3px solid #6366f1;outline-offset:2px;}
+.session-attendees summary:focus-visible {outline:3px solid var(--blue);outline-offset:2px;}
 .session-attendees ul {list-style:none;padding:0;margin:8px 0;max-height:240px;overflow:auto;min-width:180px;max-width:260px;white-space:normal;}
-.session-attendees li {padding:8px;border-bottom:1px solid #e5e7eb;overflow-wrap:anywhere;}
+.session-attendees li {padding:8px;border-bottom:1px solid var(--line);overflow-wrap:anywhere;}
 .session-attendees li span {display:block;font-size:12px;color:#4b5563;}
 
   .admin-section { margin-bottom: 2rem; }
   .table { width: 100%; border-collapse: collapse; font-size: 14px; }
-  .table th { text-align: left; padding: 8px 12px; border-bottom: 2px solid #e5e7eb; color: #6b7280; font-weight: 500; }
-  .table td { padding: 10px 12px; border-bottom: 1px solid #f3f4f6; vertical-align: middle; }
+  .table th { text-align: left; padding: 8px 12px; border-bottom: 2px solid var(--line); color: var(--ink-soft); font-weight: 500; }
+  .table td { padding: 10px 12px; border-bottom: 1px solid var(--sky); vertical-align: middle; }
   .lang-tag { font-size: 12px; font-weight: 500; padding: 3px 10px; border-radius: 99px; border: 1.5px solid; display: inline-block; margin: 2px; }
-  .tag-en { background:#dbeafe; color:#1d4ed8; border-color:#93c5fd; }
-  .tag-fr { background:#fef9c3; color:#854d0e; border-color:#fde047; }
+  .tag-en { background:var(--blue-soft); color:#1d4ed8; border-color:#93c5fd; }
+  .tag-fr { background:var(--sun-soft); color:#854d0e; border-color:#fde047; }
   .tag-es { background:#fce7f3; color:#9d174d; border-color:#f9a8d4; }
-  .tag-ja { background:#dcfce7; color:#166534; border-color:#86efac; }
-  .tag-default { background:#f3f4f6; color:#374151; border-color:#e5e7eb; }
-  .badge-online { background:#dcfce7; color:#166534; border:1.5px solid #86efac; border-radius:99px; padding:2px 10px; font-size:12px; font-weight:500; }
-  .badge-offline { background:#f3f4f6; color:#6b7280; border:1.5px solid #e5e7eb; border-radius:99px; padding:2px 10px; font-size:12px; font-weight:500; }
-  .edit-btn { font-size:12px; padding:4px 12px; border-radius:8px; border:1.5px solid #6366f1; color:#6366f1; background:white; cursor:pointer; }
+  .tag-ja { background:var(--ok-soft); color:#166534; border-color:#86efac; }
+  .tag-default { background:var(--sky); color:var(--ink); border-color:var(--line); }
+  .badge-online { background:var(--ok-soft); color:#166534; border:1.5px solid #86efac; border-radius:99px; padding:2px 10px; font-size:12px; font-weight:500; }
+  .badge-offline { background:var(--sky); color:var(--ink-soft); border:1.5px solid var(--line); border-radius:99px; padding:2px 10px; font-size:12px; font-weight:500; }
+  .edit-btn { font-size:12px; padding:4px 12px; border-radius:8px; border:1.5px solid var(--blue); color:var(--blue); background:white; cursor:pointer; }
   .edit-btn:hover { background:#EEEDFE; }
-  .delete-btn { font-size:12px; padding:4px 12px; border-radius:8px; border:1.5px solid #ef4444; color:#ef4444; background:white; cursor:pointer; margin-left:6px; }
+  .delete-btn { font-size:12px; padding:4px 12px; border-radius:8px; border:1.5px solid var(--bad); color:var(--bad); background:white; cursor:pointer; margin-left:6px; }
   .delete-btn:hover { background:#fef2f2; }
-  .role-admin  { background:#ede9fe; color:#5b21b6; border:1.5px solid #c4b5fd; border-radius:99px; padding:2px 10px; font-size:12px; font-weight:500; }
-  .role-tutor  { background:#dbeafe; color:#1d4ed8; border:1.5px solid #93c5fd; border-radius:99px; padding:2px 10px; font-size:12px; font-weight:500; }
-  .role-student{ background:#f3f4f6; color:#374151; border:1.5px solid #e5e7eb; border-radius:99px; padding:2px 10px; font-size:12px; font-weight:500; }
+  .role-admin  { background:var(--blue-soft); color:#5b21b6; border:1.5px solid #c4b5fd; border-radius:99px; padding:2px 10px; font-size:12px; font-weight:500; }
+  .role-tutor  { background:var(--blue-soft); color:#1d4ed8; border:1.5px solid #93c5fd; border-radius:99px; padding:2px 10px; font-size:12px; font-weight:500; }
+  .role-student{ background:var(--sky); color:var(--ink); border:1.5px solid var(--line); border-radius:99px; padding:2px 10px; font-size:12px; font-weight:500; }
   .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.3); z-index:100; align-items:center; justify-content:center; }
   .modal-overlay.open { display:flex; }
   .modal { background:white; border-radius:16px; padding:1.5rem; width:360px; max-width:90vw; }
   .modal h3 { margin:0 0 1rem; font-size:16px; }
-  .lang-checkbox { display:flex; align-items:center; gap:8px; padding:8px 0; border-bottom:1px solid #f3f4f6; font-size:14px; }
+  .lang-checkbox { display:flex; align-items:center; gap:8px; padding:8px 0; border-bottom:1px solid var(--sky); font-size:14px; }
   .lang-checkbox:last-child { border-bottom:none; }
-  .save-btn { margin-top:1rem; width:100%; padding:10px; background:#6366f1; color:white; border:none; border-radius:10px; font-size:14px; font-weight:500; cursor:pointer; }
-  .cancel-btn { margin-top:8px; width:100%; padding:10px; background:white; color:#6b7280; border:1.5px solid #e5e7eb; border-radius:10px; font-size:14px; cursor:pointer; }
-  .match-status-active { background:#dcfce7; color:#166534; border:1.5px solid #86efac; border-radius:99px; padding:2px 10px; font-size:12px; }
-  .match-status-done { background:#f3f4f6; color:#6b7280; border:1.5px solid #e5e7eb; border-radius:99px; padding:2px 10px; font-size:12px; }
+  .save-btn { margin-top:1rem; width:100%; padding:10px; background:var(--blue); color:white; border:none; border-radius:10px; font-size:14px; font-weight:500; cursor:pointer; }
+  .cancel-btn { margin-top:8px; width:100%; padding:10px; background:white; color:var(--ink-soft); border:1.5px solid var(--line); border-radius:10px; font-size:14px; cursor:pointer; }
+  .match-status-active { background:var(--ok-soft); color:#166534; border:1.5px solid #86efac; border-radius:99px; padding:2px 10px; font-size:12px; }
+  .match-status-done { background:var(--sky); color:var(--ink-soft); border:1.5px solid var(--line); border-radius:99px; padding:2px 10px; font-size:12px; }
   .live-dot {
     width:10px; height:10px; border-radius:50%;
-    background:#22c55e;
+    background:var(--ok);
     box-shadow:0 0 0 0 rgba(34,197,94,0.5);
     animation:live-ping 1.4s ease-in-out infinite;
     flex-shrink:0;
@@ -53,37 +53,37 @@
     70%  { box-shadow:0 0 0 8px rgba(34,197,94,0); }
     100% { box-shadow:0 0 0 0 rgba(34,197,94,0); }
   }
-  .points-btn { font-size:12px; padding:4px 12px; border-radius:8px; border:1.5px solid #f59e0b; color:#b45309; background:white; cursor:pointer; margin-left:6px; }
-  .points-btn:hover { background:#fffbeb; }
+  .points-btn { font-size:12px; padding:4px 12px; border-radius:8px; border:1.5px solid var(--sun); color:#b45309; background:white; cursor:pointer; margin-left:6px; }
+  .points-btn:hover { background:var(--sun-soft); }
   .pt-stack { display:flex; flex-direction:column; gap:3px; min-width:92px; }
   .pt-badge { display:inline-flex; align-items:center; gap:4px; width:max-content; font-size:12px; font-weight:700; border-radius:99px; padding:2px 8px; }
-  .pt-student { background:#eef2ff; color:#4338ca; border:1px solid #c7d2fe; }
+  .pt-student { background:var(--blue-soft); color:var(--blue-deep); border:1px solid var(--line); }
   .pt-teacher { background:#ecfdf5; color:#047857; border:1px solid #a7f3d0; }
-  .pt-none  { font-size:12px; color:#d1d5db; }
+  .pt-none  { font-size:12px; color:var(--line); }
   .grant-banner { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;
-    background:#fffbeb; border:1.5px solid #fde68a; border-radius:12px; padding:12px 16px; margin-bottom:1.2rem; font-size:14px; color:#92400e; }
-  .grant-btn { padding:7px 18px; background:#f59e0b; color:white; border:none; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; }
+    background:var(--sun-soft); border:1.5px solid #fde68a; border-radius:12px; padding:12px 16px; margin-bottom:1.2rem; font-size:14px; color:#92400e; }
+  .grant-btn { padding:7px 18px; background:var(--sun); color:white; border:none; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; }
   .grant-btn:hover { background:#d97706; }
-  .history-btn { font-size:12px; padding:4px 12px; border-radius:8px; border:1.5px solid #10b981; color:#059669; background:white; cursor:pointer; margin-left:6px; }
+  .history-btn { font-size:12px; padding:4px 12px; border-radius:8px; border:1.5px solid var(--ok); color:#059669; background:white; cursor:pointer; margin-left:6px; }
   .history-btn:hover { background:#ecfdf5; }
-  .notes-btn { font-size:12px; padding:4px 12px; border-radius:8px; border:1.5px solid #8b5cf6; color:#7c3aed; background:white; cursor:pointer; margin-left:6px; }
-  .notes-btn:hover { background:#f5f3ff; }
-  .star-btn { color:#d1d5db; transition:color 0.12s; }
-  .star-btn:hover { color:#f59e0b; }
-  .notes-count { font-size:10px; background:#ede9fe; color:#7c3aed; border-radius:99px; padding:1px 5px; margin-left:3px; font-weight:700; }
+  .notes-btn { font-size:12px; padding:4px 12px; border-radius:8px; border:1.5px solid var(--blue); color:#7c3aed; background:white; cursor:pointer; margin-left:6px; }
+  .notes-btn:hover { background:var(--sky); }
+  .star-btn { color:var(--line); transition:color 0.12s; }
+  .star-btn:hover { color:var(--sun); }
+  .notes-count { font-size:10px; background:var(--blue-soft); color:#7c3aed; border-radius:99px; padding:1px 5px; margin-left:3px; font-weight:700; }
   .notes-modal { background:white; border-radius:16px; padding:1.5rem; width:520px; max-width:92vw; max-height:80vh; display:flex; flex-direction:column; }
-  .notes-item { padding:10px 0; border-bottom:1px solid #f3f4f6; }
+  .notes-item { padding:10px 0; border-bottom:1px solid var(--sky); }
   .notes-item:last-child { border-bottom:none; }
-  .notes-item-meta { font-size:11px; color:#9ca3af; margin-bottom:3px; font-weight:600; }
-  .notes-item-body { font-size:14px; color:#374151; line-height:1.55; white-space:pre-wrap; }
-  .notes-empty { color:#9ca3af; font-size:14px; text-align:center; padding:1.5rem 0; }
+  .notes-item-meta { font-size:11px; color:var(--ink-soft); margin-bottom:3px; font-weight:600; }
+  .notes-item-body { font-size:14px; color:var(--ink); line-height:1.55; white-space:pre-wrap; }
+  .notes-empty { color:var(--ink-soft); font-size:14px; text-align:center; padding:1.5rem 0; }
   .history-modal { background:white; border-radius:16px; padding:1.5rem; width:480px; max-width:92vw; max-height:80vh; display:flex; flex-direction:column; }
   .history-modal h3 { margin:0 0 1rem; font-size:16px; }
   .history-list { overflow-y:auto; flex:1; }
-  .history-row { display:flex; align-items:center; gap:8px; padding:9px 0; border-bottom:1px solid #f3f4f6; font-size:13px; }
+  .history-row { display:flex; align-items:center; gap:8px; padding:9px 0; border-bottom:1px solid var(--sky); font-size:13px; }
   .history-row:last-child { border-bottom:none; }
-  .role-badge-s { background:#f3f4f6; color:#374151; border:1.5px solid #e5e7eb; border-radius:99px; padding:1px 8px; font-size:11px; font-weight:600; }
-  .role-badge-t { background:#dbeafe; color:#1d4ed8; border:1.5px solid #93c5fd; border-radius:99px; padding:1px 8px; font-size:11px; font-weight:600; }
+  .role-badge-s { background:var(--sky); color:var(--ink); border:1.5px solid var(--line); border-radius:99px; padding:1px 8px; font-size:11px; font-weight:600; }
+  .role-badge-t { background:var(--blue-soft); color:#1d4ed8; border:1.5px solid #93c5fd; border-radius:99px; padding:1px 8px; font-size:11px; font-weight:600; }
 </style>
 
 <p id="admin-refresh-status" role="status" data-ready="{% trans 'Automatic updates every 20 seconds' %}" data-failed="{% trans 'Update failed. Retrying automatically.' %}" data-paused="{% trans 'Updates paused while you are editing or viewing details.' %}">{% trans "Automatic updates every 20 seconds" %}</p>
@@ -119,7 +119,7 @@
           {% if sd.obj.spanish_count  > 0 %}<span style="margin-right:6px;">🇪🇸 ES×{{ sd.obj.spanish_count }}</span>{% endif %}
           {% if sd.obj.japanese_count > 0 %}<span style="margin-right:6px;">🇯🇵 JA×{{ sd.obj.japanese_count }}</span>{% endif %}
         </td>
-        <td style="font-size:12px; color:#6b7280;">{{ sd.obj.note|default:"—" }}</td>
+        <td style="font-size:12px; color:var(--ink-soft);">{{ sd.obj.note|default:"—" }}</td>
         <td>
           <details class="session-attendees" id="session-attendees-{{ sd.obj.pk }}">
             <summary>★ {{ sd.obj.planned_count }} · {% trans "View attendees" %}</summary>
@@ -130,9 +130,9 @@
         </td>
         <td>
           {% if sd.obj.is_published %}
-            <span style="color:#16a34a; font-weight:700; font-size:12px;">✓ Live</span>
+            <span style="color:var(--ok); font-weight:700; font-size:12px;">✓ Live</span>
           {% else %}
-            <span style="color:#9ca3af; font-size:12px;">Draft</span>
+            <span style="color:var(--ink-soft); font-size:12px;">Draft</span>
           {% endif %}
         </td>
         <td style="white-space:nowrap;">
@@ -159,7 +159,7 @@
     </tbody>
   </table>
   {% else %}
-    <p style="color:#9ca3af; text-align:center; padding:1.5rem 0;">No upcoming sessions yet.</p>
+    <p style="color:var(--ink-soft); text-align:center; padding:1.5rem 0;">No upcoming sessions yet.</p>
   {% endif %}
 </div>
 
@@ -175,23 +175,23 @@
           <input type="hidden" name="date" id="sf-date" required>
           <div id="sf-cal-trigger"
                onclick="calToggle()"
-               style="width:100%; padding:8px 12px; border:1px solid #e5e7eb; border-radius:8px;
+               style="width:100%; padding:8px 12px; border:1px solid var(--line); border-radius:8px;
                       font-size:14px; box-sizing:border-box; cursor:pointer; background:#fff;
                       display:flex; align-items:center; justify-content:space-between; user-select:none;">
-            <span id="sf-cal-label" style="color:#9ca3af;">日付を選択</span>
-            <span style="color:#9ca3af;">▼</span>
+            <span id="sf-cal-label" style="color:var(--ink-soft);">日付を選択</span>
+            <span style="color:var(--ink-soft);">▼</span>
           </div>
-          <div id="sf-cal-popup" style="display:none; margin-top:6px; border:1px solid #e5e7eb;
+          <div id="sf-cal-popup" style="display:none; margin-top:6px; border:1px solid var(--line);
                border-radius:12px; overflow:hidden; background:#fff; box-shadow:0 4px 16px rgba(0,0,0,0.1);">
             <div style="display:flex; align-items:center; justify-content:space-between;
-                        padding:10px 14px; background:#6366f1; color:#fff;">
+                        padding:10px 14px; background:var(--blue); color:#fff;">
               <button type="button" onclick="calPrev()" style="background:none;border:none;color:#fff;font-size:18px;cursor:pointer;padding:0 4px;">‹</button>
               <span id="sf-cal-month" style="font-size:14px; font-weight:700;"></span>
               <button type="button" onclick="calNext()" style="background:none;border:none;color:#fff;font-size:18px;cursor:pointer;padding:0 4px;">›</button>
             </div>
             <div style="display:grid; grid-template-columns:repeat(7,1fr); text-align:center;
                         padding:8px 6px 4px; gap:0;">
-              {% for d in "SMTWTFS" %}<span style="font-size:11px;font-weight:700;color:#9ca3af;padding:4px 0;">{{ d }}</span>{% endfor %}
+              {% for d in "SMTWTFS" %}<span style="font-size:11px;font-weight:700;color:var(--ink-soft);padding:4px 0;">{{ d }}</span>{% endfor %}
             </div>
             <div id="sf-cal-days" style="display:grid; grid-template-columns:repeat(7,1fr);
                  text-align:center; padding:0 6px 10px; gap:2px;"></div>
@@ -201,43 +201,43 @@
           <div>
             <label style="font-size:13px; font-weight:600; display:block; margin-bottom:4px;">Start time (CET/CEST)</label>
             <input type="time" name="start_time" id="sf-start" required
-              style="width:100%; padding:8px; border:1px solid #e5e7eb; border-radius:8px; font-size:14px; box-sizing:border-box;">
+              style="width:100%; padding:8px; border:1px solid var(--line); border-radius:8px; font-size:14px; box-sizing:border-box;">
           </div>
           <div>
             <label style="font-size:13px; font-weight:600; display:block; margin-bottom:4px;">End time (CET/CEST)</label>
             <input type="time" name="end_time" id="sf-end" required
-              style="width:100%; padding:8px; border:1px solid #e5e7eb; border-radius:8px; font-size:14px; box-sizing:border-box;">
+              style="width:100%; padding:8px; border:1px solid var(--line); border-radius:8px; font-size:14px; box-sizing:border-box;">
           </div>
         </div>
         <div>
           <label style="font-size:13px; font-weight:600; display:block; margin-bottom:8px;">Tutors per language</label>
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
             <div>
-              <label style="font-size:12px; color:#6b7280;">🇬🇧 English</label>
+              <label style="font-size:12px; color:var(--ink-soft);">🇬🇧 English</label>
               <input type="number" name="english_count" id="sf-en" min="0" value="0"
-                style="width:100%; padding:6px; border:1px solid #e5e7eb; border-radius:6px; font-size:14px; box-sizing:border-box;">
+                style="width:100%; padding:6px; border:1px solid var(--line); border-radius:6px; font-size:14px; box-sizing:border-box;">
             </div>
             <div>
-              <label style="font-size:12px; color:#6b7280;">🇫🇷 French</label>
+              <label style="font-size:12px; color:var(--ink-soft);">🇫🇷 French</label>
               <input type="number" name="french_count" id="sf-fr" min="0" value="0"
-                style="width:100%; padding:6px; border:1px solid #e5e7eb; border-radius:6px; font-size:14px; box-sizing:border-box;">
+                style="width:100%; padding:6px; border:1px solid var(--line); border-radius:6px; font-size:14px; box-sizing:border-box;">
             </div>
             <div>
-              <label style="font-size:12px; color:#6b7280;">🇪🇸 Spanish</label>
+              <label style="font-size:12px; color:var(--ink-soft);">🇪🇸 Spanish</label>
               <input type="number" name="spanish_count" id="sf-es" min="0" value="0"
-                style="width:100%; padding:6px; border:1px solid #e5e7eb; border-radius:6px; font-size:14px; box-sizing:border-box;">
+                style="width:100%; padding:6px; border:1px solid var(--line); border-radius:6px; font-size:14px; box-sizing:border-box;">
             </div>
             <div>
-              <label style="font-size:12px; color:#6b7280;">🇯🇵 Japanese</label>
+              <label style="font-size:12px; color:var(--ink-soft);">🇯🇵 Japanese</label>
               <input type="number" name="japanese_count" id="sf-ja" min="0" value="0"
-                style="width:100%; padding:6px; border:1px solid #e5e7eb; border-radius:6px; font-size:14px; box-sizing:border-box;">
+                style="width:100%; padding:6px; border:1px solid var(--line); border-radius:6px; font-size:14px; box-sizing:border-box;">
             </div>
           </div>
         </div>
         <div>
           <label style="font-size:13px; font-weight:600; display:block; margin-bottom:4px;">Note (optional)</label>
           <input type="text" name="note" id="sf-note" maxlength="500" placeholder="e.g. Special event"
-            style="width:100%; padding:8px; border:1px solid #e5e7eb; border-radius:8px; font-size:14px; box-sizing:border-box;">
+            style="width:100%; padding:8px; border:1px solid var(--line); border-radius:8px; font-size:14px; box-sizing:border-box;">
         </div>
         <div style="display:flex; align-items:center; gap:8px;">
           <input type="checkbox" name="is_published" id="sf-published" style="width:16px; height:16px;">
@@ -264,20 +264,20 @@
     </div>
     <div style="display:flex; align-items:center; gap:8px;">
       <button id="star-filter-btn" onclick="toggleStarFilter(this)"
-        style="padding:7px 14px; border:1.5px solid #e5e7eb; border-radius:99px;
+        style="padding:7px 14px; border:1.5px solid var(--line); border-radius:99px;
                font-size:13px; background:#fff; cursor:pointer; transition:all 0.15s;
-               color:#6b7280; font-weight:600;">
+               color:var(--ink-soft); font-weight:600;">
         ☆ Starred
       </button>
       <button id="language-tutor-filter-btn" onclick="toggleLanguageTutorFilter(this)"
-        style="padding:7px 14px; border:1.5px solid #e5e7eb; border-radius:99px;
+        style="padding:7px 14px; border:1.5px solid var(--line); border-radius:99px;
                font-size:13px; background:#fff; cursor:pointer; transition:all 0.15s;
-               color:#6b7280; font-weight:600;">
+               color:var(--ink-soft); font-weight:600;">
         🏷 Tutors with languages
       </button>
       <input type="text" id="user-search" placeholder="🔍 Search by username…"
              oninput="filterUsers(this.value)"
-             style="padding:7px 14px; border:1.5px solid #e5e7eb; border-radius:99px;
+             style="padding:7px 14px; border:1.5px solid var(--line); border-radius:99px;
                     font-size:13px; outline:none; width:200px; transition:border-color 0.15s;"
              onfocus="this.style.borderColor='#6366f1'" onblur="this.style.borderColor='#e5e7eb'">
     </div>
@@ -313,11 +313,11 @@
         <td>
           <button class="star-btn" id="star-{{ u.id }}" onclick="toggleStar({{ u.id }})"
             title="{% if u.userprofile.is_starred %}Unstar{% else %}Star{% endif %}"
-            style="background:none; border:none; cursor:pointer; font-size:16px; padding:0 4px 0 0; vertical-align:middle; line-height:1;{% if u.userprofile.is_starred %} color:#f59e0b;{% endif %}">{% if u.userprofile.is_starred %}★{% else %}☆{% endif %}</button>{{ u|display_name }}
-          {% if u.first_name and not u|has_generated_username %}<br><span style="font-size:11px; color:#9ca3af; margin-left:20px;">{{ u.first_name }}</span>{% endif %}
-          {% if u.userprofile.referral_source %}<br><span style="font-size:11px; color:#6366f1; margin-left:20px;" title="{{ u.userprofile.referral_source }}">📍 {{ u.userprofile.referral_source|truncatechars:30 }}</span>{% endif %}
+            style="background:none; border:none; cursor:pointer; font-size:16px; padding:0 4px 0 0; vertical-align:middle; line-height:1;{% if u.userprofile.is_starred %} color:var(--sun);{% endif %}">{% if u.userprofile.is_starred %}★{% else %}☆{% endif %}</button>{{ u|display_name }}
+          {% if u.first_name and not u|has_generated_username %}<br><span style="font-size:11px; color:var(--ink-soft); margin-left:20px;">{{ u.first_name }}</span>{% endif %}
+          {% if u.userprofile.referral_source %}<br><span style="font-size:11px; color:var(--blue); margin-left:20px;" title="{{ u.userprofile.referral_source }}">📍 {{ u.userprofile.referral_source|truncatechars:30 }}</span>{% endif %}
         </td>
-        <td style="font-size:12px; color:#6b7280; max-width:160px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ u.email|default:"—" }}</td>
+        <td style="font-size:12px; color:var(--ink-soft); max-width:160px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ u.email|default:"—" }}</td>
         <td>
           {% if u.is_staff %}
             <span class="role-admin">Admin</span>
@@ -345,7 +345,7 @@
           {% if u.gold_membership.is_active %}
             <span style="font-size:13px; font-weight:700; color:#b45309;">&#x1F451; {{ u.gold_membership.expires_at|date:"m/d" }}まで</span>
           {% elif u.gold_membership %}
-            <span style="font-size:12px; color:#9ca3af;">期限切れ</span>
+            <span style="font-size:12px; color:var(--ink-soft);">期限切れ</span>
           {% else %}
             <span class="pt-none">—</span>
           {% endif %}
@@ -391,7 +391,7 @@
             <form method="post" action="{% url 'grant_gold' u.id %}" style="display:inline;"
                   onsubmit="return confirm('Grant Gold 30 days to {{ u|display_name|escapejs }}?')">
               {% csrf_token %}
-              <button type="submit" class="edit-btn" style="border-color:#f59e0b;color:#b45309;" title="Grant Gold 30 days">&#x1F451;</button>
+              <button type="submit" class="edit-btn" style="border-color:var(--sun);color:#b45309;" title="Grant Gold 30 days">&#x1F451;</button>
             </form>
           {% endif %}
           {% if u != request.user %}
@@ -409,11 +409,11 @@
         <td>
           <button class="star-btn" id="star-{{ u.id }}" onclick="toggleStar({{ u.id }})"
             title="{% if u.userprofile.is_starred %}Unstar{% else %}Star{% endif %}"
-            style="background:none; border:none; cursor:pointer; font-size:16px; padding:0 4px 0 0; vertical-align:middle; line-height:1;{% if u.userprofile.is_starred %} color:#f59e0b;{% endif %}">{% if u.userprofile.is_starred %}★{% else %}☆{% endif %}</button>{{ u|display_name }}
-          {% if u.first_name and not u|has_generated_username %}<br><span style="font-size:11px; color:#9ca3af; margin-left:20px;">{{ u.first_name }}</span>{% endif %}
-          {% if u.userprofile.referral_source %}<br><span style="font-size:11px; color:#6366f1; margin-left:20px;" title="{{ u.userprofile.referral_source }}">📍 {{ u.userprofile.referral_source|truncatechars:30 }}</span>{% endif %}
+            style="background:none; border:none; cursor:pointer; font-size:16px; padding:0 4px 0 0; vertical-align:middle; line-height:1;{% if u.userprofile.is_starred %} color:var(--sun);{% endif %}">{% if u.userprofile.is_starred %}★{% else %}☆{% endif %}</button>{{ u|display_name }}
+          {% if u.first_name and not u|has_generated_username %}<br><span style="font-size:11px; color:var(--ink-soft); margin-left:20px;">{{ u.first_name }}</span>{% endif %}
+          {% if u.userprofile.referral_source %}<br><span style="font-size:11px; color:var(--blue); margin-left:20px;" title="{{ u.userprofile.referral_source }}">📍 {{ u.userprofile.referral_source|truncatechars:30 }}</span>{% endif %}
         </td>
-        <td style="font-size:12px; color:#6b7280; max-width:160px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ u.email|default:"—" }}</td>
+        <td style="font-size:12px; color:var(--ink-soft); max-width:160px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ u.email|default:"—" }}</td>
         <td>
           {% if u.is_staff %}<span class="role-admin">Admin</span>
           {% elif u.tutorprofile %}<span class="role-tutor">Tutor</span>
@@ -433,7 +433,7 @@
         </td>
         <td>
           {% if u.gold_membership.is_active %}<span style="font-size:13px; font-weight:700; color:#b45309;">&#x1F451; {{ u.gold_membership.expires_at|date:"m/d" }}まで</span>
-          {% elif u.gold_membership %}<span style="font-size:12px; color:#9ca3af;">期限切れ</span>
+          {% elif u.gold_membership %}<span style="font-size:12px; color:var(--ink-soft);">期限切れ</span>
           {% else %}<span class="pt-none">—</span>{% endif %}
         </td>
         <td>
@@ -467,7 +467,7 @@
           {% else %}
             <form method="post" action="{% url 'grant_gold' u.id %}" style="display:inline;" onsubmit="return confirm('Grant Gold 30 days to {{ u|display_name|escapejs }}?')">
               {% csrf_token %}
-              <button type="submit" class="edit-btn" style="border-color:#f59e0b;color:#b45309;" title="Grant Gold 30 days">&#x1F451;</button>
+              <button type="submit" class="edit-btn" style="border-color:var(--sun);color:#b45309;" title="Grant Gold 30 days">&#x1F451;</button>
             </form>
           {% endif %}
           {% if u != request.user %}
@@ -484,29 +484,29 @@
 </div>
 
 <!-- Online Tutors by Language -->
-<div class="card admin-section" style="border:2px solid {% if online_by_language_list %}#a5b4fc{% else %}#e5e7eb{% endif %};">
+<div class="card admin-section" style="border:2px solid {% if online_by_language_list %}var(--line){% else %}var(--line){% endif %};">
   <div style="display:flex; align-items:center; gap:10px; margin-bottom:{% if online_by_language_list %}14px{% else %}0{% endif %};">
     {% if online_by_language_list %}
-      <span style="width:10px;height:10px;border-radius:50%;background:#6366f1;display:inline-block;animation:live-ping 1.4s ease-in-out infinite;"></span>
-      <h2 style="margin:0; color:#3730a3;">🎓 Tutors Online — {{ online_tutors_count }} tutor{{ online_tutors_count|pluralize }}</h2>
+      <span style="width:10px;height:10px;border-radius:50%;background:var(--blue);display:inline-block;animation:live-ping 1.4s ease-in-out infinite;"></span>
+      <h2 style="margin:0; color:var(--ink);">🎓 Tutors Online — {{ online_tutors_count }} tutor{{ online_tutors_count|pluralize }}</h2>
     {% else %}
-      <h2 style="margin:0; color:#9ca3af; font-size:15px;">🎓 Tutors Online — No tutors available</h2>
+      <h2 style="margin:0; color:var(--ink-soft); font-size:15px;">🎓 Tutors Online — No tutors available</h2>
     {% endif %}
   </div>
   {% if online_by_language_list %}
   <div style="display:flex; flex-wrap:wrap; gap:16px;">
     {% for lang_name, tutor_list in online_by_language_list %}
-    <div style="background:#eef2ff; border:1px solid #c7d2fe; border-radius:12px; padding:12px 16px; min-width:180px;">
+    <div style="background:var(--blue-soft); border:1px solid var(--line); border-radius:12px; padding:12px 16px; min-width:180px;">
       <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
         {% if lang_name == 'English' %}<span class="lang-tag tag-en">{{ lang_name }}</span>
         {% elif lang_name == 'French' %}<span class="lang-tag tag-fr">{{ lang_name }}</span>
         {% elif lang_name == 'Spanish' %}<span class="lang-tag tag-es">{{ lang_name }}</span>
         {% elif lang_name == 'Japanese' %}<span class="lang-tag tag-ja">{{ lang_name }}</span>
         {% else %}<span class="lang-tag tag-default">{{ lang_name }}</span>{% endif %}
-        <span style="font-size:12px; color:#3730a3; font-weight:700;">{{ tutor_list|length }} online</span>
+        <span style="font-size:12px; color:var(--ink); font-weight:700;">{{ tutor_list|length }} online</span>
       </div>
       {% for tutor in tutor_list %}
-      <div style="display:flex; align-items:center; justify-content:space-between; font-size:13px; padding:3px 0; border-top:1px solid #c7d2fe;">
+      <div style="display:flex; align-items:center; justify-content:space-between; font-size:13px; padding:3px 0; border-top:1px solid var(--line);">
         <span style="font-weight:600;">{{ tutor.user|display_name }}</span>
         {% if tutor.last_ping_at %}
         <span style="color:#78716c; font-size:11px;">{{ tutor.last_ping_at|date:"H:i" }}</span>
@@ -520,13 +520,13 @@
 </div>
 
 <!-- Live Now -->
-<div class="card admin-section" style="border:2px solid {% if live_matches %}#86efac{% else %}#e5e7eb{% endif %};">
+<div class="card admin-section" style="border:2px solid {% if live_matches %}#86efac{% else %}var(--line){% endif %};">
   <div style="display:flex; align-items:center; gap:10px; margin-bottom:{% if live_matches %}14px{% else %}0{% endif %};">
     {% if live_matches %}
       <span class="live-dot"></span>
       <h2 style="margin:0; color:#166534;">Live Now — {{ live_matches|length }} session{{ live_matches|length|pluralize }}</h2>
     {% else %}
-      <h2 style="margin:0; color:#9ca3af; font-size:15px;">🔴 Live Now — No active sessions</h2>
+      <h2 style="margin:0; color:var(--ink-soft); font-size:15px;">🔴 Live Now — No active sessions</h2>
     {% endif %}
   </div>
   {% if live_matches %}
@@ -550,7 +550,7 @@
           {% endwith %}
         </td>
         <td style="font-size:12px;">{{ match.started_at|date:"H:i" }}</td>
-        <td style="font-size:12px; color:#16a34a; font-weight:600;">{{ match.end_at|date:"H:i" }}</td>
+        <td style="font-size:12px; color:var(--ok); font-weight:600;">{{ match.end_at|date:"H:i" }}</td>
       </tr>
       {% endfor %}
     </tbody>
@@ -590,14 +590,14 @@
         </td>
         <td style="font-size:13px;">
           {% if match.student_rating %}
-            <span style="color:#f59e0b;font-weight:700;">{{ match.student_rating }} ★</span>
-            {% if match.student_feedback %}<span style="font-size:11px; color:#6b7280; margin-left:4px;">💬</span>{% endif %}
+            <span style="color:var(--sun);font-weight:700;">{{ match.student_rating }} ★</span>
+            {% if match.student_feedback %}<span style="font-size:11px; color:var(--ink-soft); margin-left:4px;">💬</span>{% endif %}
           {% else %}
             <span class="pt-none">—</span>
           {% endif %}
         </td>
-        <td style="font-size:12px; color:#6b7280;">{{ match.started_at|date:"Y-m-d H:i" }}</td>
-        <td style="font-size:12px; color:#6b7280;">{% if match.end_at %}{{ match.end_at|date:"H:i" }}{% else %}<span class="pt-none">—</span>{% endif %}</td>
+        <td style="font-size:12px; color:var(--ink-soft);">{{ match.started_at|date:"Y-m-d H:i" }}</td>
+        <td style="font-size:12px; color:var(--ink-soft);">{% if match.end_at %}{{ match.end_at|date:"H:i" }}{% else %}<span class="pt-none">—</span>{% endif %}</td>
         <td>
           <a class="notes-btn" href="{% url 'admin_match_lesson_records' match.id %}">{% trans "All lesson notes" %}</a>
         </td>
@@ -619,14 +619,14 @@
         </td>
         <td style="font-size:13px;">
           {% if match.student_rating %}
-            <span style="color:#f59e0b;font-weight:700;">{{ match.student_rating }} ★</span>
-            {% if match.student_feedback %}<span style="font-size:11px; color:#6b7280; margin-left:4px;">💬</span>{% endif %}
+            <span style="color:var(--sun);font-weight:700;">{{ match.student_rating }} ★</span>
+            {% if match.student_feedback %}<span style="font-size:11px; color:var(--ink-soft); margin-left:4px;">💬</span>{% endif %}
           {% else %}
             <span class="pt-none">—</span>
           {% endif %}
         </td>
-        <td style="font-size:12px; color:#6b7280;">{{ match.started_at|date:"Y-m-d H:i" }}</td>
-        <td style="font-size:12px; color:#6b7280;">{% if match.end_at %}{{ match.end_at|date:"H:i" }}{% else %}<span class="pt-none">—</span>{% endif %}</td>
+        <td style="font-size:12px; color:var(--ink-soft);">{{ match.started_at|date:"Y-m-d H:i" }}</td>
+        <td style="font-size:12px; color:var(--ink-soft);">{% if match.end_at %}{{ match.end_at|date:"H:i" }}{% else %}<span class="pt-none">—</span>{% endif %}</td>
         <td>
           <a class="notes-btn" href="{% url 'admin_match_lesson_records' match.id %}">{% trans "All lesson notes" %}</a>
         </td>
@@ -635,7 +635,7 @@
     </tbody>
   </table>
   {% else %}
-    <p style="color:#9ca3af; text-align:center; padding:1.5rem 0;">No match history yet.</p>
+    <p style="color:var(--ink-soft); text-align:center; padding:1.5rem 0;">No match history yet.</p>
   {% endif %}
 </div>
 
@@ -661,29 +661,29 @@
       {% for wr in withdrawal_requests %}
       <tr>
         <td><strong>{{ wr.user|display_name }}</strong></td>
-        <td style="color:#6b7280;">{{ wr.points }} pt</td>
+        <td style="color:var(--ink-soft);">{{ wr.points }} pt</td>
         <td style="color:#d97706;">{% if wr.fee %}-{{ wr.fee }} pt{% else %}—{% endif %}</td>
-        <td><strong style="color:#16a34a;">{{ wr.net_points }} pt</strong></td>
+        <td><strong style="color:var(--ok);">{{ wr.net_points }} pt</strong></td>
         <td>{{ wr.currency }}</td>
         <td>{{ wr.get_payment_method_display }}</td>
-        <td style="font-size:12px; color:#374151; max-width:180px; word-break:break-all;">{{ wr.payment_details }}</td>
+        <td style="font-size:12px; color:var(--ink); max-width:180px; word-break:break-all;">{{ wr.payment_details }}</td>
         <td>
           {% if wr.status == 'pending' %}
-            <span style="background:#fef9c3;color:#854d0e;border:1.5px solid #fde047;border-radius:99px;padding:2px 10px;font-size:12px;">Pending</span>
+            <span style="background:var(--sun-soft);color:#854d0e;border:1.5px solid #fde047;border-radius:99px;padding:2px 10px;font-size:12px;">Pending</span>
           {% elif wr.status == 'paid' %}
-            <span style="background:#dcfce7;color:#166534;border:1.5px solid #86efac;border-radius:99px;padding:2px 10px;font-size:12px;">Paid</span>
+            <span style="background:var(--ok-soft);color:#166534;border:1.5px solid #86efac;border-radius:99px;padding:2px 10px;font-size:12px;">Paid</span>
           {% else %}
-            <span style="background:#fee2e2;color:#991b1b;border:1.5px solid #fca5a5;border-radius:99px;padding:2px 10px;font-size:12px;">Rejected</span>
+            <span style="background:var(--bad-soft);color:#991b1b;border:1.5px solid #fca5a5;border-radius:99px;padding:2px 10px;font-size:12px;">Rejected</span>
           {% endif %}
         </td>
-        <td style="font-size:12px;color:#6b7280;">{{ wr.created_at|date:"m/d H:i" }}</td>
+        <td style="font-size:12px;color:var(--ink-soft);">{{ wr.created_at|date:"m/d H:i" }}</td>
         <td style="white-space:nowrap;">
           {% if wr.status == 'pending' %}
             <form method="post" action="{% url 'process_withdrawal' wr.id %}" style="display:inline;"
                   onsubmit="return confirm('Mark as PAID for {{ wr.user|display_name|escapejs }}?')">
               {% csrf_token %}
               <input type="hidden" name="action" value="paid">
-              <button type="submit" class="edit-btn" style="border-color:#16a34a;color:#16a34a;">✓ Paid</button>
+              <button type="submit" class="edit-btn" style="border-color:var(--ok);color:var(--ok);">✓ Paid</button>
             </form>
             <form method="post" action="{% url 'process_withdrawal' wr.id %}" style="display:inline;"
                   onsubmit="return confirm('Reject and return points to {{ wr.user|display_name|escapejs }}?')">
@@ -698,7 +698,7 @@
     </tbody>
   </table>
   {% else %}
-    <p style="color:#9ca3af;text-align:center;padding:1.5rem 0;">No withdrawal requests yet.</p>
+    <p style="color:var(--ink-soft);text-align:center;padding:1.5rem 0;">No withdrawal requests yet.</p>
   {% endif %}
 </div>
 
@@ -718,13 +718,13 @@
       {% for gr in gold_requests %}
       <tr>
         <td><strong>{{ gr.user|display_name }}</strong></td>
-        <td style="font-size:12px;color:#6b7280;">{{ gr.created_at|date:"Y-m-d H:i" }}</td>
+        <td style="font-size:12px;color:var(--ink-soft);">{{ gr.created_at|date:"Y-m-d H:i" }}</td>
         <td>
           <form method="post" action="{% url 'grant_gold' gr.user.id %}"
                 style="display:inline;"
                 onsubmit="return confirm('Grant Gold 30 days to {{ gr.user|display_name|escapejs }}?')">
             {% csrf_token %}
-            <button type="submit" class="edit-btn" style="border-color:#f59e0b;color:#b45309;font-weight:700;">
+            <button type="submit" class="edit-btn" style="border-color:var(--sun);color:#b45309;font-weight:700;">
               &#x1F451; Activate 30 days
             </button>
           </form>
@@ -734,7 +734,7 @@
     </tbody>
   </table>
   {% else %}
-    <p style="color:#9ca3af;text-align:center;padding:1.5rem 0;">No pending Gold requests.</p>
+    <p style="color:var(--ink-soft);text-align:center;padding:1.5rem 0;">No pending Gold requests.</p>
   {% endif %}
 </div>
 
@@ -768,7 +768,7 @@
         {{ lang.name }}
       </label>
       {% endfor %}
-      <label class="lang-checkbox" style="margin-top:10px; border-top:1px solid #e5e7eb; padding-top:10px;">
+      <label class="lang-checkbox" style="margin-top:10px; border-top:1px solid var(--line); padding-top:10px;">
         <input type="checkbox" name="is_hourly_paid" id="is-hourly-paid">
         Hourly paid tutor
       </label>
@@ -786,36 +786,36 @@
       {% csrf_token %}
 
       <!-- Student points -->
-      <div style="margin-bottom:16px; padding:12px; background:#f9fafb; border-radius:10px; border:1px solid #e5e7eb;">
+      <div style="margin-bottom:16px; padding:12px; background:var(--sky); border-radius:10px; border:1px solid var(--line);">
         <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px;">
-          <label style="font-size:13px; font-weight:700; color:#4338ca;">🎓 Student points</label>
-          <span style="font-size:12px; color:#6b7280;">Current: <strong id="pts-student-current">—</strong> pt</span>
+          <label style="font-size:13px; font-weight:700; color:var(--blue-deep);">🎓 Student points</label>
+          <span style="font-size:12px; color:var(--ink-soft);">Current: <strong id="pts-student-current">—</strong> pt</span>
         </div>
         <div style="display:flex; align-items:center; gap:10px;">
           <input type="number" name="student_points_delta" id="pts-student-input" step="1" value="0"
                  oninput="updatePointsPreview()"
-                 style="flex:1; padding:9px 12px; border:1.5px solid #c7d2fe; border-radius:8px; font-size:15px; box-sizing:border-box; text-align:center;">
-          <span style="font-size:13px; color:#6b7280; white-space:nowrap;">→ <strong id="pts-student-after" style="color:#4338ca;">—</strong> pt</span>
+                 style="flex:1; padding:9px 12px; border:1.5px solid var(--line); border-radius:8px; font-size:15px; box-sizing:border-box; text-align:center;">
+          <span style="font-size:13px; color:var(--ink-soft); white-space:nowrap;">→ <strong id="pts-student-after" style="color:var(--blue-deep);">—</strong> pt</span>
         </div>
-        <p style="font-size:11px; color:#9ca3af; margin:5px 0 0;">正の値で加算、負の値で減算（例: -5）</p>
+        <p style="font-size:11px; color:var(--ink-soft); margin:5px 0 0;">正の値で加算、負の値で減算（例: -5）</p>
       </div>
 
       <!-- Teacher points -->
       <div style="margin-bottom:16px; padding:12px; background:#f0fdf4; border-radius:10px; border:1px solid #a7f3d0;">
         <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px;">
           <label style="font-size:13px; font-weight:700; color:#047857;">👨‍🏫 Teacher points</label>
-          <span style="font-size:12px; color:#6b7280;">Current: <strong id="pts-teacher-current">—</strong> pt</span>
+          <span style="font-size:12px; color:var(--ink-soft);">Current: <strong id="pts-teacher-current">—</strong> pt</span>
         </div>
         <div style="display:flex; align-items:center; gap:10px;">
           <input type="number" name="teacher_points_delta" id="pts-teacher-input" step="1" value="0"
                  oninput="updatePointsPreview()"
                  style="flex:1; padding:9px 12px; border:1.5px solid #a7f3d0; border-radius:8px; font-size:15px; box-sizing:border-box; text-align:center;">
-          <span style="font-size:13px; color:#6b7280; white-space:nowrap;">→ <strong id="pts-teacher-after" style="color:#047857;">—</strong> pt</span>
+          <span style="font-size:13px; color:var(--ink-soft); white-space:nowrap;">→ <strong id="pts-teacher-after" style="color:#047857;">—</strong> pt</span>
         </div>
-        <p style="font-size:11px; color:#9ca3af; margin:5px 0 0;">正の値で加算、負の値で減算（例: -5）</p>
+        <p style="font-size:11px; color:var(--ink-soft); margin:5px 0 0;">正の値で加算、負の値で減算（例: -5）</p>
       </div>
 
-      <button type="submit" class="save-btn" style="background:#6366f1;">Save</button>
+      <button type="submit" class="save-btn" style="background:var(--blue);">Save</button>
     </form>
     <button class="cancel-btn" onclick="closePointsModal()">Cancel</button>
   </div>
@@ -976,10 +976,10 @@
       const stars = fb.rating
         ? '★'.repeat(fb.rating) + '☆'.repeat(5 - fb.rating)
         : '—';
-      html += `<div class="notes-item" style="border-left:3px solid #f59e0b;">
+      html += `<div class="notes-item" style="border-left:3px solid var(--sun);">
         <div class="notes-item-meta" style="color:#b45309;">⭐ Student rating</div>
-        <div class="notes-item-body" style="font-size:18px; letter-spacing:2px; color:#f59e0b; margin-bottom:${fb.feedback ? '6px' : '0'};">${stars}</div>
-        ${fb.feedback ? `<div class="notes-item-body" style="font-size:13px; color:#374151; white-space:pre-wrap;">${fb.feedback.replace(/</g,'&lt;')}</div>` : ''}
+        <div class="notes-item-body" style="font-size:18px; letter-spacing:2px; color:var(--sun); margin-bottom:${fb.feedback ? '6px' : '0'};">${stars}</div>
+        ${fb.feedback ? `<div class="notes-item-body" style="font-size:13px; color:var(--ink); white-space:pre-wrap;">${fb.feedback.replace(/</g,'&lt;')}</div>` : ''}
       </div>`;
     }
 
@@ -1017,7 +1017,7 @@
     const entries = USER_MATCHES[userId] || [];
 
     if (entries.length === 0) {
-      list.innerHTML = '<p style="color:#9ca3af;text-align:center;padding:1.5rem 0;">No lessons yet.</p>';
+      list.innerHTML = '<p style="color:var(--ink-soft);text-align:center;padding:1.5rem 0;">No lessons yet.</p>';
     } else {
       list.innerHTML = entries.map(e => {
         const roleClass = e.role === 'tutor' ? 'role-badge-t' : 'role-badge-s';
@@ -1027,7 +1027,7 @@
           <span class="${roleClass}">${roleLabel}</span>
           <span style="flex:1;font-weight:500;">🤝 ${e.partner}</span>
           <span class="lang-tag ${langClass}" style="margin:0;">${e.language}</span>
-          <span style="color:#9ca3af;font-size:11px;white-space:nowrap;">${e.date}</span>
+          <span style="color:var(--ink-soft);font-size:11px;white-space:nowrap;">${e.date}</span>
         </div>`;
       }).join('');
     }

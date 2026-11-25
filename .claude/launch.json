@@ -4,8 +4,22 @@
     {
       "name": "banner-preview",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "8888"],
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8888"
+      ],
       "port": 8888
+    },
+    {
+      "name": "django",
+      "runtimeExecutable": ".venv/bin/python",
+      "runtimeArgs": [
+        "manage.py",
+        "runserver",
+        "8000"
+      ],
+      "port": 8000
     }
   ]
 }

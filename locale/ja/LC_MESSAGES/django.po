@@ -1686,6 +1686,49 @@ msgid ""
 "this page."
 msgstr "サーバーとの通信が途切れています。再接続中です。改善しない場合は、このページを再読み込みしてください。"
 
+
+#: templates/base.html
+msgid "Home"
+msgstr "ホーム"
+
+#: templates/base.html
+msgid "Talk"
+msgstr "話す"
+
+#: templates/base.html
+msgid "Review"
+msgstr "復習"
+
+#: templates/base.html
+msgid "History"
+msgstr "履歴"
+
+#: templates/base.html
+msgid "Me"
+msgstr "マイページ"
+
+#: templates/base.html
+msgid "Navigation"
+msgstr "ナビゲーション"
+
+#: templates/base.html
+msgid "My Point"
+msgstr "マイポイント"
+
+#: templates/base.html
+msgid "Five minutes is enough to start talking."
+msgstr "5分あれば、話しはじめられる。"
+
+
+#: templates/core/home.html
+msgid "Upcoming Sessions"
+msgstr "今後のセッション"
+
+#: templates/core/home.html
+#, python-format
+msgid "Hello, <b>%(name)s</b>!"
+msgstr "こんにちは、<b>%(name)s</b>さん！"
+
 #~ msgid "Step 1"
 #~ msgstr "ステップ1"
 

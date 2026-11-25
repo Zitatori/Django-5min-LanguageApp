@@ -1816,6 +1816,49 @@ msgstr ""
 "Se perdió la conexión con el servidor. Reconectando… Si el problema "
 "continúa, vuelve a cargar esta página."
 
+
+#: templates/base.html
+msgid "Home"
+msgstr "Inicio"
+
+#: templates/base.html
+msgid "Talk"
+msgstr "Hablar"
+
+#: templates/base.html
+msgid "Review"
+msgstr "Repasar"
+
+#: templates/base.html
+msgid "History"
+msgstr "Historial"
+
+#: templates/base.html
+msgid "Me"
+msgstr "Yo"
+
+#: templates/base.html
+msgid "Navigation"
+msgstr "Navegación"
+
+#: templates/base.html
+msgid "My Point"
+msgstr "Mis puntos"
+
+#: templates/base.html
+msgid "Five minutes is enough to start talking."
+msgstr "Cinco minutos bastan para empezar a hablar."
+
+
+#: templates/core/home.html
+msgid "Upcoming Sessions"
+msgstr "Próximas sesiones"
+
+#: templates/core/home.html
+#, python-format
+msgid "Hello, <b>%(name)s</b>!"
+msgstr "¡Hola, <b>%(name)s</b>!"
+
 #~ msgid "Step 1"
 #~ msgstr "Paso 1"
 

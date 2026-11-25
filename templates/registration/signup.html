@@ -36,18 +36,18 @@
     </button>
   </form>
 
-  <p style="margin-top:16px; text-align:center; font-size:14px; color:#6b7280;">
+  <p style="margin-top:16px; text-align:center; font-size:14px; color:var(--ink-soft);">
     {% trans "Already have an account?" %}
-    <a href="{% url 'login' %}" style="color:#6366f1; font-weight:600;">{% trans "Log in here" %}</a>
+    <a href="{% url 'login' %}" style="color:var(--blue); font-weight:600;">{% trans "Log in here" %}</a>
   </p>
 </div>
 
 <style>
   #id_learning_languages { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
-  #id_learning_languages label { display: flex; align-items: center; gap: 8px; min-height: 48px; padding: 8px 12px; box-sizing: border-box; border: 1.5px solid #c7d2fe; border-radius: 10px; cursor: pointer; background: #eef2ff; overflow-wrap: anywhere; }
-  #id_learning_languages input { accent-color: #4f46e5; width: 18px; height: 18px; flex-shrink: 0; }
-  #id_learning_languages label:has(input:checked) { border-color: #4f46e5; background: #e0e7ff; }
-  #id_learning_languages label:focus-within { outline: 2px solid #4f46e5; outline-offset: 2px; }
+  #id_learning_languages label { display: flex; align-items: center; gap: 8px; min-height: 48px; padding: 8px 12px; box-sizing: border-box; border: 1.5px solid var(--line); border-radius: 10px; cursor: pointer; background: var(--blue-soft); overflow-wrap: anywhere; }
+  #id_learning_languages input { accent-color: var(--blue-deep); width: 18px; height: 18px; flex-shrink: 0; }
+  #id_learning_languages label:has(input:checked) { border-color: var(--blue-deep); background: var(--blue-soft); }
+  #id_learning_languages label:focus-within { outline: 2px solid var(--blue-deep); outline-offset: 2px; }
   @media (max-width: 360px) { #id_learning_languages { grid-template-columns: 1fr; } }
   .signup-field {
     margin-bottom: 18px;
@@ -56,7 +56,7 @@
     display: block;
     font-weight: 700;
     font-size: 14px;
-    color: #111827;
+    color: var(--ink);
     margin-bottom: 6px;
   }
   .signup-field input[type="text"],
@@ -64,7 +64,7 @@
   .signup-field input[type="password"] {
     width: 100%;
     padding: 10px 12px;
-    border: 1.5px solid #e5e7eb;
+    border: 1.5px solid var(--line);
     border-radius: 10px;
     font-size: 15px;
     box-sizing: border-box;
@@ -72,18 +72,18 @@
   }
   .signup-field input:focus {
     outline: none;
-    border-color: #6366f1;
+    border-color: var(--blue);
   }
   .signup-error {
     margin: 6px 0 0;
     font-size: 13px;
-    color: #dc2626;
+    color: var(--bad);
     font-weight: 500;
   }
   .signup-help {
     margin: 6px 0 0;
     font-size: 12px;
-    color: #9ca3af;
+    color: var(--ink-soft);
     line-height: 1.5;
   }
   .signup-teach-label {
@@ -91,7 +91,7 @@
     align-items: center;
     gap: 8px;
     font-size: 14px;
-    color: #374151;
+    color: var(--ink);
     cursor: pointer;
   }
 </style>
