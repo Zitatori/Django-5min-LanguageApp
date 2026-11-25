@@ -1719,6 +1719,16 @@ msgstr "マイポイント"
 msgid "Five minutes is enough to start talking."
 msgstr "5分あれば、話しはじめられる。"
 
+
+#: templates/core/home.html
+msgid "Upcoming Sessions"
+msgstr "今後のセッション"
+
+#: templates/core/home.html
+#, python-format
+msgid "Hello, <b>%(name)s</b>!"
+msgstr "こんにちは、<b>%(name)s</b>さん！"
+
 #~ msgid "Step 1"
 #~ msgstr "ステップ1"
 

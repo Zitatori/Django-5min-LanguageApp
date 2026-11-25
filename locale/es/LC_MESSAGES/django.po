@@ -1849,6 +1849,16 @@ msgstr "Mis puntos"
 msgid "Five minutes is enough to start talking."
 msgstr "Cinco minutos bastan para empezar a hablar."
 
+
+#: templates/core/home.html
+msgid "Upcoming Sessions"
+msgstr "Próximas sesiones"
+
+#: templates/core/home.html
+#, python-format
+msgid "Hello, <b>%(name)s</b>!"
+msgstr "¡Hola, <b>%(name)s</b>!"
+
 #~ msgid "Step 1"
 #~ msgstr "Paso 1"
 
