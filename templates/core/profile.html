@@ -1,11 +1,15 @@
 {% extends "base.html" %}
-{% load display_names i18n %}
+{% load display_names i18n static %}
 
 {% block content %}
 <style>
   .pf { display: grid; gap: 16px; }
   .pf .card { margin: 0; min-width: 0; overflow-wrap: anywhere; }
   .pf-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .pf-who { display: flex; align-items: center; gap: 12px; min-width: 0; }
+  .pf-mascot { width: 64px; height: 64px; flex: none; }
+  .pf-who-text { display: grid; gap: 2px; min-width: 0; overflow-wrap: anywhere; }
+  .pf-handle { color: var(--ink-soft); font-size: 15px; font-weight: 700; }
   .pf-section-title { display: flex; align-items: center; gap: 10px; margin: 0 0 12px; }
   .pf-section-title .h2 { font-size: 20px; }
   .wallet { display: grid; grid-template-columns: 1fr; gap: 12px; }
@@ -49,7 +53,13 @@
 
 <div class="pf">
   <div class="pf-head">
-    <h1 class="h1">{% trans "Me" %}</h1>
+    <div class="pf-who">
+      <img class="pf-mascot" src="{% static 'icons/mascot.svg' %}" alt="">
+      <div class="pf-who-text">
+        <h1 class="h1">{{ request.user|display_name }}</h1>
+        <span class="pf-handle">{% if is_gold %}👑 Gold{% elif request.user.is_superuser %}🚀 {% trans "Founder" %}{% elif request.user.is_staff %}Admin{% else %}{% trans "Student" %}{% endif %}</span>
+      </div>
+    </div>
     {% if is_gold %}<span class="gold-chip">👑 {% trans "Gold member" %} · {% trans "Active until" %} {{ gold_expires_at|date:"DATE_FORMAT" }}</span>{% endif %}
   </div>
 
