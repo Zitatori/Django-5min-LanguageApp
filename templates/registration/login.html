@@ -1,64 +1,36 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n static %}
 {% block content %}
-<div class="card" style="max-width: 420px; margin: 40px auto;">
-  <h2 style="margin-bottom: 24px;">{% trans "Log In" %}</h2>
+<div class="auth">
+  <div class="auth-head">
+    <img src="{% static 'icons/quicklesson-character-180.png' %}" alt="">
+    <p class="auth-bubble">{% trans "Five minutes is enough to start talking." %}</p>
+  </div>
 
-  <form method="post">
-    {% csrf_token %}
-    {{ form.non_field_errors }}
+  <section class="card sticker" aria-labelledby="auth-title">
+    <h1 class="h1" id="auth-title">{% trans "Log In" %}</h1>
 
-    {% for field in form %}
-    <div class="signup-field">
-      <label class="signup-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
-      {{ field }}
-      {% if field.errors %}
+    <form method="post">
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+
+      {% for field in form %}
+      <div class="auth-field">
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
         {% for error in field.errors %}
-          <p class="signup-error">{{ error }}</p>
+          <p class="auth-error">{{ error }}</p>
         {% endfor %}
-      {% endif %}
-    </div>
-    {% endfor %}
+      </div>
+      {% endfor %}
 
-    <button type="submit" class="btn" style="width:100%; margin-top:8px;">{% trans "Log In" %}</button>
-  </form>
+      <button type="submit" class="btn">{% trans "Log In" %}</button>
+    </form>
+  </section>
 
-  <p style="margin-top:16px; text-align:center; font-size:14px; color:var(--ink-soft);">
+  <p class="auth-switch">
     {% trans "Don't have an account?" %}
-    <a href="{% url 'signup' %}" style="color:var(--blue); font-weight:600;">{% trans "Create an account" %}</a>
+    <a href="{% url 'signup' %}">{% trans "Create an account" %}</a>
   </p>
 </div>
-
-<style>
-  .signup-field {
-    margin-bottom: 18px;
-  }
-  .signup-label {
-    display: block;
-    font-weight: 700;
-    font-size: 14px;
-    color: var(--ink);
-    margin-bottom: 6px;
-  }
-  .signup-field input[type="text"],
-  .signup-field input[type="password"] {
-    width: 100%;
-    padding: 10px 12px;
-    border: 1.5px solid var(--line);
-    border-radius: 10px;
-    font-size: 15px;
-    box-sizing: border-box;
-    transition: border-color 0.2s;
-  }
-  .signup-field input:focus {
-    outline: none;
-    border-color: var(--blue);
-  }
-  .signup-error {
-    margin: 6px 0 0;
-    font-size: 13px;
-    color: var(--bad);
-    font-weight: 500;
-  }
-</style>
 {% endblock %}

@@ -1758,6 +1758,10 @@ msgstr "生徒からのフィードバック"
 msgid "No feedback yet."
 msgstr "まだフィードバックはありません。"
 
+#: core/forms.py
+msgid "Email address (or username)"
+msgstr "メールアドレス（またはユーザー名）"
+
 #~ msgid "Step 1"
 #~ msgstr "ステップ1"
 

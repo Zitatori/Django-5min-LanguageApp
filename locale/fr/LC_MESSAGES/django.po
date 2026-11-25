@@ -1914,6 +1914,10 @@ msgstr "Avis de l'élève"
 msgid "No feedback yet."
 msgstr "Pas encore d'avis."
 
+#: core/forms.py
+msgid "Email address (or username)"
+msgstr "Adresse e-mail (ou nom d'utilisateur)"
+
 #~ msgid "Step 1"
 #~ msgstr "Étape 1"
 

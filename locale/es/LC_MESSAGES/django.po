@@ -1888,6 +1888,10 @@ msgstr "Comentarios del estudiante"
 msgid "No feedback yet."
 msgstr "Aún no hay comentarios."
 
+#: core/forms.py
+msgid "Email address (or username)"
+msgstr "Correo electrónico (o nombre de usuario)"
+
 #~ msgid "Step 1"
 #~ msgstr "Paso 1"
 
