@@ -496,10 +496,8 @@ msgid "Matching"
 msgstr "マッチング中"
 
 #: templates/core/request_detail.html:19
-#, fuzzy
-#| msgid "Cancel"
 msgid "Canceled"
-msgstr "キャンセル"
+msgstr "キャンセル済み"
 
 #: templates/core/request_detail.html:24
 msgid "Selected language"
@@ -588,7 +586,7 @@ msgstr "オンライン"
 
 #: templates/core/tutor_dashboard.html:47
 msgid "Total Lessons"
-msgstr ""
+msgstr "担当したレッスン"
 
 #: templates/core/tutor_dashboard.html:71
 #, fuzzy
@@ -1728,6 +1726,67 @@ msgstr "今後のセッション"
 #, python-format
 msgid "Hello, <b>%(name)s</b>!"
 msgstr "こんにちは、<b>%(name)s</b>さん！"
+
+
+#: templates/core/study_notes.html
+msgid "How your data is used"
+msgstr "データの使われ方"
+
+#: templates/core/tutor_dashboard.html
+msgid "Your status"
+msgstr "あなたのステータス"
+
+#: templates/core/tutor_dashboard.html
+msgid "Students can be matched with you now."
+msgstr "今、生徒とマッチングできます。"
+
+#: templates/core/tutor_dashboard.html
+msgid "Go online to receive students."
+msgstr "オンラインにすると生徒とマッチングできます。"
+
+#: templates/core/tutor_dashboard.html
+msgid "No lessons yet."
+msgstr "まだレッスンはありません。"
+
+#: templates/core/_recent_lessons.html
+msgid "Student feedback"
+msgstr "生徒からのフィードバック"
+
+#: templates/core/_recent_lessons.html
+msgid "No feedback yet."
+msgstr "まだフィードバックはありません。"
+
+#: core/forms.py
+msgid "Email address (or username)"
+msgstr "メールアドレス（またはユーザー名）"
+
+#: templates/core/purchase_points.html
+msgid "Choose a pack"
+msgstr "パックを選ぶ"
+
+#: templates/core/lesson_rating.html
+msgid "Optional: share any comments about this lesson…"
+msgstr "任意：このレッスンの感想を講師に伝えましょう…"
+
+#: templates/core/lesson_note.html
+msgid "Conversation Notes"
+msgstr "会話メモ"
+
+#: templates/core/lesson_note.html
+msgid "Previous Notes"
+msgstr "これまでのメモ"
+
+#: templates/core/lesson_note.html
+msgid "Save Note"
+msgstr "メモを保存"
+
+#: templates/core/_student_lesson_record.html
+msgid "Level"
+msgstr "レベル"
+
+#: templates/core/request_detail.html
+msgid "Entering lesson room…"
+msgstr "レッスンルームに入室しています…"
 
 #~ msgid "Step 1"
 #~ msgstr "ステップ1"

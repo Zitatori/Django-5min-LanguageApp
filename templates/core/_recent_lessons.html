@@ -1,57 +1,73 @@
 {% load display_names i18n %}
 
-<div class="card">
-  <div class="card-header">
-    <h3 class="card-title">{% trans "Recent History" %}</h3>
-  </div>
+<section class="card rl" aria-labelledby="rl-title">
+  <h2 class="h2" id="rl-title">{% trans "Recent History" %}</h2>
 
-  <ul class="list">
+  <ul class="rl-list">
     {% for m in matches %}
-      <li style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px;">
-        <div style="min-width:0; flex:1;">
-          <div><strong>{{ m.started_at|date:"Y-m-d" }}</strong></div>
-          <div class="text-muted" style="margin-top:4px; display:flex; align-items:center; gap:5px;">
-            {% with u=m.request.student.user %}{% if u.first_name %}{{ u.first_name }} <span style="color:var(--ink-soft); font-size:.85em;">({{ u|display_name }})</span>{% else %}{{ u|display_name }}{% endif %}
-            {% if u.is_superuser %}<span class="header-badge header-badge-dev">🚀 {% trans "Founder" %}</span>
-            {% elif u.is_staff %}<span class="header-badge header-badge-admin">Admin</span>
-            {% endif %}{% endwith %}
+      {% with u=m.request.student.user %}
+      <li class="rl-row">
+        <span class="avatar" aria-hidden="true">{{ u|display_name|slice:":1"|upper }}</span>
+        <div class="rl-main">
+          <div class="rl-top">
+            <strong>
+              {% if u.first_name %}{{ u.first_name }} <span class="rl-soft">({{ u|display_name }})</span>{% else %}{{ u|display_name }}{% endif %}
+              {% if u.is_superuser %}<span class="header-badge header-badge-dev">🚀 {% trans "Founder" %}</span>
+              {% elif u.is_staff %}<span class="header-badge header-badge-admin">Admin</span>
+              {% endif %}
+            </strong>
+            <span class="rl-meta"><span class="badge badge-gray">{{ m.request.language.name }}</span> <time>{{ m.started_at|date:"Y-m-d" }}</time></span>
           </div>
-          <div style="margin-top:10px; overflow-wrap:anywhere;">
-            <strong>{% trans "Student feedback" %}</strong>
-            {% if m.student_rating %}
-              <div style="margin-top:4px;">
-                <span aria-hidden="true" style="color:#d97706;">{% for star in "12345" %}{% if forloop.counter <= m.student_rating %}★{% else %}☆{% endif %}{% endfor %}</span>
-                <span>{{ m.student_rating }} / 5</span>
-              </div>
-            {% endif %}
-            {% if m.student_feedback %}
-              <div style="margin-top:4px; white-space:pre-wrap;">{{ m.student_feedback }}</div>
-            {% elif not m.student_rating %}
-              <div class="text-muted">{% trans "No feedback yet." %}</div>
-            {% endif %}
-          </div>
+          <span class="rl-label">{% trans "Student feedback" %}</span>
+          {% if m.student_rating %}
+            <div class="rl-stars">
+              <span aria-hidden="true">{% for star in "12345" %}{% if forloop.counter <= m.student_rating %}★{% else %}☆{% endif %}{% endfor %}</span>
+              <span>{{ m.student_rating }} / 5</span>
+            </div>
+          {% endif %}
+          {% if m.student_feedback %}
+            <p class="rl-feedback">{{ m.student_feedback }}</p>
+          {% elif not m.student_rating %}
+            <span class="rl-soft">{% trans "No feedback yet." %}</span>
+          {% endif %}
         </div>
-        <span class="badge badge-gray">{{ m.request.language.name }}</span>
       </li>
+      {% endwith %}
 
     {% empty %}
 
       {% for d in dummy_matches %}
-        <li style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px; opacity:.85;">
-          <div>
-            <div><strong>{{ d.started_at|date:"Y-m-d" }}</strong></div>
-            <div class="text-muted" style="margin-top:4px;">
-              Guest：{{ d.partner }}
-              <span class="text-muted"></span>
+        <li class="rl-row rl-dummy">
+          <span class="avatar" aria-hidden="true">G</span>
+          <div class="rl-main">
+            <div class="rl-top">
+              <strong>Guest：{{ d.partner }}</strong>
+              <span class="rl-meta"><span class="badge badge-gray">{{ d.language }}</span> <time>{{ d.started_at|date:"Y-m-d" }}</time></span>
             </div>
           </div>
-          <span class="badge badge-gray">{{ d.language }}</span>
         </li>
 
       {% empty %}
-        <li class="text-muted">まだ履歴はありません。</li>
+        <li class="rl-soft">まだ履歴はありません。</li>
       {% endfor %}
 
     {% endfor %}
   </ul>
-</div>
+</section>
+
+<style>
+  .rl .h2 { margin: 0 0 6px; }
+  .rl-list { display: grid; margin: 0; padding: 0; list-style: none; }
+  .rl-row { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: start; padding: 14px 0; border-top: 2px dashed var(--line); }
+  .rl-row:first-child { border-top: 0; }
+  .rl-dummy { opacity: .85; }
+  .rl-main { display: grid; gap: 4px; min-width: 0; overflow-wrap: anywhere; }
+  .rl-top { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 10px; }
+  .rl-top strong { font-weight: 900; }
+  .rl-meta { display: inline-flex; align-items: center; gap: 6px; color: var(--ink-soft); font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .rl-soft { color: var(--ink-soft); font-size: 14px; font-weight: 700; }
+  .rl-label { color: var(--ink-soft); font-size: 13px; font-weight: 800; }
+  .rl-stars { display: flex; align-items: center; gap: 8px; font-weight: 800; }
+  .rl-stars [aria-hidden] { color: #8a5a00; font-size: 18px; }
+  .rl-feedback { margin: 0; padding: 10px 12px; background: var(--sky); border-radius: 14px; white-space: pre-wrap; }
+</style>

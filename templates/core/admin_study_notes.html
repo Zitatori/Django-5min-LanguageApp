@@ -1,6 +1,6 @@
 {% extends 'base.html' %}{% load i18n static display_names %}
 {% block content %}
-<link rel="stylesheet" href="{% static 'css/study_notes.css' %}">
+<link rel="stylesheet" href="{% static 'css/study_notes.css' %}?v=kawaii1">
 <div class="study-page">
 <a href="{% url 'admin_dashboard' %}">← Admin Dashboard</a>
 <header class="study-hero"><h1>{% trans 'AI Study Notes' %} · {{ learner|display_name }}</h1><p>{% trans 'Read-only administrator view' %}</p></header>

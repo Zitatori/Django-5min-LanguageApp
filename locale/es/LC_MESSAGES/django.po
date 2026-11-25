@@ -513,7 +513,7 @@ msgstr "Buscando profesor"
 
 #: templates/core/request_detail.html:19
 msgid "Canceled"
-msgstr "Cancelado"
+msgstr "Cancelada"
 
 #: templates/core/request_detail.html:24
 msgid "Selected language"
@@ -604,7 +604,7 @@ msgstr "En línea"
 
 #: templates/core/tutor_dashboard.html:47
 msgid "Total Lessons"
-msgstr ""
+msgstr "Lecciones impartidas"
 
 #: templates/core/tutor_dashboard.html:71
 #, fuzzy
@@ -1858,6 +1858,67 @@ msgstr "Próximas sesiones"
 #, python-format
 msgid "Hello, <b>%(name)s</b>!"
 msgstr "¡Hola, <b>%(name)s</b>!"
+
+
+#: templates/core/study_notes.html
+msgid "How your data is used"
+msgstr "Cómo se usan tus datos"
+
+#: templates/core/tutor_dashboard.html
+msgid "Your status"
+msgstr "Tu estado"
+
+#: templates/core/tutor_dashboard.html
+msgid "Students can be matched with you now."
+msgstr "Los estudiantes ya pueden emparejarse contigo."
+
+#: templates/core/tutor_dashboard.html
+msgid "Go online to receive students."
+msgstr "Conéctate para recibir estudiantes."
+
+#: templates/core/tutor_dashboard.html
+msgid "No lessons yet."
+msgstr "Aún no hay lecciones."
+
+#: templates/core/_recent_lessons.html
+msgid "Student feedback"
+msgstr "Comentarios del estudiante"
+
+#: templates/core/_recent_lessons.html
+msgid "No feedback yet."
+msgstr "Aún no hay comentarios."
+
+#: core/forms.py
+msgid "Email address (or username)"
+msgstr "Correo electrónico (o nombre de usuario)"
+
+#: templates/core/purchase_points.html
+msgid "Choose a pack"
+msgstr "Elige un paquete"
+
+#: templates/core/lesson_rating.html
+msgid "Optional: share any comments about this lesson…"
+msgstr "Opcional: comparte tus comentarios sobre esta lección…"
+
+#: templates/core/lesson_note.html
+msgid "Conversation Notes"
+msgstr "Notas de conversación"
+
+#: templates/core/lesson_note.html
+msgid "Previous Notes"
+msgstr "Notas anteriores"
+
+#: templates/core/lesson_note.html
+msgid "Save Note"
+msgstr "Guardar nota"
+
+#: templates/core/_student_lesson_record.html
+msgid "Level"
+msgstr "Nivel"
+
+#: templates/core/request_detail.html
+msgid "Entering lesson room…"
+msgstr "Entrando en la sala de la lección…"
 
 #~ msgid "Step 1"
 #~ msgstr "Paso 1"

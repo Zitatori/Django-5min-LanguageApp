@@ -1,32 +1,22 @@
 {% extends "base.html" %}
-{% load display_names i18n %}
+{% load display_names i18n static %}
 
 {% block content %}
-<div class="note-wrap">
+<div class="nt">
 
-  <div class="card note-card">
-    <h2 class="card-title">{% trans "Conversation Notes" %}</h2>
-    <p class="note-subtitle">
-      {% with u=match.request.student.user %}
-        {% if u.first_name %}{{ u.first_name }} <span class="note-username">({{ u|display_name }})</span>{% else %}{{ u|display_name }}{% endif %}
-      {% endwith %}
-      &nbsp;·&nbsp;{% trans match.request.language.name %}
-    </p>
-
-    {% if previous_notes %}
-    <div class="note-prev-section">
-      <h3 class="note-prev-title">{% trans "Previous Notes" %}</h3>
-      <ul class="note-prev-list">
-        {% for n in previous_notes %}
-        <li class="note-prev-item">
-          <div class="note-prev-meta">{{ n.created_at|date:"Y/m/d" }}&ensp;·&ensp;{% if n.tutor.user.first_name %}{{ n.tutor.user.first_name }} ({{ n.tutor.user|display_name }}){% else %}{{ n.tutor.user|display_name }}{% endif %}</div>
-          <div class="note-prev-body">{{ n.conversation_content }}</div>
-        </li>
-        {% endfor %}
-      </ul>
+  <section class="card sticker nt-head" aria-labelledby="nt-title">
+    {% with u=match.request.student.user %}
+    <span class="avatar nt-avatar" aria-hidden="true">{{ u|display_name|slice:":1"|upper }}</span>
+    <div class="nt-head-text">
+      <span class="eyebrow">✍️ {% trans "Conversation Notes" %}</span>
+      <h1 class="h2" id="nt-title">{% if u.first_name %}{{ u.first_name }} <span class="note-username">({{ u|display_name }})</span>{% else %}{{ u|display_name }}{% endif %}</h1>
     </div>
-    {% endif %}
+    <span class="nt-lang {{ match.request.language.code }}">{% trans match.request.language.name %}</span>
+    {% endwith %}
+  </section>
 
+  <div class="nt-split">
+  <section class="card nt-form-card" aria-labelledby="nt-title">
     <form method="post" id="note-form">
       {% csrf_token %}
 
@@ -34,8 +24,9 @@
         <input type="checkbox" id="conversation-not-held" name="conversation_not_held" value="on" {% if form.conversation_not_held.value %}checked{% endif %}>
         {% trans "Conversation did not take place" %}
       </label>
-      <p class="note-help">{% trans "Both notes are required unless the conversation did not take place." %}</p>
-      <label class="note-label" for="learner-level">{% trans "Learner's level" %}</label>
+      <p class="note-help note-help-outcome">{% trans "Both notes are required unless the conversation did not take place." %}</p>
+      <div class="note-field">
+      <label class="note-label" for="learner-level">1 · {% trans "Learner's level" %}</label>
       <select id="learner-level" name="learner_level" class="note-select">
         <option value="">{% trans "Select level" %}</option>
         <option value="A1" {% if form.learner_level.value == 'A1' %}selected{% endif %}>{{ "A1"|level_label }}{% if match.request.language.code == 'ja' %}（JLPT N5目安）{% endif %}</option>
@@ -46,10 +37,12 @@
         <option value="C2" {% if form.learner_level.value == 'C2' %}selected{% endif %}>{{ "C2"|level_label }}{% if match.request.language.code == 'ja' %}（JLPT対応なし・熟達）{% endif %}</option>
       </select>
       {% if match.request.language.code == 'ja' %}
-      <p class="text-muted" style="font-size:13px; margin-top:6px;">※JLPTは参考目安です。会話中の理解・発話をもとに選んでください。</p>
+      <p class="note-help">※JLPTは参考目安です。会話中の理解・発話をもとに選んでください。</p>
       {% endif %}
 
-      <label class="note-label" for="talked-about">{% trans "What we talked about" %}</label>
+      </div>
+      <div class="note-field">
+      <label class="note-label" for="talked-about">2 · {% trans "What we talked about" %}</label>
       <p class="note-help" id="talked-about-help">{% trans "Shared with the student. Used for the tutor’s learner conversation brief and AI review materials." %}</p>
       <textarea
         id="talked-about"
@@ -57,190 +50,90 @@
         class="note-textarea"
         maxlength="500"
         placeholder="{% if match.request.language.code == 'ja' %}・名前：マリア&#10;・国：スペイン&#10;・好きな食べ物：寿司&#10;・趣味：映画{% elif match.request.language.code == 'es' %}・Nombre: María&#10;・País: España&#10;・Comida favorita: sushi&#10;・Aficiones: cine{% elif match.request.language.code == 'fr' %}・Prénom : Maria&#10;・Pays : Espagne&#10;・Plat préféré : sushi&#10;・Loisirs : cinéma{% else %}・Name: Maria&#10;・Country: Spain&#10;・Favorite food: sushi&#10;・Hobbies: movies{% endif %}"
-        rows="3"
+        rows="5"
         {% if not form.conversation_not_held.value %}required{% endif %}
         aria-describedby="talked-about-help talked-about-errors"
       >{{ form.talked_about.value|default_if_none:"" }}</textarea>
       <div class="note-errors" id="talked-about-errors" role="alert">{{ form.talked_about.errors }}</div>
 
-      <label class="note-label" for="next-conversation">{% trans "What to study" %}</label>
+      </div>
+      <div class="note-field">
+      <label class="note-label" for="next-conversation">3 · {% trans "What to study" %}</label>
       <p class="note-help" id="next-conversation-help">{% trans "Shared with the student. Used when Gold members generate AI Study Notes. Write what to practice and specific points to improve." %}</p>
       <textarea id="next-conversation" name="next_conversation" class="note-textarea"
-        maxlength="500" rows="3" aria-describedby="next-conversation-help next-conversation-errors"
+        maxlength="500" rows="5" aria-describedby="next-conversation-help next-conversation-errors"
         {% if not form.conversation_not_held.value %}required{% endif %}
       >{{ form.next_conversation.value|default_if_none:"" }}</textarea>
       <div class="note-errors" id="next-conversation-errors" role="alert">{{ form.next_conversation.errors }}</div>
 
+      </div>
       <button type="submit" class="btn note-submit">{% trans "Save Note" %}</button>
     </form>
+  </section>
 
-
+  {% if previous_notes %}
+  <section class="card tint nt-prev" aria-labelledby="nt-prev-title">
+    <h2 class="h3" id="nt-prev-title">🗂️ {% trans "Previous Notes" %}</h2>
+    <ul class="nt-prev-list">
+      {% for n in previous_notes %}
+      <li class="nt-prev-item">
+        <div class="nt-prev-meta"><time>{{ n.created_at|date:"Y/m/d" }}</time> · {% if n.tutor.user.first_name %}{{ n.tutor.user.first_name }} ({{ n.tutor.user|display_name }}){% else %}{{ n.tutor.user|display_name }}{% endif %}</div>
+        <div class="nt-prev-body">{{ n.conversation_content }}</div>
+      </li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
   </div>
 
 </div>
 
 <style>
-  .note-outcome { display:flex; gap:10px; align-items:center; padding:12px; border:1px solid var(--ink-soft); border-radius:8px; cursor:pointer; }
-  .note-outcome input { width:20px; height:20px; flex-shrink:0; }
-  .note-help { font-size:13px; margin:10px 0 20px; }
-  .note-errors { color:var(--bad); font-size:14px; }
-  .note-errors ul { margin:0 0 14px; padding-left:20px; }
-
-  .note-wrap {
-    max-width: 600px;
-    margin: 32px auto;
-    padding: 0 12px;
-  }
-  .note-card {
-    padding: 28px 30px 24px;
-  }
-  .note-subtitle {
-    color: var(--ink-soft);
-    font-size: 14px;
-    margin-bottom: 20px;
-  }
-  .note-username {
-    color: var(--ink-soft);
-    font-size: 12px;
+  .nt { display: grid; gap: 16px; min-width: 0; }
+  .nt *, .nt *::before, .nt *::after { box-sizing: border-box; }
+  .nt .card { margin: 0; min-width: 0; }
+  .nt-split { display: grid; gap: 16px; }
+  @media (min-width: 1100px) {
+    .nt-split { grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 24px; align-items: start; }
+    .nt-prev { position: sticky; top: 90px; max-height: calc(100dvh - 110px); overflow: auto; }
   }
 
-  /* Previous notes */
-  .note-prev-section {
-    margin-bottom: 22px;
-    border-top: 1px solid var(--line);
-    padding-top: 16px;
-  }
-  .note-prev-title {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--ink-soft);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    margin-bottom: 10px;
-  }
-  .note-prev-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    max-height: 260px;
-    overflow-y: auto;
-  }
-  .note-prev-item {
-    background: var(--sky);
-    border-radius: 8px;
-    padding: 10px 13px;
-    border: 1px solid var(--line);
-  }
-  .note-prev-meta {
-    font-size: 11px;
-    color: var(--ink-soft);
-    margin-bottom: 4px;
-    font-weight: 600;
-  }
-  .note-prev-body {
-    font-size: 14px;
-    color: var(--ink);
-    line-height: 1.55;
-    white-space: pre-wrap;
-  }
-  .note-prev-structured {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    font-size: 14px;
-    color: var(--ink);
-    line-height: 1.5;
-  }
-  .note-prev-structured p { margin: 0; }
+  .nt-head { display: grid; grid-template-columns: auto 1fr auto; gap: 14px; align-items: center; }
+  .nt-avatar { width: 56px; height: 56px; font-size: 22px; }
+  .nt-head-text { display: grid; gap: 2px; min-width: 0; overflow-wrap: anywhere; }
+  .note-username { color: var(--ink-soft); font-size: 15px; font-weight: 700; }
+  .nt-lang { padding: 4px 12px; background: var(--cloud); border: 2px solid var(--ink); border-radius: var(--r-pill); font-weight: 900; white-space: nowrap; }
+  .nt-lang.ja { background: var(--lang-ja); }
+  .nt-lang.en { background: var(--lang-en); }
+  .nt-lang.fr { background: var(--lang-fr); }
+  .nt-lang.es { background: var(--lang-es); }
 
-  /* First session guide */
-  .note-first-session {
-    background: #eff6ff;
-    border: 1px solid #bfdbfe;
-    border-radius: 8px;
-    padding: 12px 16px;
-    margin-bottom: 20px;
+  #note-form { display: grid; gap: 18px; margin: 0; }
+  .note-outcome {
+    display: flex; align-items: center; gap: 12px; padding: 12px 14px; cursor: pointer;
+    background: var(--cloud); border: 2px solid var(--line); border-radius: 18px; font-weight: 900;
   }
-  .note-first-label {
-    font-size: 13px;
-    font-weight: 700;
-    color: #1d4ed8;
-    margin-bottom: 8px;
-  }
-  .note-first-questions {
-    margin: 0;
-    padding-left: 18px;
-    color: #1e40af;
-    font-size: 14px;
-    line-height: 1.7;
-  }
+  .note-outcome:has(input:checked) { background: var(--bad-soft); border-color: var(--bad); }
+  .note-outcome input { width: 20px; height: 20px; margin: 0; flex: none; }
+  .note-help-outcome { margin-top: -10px !important; }
+  .note-field { display: grid; gap: 6px; min-width: 0; }
+  .note-label { font-size: 16px; font-weight: 900; }
+  .note-help { margin: 0; color: var(--ink-soft); font-size: 13px; font-weight: 700; line-height: 1.5; }
+  .note-select, .note-textarea { width: 100%; }
+  .note-textarea { resize: vertical; line-height: 1.6; }
+  .note-errors:empty { display: none; }
+  .note-errors .errorlist { margin: 0; padding: 0; list-style: none; color: #a32025; font-size: 14px; font-weight: 800; }
+  .note-submit { width: 100%; }
 
-  /* Form */
-  .note-label {
-    display: block;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--ink);
-    margin-bottom: 6px;
-  }
-  .note-select,
-  .note-textarea {
-    width: 100%;
-    padding: 10px 12px;
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    font-size: 14px;
-    line-height: 1.55;
-    font-family: inherit;
-    box-sizing: border-box;
-    transition: border-color 0.15s;
-  }
-  .note-select {
-    background: #fff;
-    margin-bottom: 14px;
-  }
-  .note-textarea {
-    resize: vertical;
-    margin-bottom: 14px;
-  }
-  .note-textarea:focus,
-  .note-select:focus {
-    outline: none;
-    border-color: var(--blue);
-    box-shadow: 0 0 0 3px rgba(99,102,241,0.12);
-  }
-  .note-charcount {
-    font-size: 12px;
-    color: var(--ink-soft);
-    text-align: right;
-    margin-top: 4px;
-    margin-bottom: 14px;
-  }
-  .note-submit {
-    width: 100%;
-  }
-  .note-skip {
-    display: block;
-    text-align: center;
-    margin-top: 12px;
-    color: var(--ink-soft);
-    font-size: 14px;
-    text-decoration: none;
-  }
-  .note-skip:hover { color: var(--ink); }
+  .nt-prev { display: grid; gap: 12px; }
+  .nt-prev-list { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+  .nt-prev-item { display: grid; gap: 6px; padding: 12px 14px; background: var(--cloud); border: 2px solid var(--ink); border-radius: 18px; }
+  .nt-prev-meta { color: var(--ink-soft); font-size: 13px; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .nt-prev-body { white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.6; }
 
-  @media (prefers-color-scheme: dark) {
-    .note-prev-item { background: var(--ink); border-color: var(--ink); }
-    .note-prev-body, .note-prev-structured { color: var(--line); }
-    .note-first-session { background: #1e3a5f; border-color: var(--blue); }
-    .note-first-label { color: #93c5fd; }
-    .note-first-questions { color: #bfdbfe; }
-    .note-label { color: var(--line); }
-    .note-select, .note-textarea { background: var(--ink); border-color: var(--ink); color: var(--sky); }
-    .note-textarea:focus, .note-select:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(129,140,248,0.15); }
+  @media (max-width: 480px) {
+    .nt-head { grid-template-columns: auto 1fr; }
+    .nt-lang { grid-column: 1 / -1; justify-self: start; }
   }
 </style>
 

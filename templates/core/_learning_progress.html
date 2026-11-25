@@ -20,9 +20,21 @@
   {% else %}<p>{% trans 'New session times will appear on the home page when published.' %}</p>{% endif %}
 </section>
 <style>
-.learning-progress {padding:18px; margin:16px 0; background:#f0f9ff; border:1px solid #bae6fd; border-radius:16px; color:#172554; overflow-wrap:anywhere; text-align:left}
-.progress-metrics,.progress-links {display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center}
-.progress-links {margin:14px 0}.learning-progress a {display:inline-flex;align-items:center;min-height:44px}.learning-progress .btn{color:#fff}
+.learning-progress { display: grid; gap: 12px; padding: 18px; background: var(--blue-soft); color: var(--ink); border: 2px solid var(--blue-soft); border-radius: var(--r-card); overflow-wrap: anywhere; text-align: left; }
+.learning-progress h3 { margin: 0; font-size: 18px; font-weight: 900; }
+.learning-progress p { margin: 0; font-weight: 700; }
+.progress-metrics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.progress-metrics > span { display: grid; gap: 2px; padding: 10px 12px; background: var(--cloud); border: 2px solid var(--ink); border-radius: 16px; font-size: 13px; font-weight: 800; color: var(--ink-soft); }
+.progress-metrics strong { font-family: var(--font-display); font-size: 24px; font-weight: 900; color: var(--ink); font-variant-numeric: tabular-nums; }
+.progress-links { display: flex; flex-wrap: wrap; gap: 8px; }
+.progress-links a, .learning-progress > a:not(.btn) {
+  display: inline-flex; align-items: center; min-height: 44px; padding: 6px 14px;
+  background: var(--cloud); color: var(--ink); border: 2px solid var(--ink); border-radius: var(--r-pill);
+  font-weight: 800; text-decoration: none;
+}
+.progress-links a:hover, .learning-progress > a:not(.btn):hover { background: var(--sun-soft); }
+.learning-progress > a { justify-self: start; }
+@media (max-width: 380px) { .progress-metrics { grid-template-columns: 1fr; } }
 </style>
 <script>
 document.querySelectorAll('.progress-local-time').forEach(el => { const date=new Date(el.dateTime); if (!Number.isNaN(date.getTime())) el.textContent=new Intl.DateTimeFormat(document.documentElement.lang || undefined,{dateStyle:'medium',timeStyle:'short',timeZoneName:undefined}).format(date); });

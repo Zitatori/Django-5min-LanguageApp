@@ -307,14 +307,94 @@ table th { color: var(--ink-soft); }
 
 @media (max-width: 479px) {
   .topbar { padding: 8px 12px; gap: 8px; }
-  .app:not(.guest) .topbar .logo > span:last-child { display: none; }
+  .topbar .logo > span:last-child { display: none; }
+  .top-link { padding: 6px 4px; }
   .topbar-right { gap: 6px; }
   .lang-select { padding: 6px 8px; font-size: 12px; max-width: 92px; }
   .icon-btn { width: 36px; height: 36px; }
 }
 
 /* Logged-out header links */
-.top-link { font-size: 14px; font-weight: 800; color: var(--ink) !important; padding: 6px 10px; text-decoration: none !important; }
+.top-link { font-size: 14px; font-weight: 800; color: var(--ink) !important; padding: 6px 10px; text-decoration: none !important; white-space: nowrap; }
+.topbar-right .btn { white-space: nowrap; }
+
+/* ── Auth pages (log in / sign up) ── */
+.auth { width: 100%; max-width: 460px; margin: 16px auto 40px; display: grid; gap: 16px; }
+.auth.wide { max-width: 540px; }
+.auth *, .auth *::before, .auth *::after { box-sizing: border-box; }
+.auth-head { display: grid; grid-template-columns: 72px 1fr; gap: 14px; align-items: center; }
+.auth-head img { width: 72px; height: 72px; background: var(--cloud); border: 2px solid var(--ink); border-radius: 22px; }
+.auth-bubble {
+  position: relative; padding: 10px 14px; background: var(--cloud); color: var(--ink);
+  border: 2px solid var(--ink); border-radius: 18px; font-weight: 800; line-height: 1.4;
+}
+.auth-bubble::before {
+  content: ""; position: absolute; left: -9px; top: 50%; width: 14px; height: 14px; margin-top: -7px;
+  background: var(--cloud); border-left: 2px solid var(--ink); border-bottom: 2px solid var(--ink); transform: rotate(45deg);
+}
+.auth .card { margin: 0; display: grid; gap: 16px; }
+.auth .chip { justify-self: start; white-space: normal; border: 2px solid var(--ink); }
+.auth form { display: grid; gap: 16px; margin: 0; }
+.auth-field { display: grid; gap: 6px; min-width: 0; }
+.auth-field > label { font-size: 15px; font-weight: 900; }
+.auth-field input[type="text"], .auth-field input[type="email"], .auth-field input[type="password"] { width: 100%; }
+.auth-error, .auth .errorlist { margin: 0; padding: 0; list-style: none; color: #a32025; font-size: 14px; font-weight: 800; }
+.auth .errorlist.nonfield { padding: 10px 12px; background: var(--bad-soft); border: 2px solid var(--bad); border-radius: 14px; }
+.auth-help { color: var(--ink-soft); font-size: 13px; font-weight: 700; line-height: 1.5; }
+.auth-help ul { margin: 4px 0 0; padding-left: 18px; }
+.auth-help li { margin: 2px 0; }
+.auth .btn[type="submit"] { width: 100%; }
+.auth-switch { margin: 0; text-align: center; color: var(--ink-soft); font-size: 15px; font-weight: 700; }
+.auth-switch a { color: var(--blue); font-weight: 900; }
+
+/* Language tiles (sign up) */
+#id_learning_languages { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+#id_learning_languages > div { min-width: 0; }
+#id_learning_languages label {
+  display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 10px 12px; cursor: pointer;
+  background: var(--cloud); border: 2px solid var(--line); border-radius: 18px; font-weight: 900; overflow-wrap: anywhere;
+}
+#id_learning_languages input { width: 20px; height: 20px; margin: 0; flex: none; }
+#id_learning_languages label:has(input:checked) { border-color: var(--ink); box-shadow: 0 3px 0 var(--ink); }
+#id_learning_languages label:has(input[value="ja"]:checked) { background: var(--lang-ja); }
+#id_learning_languages label:has(input[value="en"]:checked) { background: var(--lang-en); }
+#id_learning_languages label:has(input[value="fr"]:checked) { background: var(--lang-fr); }
+#id_learning_languages label:has(input[value="es"]:checked) { background: var(--lang-es); }
+@media (max-width: 360px) { #id_learning_languages { grid-template-columns: 1fr; } }
+
+.auth-teach {
+  display: flex; align-items: center; gap: 12px; padding: 12px 14px; cursor: pointer;
+  background: var(--sun-soft); border: 2px solid var(--line); border-radius: 18px; font-weight: 900;
+}
+.auth-teach:has(input:checked) { border-color: var(--ink); box-shadow: 0 3px 0 var(--ink); }
+.auth-teach input { width: 20px; height: 20px; margin: 0; flex: none; }
+
+/* ── Lesson record (history, Talk page) ── */
+.rec { display: grid; gap: 10px; min-width: 0; overflow-wrap: anywhere; }
+.rec-tutor, .rec-mine { display: grid; gap: 10px; padding: 12px 14px; border-radius: 18px; }
+.rec-tutor { background: var(--sky); }
+.rec-mine { background: var(--cloud); border: 2px dashed var(--line); }
+.rec-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 10px; }
+.rec-item { display: grid; gap: 2px; }
+.rec strong { font-size: 13px; font-weight: 900; color: var(--ink-soft); }
+.rec small { color: var(--ink-soft); font-size: 12px; font-weight: 700; }
+.rec-text { white-space: pre-wrap; line-height: 1.6; }
+.cr-hist-note .rec-tutor { background: var(--cloud); }
+.rec-level { padding: 2px 10px; background: var(--sun); border: 2px solid var(--ink); border-radius: 14px; font-size: 13px; font-weight: 900; }
+.rec-stars { font-weight: 800; }
+.rec-stars [aria-hidden] { color: #8a5a00; font-size: 16px; }
+.record-translation { background: var(--cloud); border: 2px solid var(--line); border-radius: 16px; }
+.record-translation summary { display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 8px 14px; cursor: pointer; list-style: none; font-weight: 900; }
+.record-translation summary::-webkit-details-marker { display: none; }
+.record-translation summary::after { content: "⌄"; margin-left: auto; transition: transform .2s; }
+.record-translation[open] summary::after { transform: rotate(180deg); }
+.record-translation .translation-form { display: grid; gap: 8px; padding: 0 14px 12px; margin: 0; }
+.record-translation .translation-form label { display: grid; gap: 4px; font-size: 14px; font-weight: 800; }
+.record-translation .translation-form select { max-width: 100%; font-size: 16px; }
+.record-translation .translation-form p { margin: 0; color: var(--ink-soft); }
+.record-translation .translation-form .btn { justify-self: start; }
+.translation-result:not(:empty) { padding: 0 14px 12px; }
+.translation-result p { margin: 4px 0 8px; }
 
 @media (prefers-reduced-motion: reduce) {
   *, :before, :after { transition: none !important; animation: none !important; }

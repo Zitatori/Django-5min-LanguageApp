@@ -514,7 +514,7 @@ msgstr "Recherche en cours"
 
 #: templates/core/request_detail.html:19
 msgid "Canceled"
-msgstr "Annulé"
+msgstr "Annulée"
 
 #: templates/core/request_detail.html:24
 msgid "Selected language"
@@ -610,7 +610,7 @@ msgstr "En ligne"
 
 #: templates/core/tutor_dashboard.html:47
 msgid "Total Lessons"
-msgstr ""
+msgstr "Leçons données"
 
 #: templates/core/tutor_dashboard.html:71
 #, fuzzy
@@ -1884,6 +1884,63 @@ msgstr "Sessions à venir"
 #, python-format
 msgid "Hello, <b>%(name)s</b>!"
 msgstr "Bonjour <b>%(name)s</b> !"
+
+
+#: templates/core/study_notes.html
+msgid "How your data is used"
+msgstr "Comment tes données sont utilisées"
+
+#: templates/core/tutor_dashboard.html
+msgid "Your status"
+msgstr "Ton statut"
+
+#: templates/core/tutor_dashboard.html
+msgid "Students can be matched with you now."
+msgstr "Les élèves peuvent être mis en relation avec toi maintenant."
+
+#: templates/core/tutor_dashboard.html
+msgid "Go online to receive students."
+msgstr "Passe en ligne pour recevoir des élèves."
+
+#: templates/core/tutor_dashboard.html
+msgid "No lessons yet."
+msgstr "Pas encore de leçon."
+
+#: templates/core/_recent_lessons.html
+msgid "Student feedback"
+msgstr "Avis de l'élève"
+
+#: templates/core/_recent_lessons.html
+msgid "No feedback yet."
+msgstr "Pas encore d'avis."
+
+#: core/forms.py
+msgid "Email address (or username)"
+msgstr "Adresse e-mail (ou nom d'utilisateur)"
+
+#: templates/core/purchase_points.html
+msgid "Choose a pack"
+msgstr "Choisis un pack"
+
+#: templates/core/lesson_rating.html
+msgid "Optional: share any comments about this lesson…"
+msgstr "Facultatif : un mot sur cette leçon…"
+
+#: templates/core/lesson_note.html
+msgid "Conversation Notes"
+msgstr "Notes de conversation"
+
+#: templates/core/lesson_note.html
+msgid "Previous Notes"
+msgstr "Notes précédentes"
+
+#: templates/core/lesson_note.html
+msgid "Save Note"
+msgstr "Enregistrer la note"
+
+#: templates/core/request_detail.html
+msgid "Entering lesson room…"
+msgstr "Entrée dans la salle de leçon…"
 
 #~ msgid "Step 1"
 #~ msgstr "Étape 1"

@@ -1,6 +1,6 @@
 {% extends 'base.html' %}{% load display_names static i18n %}
 {% block content %}
-<link rel="stylesheet" href="{% static 'css/study_notes.css' %}">
+<link rel="stylesheet" href="{% static 'css/study_notes.css' %}?v=kawaii1">
 <div class="study-page">
 {% if admin_review %}{% include 'core/_admin_study_banner.html' %}{% else %}<a href="{% url 'cheatsheets' %}">← {% trans "Study Cheatsheet" %}</a>{% endif %}
 {% language note.explanation_language %}

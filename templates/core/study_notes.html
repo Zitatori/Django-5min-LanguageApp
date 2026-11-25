@@ -1,29 +1,89 @@
 {% extends "base.html" %}
 {% load display_names i18n static %}
 {% block content %}
-<link rel="stylesheet" href="{% static 'css/study_notes.css' %}">
-<div class="study-page">
-<p><a href="{% url 'cheatsheets' %}">{% trans "Study Cheatsheet" %} — {% trans "Japanese review for the next two days" %} →</a></p>
-<header class="study-hero"><h1>✨ {% trans "AI Study Notes" %}</h1><p>{% trans "AI creates personalized review materials from your past lessons." %}</p><p>{% trans "One AI study note per lesson for everyone. Unlimited generation for Gold members." %}</p></header>
-<section class="card">
-<p class="study-muted">{% trans "Saved learning materials can also be reviewed by QuickLesson administrators. Your private note text is not displayed in that administrator view." %}</p>
-<p>{% trans "We send notes from your selected lessons to OpenAI to create one combined review. Private notes are included only with your permission. We do not record or monitor conversations." %}</p>
-<p class="study-muted">{% trans "Account names and email fields are not sent. Known identifiers in notes are masked, but this cannot detect every personal detail. Remove sensitive information from your notes before generating. Generated materials are saved privately in QuickLesson and can be read without another API call." %} <a href="https://platform.openai.com/docs/guides/your-data" target="_blank" rel="noopener noreferrer">{% trans "OpenAI data handling" %}</a></p>
-{% if error %}<p class="study-error" role="alert">{{ error }}</p>{% endif %}
-<style>.study-lesson-picker {border:1px solid #cbd5e1;border-radius:12px;padding:12px;min-width:0;margin:16px 0}.study-lesson-picker #id_lesson {max-height:320px;overflow:auto}.study-lesson-picker label {display:flex;gap:10px;align-items:flex-start;padding:10px;overflow-wrap:anywhere;font-size:16px}.study-lesson-picker input {flex:0 0 auto;width:18px;height:18px;margin:3px 0}.study-lesson-picker legend {font-weight:600}</style>
-<form method="post" id="study-form">{% csrf_token %}{{ form.request_token }}
-<p>{% trans "Select one or more lessons in the same language to review together. The study language is detected automatically." %}</p>
-<fieldset class="study-lesson-picker"><legend>{{ form.lesson.label }}</legend>{{ form.lesson }}{{ form.lesson.errors }}</fieldset>
-<div class="study-form-grid"><div>{{ form.explanation_language.label_tag }}{{ form.explanation_language }}{{ form.explanation_language.errors }}</div></div>
-<label class="study-consent">{{ form.include_private_notes }} {{ form.include_private_notes.label }}</label>
-<button type="submit" class="btn" id="study-generate">{% if error %}{% trans "Retry" %}{% else %}{% trans "Generate AI study notes" %}{% endif %}</button>
-<p id="study-loading" role="status" aria-live="polite" hidden>{% trans "Generating your study notes… Please wait on this page." %}</p>
-</form>
+<link rel="stylesheet" href="{% static 'css/study_notes.css' %}?v=kawaii1">
+<div class="study-page rv">
+<div class="rv-split">
+<div class="rv-col">
 
-</section>
-<section><h2>{% trans "Saved study notes" %}</h2><div class="study-grid">
-{% for item in notes %}<a class="card study-saved" href="{% url 'study_note_detail' item.pk %}"><strong>{% trans "AI Study Notes" %}</strong><p>{{ item.target_language|upper }} → {{ item.explanation_language|upper }} · {{ item.learner_level|level_label }}</p><p>{% blocktrans count count=item.source_lesson_ids|length %}{{ count }} lesson reviewed{% plural %}{{ count }} lessons reviewed{% endblocktrans %}</p><time>{{ item.created_at|date:"Y-m-d H:i" }}</time></a>{% empty %}<p>{% trans "No saved study notes yet." %}</p>{% endfor %}
-</div>{% if notes.has_previous %}<a href="?page={{ notes.previous_page_number }}">← {% trans "Previous" %}</a>{% endif %} {% if notes.has_next %}<a href="?page={{ notes.next_page_number }}">{% trans "Next" %} →</a>{% endif %}</section>
+  {# ── Header ── #}
+  <header class="card sun rv-hero">
+    <div class="rv-hero-top">
+      <div>
+        <span class="eyebrow">✨ {% trans "AI Study Notes" %}</span>
+        <h1 class="h1">{% trans "Review" %}</h1>
+        <p>{% trans "AI creates personalized review materials from your past lessons." %}</p>
+      </div>
+      <img src="{% static 'icons/quicklesson-character-180.png' %}" alt="">
+    </div>
+    <div class="chips">
+      <span class="chip rv-chip">{% trans "One AI study note per lesson for everyone. Unlimited generation for Gold members." %}</span>
+    </div>
+  </header>
+
+  {# ── Create a study note ── #}
+  <section class="card" aria-labelledby="rv-create-title">
+    <h2 class="h2" id="rv-create-title">✨ {% trans "Generate AI study notes" %}</h2>
+    {% if error %}<p class="study-error" role="alert">{{ error }}</p>{% endif %}
+    <form method="post" id="study-form">{% csrf_token %}{{ form.request_token }}
+      <fieldset class="study-lesson-picker">
+        <legend>1 · {{ form.lesson.label }}</legend>
+        <p class="study-muted">{% trans "Select one or more lessons in the same language to review together. The study language is detected automatically." %}</p>
+        {{ form.lesson }}{{ form.lesson.errors }}
+      </fieldset>
+      <div class="rv-field">
+        <label for="{{ form.explanation_language.id_for_label }}">2 · {{ form.explanation_language.label }}</label>
+        {{ form.explanation_language }}{{ form.explanation_language.errors }}
+      </div>
+      <label class="study-consent">{{ form.include_private_notes }} <span>{{ form.include_private_notes.label }}</span></label>
+      <details class="rv-disclose">
+        <summary>🔒 {% trans "How your data is used" %}</summary>
+        <div class="rv-disclose-body">
+          <p>{% trans "We send notes from your selected lessons to OpenAI to create one combined review. Private notes are included only with your permission. We do not record or monitor conversations." %}</p>
+          <p>{% trans "Account names and email fields are not sent. Known identifiers in notes are masked, but this cannot detect every personal detail. Remove sensitive information from your notes before generating. Generated materials are saved privately in QuickLesson and can be read without another API call." %}</p>
+          <p>{% trans "Saved learning materials can also be reviewed by QuickLesson administrators. Your private note text is not displayed in that administrator view." %}</p>
+          <a href="https://platform.openai.com/docs/guides/your-data" target="_blank" rel="noopener noreferrer">{% trans "OpenAI data handling" %} ↗</a>
+        </div>
+      </details>
+      <button type="submit" class="btn" id="study-generate">✨ {% if error %}{% trans "Retry" %}{% else %}{% trans "Generate AI study notes" %}{% endif %}</button>
+      <p id="study-loading" role="status" aria-live="polite" hidden>{% trans "Generating your study notes… Please wait on this page." %}</p>
+    </form>
+  </section>
+
+</div>{# /rv-col left #}
+<div class="rv-col">
+
+  {# ── Saved notes ── #}
+  <section class="card" aria-labelledby="rv-saved-title">
+    <h2 class="h2" id="rv-saved-title">{% trans "Saved study notes" %}</h2>
+    <div class="rv-list">
+    {% for item in notes %}
+      <a class="rv-row study-saved" href="{% url 'study_note_detail' item.pk %}">
+        <span class="rv-level" title="{{ item.learner_level|level_label }}">{{ item.learner_level|default:"—" }}</span>
+        <span class="rv-row-main">
+          <strong>{{ item.content.title|default:"" }}{% if item.content.title %} · {% endif %}{{ item.target_language|upper }} → {{ item.explanation_language|upper }}</strong>
+          <span>{% blocktrans count count=item.source_lesson_ids|length %}{{ count }} lesson reviewed{% plural %}{{ count }} lessons reviewed{% endblocktrans %} · <time>{{ item.created_at|date:"Y-m-d H:i" }}</time></span>
+        </span>
+        <span class="rv-arrow" aria-hidden="true">→</span>
+      </a>
+    {% empty %}
+      <p class="study-muted">{% trans "No saved study notes yet." %}</p>
+    {% endfor %}
+    </div>
+    {% if notes.has_previous or notes.has_next %}
+    <nav class="study-nav">{% if notes.has_previous %}<a href="?page={{ notes.previous_page_number }}">← {% trans "Previous" %}</a>{% endif %}{% if notes.has_next %}<a href="?page={{ notes.next_page_number }}">{% trans "Next" %} →</a>{% endif %}</nav>
+    {% endif %}
+  </section>
+
+  {# ── Cheatsheet (Gold) ── #}
+  <a class="card tint rv-cheat" href="{% url 'cheatsheets' %}">
+    <span class="chip sun">👑 {% trans "Study Cheatsheet" %}</span>
+    <span class="rv-cheat-text">{% trans "Japanese review for the next two days" %}</span>
+    <span class="rv-arrow" aria-hidden="true">→</span>
+  </a>
+
+</div>{# /rv-col right #}
+</div>
 </div>
 <script>
 (function () {

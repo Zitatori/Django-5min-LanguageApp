@@ -3,47 +3,56 @@
 
 {% block content %}
 
-<div class="td-pc-grid">
+<div class="tdx">
+<h1 class="h1 tdx-title">{% trans "Tutor Dashboard" %}</h1>
 
-{# ── ❶ ステータスカード（独立: モバイルで最上部） ── #}
-<div class="td-item-status">
-<div class="card td-status-card">
-  <div class="td-status-left">
-    <h2 class="card-title" style="margin:0;">{% trans "Tutor Dashboard" %}</h2>
-    {% if tutor.is_online %}
-      <div class="td-online-pill">
-        <span class="td-dot"></span>
-        {% trans "Online · Waiting for a match" %}
-      </div>
-    {% else %}
-      <div class="td-offline-pill">{% trans "Offline" %}</div>
-    {% endif %}
+<div class="tdx-split">
+<div class="tdx-col">
+
+{# ── ❶ Status ── #}
+<section class="tdx-status {% if tutor.is_online %}hero{% else %}card sticker{% endif %}" aria-labelledby="tdx-status-title">
+  <div class="tdx-status-top">
+    <img class="tdx-mascot{% if tutor.is_online %} is-online{% endif %}" src="{% static 'icons/quicklesson-character-180.png' %}" alt="">
+    <div class="tdx-status-text">
+      <span class="eyebrow">{% trans "Your status" %}</span>
+      <h2 class="h2" id="tdx-status-title">{% if tutor.is_online %}{% trans "Online · Waiting for a match" %}{% else %}{% trans "Offline" %}{% endif %}</h2>
+      <p>{% if tutor.is_online %}{% trans "Students can be matched with you now." %}{% else %}{% trans "Go online to receive students." %}{% endif %}</p>
+    </div>
   </div>
 
-  <div class="td-status-actions">
-    <button type="button" class="td-device-check-btn" id="device-check-open">
-      {% trans "Check camera and microphone" %}
-    </button>
+  {% if tutor.languages.all %}
+  <div class="tdx-langs" aria-label="{% trans 'Teaching languages' %}">
+    {% for lang in tutor.languages.all %}
+      <span class="tdx-lang {% if lang.name == 'Japanese' %}ja{% elif lang.name == 'English' %}en{% elif lang.name == 'Spanish' %}es{% elif lang.name == 'French' %}fr{% endif %}">
+        {% if lang.name == 'English' %}<span class="fi fi-gb"></span>{% elif lang.name == 'French' %}<span class="fi fi-fr"></span>{% elif lang.name == 'Spanish' %}<span class="fi fi-es"></span>{% elif lang.name == 'Japanese' %}<span class="fi fi-jp"></span>{% else %}<span class="fi fi-un"></span>{% endif %}
+        {% trans lang.name %}
+      </span>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="tdx-warn" role="note">⚠️ {% trans "No teaching languages set — students cannot find you. Please contact an admin." %}</p>
+  {% endif %}
 
-    <p id="presence-error" role="alert" hidden style="color:#991b1b;background:#fff1f2;padding:12px;border-radius:10px;max-width:420px;">{% trans "Connection to the server was lost. Reconnecting… If this continues, reload this page." %}</p>
-    <form method="post" id="online-form" style="margin:0;">
+  <div class="tdx-status-actions">
+    <form method="post" id="online-form">
       {% csrf_token %}
       {% if tutor.is_online %}
         <input type="hidden" name="action" value="go_offline">
       {% else %}
         <input type="hidden" name="action" value="go_online">
       {% endif %}
-      <div class="td-toggle-wrap">
-        <span class="td-toggle-label">{% trans "Offline" %}</span>
-        <label class="td-toggle">
-          <input id="online-toggle" type="checkbox" style="display:none;" {% if tutor.is_online %}checked{% endif %}>
-          <span class="td-slider"></span>
-        </label>
-        <span class="td-toggle-label {% if tutor.is_online %}td-toggle-on{% endif %}">{% trans "Online" %}</span>
+      <div class="td-toggle-wrap" role="switch" tabindex="0" aria-checked="{% if tutor.is_online %}true{% else %}false{% endif %}" aria-label="{% trans 'Online' %}">
+        <input id="online-toggle" type="checkbox" hidden {% if tutor.is_online %}checked{% endif %}>
+        <span class="tdx-switch" aria-hidden="true"></span>
+        <span class="tdx-switch-label">{% if tutor.is_online %}{% trans "Online" %}{% else %}{% trans "Offline" %}{% endif %}</span>
       </div>
     </form>
+    <button type="button" class="btn btn-sm {% if tutor.is_online %}btn-sunny{% else %}btn-secondary{% endif %}" id="device-check-open">
+      🎥 {% trans "Check camera and microphone" %}
+    </button>
   </div>
-</div>
+  <p id="presence-error" class="tdx-error" role="alert" hidden>{% trans "Connection to the server was lost. Reconnecting… If this continues, reload this page." %}</p>
+</section>
 
 <div
   class="td-device-modal"
@@ -92,597 +101,265 @@
           <strong>{% trans "Speaker" %}</strong>
         </div>
         <p class="td-device-help">{% trans "The sound will play from your browser's default output device." %}</p>
-        <button type="button" class="td-device-secondary" id="speaker-test-btn">
-          {% trans "Play test sound" %}
+        <button type="button" class="btn btn-sm btn-secondary" id="speaker-test-btn">
+          🔊 {% trans "Play test sound" %}
         </button>
       </section>
     </div>
 
     <div class="td-device-error" id="device-error" role="alert" hidden></div>
-    <button type="button" class="td-device-done" data-device-close>{% trans "Done" %}</button>
+    <button type="button" class="btn td-device-done" data-device-close>{% trans "Done" %}</button>
   </div>
 </div>
-</div>{# /td-item-status #}
 
-{# ── ❸ Active Matches（モバイル: toggle直下 / PC: 右カラム） ── #}
-<div class="td-active-matches">
-<div class="card">
-  <h3 class="card-title" style="margin-bottom:16px;">{% trans "Active Matches" %}</h3>
+{# ── ❷ Active matches ── #}
+<section class="card tdx-matches" id="matching-card" aria-labelledby="tdx-matches-title">
+  <div class="tdx-card-head">
+    <h2 class="h2" id="tdx-matches-title">{% trans "Active Matches" %}</h2>
+    {% if tutor.is_online %}<span class="chip ok"><span class="tdx-live" aria-hidden="true"></span>{% trans "Online" %}</span>{% endif %}
+  </div>
 
   {% if active_matches %}
+    <div class="tdx-match-list">
     {% for match in active_matches %}
-      <div style="padding:12px; border:1px solid var(--line); border-radius:12px; margin-bottom:12px;">
-        <p><strong>Student:</strong>
-          {% with u=match.request.student.user %}{% if u.first_name %}{{ u.first_name }} <span style="color:var(--ink-soft); font-size:.85em;">({{ u|display_name }})</span>{% else %}{{ u|display_name }}{% endif %}
-          {% if u.gold_membership.is_active %}<span class="header-badge header-badge-gold">&#x1F451; Gold</span>
-          {% elif u.is_superuser %}<span class="header-badge header-badge-dev">🚀 {% trans "Founder" %}</span>
-          {% elif u.is_staff %}<span class="header-badge header-badge-admin">Admin</span>
-          {% endif %}{% endwith %}
-        </p>
-        <p style="font-size:12px; color:var(--ink-soft); margin-top:4px;">
-          {% if match.previous_conversation_count %}
-            {% blocktrans with count=match.previous_conversation_count %}Previous conversations: {{ count }}{% endblocktrans %}
-          {% else %}
-            {% trans "First time" %}
-          {% endif %}
-        </p>
-        <p><strong>Language:</strong> {{ match.request.language.name }}</p>
-        <a href="{% url 'lesson_room' match.id %}" class="btn btn-primary" style="margin-top:8px; display:inline-block;">
-          {% trans "Enter lesson room" %}
-        </a>
+      {% with u=match.request.student.user %}
+      <div class="tdx-match">
+        <span class="avatar" aria-hidden="true">{{ u|display_name|slice:":1"|upper }}</span>
+        <div class="tdx-match-main">
+          <strong>
+            {% if u.first_name %}{{ u.first_name }} <span class="tdx-soft">({{ u|display_name }})</span>{% else %}{{ u|display_name }}{% endif %}
+            {% if u.gold_membership.is_active %}<span class="header-badge header-badge-gold">&#x1F451; Gold</span>
+            {% elif u.is_superuser %}<span class="header-badge header-badge-dev">🚀 {% trans "Founder" %}</span>
+            {% elif u.is_staff %}<span class="header-badge header-badge-admin">Admin</span>
+            {% endif %}
+          </strong>
+          <span class="tdx-soft">
+            {{ match.request.language.name }} ·
+            {% if match.previous_conversation_count %}{% blocktrans with count=match.previous_conversation_count %}Previous conversations: {{ count }}{% endblocktrans %}{% else %}{% trans "First time" %}{% endif %}
+          </span>
+        </div>
+        <a href="{% url 'lesson_room' match.id %}" class="btn btn-sm">{% trans "Enter lesson room" %}</a>
       </div>
+      {% endwith %}
     {% endfor %}
-  {% else %}
-    <div class="td-empty-state">
-      <div class="td-empty-icon">🎯</div>
-      <p>{% trans "No active matches yet." %}</p>
-      <p style="font-size:12px;">{% trans "Matches will appear here automatically." %}</p>
     </div>
-  {% endif %}
-</div>
-</div>{# /td-active-matches #}
-
-{# ── 左カラム残り（統計・言語・案内） ── #}
-<div class="td-col-left">
-
-{# ── ❷ レッスン統計 ── #}
-{% if total_lessons_taught %}
-<div class="card td-stats-card">
-  <div class="td-stats-grid">
-    <div class="td-stat-total">
-      <span class="td-stat-big">{{ total_lessons_taught }}</span>
-      <span class="td-stat-lbl">{% trans "Total Lessons" %}</span>
-    </div>
-    <div class="td-stat-langs">
-      {% for lang, count in lang_lesson_stats %}
-      <div class="td-stat-lang">
-        {% if lang.name == 'English' %}<span class="fi fi-gb td-slc-flag"></span>
-        {% elif lang.name == 'French' %}<span class="fi fi-fr td-slc-flag"></span>
-        {% elif lang.name == 'Spanish' %}<span class="fi fi-es td-slc-flag"></span>
-        {% elif lang.name == 'Japanese' %}<span class="fi fi-jp td-slc-flag"></span>
-        {% else %}<span class="fi fi-un td-slc-flag"></span>{% endif %}
-        <span class="td-slc-num">{{ count }}</span>
-        <span class="td-slc-name">{% trans lang.name %}</span>
-      </div>
-      {% endfor %}
-    </div>
-  </div>
-</div>
-{% endif %}
-
-{# ── ❸ 言語カード（オンライン時のみ） ── #}
-{% if tutor.is_online %}
-<div class="card td-matching-card" id="matching-card">
-
-  {# 言語未設定の警告 #}
-  {% if not tutor.languages.all %}
-  <div style="background:var(--sun-soft); border:1.5px solid #fde68a; border-radius:10px; padding:10px 14px; margin-bottom:14px; font-size:13px; color:#92400e;">
-    ⚠️ {% trans "No teaching languages set — students cannot find you. Please contact an admin." %}
-  </div>
-  {% endif %}
-
-  {# 言語カードグリッド #}
-  <p class="td-lang-label">{% trans "Teaching languages" %}</p>
-  <div class="td-lang-grid">
-    {% for lang in tutor.languages.all %}
-      {% if lang.name == "Japanese" %}
-        <div class="td-lang-card td-lc-ja">
-          <div class="td-lc-bg"></div><div class="td-lc-ov"></div>
-          <span class="fi fi-jp td-lc-flag"></span>
-          <span class="td-lc-name">{% trans "Japanese" %}</span>
-        </div>
-      {% elif lang.name == "English" %}
-        <div class="td-lang-card td-lc-en">
-          <div class="td-lc-bg"></div><div class="td-lc-ov"></div>
-          <span class="fi fi-gb td-lc-flag"></span>
-          <span class="td-lc-name">{% trans "English" %}</span>
-        </div>
-      {% elif lang.name == "Spanish" %}
-        <div class="td-lang-card td-lc-es">
-          <div class="td-lc-bg"></div><div class="td-lc-ov"></div>
-          <span class="fi fi-es td-lc-flag"></span>
-          <span class="td-lc-name">{% trans "Spanish" %}</span>
-        </div>
-      {% elif lang.name == "French" %}
-        <div class="td-lang-card td-lc-fr">
-          <div class="td-lc-bg"></div><div class="td-lc-ov"></div>
-          <span class="fi fi-fr td-lc-flag"></span>
-          <span class="td-lc-name">{% trans "French" %}</span>
-        </div>
-      {% else %}
-        <div class="td-lang-card">
-          <div class="td-lc-bg"></div><div class="td-lc-ov"></div>
-          <span class="fi fi-un td-lc-flag"></span>
-          <span class="td-lc-name">{% trans lang.name %}</span>
-        </div>
-      {% endif %}
-    {% empty %}
-      <p class="text-muted" style="font-size:13px;">{% trans "No teaching languages selected yet." %}</p>
-    {% endfor %}
-  </div>
-
-  {# 待機中アニメーション #}
-  <div class="td-wave-box">
-    <div class="td-wave">
-      <span></span><span></span><span></span><span></span><span></span>
-    </div>
-    <div class="td-wave-text">
+  {% elif tutor.is_online %}
+    <div class="tdx-empty">
+      <div class="td-wave" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
       <strong>{% trans "Waiting for a student…" %}</strong>
       <span>{% trans "You'll be matched as soon as a student comes online." %}</span>
     </div>
+  {% else %}
+    <div class="tdx-empty">
+      <img src="{% static 'icons/quicklesson-character-180.png' %}" alt="" class="tdx-sleepy">
+      <strong>{% trans "No active matches yet." %}</strong>
+      <span>{% trans "Matches will appear here automatically." %}</span>
+    </div>
+  {% endif %}
+</section>
+
+{# ── ❺ Add a language ── #}
+<section class="card tint tdx-notice" aria-labelledby="tdx-notice-title">
+  <h2 class="h3" id="tdx-notice-title">💬 {% trans "To add a teaching language, a review and trial are required." %}</h2>
+  {% if request.LANGUAGE_CODE == "ja" %}
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLScNqEZQsvZqmpH4RzhII00l0OPiAbcJNympRh51-Zl4aoIgDQ/viewform?usp=dialog" target="_blank" rel="noopener" class="btn btn-sm">{% trans "Application form" %} ↗</a>
+  {% elif request.LANGUAGE_CODE == "fr" %}
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLScwKwyWGtrJojc8TB80NnuSeMl9xGnggJhebn_mGyz5Hlmxhg/viewform?usp=dialog" target="_blank" rel="noopener" class="btn btn-sm">{% trans "Application form" %} ↗</a>
+  {% elif request.LANGUAGE_CODE == "es" %}
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLSflXPpl_sqJWoOEiLdhGgaizTwVNu4151T9uzi87LWlbvZ2qQ/viewform?usp=dialog" target="_blank" rel="noopener" class="btn btn-sm">{% trans "Application form" %} ↗</a>
+  {% else %}
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLSdxtlLt0XxDJsjwBzBvvpo5EpFNbG00b0sirsPFXw5R8s9yrg/viewform?usp=dialog" target="_blank" rel="noopener" class="btn btn-sm">{% trans "Application form" %} ↗</a>
+  {% endif %}
+</section>
+
+</div>{# /tdx-col left #}
+<div class="tdx-col">
+
+{# ── ❸ Lessons given ── #}
+<section class="card tdx-stats" aria-labelledby="tdx-stats-title">
+  <div class="tdx-card-head">
+    <h2 class="h2" id="tdx-stats-title">{% trans "Total Lessons" %}</h2>
+    <span class="tdx-big">{{ total_lessons_taught|default:0 }}</span>
   </div>
-</div>
-{% endif %}
-
-{# ── 言語追加案内 ── #}
-<div class="td-lang-notice">
-  <span class="td-lang-notice-icon">💬</span>
-  <div class="td-lang-notice-body">
-    <span>{% trans "To add a teaching language, a review and trial are required." %}</span>
-    {% if request.LANGUAGE_CODE == "ja" %}
-      <a href="https://docs.google.com/forms/d/e/1FAIpQLScNqEZQsvZqmpH4RzhII00l0OPiAbcJNympRh51-Zl4aoIgDQ/viewform?usp=dialog" target="_blank" rel="noopener" class="td-lang-notice-link">{% trans "Application form" %}</a>
-    {% elif request.LANGUAGE_CODE == "fr" %}
-      <a href="https://docs.google.com/forms/d/e/1FAIpQLScwKwyWGtrJojc8TB80NnuSeMl9xGnggJhebn_mGyz5Hlmxhg/viewform?usp=dialog" target="_blank" rel="noopener" class="td-lang-notice-link">{% trans "Application form" %}</a>
-    {% elif request.LANGUAGE_CODE == "es" %}
-      <a href="https://docs.google.com/forms/d/e/1FAIpQLSflXPpl_sqJWoOEiLdhGgaizTwVNu4151T9uzi87LWlbvZ2qQ/viewform?usp=dialog" target="_blank" rel="noopener" class="td-lang-notice-link">{% trans "Application form" %}</a>
-    {% else %}
-      <a href="https://docs.google.com/forms/d/e/1FAIpQLSdxtlLt0XxDJsjwBzBvvpo5EpFNbG00b0sirsPFXw5R8s9yrg/viewform?usp=dialog" target="_blank" rel="noopener" class="td-lang-notice-link">{% trans "Application form" %}</a>
-    {% endif %}
+  {% if lang_lesson_stats %}
+  <div class="tdx-bars">
+    {% for lang, count in lang_lesson_stats %}
+    <div class="tdx-bar-row">
+      <span class="tdx-bar-name">
+        {% if lang.name == 'English' %}<span class="fi fi-gb"></span>{% elif lang.name == 'French' %}<span class="fi fi-fr"></span>{% elif lang.name == 'Spanish' %}<span class="fi fi-es"></span>{% elif lang.name == 'Japanese' %}<span class="fi fi-jp"></span>{% else %}<span class="fi fi-un"></span>{% endif %}
+        {% trans lang.name %}
+      </span>
+      <span class="tdx-bar" aria-hidden="true"><span style="width: {% widthratio count total_lessons_taught 100 %}%"></span></span>
+      <span class="tdx-bar-num">{{ count }}</span>
+    </div>
+    {% endfor %}
   </div>
-</div>
+  {% else %}
+  <p class="tdx-soft">{% trans "No lessons yet." %}</p>
+  {% endif %}
+</section>
 
-</div>{# /td-col-left #}
-
-{# ── ❹ Recent History ── #}
-<div class="td-col-right">
+{# ── ❹ Recent history / student feedback ── #}
+<div class="tdx-history">
 {% include "core/_recent_lessons.html" with matches=matches %}
-</div>{# /td-col-right #}
+</div>
 
-</div>{# /td-pc-grid #}
+</div>{# /tdx-col right #}
+</div>{# /tdx-split #}
+</div>{# /tdx #}
 
 <style>
-  /* ── ステータスカード ── */
-  .td-status-card {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    flex-wrap: wrap;
+  /* Tutor dashboard · kawaii design */
+  .tdx { display: grid; gap: 16px; min-width: 0; }
+  .tdx *, .tdx *::before, .tdx *::after { box-sizing: border-box; }
+  .tdx .card, .tdx .hero { margin: 0; min-width: 0; }
+  .tdx-split { display: grid; gap: 16px; }
+  .tdx-col { display: contents; }
+  .tdx-status   { order: 1; }
+  .tdx-matches  { order: 2; }
+  .tdx-stats    { order: 3; }
+  .tdx-history  { order: 4; min-width: 0; }
+  .tdx-notice   { order: 5; }
+  @media (min-width: 1100px) {
+    .tdx-split { grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: 24px; align-items: start; }
+    .tdx-col { display: grid; gap: 24px; align-content: start; min-width: 0; }
   }
-  .td-status-left {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .td-status-actions {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 14px;
-    flex-wrap: wrap;
-  }
-  .td-device-check-btn {
-    appearance: none;
-    border: 1.5px solid #d7d9ff;
-    background: #fff;
-    color: var(--blue-deep);
-    font-size: 13px;
-    font-weight: 800;
-    border-radius: 999px;
-    padding: 10px 16px;
-    cursor: pointer;
-    box-shadow: 0 8px 18px rgba(99,102,241,0.12);
-    transition: transform 0.12s, border-color 0.12s, box-shadow 0.12s;
-  }
-  .td-device-check-btn:hover {
-    transform: translateY(-1px);
-    border-color: var(--blue);
-    box-shadow: 0 12px 24px rgba(99,102,241,0.18);
-  }
-  .td-online-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    background: var(--ok-soft);
-    color: #15803d;
-    font-size: 13px;
-    font-weight: 600;
-    padding: 5px 12px;
-    border-radius: 99px;
-    width: fit-content;
-  }
-  .td-dot {
-    width: 8px;
-    height: 8px;
-    background: var(--ok);
-    border-radius: 50%;
-    animation: td-pulse 1.5s ease-in-out infinite;
-    flex-shrink: 0;
-  }
-  @keyframes td-pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50%       { opacity: 0.4; transform: scale(0.85); }
-  }
-  .td-offline-pill {
-    display: inline-flex;
-    align-items: center;
-    background: var(--sky);
-    color: var(--ink-soft);
-    font-size: 13px;
-    font-weight: 600;
-    padding: 5px 12px;
-    border-radius: 99px;
-    width: fit-content;
-  }
-  /* トグル */
-  .td-toggle-wrap {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 13px;
-    color: var(--ink-soft);
-    cursor: pointer;
-  }
-  .td-toggle-on { color: #15803d; font-weight: 700; }
-  .td-toggle { position: relative; width: 52px; height: 28px; display: block; }
-  .td-slider {
-    position: absolute;
-    inset: 0;
-    border-radius: 99px;
-    background: var(--line);
-    transition: background 0.2s;
-    cursor: pointer;
-  }
-  .td-slider::before {
-    content: '';
-    position: absolute;
-    width: 20px; height: 20px;
-    left: 4px; top: 4px;
-    background: #fff;
-    border-radius: 50%;
-    transition: transform 0.2s;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
-  }
-  #online-toggle:checked + .td-slider { background: var(--ok); }
-  #online-toggle:checked + .td-slider::before { transform: translateX(24px); }
 
-  /* ── 任意デバイスチェック ── */
+  .tdx-card-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+  .tdx-soft { color: var(--ink-soft); font-size: 14px; font-weight: 700; }
+
+  /* Status */
+  .tdx-status { display: grid; gap: 14px; }
+  .tdx-status-top { display: grid; grid-template-columns: 84px 1fr; gap: 14px; align-items: center; }
+  .tdx-mascot { width: 84px; height: 84px; border: 2px solid var(--ink); border-radius: 24px; background: var(--cloud); }
+  .tdx-mascot:not(.is-online) { filter: saturate(.55); }
+  .tdx-mascot.is-online { animation: tdx-bob 2.4s ease-in-out infinite; }
+  @keyframes tdx-bob { 50% { transform: translateY(-4px); } }
+  .tdx-status-text { display: grid; gap: 4px; min-width: 0; }
+  .tdx-status-text p { margin: 0; font-weight: 700; color: var(--ink-soft); }
+  .tdx-status.hero .eyebrow, .tdx-status.hero .tdx-status-text p { color: #fff; }
+  .tdx-langs { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tdx-lang {
+    display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px;
+    background: var(--cloud); color: var(--ink); border: 2px solid var(--ink); border-radius: var(--r-pill);
+    font-size: 14px; font-weight: 800;
+  }
+  .tdx-lang.ja { background: var(--lang-ja); }
+  .tdx-lang.en { background: var(--lang-en); }
+  .tdx-lang.es { background: var(--lang-es); }
+  .tdx-lang.fr { background: var(--lang-fr); }
+  .tdx-lang .fi { border-radius: 3px; }
+  .tdx-warn { margin: 0; padding: 10px 14px; background: var(--sun-soft); color: #6b4f12; border: 2px solid var(--sun); border-radius: 14px; font-size: 14px; font-weight: 700; }
+  .tdx-status-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+  .tdx-status-actions form { margin: 0; }
+  .tdx-error { margin: 0; padding: 12px; background: var(--bad-soft); color: #a32025; border: 2px solid var(--bad); border-radius: 14px; font-weight: 700; }
+
+  /* Switch (the whole .td-toggle-wrap submits the form via JS) */
+  .td-toggle-wrap { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; cursor: pointer; font-weight: 900; border-radius: var(--r-pill); }
+  .td-toggle-wrap:focus-visible { outline: 3px solid var(--sun); outline-offset: 3px; }
+  .tdx-switch {
+    position: relative; width: 56px; height: 32px; flex: none;
+    background: #d7deee; border: 2px solid var(--ink); border-radius: var(--r-pill);
+    transition: background .2s;
+  }
+  .tdx-switch::after {
+    content: ""; position: absolute; top: 3px; left: 3px; width: 22px; height: 22px;
+    background: var(--cloud); border: 2px solid var(--ink); border-radius: 50%;
+    transition: transform .2s;
+  }
+  #online-toggle:checked + .tdx-switch { background: var(--ok); }
+  #online-toggle:checked + .tdx-switch::after { transform: translateX(24px); }
+  .hero .tdx-switch-label { color: #fff; }
+
+  /* Active matches */
+  .tdx-live { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); animation: tdx-pulse 1.6s ease-in-out infinite; }
+  @keyframes tdx-pulse { 50% { opacity: .35; } }
+  .tdx-match-list { display: grid; gap: 10px; }
+  .tdx-match {
+    display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center;
+    padding: 12px; background: var(--sun-soft); border: 2px solid var(--ink); border-radius: 18px; box-shadow: var(--edge);
+  }
+  .tdx-match-main { display: grid; gap: 2px; min-width: 0; overflow-wrap: anywhere; }
+  .tdx-match-main strong { font-weight: 900; }
+  .tdx-empty { display: grid; justify-items: center; gap: 6px; padding: 8px 0 4px; text-align: center; }
+  .tdx-empty strong { font-weight: 900; }
+  .tdx-empty span { color: var(--ink-soft); font-size: 14px; font-weight: 700; }
+  .tdx-sleepy { width: 72px; height: 72px; border-radius: 22px; border: 2px solid var(--line); filter: saturate(.55); }
+  .td-wave { display: flex; align-items: flex-end; gap: 5px; height: 36px; margin-bottom: 4px; }
+  .td-wave span { width: 8px; height: 12px; background: var(--blue); border: 2px solid var(--ink); border-radius: var(--r-pill); animation: tdx-wave 1.1s ease-in-out infinite; }
+  .td-wave span:nth-child(2) { animation-delay: .12s; background: var(--blush); }
+  .td-wave span:nth-child(3) { animation-delay: .24s; background: var(--sun); }
+  .td-wave span:nth-child(4) { animation-delay: .36s; background: var(--ok); }
+  .td-wave span:nth-child(5) { animation-delay: .48s; }
+  @keyframes tdx-wave { 50% { height: 34px; } }
+
+  /* Add a language */
+  .tdx-notice { display: grid; gap: 12px; }
+  .tdx-notice .btn { justify-self: start; }
+
+  /* Lessons given */
+  .tdx-big { font-family: var(--font-display); font-size: 34px; font-weight: 900; line-height: 1; font-variant-numeric: tabular-nums; }
+  .tdx-bars { display: grid; gap: 10px; }
+  .tdx-bar-row { display: grid; grid-template-columns: minmax(96px, auto) 1fr 32px; gap: 10px; align-items: center; }
+  .tdx-bar-name { display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 800; }
+  .tdx-bar-name .fi { border-radius: 3px; }
+  .tdx-bar { height: 14px; background: var(--sky); border: 2px solid var(--ink); border-radius: var(--r-pill); overflow: hidden; }
+  .tdx-bar > span { display: block; height: 100%; background: var(--blue); }
+  .tdx-bar-num { text-align: right; font-weight: 900; font-variant-numeric: tabular-nums; }
+
+  /* Device check modal */
   .td-device-modal {
-    position: fixed;
-    inset: 0;
-    z-index: 10050;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    padding: 18px;
-    background: rgba(15, 23, 42, 0.52);
+    position: fixed; inset: 0; z-index: 1000; display: none; align-items: center; justify-content: center;
+    padding: 16px; background: rgba(28, 42, 82, .55);
   }
   .td-device-modal.is-open { display: flex; }
   .td-device-dialog {
-    position: relative;
-    width: min(760px, 100%);
-    max-height: min(92vh, 820px);
-    overflow: auto;
-    background: #fff;
-    border-radius: 18px;
-    padding: 26px;
-    box-shadow: 0 24px 70px rgba(15, 23, 42, 0.3);
+    position: relative; width: min(760px, 100%); max-height: calc(100dvh - 32px); overflow: auto;
+    padding: 22px; background: var(--cloud); color: var(--ink);
+    border: 2px solid var(--ink); border-radius: 28px; box-shadow: 0 6px 0 var(--ink);
   }
   .td-device-x {
-    position: absolute;
-    top: 14px;
-    right: 14px;
-    width: 36px;
-    height: 36px;
-    border: 0;
-    border-radius: 50%;
-    background: var(--sky);
-    color: var(--ink-soft);
-    font-size: 24px;
-    line-height: 1;
-    cursor: pointer;
+    position: absolute; top: 14px; right: 14px; width: 40px; height: 40px;
+    display: grid; place-items: center; background: var(--cloud); color: var(--ink);
+    border: 2px solid var(--ink); border-radius: 50%; font-size: 22px; font-weight: 900; cursor: pointer;
   }
-  .td-device-head { padding-right: 36px; margin-bottom: 20px; }
-  .td-device-head h3 {
-    margin: 0 0 6px;
-    font-size: 24px;
-    font-weight: 900;
-    color: var(--ink);
-  }
-  .td-device-head p {
-    margin: 0;
-    color: var(--ink-soft);
-    font-size: 14px;
-    line-height: 1.5;
-  }
-  .td-device-grid {
-    display: grid;
-    grid-template-columns: 1.2fr 1fr;
-    gap: 14px;
-  }
-  .td-device-panel {
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    padding: 14px;
-    background: var(--sky);
-  }
+  .td-device-x:hover { background: var(--sky); }
+  .td-device-head { padding-right: 48px; margin-bottom: 16px; }
+  .td-device-head h3 { margin: 0 0 4px; font-size: 22px; font-weight: 900; }
+  .td-device-head p { margin: 0; color: var(--ink-soft); font-weight: 700; }
+  .td-device-grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 12px; }
+  .td-device-panel { display: grid; gap: 10px; align-content: start; padding: 14px; background: var(--sky); border: 2px solid var(--line); border-radius: 20px; min-width: 0; }
   .td-device-panel:first-child { grid-row: span 2; }
-  .td-device-panel-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    margin-bottom: 12px;
-  }
-  .td-device-panel-head strong {
-    color: var(--ink);
-    font-size: 15px;
-  }
+  .td-device-panel-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .td-device-panel-head strong { font-weight: 900; }
   .td-device-status {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    border-radius: 999px;
-    background: var(--blue-soft);
-    color: var(--blue-deep);
-    font-size: 11px;
-    font-weight: 800;
-    padding: 5px 9px;
-    white-space: nowrap;
+    display: inline-flex; align-items: center; gap: 4px; padding: 2px 10px;
+    background: var(--cloud); color: var(--ink-soft); border: 2px solid var(--line); border-radius: var(--r-pill);
+    font-size: 12px; font-weight: 800; white-space: nowrap;
   }
-  .td-device-status.is-ok {
-    background: var(--ok-soft);
-    color: #15803d;
-  }
+  .td-device-status.is-ok { background: var(--ok-soft); color: #0d6b4a; border-color: var(--ok); }
   .td-device-status.is-ok::before { content: "✓"; }
-  .td-device-preview {
-    width: 100%;
-    aspect-ratio: 4 / 3;
-    display: block;
-    border-radius: 12px;
-    background: var(--ink);
-    object-fit: cover;
-  }
-  .td-mic-meter {
-    height: 16px;
-    overflow: hidden;
-    border-radius: 999px;
-    background: var(--line);
-  }
-  .td-mic-meter span {
-    display: block;
-    width: 0%;
-    height: 100%;
-    border-radius: inherit;
-    background: linear-gradient(90deg, var(--ok), var(--blue));
-    transition: width 0.08s linear;
-  }
-  .td-device-help {
-    margin: 10px 0 0;
-    color: var(--ink-soft);
-    font-size: 13px;
-    line-height: 1.5;
-  }
-  .td-device-secondary {
-    width: 100%;
-    margin-top: 12px;
-    border: 1.5px solid var(--line);
-    border-radius: 12px;
-    background: #fff;
-    color: var(--blue-deep);
-    font-weight: 900;
-    padding: 12px 14px;
-    cursor: pointer;
-  }
-  .td-device-done {
-    width: 100%;
-    margin-top: 16px;
-    border: 0;
-    border-radius: 999px;
-    background: var(--blue);
-    color: #fff;
-    font-weight: 900;
-    padding: 14px 18px;
-    cursor: pointer;
-    box-shadow: 0 12px 28px rgba(99,102,241,0.28);
-  }
-  .td-device-error {
-    margin-top: 14px;
-    border: 1px solid #fecaca;
-    border-radius: 12px;
-    background: #fef2f2;
-    color: #b91c1c;
-    padding: 12px 14px;
-    font-size: 13px;
-    font-weight: 700;
-    line-height: 1.5;
-  }
+  .td-device-preview { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; background: var(--ink); border: 2px solid var(--ink); border-radius: 16px; transform: scaleX(-1); }
+  .td-mic-meter { height: 16px; background: var(--cloud); border: 2px solid var(--ink); border-radius: var(--r-pill); overflow: hidden; }
+  .td-mic-meter span { display: block; width: 0; height: 100%; background: var(--ok); transition: width .08s linear; }
+  .td-device-help { margin: 0; color: var(--ink-soft); font-size: 14px; font-weight: 700; }
+  .td-device-speaker .btn { justify-self: start; }
+  .td-device-error { margin-top: 12px; padding: 12px; background: var(--bad-soft); color: #a32025; border: 2px solid var(--bad); border-radius: 14px; font-weight: 700; }
+  .td-device-done { width: 100%; margin-top: 14px; }
 
-  /* ── レッスン統計カード ── */
-  .td-stats-card { padding: 14px 20px; }
-  .td-stats-grid { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
-  .td-stat-total { display: flex; flex-direction: column; gap: 2px; min-width: 64px; }
-  .td-stat-big { font-size: 30px; font-weight: 800; color: var(--ink); line-height: 1; }
-  .td-stat-lbl { font-size: 11px; font-weight: 600; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.06em; }
-  .td-stat-langs { display: flex; gap: 8px; flex-wrap: wrap; }
-  .td-stat-lang {
-    display: flex; align-items: center; gap: 5px;
-    background: var(--sky); border: 1px solid var(--line);
-    border-radius: 8px; padding: 6px 10px;
-  }
-  .td-slc-flag { width: 20px; height: 14px; border-radius: 2px; flex-shrink: 0; }
-  .td-slc-num { font-size: 15px; font-weight: 800; color: var(--ink); }
-  .td-slc-name { font-size: 11px; font-weight: 600; color: var(--ink-soft); }
-
-  /* ── 言語カードグリッド ── */
-  .td-lang-label {
-    font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
-    text-transform: uppercase; color: var(--ink-soft); margin: 0 0 10px;
-  }
-  .td-lang-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 18px; }
-  .td-lang-card {
-    position: relative;
-    display: flex; align-items: center; gap: 10px;
-    padding: 12px 20px; border-radius: 14px;
-    border: 2px solid transparent; overflow: hidden;
-    cursor: default; transition: transform 0.12s, box-shadow 0.12s;
-    min-width: 130px;
-  }
-  .td-lang-card:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,0.18); }
-
-  .td-lc-bg { position:absolute; inset:0; background-size:cover; background-position:center; border-radius:12px; }
-  .td-lc-ov { position:absolute; inset:0; border-radius:12px; }
-
-  .td-lc-en .td-lc-bg { background-image: url('https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=400&q=80&auto=format&fit=crop'); }
-  .td-lc-en .td-lc-ov { background: linear-gradient(135deg, rgba(30,64,175,0.82) 0%, rgba(37,99,235,0.65) 100%); }
-  .td-lc-fr .td-lc-bg { background-image: url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=400&q=80&auto=format&fit=crop'); }
-  .td-lc-fr .td-lc-ov { background: linear-gradient(135deg, rgba(109,40,217,0.82) 0%, rgba(124,58,237,0.65) 100%); }
-  .td-lc-es .td-lc-bg { background-image: url('https://images.unsplash.com/photo-1539037116277-4db20889f2d4?w=400&q=80&auto=format&fit=crop'); }
-  .td-lc-es .td-lc-ov { background: linear-gradient(135deg, rgba(180,83,9,0.82) 0%, rgba(217,119,6,0.65) 100%); }
-  .td-lc-ja .td-lc-bg { background-image: url('https://images.unsplash.com/photo-1490806843957-31f4c9a91c65?w=400&q=80&auto=format&fit=crop'); }
-  .td-lc-ja .td-lc-ov { background: linear-gradient(135deg, rgba(159,18,57,0.82) 0%, rgba(190,18,60,0.65) 100%); }
-
-  .td-lc-flag { width: 28px; height: 20px; border-radius: 3px; flex-shrink: 0; position:relative; z-index:1; }
-  .td-lc-name { font-size: 14px; font-weight: 700; color: #fff; position:relative; z-index:1; text-shadow: 0 1px 3px rgba(0,0,0,0.2); }
-
-  .td-wave-box {
-    background: var(--sky);
-    border: 1px dashed #cbd5e1;
-    border-radius: 12px;
-    padding: 18px 20px;
-    display: flex;
-    align-items: center;
-    gap: 18px;
-  }
-  .td-wave {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    flex-shrink: 0;
-  }
-  .td-wave span {
-    display: block;
-    width: 4px;
-    border-radius: 4px;
-    background: var(--blue);
-    animation: td-wave 1s ease-in-out infinite;
-  }
-  .td-wave span:nth-child(1) { height: 10px; animation-delay: 0s; }
-  .td-wave span:nth-child(2) { height: 18px; animation-delay: 0.1s; }
-  .td-wave span:nth-child(3) { height: 26px; animation-delay: 0.2s; }
-  .td-wave span:nth-child(4) { height: 18px; animation-delay: 0.3s; }
-  .td-wave span:nth-child(5) { height: 10px; animation-delay: 0.4s; }
-  @keyframes td-wave {
-    0%, 100% { transform: scaleY(0.5); opacity: 0.4; }
-    50%       { transform: scaleY(1);   opacity: 1; }
-  }
-  .td-wave-text {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-  }
-  .td-wave-text strong { font-size: 14px; font-weight: 600; color: var(--ink); }
-  .td-wave-text span   { font-size: 12px; color: var(--ink-soft); }
-
-  /* ── Empty State ── */
-  .td-empty-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 28px 0;
-    gap: 6px;
-    color: var(--ink-soft);
-  }
-  .td-empty-icon { font-size: 36px; margin-bottom: 4px; }
-  .td-empty-state p { font-size: 13px; }
-
-  /* ── 言語追加案内 ── */
-  .td-lang-notice {
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    background: var(--sky);
-    border: 1px solid var(--line);
-    border-radius: 10px;
-    padding: 12px 14px;
-    font-size: 12px;
-    color: var(--ink-soft);
-    line-height: 1.5;
-    margin-bottom: 16px;
-  }
-  .td-lang-notice-icon { flex-shrink: 0; font-size: 15px; }
-  .td-lang-notice-body { display: flex; flex-direction: column; gap: 8px; }
-  .td-lang-form-links { display: flex; flex-wrap: wrap; gap: 8px 12px; }
-  .td-lang-notice-link { color: var(--blue); text-decoration: underline; font-weight: 700; }
-  .td-lang-notice-link:hover { color: var(--blue-deep); }
-
-  /* ── PC 2カラムレイアウト ── */
-  @media (min-width: 900px) {
-    .td-pc-grid {
-      display: grid;
-      grid-template-columns: 400px 1fr;
-      grid-template-areas:
-        "status  matches"
-        "left    matches"
-        "left    history";
-      gap: 0 28px;
-      align-items: start;
-    }
-    .td-item-status   { grid-area: status;  min-width: 0; }
-    .td-col-left      { grid-area: left;    min-width: 0; }
-    .td-active-matches{ grid-area: matches; min-width: 0; align-self: start; }
-    .td-col-right     { grid-area: history; min-width: 0; }
-
-    .td-col-left > *:last-child,
-    .td-col-right > *:last-child {
-      margin-bottom: 0;
-    }
-  }
   @media (max-width: 620px) {
-    .td-status-card,
-    .td-status-actions {
-      align-items: stretch;
-      flex-direction: column;
-    }
-    .td-device-check-btn,
-    .td-status-actions form,
-    .td-toggle-wrap {
-      width: 100%;
-      justify-content: center;
-    }
-    .td-device-dialog {
-      padding: 22px 16px 18px;
-      border-radius: 16px;
-    }
-    .td-device-grid {
-      grid-template-columns: 1fr;
-    }
+    .tdx-status-actions { flex-direction: column; align-items: stretch; }
+    .tdx-status-actions .btn { width: 100%; }
+    .tdx-match { grid-template-columns: auto 1fr; }
+    .tdx-match .btn { grid-column: 1 / -1; width: 100%; }
+    .td-device-dialog { padding: 18px; border-radius: 24px; }
+    .td-device-grid { grid-template-columns: 1fr; }
     .td-device-panel:first-child { grid-row: auto; }
-    .td-device-panel-head {
-      align-items: flex-start;
-      flex-direction: column;
-    }
     .td-device-status { white-space: normal; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tdx-mascot.is-online, .tdx-live, .td-wave span { animation: none; }
+    .tdx-switch, .tdx-switch::after { transition: none; }
   }
 </style>
 
@@ -725,7 +402,7 @@
 
   function flashScreen() {
     const overlay = document.createElement("div");
-    overlay.style.cssText = "position:fixed;inset:0;background:#22c55e;opacity:0;z-index:9999;pointer-events:none;transition:opacity 0.15s ease;";
+    overlay.style.cssText = "position:fixed;inset:0;background:#1fae7a;opacity:0;z-index:9999;pointer-events:none;transition:opacity 0.15s ease;";
     document.body.appendChild(overlay);
     let count = 0;
     const id = setInterval(() => {
@@ -744,12 +421,13 @@
       "top:24px",
       "transform:translateX(-50%)",
       "z-index:10000",
-      "background:#111827",
-      "color:#fff",
+      "background:#fff3c4",
+      "color:#1c2a52",
+      "border:2px solid #1c2a52",
       "padding:12px 18px",
       "border-radius:999px",
-      "font-weight:700",
-      "box-shadow:0 12px 30px rgba(15,23,42,.25)"
+      "font-weight:800",
+      "box-shadow:0 4px 0 #1c2a52"
     ].join(";");
     document.body.appendChild(notice);
   }
@@ -763,12 +441,13 @@
       "top:24px",
       "transform:translateX(-50%)",
       "z-index:10000",
-      "background:#dc2626",
+      "background:#e5484d",
       "color:#fff",
+      "border:2px solid #1c2a52",
       "padding:12px 22px",
       "border-radius:999px",
-      "font-weight:700",
-      "box-shadow:0 12px 30px rgba(220,38,38,.35)",
+      "font-weight:800",
+      "box-shadow:0 4px 0 #1c2a52",
       "max-width:90vw",
       "text-align:center"
     ].join(";");
@@ -974,9 +653,16 @@
   if (toggle && toggle.checked) startPolling();
 
   if (form) {
-    form.querySelector(".td-toggle-wrap").addEventListener("click", () => {
+    const toggleWrap = form.querySelector(".td-toggle-wrap");
+    toggleWrap.addEventListener("click", () => {
       stopPolling();
       form.submit();
+    });
+    toggleWrap.addEventListener("keydown", event => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        toggleWrap.click();
+      }
     });
   }
 

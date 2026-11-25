@@ -1,49 +1,90 @@
 {% extends "base.html" %}
 {% load display_names i18n %}
-
-{% block container_class %}lesson-history-page{% endblock %}
-
 {% block content %}
-<div class="card lesson-history-card">
-  <div class="card-header">
-    <h2 class="card-title">{% trans "My Lesson History" %}</h2>
-    <a href="{% url 'cheatsheets' %}">✨ {% trans "Study Cheatsheet" %} (Gold)</a>
-    <a href="{% url 'study_notes' %}">✨ {% trans "AI Study Notes" %}</a>
-  </div>
+<div class="hs">
+
+  <section class="card sticker hs-head" aria-labelledby="hs-title">
+    <h1 class="h1" id="hs-title">{% trans "My Lesson History" %}</h1>
+    <div class="hs-links">
+      <a class="btn btn-sm" href="{% url 'study_notes' %}">✨ {% trans "AI Study Notes" %}</a>
+      <a class="btn btn-sm btn-sunny" href="{% url 'cheatsheets' %}">👑 {% trans "Study Cheatsheet" %} (Gold)</a>
+    </div>
+  </section>
 
   {% if matches %}
-    <table class="lesson-history-table">
-      <thead>
-        <tr>
-          <th>{% trans "Date" %}</th>
-          <th>{% trans "Tutor" %}</th>
-          <th>{% trans "Language" %}</th>
-          <th>{% trans "Lesson notes" %}</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for match in matches %}
-          <tr id="lesson-{{ match.pk }}">
-            <td data-label="{% trans 'Date' %}">{{ match.started_at|date:"Y-m-d H:i" }}</td>
-            <td data-label="{% trans 'Tutor' %}">
-              {% if match.tutor.user.first_name %}{{ match.tutor.user.first_name }} <span style="color:var(--ink-soft); font-size:.85em;">({{ match.tutor.user|display_name }})</span>{% else %}{{ match.tutor.user|display_name }}{% endif %}
-              {% if match.tutor.user.gold_membership.is_active %}<span class="header-badge header-badge-gold">&#x1F451; Gold</span>
-              {% elif match.tutor.user.is_superuser %}<span class="header-badge header-badge-dev">🚀 {% trans "Founder" %}</span>
-              {% elif match.tutor.user.is_staff %}<span class="header-badge header-badge-admin">Admin</span>
+    <div class="hs-list">
+    {% for match in matches %}
+      {% with t=match.tutor.user %}
+      <article class="card hs-item" id="lesson-{{ match.pk }}" aria-labelledby="lesson-{{ match.pk }}-title">
+        <header class="hs-item-head">
+          <time class="hs-date" datetime="{{ match.started_at|date:'c' }}">
+            <span class="hs-day">{{ match.started_at|date:"d" }}</span>
+            <span class="hs-month">{{ match.started_at|date:"Y-m" }}</span>
+          </time>
+          <div class="hs-who">
+            <h2 class="h3" id="lesson-{{ match.pk }}-title">
+              {% if t.first_name %}{{ t.first_name }} <span class="hs-soft">({{ t|display_name }})</span>{% else %}{{ t|display_name }}{% endif %}
+              {% if t.gold_membership.is_active %}<span class="header-badge header-badge-gold">&#x1F451; Gold</span>
+              {% elif t.is_superuser %}<span class="header-badge header-badge-dev">🚀 {% trans "Founder" %}</span>
+              {% elif t.is_staff %}<span class="header-badge header-badge-admin">Admin</span>
               {% endif %}
-            </td>
-            <td data-label="{% trans 'Language' %}">{% trans match.request.language.name %}</td>
-            <td class="student-note-cell" data-label="{% trans 'Lesson notes' %}">
-              {% include "core/_student_lesson_record.html" %}
-
-            </td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+            </h2>
+            <span class="hs-soft">{{ match.started_at|date:"H:i" }}</span>
+          </div>
+          <span class="hs-lang {{ match.request.language.code }}">{% trans match.request.language.name %}</span>
+        </header>
+        <div class="hs-notes">
+          <span class="hs-notes-title">{% trans "Lesson notes" %}</span>
+          {% include "core/_student_lesson_record.html" %}
+        </div>
+      </article>
+      {% endwith %}
+    {% endfor %}
+    </div>
   {% else %}
-    <p class="text-muted">{% trans "No lesson history yet." %}</p>
+    <section class="card hs-empty">
+      <p>{% trans "No lesson history yet." %}</p>
+      <a class="btn btn-sunny" href="{% url 'create_request' %}">{% trans "Start a 5-Minute Lesson Now" %}</a>
+    </section>
   {% endif %}
 </div>
 
+<style>
+  .hs { display: grid; gap: 16px; min-width: 0; }
+  .hs *, .hs *::before, .hs *::after { box-sizing: border-box; }
+  .hs .card { margin: 0; min-width: 0; }
+  .hs-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+  .hs-links { display: flex; flex-wrap: wrap; gap: 8px; }
+
+  .hs-list { display: grid; gap: 16px; }
+  @media (min-width: 1100px) { .hs-list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; align-items: start; } }
+  .hs-item { display: grid; gap: 14px; scroll-margin-top: 90px; }
+  .hs-item:target { border-color: var(--ink); box-shadow: var(--edge); }
+  .hs-item-head { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; }
+  .hs-date {
+    display: grid; justify-items: center; width: 58px; padding: 6px 0;
+    background: var(--sun-soft); border: 2px solid var(--ink); border-radius: 16px; line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+  }
+  .hs-day { font-family: var(--font-display); font-size: 22px; font-weight: 900; }
+  .hs-month { font-size: 12px; font-weight: 800; color: var(--ink-soft); }
+  .hs-who { display: grid; gap: 2px; min-width: 0; overflow-wrap: anywhere; }
+  .hs-who .h3 { font-weight: 900; }
+  .hs-soft { color: var(--ink-soft); font-size: 14px; font-weight: 700; }
+  .hs-lang { padding: 4px 12px; background: var(--cloud); border: 2px solid var(--ink); border-radius: var(--r-pill); font-size: 14px; font-weight: 900; white-space: nowrap; }
+  .hs-lang.ja { background: var(--lang-ja); }
+  .hs-lang.en { background: var(--lang-en); }
+  .hs-lang.fr { background: var(--lang-fr); }
+  .hs-lang.es { background: var(--lang-es); }
+  .hs-notes { display: grid; gap: 8px; }
+  .hs-notes-title { font-size: 15px; font-weight: 900; }
+
+  .hs-empty { display: grid; justify-items: center; gap: 12px; text-align: center; }
+  .hs-empty p { margin: 0; font-weight: 800; color: var(--ink-soft); }
+
+  @media (max-width: 480px) {
+    .hs-item-head { grid-template-columns: auto 1fr; }
+    .hs-lang { grid-column: 2; justify-self: start; }
+  }
+</style>
 {% endblock %}

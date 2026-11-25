@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "flat-type-hierarchy",
+        "value": "*",
+        "files": [
+          "templates/core/study_sheet.html"
+        ],
+        "createdAt": "2026-11-25T15:31:44.282Z",
+        "reason": "Claude: false positive; heading sizes (h1 26px/23px, h2 16px, body 12px) live in static/css/study_sheet.css, which the single-file scan does not load"
+      }
+    ]
+  }
+}

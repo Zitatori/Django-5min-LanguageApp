@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Zen+Maru+Gothic:wght@500;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
-  <link rel="stylesheet" href="{% static 'css/kawaii.css' %}">
+  <link rel="stylesheet" href="{% static 'css/kawaii.css' %}?v=kawaii4">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.2.3/css/flag-icons.min.css">
 
   <link rel="icon" type="image/x-icon" sizes="16x16 32x32 48x48" href="{% static 'icons/quicklesson-rounded.ico' %}">
@@ -55,14 +55,14 @@
       <a class="side-item" href="{% url 'home' %}" {% if url_name == 'home' %}aria-current="page"{% endif %}>
         <svg><use href="#i-home"/></svg><span>{% trans "Home" %}</span>
       </a>
-      <a class="side-item" href="{% url 'create_request' %}" {% if url_name == 'create_request' or url_name == 'request_detail' or url_name == 'lesson_room' or url_name == 'lesson_rating' or url_name == 'lesson_note' %}aria-current="page"{% endif %}>
+      <a class="side-item" href="{% url 'create_request' %}" {% if url_name == 'create_request' or url_name == 'request_detail' or url_name == 'lesson_room' or url_name == 'lesson_rating' %}aria-current="page"{% endif %}>
         <svg><use href="#i-talk"/></svg><span>{% trans "Talk" %}</span>
       </a>
       <a class="side-item" href="{% url 'study_notes' %}" {% if url_name == 'study_notes' or url_name == 'study_note_detail' or url_name == 'cheatsheets' or url_name == 'cheatsheet_detail' or url_name == 'learning_retention' %}aria-current="page"{% endif %}>
         <svg><use href="#i-review"/></svg><span>{% trans "Review" %}</span>
       </a>
       {% if can_access_tutor_dashboard %}
-      <a class="side-item" href="{% url 'tutor_dashboard' %}" {% if url_name == 'tutor_dashboard' %}aria-current="page"{% endif %}>
+      <a class="side-item" href="{% url 'tutor_dashboard' %}" {% if url_name == 'tutor_dashboard' or url_name == 'lesson_note' %}aria-current="page"{% endif %}>
         <svg><use href="#i-tutor"/></svg><span>{% trans "Tutor" %}</span>
       </a>
       {% endif %}
@@ -135,14 +135,14 @@
     <a class="tab" href="{% url 'home' %}" {% if url_name == 'home' %}aria-current="page"{% endif %}>
       <span class="ico"><svg><use href="#i-home"/></svg></span>{% trans "Home" %}
     </a>
-    <a class="tab" href="{% url 'create_request' %}" {% if url_name == 'create_request' or url_name == 'request_detail' or url_name == 'lesson_room' or url_name == 'lesson_rating' or url_name == 'lesson_note' %}aria-current="page"{% endif %}>
+    <a class="tab" href="{% url 'create_request' %}" {% if url_name == 'create_request' or url_name == 'request_detail' or url_name == 'lesson_room' or url_name == 'lesson_rating' %}aria-current="page"{% endif %}>
       <span class="ico"><svg><use href="#i-talk"/></svg></span>{% trans "Talk" %}
     </a>
     <a class="tab" href="{% url 'study_notes' %}" {% if url_name == 'study_notes' or url_name == 'study_note_detail' or url_name == 'cheatsheets' or url_name == 'cheatsheet_detail' or url_name == 'learning_retention' %}aria-current="page"{% endif %}>
       <span class="ico"><svg><use href="#i-review"/></svg></span>{% trans "Review" %}
     </a>
     {% if can_access_tutor_dashboard %}
-    <a class="tab" href="{% url 'tutor_dashboard' %}" {% if url_name == 'tutor_dashboard' %}aria-current="page"{% endif %}>
+    <a class="tab" href="{% url 'tutor_dashboard' %}" {% if url_name == 'tutor_dashboard' or url_name == 'lesson_note' %}aria-current="page"{% endif %}>
       <span class="ico"><svg><use href="#i-tutor"/></svg></span>{% trans "Tutor" %}
     </a>
     {% endif %}

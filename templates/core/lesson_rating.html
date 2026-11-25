@@ -2,213 +2,121 @@
 {% load display_names i18n static %}
 
 {% block content %}
-<div class="card rating-card">
-<div class="lesson-celebration">
-<div class="celebration-bird" aria-hidden="true"><img src="{% static 'images/celebration-penguin.png' %}" width="140" height="140" alt=""></div>
-<p role="status">{% trans match.request.language.name as study_language %}{% if full_lesson %}{% blocktrans %}Congratulations! You spoke {{ study_language }} for five minutes!{% endblocktrans %}{% else %}{% trans 'Well done for practising today!' %}{% endif %}</p>
-</div>
-  <h2 class="card-title rating-title">{% trans "Rate this lesson" %}</h2>
-  <p class="card-subtitle rating-subtitle">
-    {{ match.tutor.user|display_name }} · {% trans match.request.language.name %}
-  </p>
+<div class="rt">
 
-  {% if match.student_rating %}
-    <div class="rating-result-stars">
-      {% for i in "12345" %}
-        {% if forloop.counter <= match.student_rating %}★{% else %}☆{% endif %}
-      {% endfor %}
+  <section class="card sun rt-celebrate">
+    <div class="celebration-bird" aria-hidden="true"><img src="{% static 'images/celebration-penguin.png' %}" width="120" height="120" alt=""></div>
+    <p role="status">{% trans match.request.language.name as study_language %}{% if full_lesson %}{% blocktrans %}Congratulations! You spoke {{ study_language }} for five minutes!{% endblocktrans %}{% else %}{% trans 'Well done for practising today!' %}{% endif %}</p>
+  </section>
+
+  <section class="card sticker rt-card" aria-labelledby="rt-title">
+    <div class="rt-head">
+      <h1 class="h2" id="rt-title">{% trans "Rate this lesson" %}</h1>
+      <span class="chip rt-who">
+        <span class="avatar" aria-hidden="true">{{ match.tutor.user|display_name|slice:":1"|upper }}</span>
+        {{ match.tutor.user|display_name }} · {% trans match.request.language.name %}
+      </span>
     </div>
-    <p class="rating-thanks">{% trans "Thanks for your rating." %}</p>
-    {% if match.student_feedback %}
-      <p class="rating-feedback-display">{{ match.student_feedback }}</p>
-    {% endif %}
-    <form method="post">
-      {% csrf_token %}
-      {% include "core/_private_note_input.html" %}
-      <button type="submit" class="btn">{% trans "Save" %}</button>
-    </form>
-  {% else %}
-    <form method="post" id="rating-form">
-      {% csrf_token %}
-      <div class="rating-options" role="radiogroup" aria-label="Lesson rating">
-        {% for value in "12345" %}
-          <label class="rating-option" for="star{{ value }}" data-value="{{ value }}">
-            <input type="radio" id="star{{ value }}" name="rating" value="{{ value }}">
-            <span class="rating-option-star">★</span>
-          </label>
+
+    {% if match.student_rating %}
+      <div class="rt-result" role="img" aria-label="{{ match.student_rating }} / 5">
+        {% for i in "12345" %}
+          <svg class="rt-star{% if forloop.counter <= match.student_rating %} filled{% endif %}" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8l2.8 5.7 6.3.9-4.6 4.4 1.1 6.3L12 17.1l-5.6 3 1.1-6.3-4.6-4.4 6.3-.9z"/></svg>
         {% endfor %}
       </div>
-      <div class="rating-helper" id="rating-helper">{% trans "Tap a star to rate the lesson" %}</div>
+      <p class="rt-thanks">{% trans "Thanks for your rating." %}</p>
+      {% if match.student_feedback %}
+        <p class="rt-feedback-display">{{ match.student_feedback }}</p>
+      {% endif %}
+      <form method="post" class="rt-form">
+        {% csrf_token %}
+        {% include "core/_private_note_input.html" %}
+        <button type="submit" class="btn">{% trans "Save" %}</button>
+      </form>
+    {% else %}
+      <form method="post" id="rating-form" class="rt-form">
+        {% csrf_token %}
+        <div class="rating-options" role="radiogroup" aria-label="{% trans 'Rate this lesson' %}">
+          {% for value in "12345" %}
+            <label class="rating-option" for="star{{ value }}" data-value="{{ value }}">
+              <input type="radio" id="star{{ value }}" name="rating" value="{{ value }}">
+              <svg class="rt-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8l2.8 5.7 6.3.9-4.6 4.4 1.1 6.3L12 17.1l-5.6 3 1.1-6.3-4.6-4.4 6.3-.9z"/></svg>
+              <span class="rt-sr">{{ value }} / 5</span>
+            </label>
+          {% endfor %}
+        </div>
+        <div class="rating-helper" id="rating-helper" aria-live="polite">{% trans "Tap a star to rate the lesson" %}</div>
 
-      <div id="feedback-area" class="feedback-area" style="display:none;">
-        <textarea
-          name="feedback"
-          id="feedback-input"
-          class="feedback-textarea"
-          maxlength="500"
-          rows="3"
-          placeholder="{% trans 'Optional: share any comments about this lesson…' %}"
-        ></textarea>
-        <div class="feedback-charcount"><span id="feedback-count">0</span> / 500</div>
-      </div>
+        <div id="feedback-area" class="rt-field" hidden>
+          <textarea
+            name="feedback"
+            id="feedback-input"
+            maxlength="500"
+            rows="3"
+            aria-label="{% trans 'Optional: share any comments about this lesson…' %}"
+            placeholder="{% trans 'Optional: share any comments about this lesson…' %}"
+          ></textarea>
+          <div class="rt-count"><span id="feedback-count">0</span> / 500</div>
+        </div>
 
-      {% include "core/_private_note_input.html" %}
-      <button type="submit" class="btn rating-submit">{% trans "Save" %}</button>
-      <a href="{% url 'home' %}" class="rating-skip">{% trans "Skip" %}</a>
-    </form>
-  {% endif %}
-{% include "core/_learning_progress.html" %}
+        {% include "core/_private_note_input.html" %}
+        <button type="submit" class="btn rating-submit">{% trans "Save" %}</button>
+        <a href="{% url 'home' %}" class="rt-skip">{% trans "Skip" %}</a>
+      </form>
+    {% endif %}
+  </section>
+
+  {% include "core/_learning_progress.html" %}
 </div>
 
 <style>
-  .lesson-celebration {padding:8px 0 4px;color:var(--ink);font-weight:700}
-  .celebration-bird {position:relative;width:140px;margin:auto;animation:bird-hop .65s ease-in-out 3}
-  .celebration-bird img {display:block;width:100%;height:auto;object-fit:contain}
-  .celebration-bird span {position:absolute;right:-12px;top:0;font-size:28px;animation:star-glow 1s ease-in-out 2}
-  @keyframes bird-hop {0%,100% {transform:translateY(0) rotate(0)} 45% {transform:translateY(-12px) rotate(-8deg)}}
-  @keyframes star-glow {0%,100% {opacity:.3;transform:scale(.8)} 50% {opacity:1;transform:scale(1.15)}}
-  @media(prefers-reduced-motion:reduce) {.celebration-bird,.celebration-bird span{animation:none}}
+  .rt { width: 100%; max-width: 520px; margin: 8px auto 32px; display: grid; gap: 16px; }
+  .rt *, .rt *::before, .rt *::after { box-sizing: border-box; }
+  .rt .card { margin: 0; min-width: 0; }
 
-  .rating-card {
-    max-width: 440px;
-    margin: 36px auto;
-    padding: 30px 32px;
-    text-align: center;
-  }
-  .rating-title {
-    margin-bottom: 6px;
-  }
-  .rating-subtitle {
-    margin-bottom: 18px;
-  }
-  .rating-result-stars {
-    font-size: 44px;
-    line-height: 1;
-    color: var(--sun);
-    margin: 22px 0 12px;
-    letter-spacing: 0;
-  }
-  .rating-thanks {
-    color: var(--ink-soft);
-    margin: 0;
-  }
-  .rating-options {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    max-width: 380px;
-    margin: 10px auto 0;
-  }
-  .rating-option {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 54px;
-    height: 58px;
-    color: var(--line);
-    cursor: pointer;
-    transition: color 0.14s ease, transform 0.12s ease, filter 0.14s ease;
-  }
-  .rating-option input {
-    position: absolute;
-    opacity: 0;
-    pointer-events: none;
-  }
-  .rating-option-star {
-    font-size: 52px;
-    line-height: 1;
-    text-shadow: 0 2px 6px rgba(15, 23, 42, .08);
-  }
-  .rating-option:hover {
-    transform: translateY(-2px) scale(1.04);
-    color: var(--sun);
-  }
-  .rating-option.filled {
-    color: var(--sun);
-    filter: drop-shadow(0 7px 10px rgba(245, 158, 11, .22));
-  }
-  .rating-helper {
-    min-height: 20px;
-    margin-top: 14px;
-    color: var(--ink-soft);
-    font-size: 13px;
-    font-weight: 600;
-  }
-  .rating-submit {
-    display: block;
-    width: 100%;
-    max-width: 340px;
-    margin: 20px auto 0;
-  }
-  .rating-submit:disabled {
-    opacity: .45;
-    cursor: not-allowed;
-  }
-  .rating-skip {
-    display: inline-block;
-    margin-top: 12px;
-    color: var(--ink-soft);
-    font-size: 14px;
-    text-decoration: none;
-  }
-  .rating-skip:hover {
-    color: var(--ink);
-  }
-  .feedback-area {
-    margin-top: 18px;
-    text-align: left;
-  }
-  .feedback-textarea {
-    width: 100%;
-    padding: 10px 12px;
-    border: 1.5px solid var(--line);
-    border-radius: 10px;
-    font-size: 14px;
-    font-family: inherit;
-    resize: vertical;
-    line-height: 1.55;
-    box-sizing: border-box;
-    transition: border-color 0.15s;
-  }
-  .feedback-textarea:focus {
-    outline: none;
-    border-color: var(--blue);
-    box-shadow: 0 0 0 3px rgba(99,102,241,0.12);
-  }
-  .feedback-charcount {
-    font-size: 12px;
-    color: var(--ink-soft);
-    text-align: right;
-    margin-top: 4px;
-  }
-  .rating-feedback-display {
-    font-size: 14px;
-    color: var(--ink-soft);
-    margin: 12px auto 0;
-    max-width: 340px;
-    line-height: 1.6;
-    white-space: pre-wrap;
-  }
-  @media (prefers-color-scheme: dark) {
-    .feedback-textarea { background: var(--ink); border-color: var(--ink); color: var(--sky); }
-    .feedback-textarea:focus { border-color: var(--blue); }
-  }
-  @media (max-width: 520px) {
-    .rating-card {
-      margin: 20px auto;
-      padding: 24px 18px;
-    }
-    .rating-options {
-      gap: 4px;
-    }
-    .rating-option {
-      width: 44px;
-      height: 50px;
-    }
-    .rating-option-star {
-      font-size: 42px;
-    }
+  .rt-celebrate { display: grid; grid-template-columns: 96px 1fr; gap: 14px; align-items: center; }
+  .rt-celebrate p { margin: 0; font-family: var(--font-display); font-size: 18px; font-weight: 900; line-height: 1.4; }
+  .celebration-bird { width: 96px; animation: bird-hop .65s ease-in-out 3; }
+  .celebration-bird img { display: block; width: 100%; height: auto; object-fit: contain; }
+  @keyframes bird-hop { 0%, 100% { transform: translateY(0) rotate(0); } 45% { transform: translateY(-12px) rotate(-8deg); } }
+  @media (prefers-reduced-motion: reduce) { .celebration-bird { animation: none; } }
+
+  .rt-card { display: grid; gap: 16px; text-align: center; }
+  .rt-head { display: grid; justify-items: center; gap: 8px; }
+  .rt-who { display: inline-flex; align-items: center; gap: 8px; max-width: 100%; padding: 4px 12px 4px 4px; background: var(--cloud); border: 2px solid var(--ink); white-space: normal; font-weight: 800; }
+  .rt-who .avatar { width: 28px; height: 28px; font-size: 13px; }
+
+  .rt-star { width: 100%; height: 100%; fill: var(--cloud); stroke: var(--ink); stroke-width: 1.6; stroke-linejoin: round; transition: fill .14s, transform .12s; }
+  .rt-star.filled, .rating-option.filled .rt-star { fill: var(--sun); }
+  .rt-result { display: flex; justify-content: center; gap: 6px; }
+  .rt-result .rt-star { width: 44px; height: 44px; }
+  .rt-thanks { margin: 0; color: var(--ink-soft); font-weight: 800; }
+  .rt-feedback-display { margin: 0; padding: 12px 14px; background: var(--sky); border-radius: 16px; text-align: left; white-space: pre-wrap; overflow-wrap: anywhere; }
+
+  .rt-form { display: grid; gap: 14px; margin: 0; text-align: left; }
+  .rating-options { display: flex; justify-content: center; gap: 8px; }
+  .rating-option { position: relative; width: 52px; height: 52px; cursor: pointer; }
+  .rating-option input { position: absolute; opacity: 0; pointer-events: none; }
+  .rating-option:hover .rt-star { transform: translateY(-2px) scale(1.06); }
+  .rating-option:focus-within { outline: 3px solid var(--blue); outline-offset: 2px; border-radius: 12px; }
+  .rt-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .rating-helper { min-height: 22px; text-align: center; color: var(--ink-soft); font-size: 14px; font-weight: 800; }
+
+  .rt-field { display: grid; gap: 6px; }
+  .rt-field[hidden] { display: none; }
+  .rt-field label { font-size: 15px; font-weight: 900; }
+  .rt-field textarea { width: 100%; resize: vertical; line-height: 1.55; }
+  .rt-count { text-align: right; color: var(--ink-soft); font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .rt-note-help { margin: 0; color: var(--ink-soft); font-size: 13px; font-weight: 700; }
+  .rt .btn[type="submit"] { width: 100%; }
+  .rt-skip { justify-self: center; color: var(--ink-soft); font-weight: 800; text-decoration: none; }
+  .rt-skip:hover { color: var(--ink); text-decoration: underline; }
+
+  @media (max-width: 420px) {
+    .rt-celebrate { grid-template-columns: 72px 1fr; }
+    .celebration-bird { width: 72px; }
+    .rating-options { gap: 4px; }
+    .rating-option { width: 46px; height: 46px; }
   }
 </style>
 
@@ -242,7 +150,7 @@
       paintStars(selectedValue);
       ratingHelper.textContent = ratingText[selectedValue];
       ratingSubmit.disabled = false;
-      document.getElementById('feedback-area').style.display = 'block';
+      document.getElementById('feedback-area').hidden = false;
     });
   });
 
