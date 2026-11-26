@@ -58,7 +58,7 @@
       <a class="side-item" href="{% url 'create_request' %}" {% if url_name == 'create_request' or url_name == 'request_detail' or url_name == 'lesson_room' or url_name == 'lesson_rating' %}aria-current="page"{% endif %}>
         <svg><use href="#i-talk"/></svg><span>{% trans "Talk" %}</span>
       </a>
-      <a class="side-item" href="{% url 'study_notes' %}" {% if url_name == 'study_notes' or url_name == 'study_note_detail' or url_name == 'cheatsheets' or url_name == 'cheatsheet_detail' or url_name == 'learning_retention' %}aria-current="page"{% endif %}>
+      <a class="side-item" href="{% url 'study_notes' %}" {% if url_name == 'study_notes' or url_name == 'study_note_detail' or url_name == 'cheatsheets' or url_name == 'cheatsheet_detail' %}aria-current="page"{% endif %}>
         <svg><use href="#i-review"/></svg><span>{% trans "Review" %}</span>
       </a>
       {% if can_access_tutor_dashboard %}
@@ -70,7 +70,7 @@
         <svg><use href="#i-me"/></svg><span>{% trans "Me" %}</span>
       </a>
       {% if user.is_staff %}
-      <a class="side-item" href="{% url 'admin_dashboard' %}" {% if url_name|slice:':5' == 'admin' %}aria-current="page"{% endif %}>
+      <a class="side-item" href="{% url 'admin_dashboard' %}" {% if url_name|slice:':5' == 'admin' or url_name == 'learning_retention' %}aria-current="page"{% endif %}>
         <svg><use href="#i-admin"/></svg><span>Admin</span>
       </a>
       {% endif %}
@@ -140,7 +140,7 @@
     <a class="tab" href="{% url 'create_request' %}" {% if url_name == 'create_request' or url_name == 'request_detail' or url_name == 'lesson_room' or url_name == 'lesson_rating' %}aria-current="page"{% endif %}>
       <span class="ico"><svg><use href="#i-talk"/></svg></span>{% trans "Talk" %}
     </a>
-    <a class="tab" href="{% url 'study_notes' %}" {% if url_name == 'study_notes' or url_name == 'study_note_detail' or url_name == 'cheatsheets' or url_name == 'cheatsheet_detail' or url_name == 'learning_retention' %}aria-current="page"{% endif %}>
+    <a class="tab" href="{% url 'study_notes' %}" {% if url_name == 'study_notes' or url_name == 'study_note_detail' or url_name == 'cheatsheets' or url_name == 'cheatsheet_detail' %}aria-current="page"{% endif %}>
       <span class="ico"><svg><use href="#i-review"/></svg></span>{% trans "Review" %}
     </a>
     {% if can_access_tutor_dashboard %}
