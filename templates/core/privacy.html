@@ -1,39 +1,77 @@
 {% extends "base.html" %}
+{% load static %}
 {% block content %}
-<div class="max-w-2xl mx-auto px-4 py-10">
-  <h1 class="text-2xl font-bold text-indigo-700 mb-2">プライバシーポリシー / Privacy Policy</h1>
-  <p class="text-sm text-gray-400 mb-8">最終更新日 / Last updated: 2026年6月9日</p>
+<div class="pv">
+  <header class="card sticker pv-head">
+    <div class="pv-head-text">
+      <h1 class="h1">プライバシーポリシー<span class="pv-en">Privacy Policy</span></h1>
+      <p class="pv-date">最終更新日 / Last updated: 2026年6月9日</p>
+    </div>
+    <img src="{% static 'icons/mascot-happy.svg' %}" alt="">
+  </header>
 
-  <section class="mb-6">
-    <h2 class="text-lg font-semibold text-gray-800 mb-2">1. 収集する情報 / Information We Collect</h2>
-    <p class="text-gray-600 leading-relaxed">
-      QuickLesson は以下の情報を収集します：アカウント情報（メールアドレス・ユーザー名）、選択した言語・レッスン履歴、ポイントの取引履歴。<br>
-      We collect account information (email, username), language preferences, lesson history, and point transaction records.
-    </p>
+  <section class="card pv-sec" aria-labelledby="pv-1">
+    <span class="pv-n" aria-hidden="true">1</span>
+    <div class="pv-body">
+      <h2 class="h3" id="pv-1">収集する情報<span class="pv-en">Information We Collect</span></h2>
+      <p lang="ja">QuickLesson は以下の情報を収集します：アカウント情報（メールアドレス・ユーザー名）、選択した言語・レッスン履歴、ポイントの取引履歴。</p>
+      <p lang="en">We collect account information (email, username), language preferences, lesson history, and point transaction records.</p>
+    </div>
   </section>
 
-  <section class="mb-6">
-    <h2 class="text-lg font-semibold text-gray-800 mb-2">2. 利用目的 / How We Use Your Information</h2>
-    <p class="text-gray-600 leading-relaxed">
-      収集した情報はサービスの提供・改善のみに使用します。第三者への販売・提供は行いません。<br>
-      Information is used solely to provide and improve the service. We do not sell or share your data with third parties.
-    </p>
+  <section class="card pv-sec" aria-labelledby="pv-2">
+    <span class="pv-n" aria-hidden="true">2</span>
+    <div class="pv-body">
+      <h2 class="h3" id="pv-2">利用目的<span class="pv-en">How We Use Your Information</span></h2>
+      <p lang="ja">収集した情報はサービスの提供・改善のみに使用します。第三者への販売・提供は行いません。</p>
+      <p lang="en">Information is used solely to provide and improve the service. We do not sell or share your data with third parties.</p>
+    </div>
   </section>
 
-  <section class="mb-6">
-    <h2 class="text-lg font-semibold text-gray-800 mb-2">3. データの保管 / Data Storage</h2>
-    <p class="text-gray-600 leading-relaxed">
-      データはセキュアなサーバーに保管され、不要になった場合は削除されます。<br>
-      Data is stored on secure servers and deleted when no longer needed.
-    </p>
+  <section class="card pv-sec" aria-labelledby="pv-3">
+    <span class="pv-n" aria-hidden="true">3</span>
+    <div class="pv-body">
+      <h2 class="h3" id="pv-3">データの保管<span class="pv-en">Data Storage</span></h2>
+      <p lang="ja">データはセキュアなサーバーに保管され、不要になった場合は削除されます。</p>
+      <p lang="en">Data is stored on secure servers and deleted when no longer needed.</p>
+    </div>
   </section>
 
-  <section class="mb-6">
-    <h2 class="text-lg font-semibold text-gray-800 mb-2">4. お問い合わせ / Contact</h2>
-    <p class="text-gray-600 leading-relaxed">
-      ご質問はアプリ内のサポート機能、またはデベロッパーへお問い合わせください。<br>
-      For questions, please contact us through the app's support feature or reach out to the developer.
-    </p>
+  <section class="card pv-sec" aria-labelledby="pv-4">
+    <span class="pv-n" aria-hidden="true">4</span>
+    <div class="pv-body">
+      <h2 class="h3" id="pv-4">お問い合わせ<span class="pv-en">Contact</span></h2>
+      <p lang="ja">ご質問はアプリ内のサポート機能、またはデベロッパーへお問い合わせください。</p>
+      <p lang="en">For questions, please contact us through the app's support feature or reach out to the developer.</p>
+    </div>
   </section>
 </div>
+
+<style>
+  .pv { width: 100%; max-width: 760px; margin: 8px auto 40px; display: grid; gap: 16px; min-width: 0; }
+  .pv *, .pv *::before, .pv *::after { box-sizing: border-box; }
+  .pv .card { margin: 0; min-width: 0; }
+  .pv-en { display: block; margin-top: 2px; color: var(--ink-soft); font-family: var(--font-body); font-size: 18px; font-weight: 800; }
+  .pv-head { display: grid; grid-template-columns: 1fr 84px; gap: 12px; align-items: center; }
+  .pv-head-text { display: grid; gap: 8px; min-width: 0; }
+  .pv-head img { width: 84px; height: 84px; }
+  .pv-date { justify-self: start; margin: 0; padding: 4px 12px; background: var(--sky); border-radius: var(--r-pill); color: var(--ink-soft); font-size: 14px; font-weight: 800; }
+
+  .pv-sec { display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: start; }
+  .pv-n {
+    width: 36px; height: 36px; display: grid; place-items: center;
+    background: var(--blue); color: #fff; border: 2px solid var(--ink); border-radius: 12px;
+    font-weight: 900;
+  }
+  .pv-body { display: grid; gap: 8px; min-width: 0; overflow-wrap: anywhere; }
+  .pv-body .h3 { font-weight: 900; }
+  .pv-body .pv-en { font-size: 14px; }
+  .pv-body p { margin: 0; line-height: 1.75; font-weight: 600; }
+  .pv-body p[lang="en"] { color: var(--ink-soft); }
+
+  @media (max-width: 480px) {
+    .pv-head { grid-template-columns: 1fr; }
+    .pv-head img { display: none; }
+  }
+</style>
 {% endblock %}

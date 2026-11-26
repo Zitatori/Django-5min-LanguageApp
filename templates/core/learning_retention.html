@@ -1,7 +1,64 @@
-{% extends 'base.html' %}{% load i18n %}
-{% block content %}<div class="card">
-<h2>{% trans 'Learning continuation' %}</h2>
-<p>{% trans 'Two-point signup users only. Purchase-page visits are recorded from this feature onward. These counts show behaviour, not the reason for leaving.' %}</p>
-<dl>{% for label,count in rows %}<dt>{{ label }}</dt><dd><strong>{{ count }}</strong></dd>{% endfor %}</dl>
-<p>{% trans 'Connection attempts are shown separately. They are not counted as completed lessons. Tutor availability and payment delays may also affect return visits.' %}</p>
-<a href="{% url 'admin_dashboard' %}">{% trans 'Back' %}</a></div>{% endblock %}
+{% extends 'base.html' %}
+{% load i18n static %}
+{% block content %}
+<div class="lr2">
+  <a class="lr2-back" href="{% url 'admin_dashboard' %}">← {% trans 'Back to dashboard' %}</a>
+
+  <section class="card sticker lr2-head" aria-labelledby="lr2-title">
+    <div class="lr2-head-text">
+      <h1 class="h1" id="lr2-title">{% trans 'Learning continuation' %}</h1>
+      <p>{% trans 'Two-point signup users only. Purchase-page visits are recorded from this feature onward. These counts show behaviour, not the reason for leaving.' %}</p>
+    </div>
+    <img src="{% static 'icons/mascot-think.svg' %}" alt="">
+  </section>
+
+  <section class="card lr2-list" aria-labelledby="lr2-title">
+    <ul>
+      {% for label, count in rows %}
+      <li class="lr2-row{% if forloop.counter > 4 %} is-aside{% endif %}">
+        <span class="lr2-label">{{ label }}</span>
+        <strong class="lr2-num">{{ count }}</strong>
+      </li>
+      {% endfor %}
+    </ul>
+  </section>
+
+  <section class="card tint lr2-note">
+    <p>{% trans 'Connection attempts are shown separately. They are not counted as completed lessons. Tutor availability and payment delays may also affect return visits.' %}</p>
+  </section>
+</div>
+
+<style>
+  .lr2 { width: 100%; max-width: 760px; margin: 8px auto 40px; display: grid; gap: 16px; min-width: 0; }
+  .lr2 *, .lr2 *::before, .lr2 *::after { box-sizing: border-box; }
+  .lr2 .card { margin: 0; min-width: 0; }
+  .lr2-back { justify-self: start; color: var(--blue); font-weight: 900; text-decoration: none; }
+  .lr2-back:hover { text-decoration: underline; }
+
+  .lr2-head { display: grid; grid-template-columns: 1fr 84px; gap: 12px; align-items: center; }
+  .lr2-head-text { display: grid; gap: 6px; min-width: 0; }
+  .lr2-head-text p { margin: 0; color: var(--ink-soft); font-weight: 700; line-height: 1.6; }
+  .lr2-head img { width: 84px; height: 84px; }
+
+  .lr2-list ul { list-style: none; margin: 0; padding: 0; }
+  .lr2-row {
+    display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: center;
+    padding: 14px 0; border-top: 2px dashed var(--line);
+  }
+  .lr2-row:first-child { border-top: 0; padding-top: 4px; }
+  .lr2-label { font-weight: 800; line-height: 1.5; overflow-wrap: anywhere; }
+  .lr2-num {
+    min-width: 64px; padding: 4px 14px; text-align: center;
+    background: var(--sun-soft); border: 2px solid var(--ink); border-radius: var(--r-pill);
+    font-family: var(--font-display); font-size: 24px; font-weight: 900; font-variant-numeric: tabular-nums;
+  }
+  .lr2-row.is-aside .lr2-label { color: var(--ink-soft); }
+  .lr2-row.is-aside .lr2-num { background: var(--sky); border-color: var(--line); font-size: 20px; }
+  .lr2-note p { margin: 0; font-weight: 700; line-height: 1.6; }
+
+  @media (max-width: 480px) {
+    .lr2-head { grid-template-columns: 1fr; }
+    .lr2-head img { display: none; }
+  }
+</style>
+{% endblock %}
