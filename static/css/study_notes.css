@@ -87,7 +87,7 @@
 .rv-hero { display: grid; gap: 10px; }
 .rv-hero-top { display: grid; grid-template-columns: 1fr 84px; gap: 12px; align-items: center; }
 .rv-hero-top p { margin: 4px 0 0; font-weight: 700; }
-.rv-hero-top img { width: 84px; height: 84px; border: 2px solid var(--ink); border-radius: 24px; background: var(--cloud); }
+.rv-hero-top img { width: 92px; height: 92px; }
 .rv-chip { background: var(--cloud); border-color: var(--ink); white-space: normal; }
 .rv h2.h2 { margin: 0 0 12px; }
 .rv #study-form { gap: 14px; }

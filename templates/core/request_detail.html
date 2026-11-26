@@ -16,7 +16,7 @@
     </div>
 
     {% if match %}
-      <img class="mw-mascot is-happy" src="{% static 'icons/quicklesson-character-180.png' %}" alt="">
+      <img class="mw-mascot is-happy" src="{% static 'icons/mascot-wow.svg' %}" alt="">
       <h1 class="h2" id="mw-title">{% trans "Matching Result" %}</h1>
       <p class="mw-sub">{% trans "Your 5-minute lesson is ready." %}</p>
       <div class="mw-tutor">
@@ -39,7 +39,7 @@
       </script>
 
     {% elif request_obj.status == "waiting" %}
-      <img class="mw-mascot is-waiting" src="{% static 'icons/quicklesson-character-180.png' %}" alt="">
+      <img class="mw-mascot is-waiting" src="{% static 'icons/mascot-think.svg' %}" alt="">
       <h1 class="h2" id="mw-title">{% trans "Matching you with a tutor…" %}</h1>
       <div class="mw-wave" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
       <p class="mw-sub" role="status">{% trans "This page will automatically update as soon as an available tutor is found." %}</p>
@@ -49,7 +49,7 @@
       </script>
 
     {% else %}
-      <img class="mw-mascot is-sleepy" src="{% static 'icons/quicklesson-character-180.png' %}" alt="">
+      <img class="mw-mascot is-sleepy" src="{% static 'icons/mascot-sleepy.svg' %}" alt="">
       <h1 class="h2" id="mw-title">{% trans "Matching Result" %}</h1>
       <p class="mw-sub">{% trans "This request is no longer valid." %}</p>
       <a class="btn mw-action" href="{% url 'home' %}">{% trans "Back to Home" %}</a>
@@ -71,10 +71,8 @@
   .mw-live { width: 8px; height: 8px; border-radius: 50%; background: var(--ink); animation: mw-pulse 1.4s ease-in-out infinite; }
   @keyframes mw-pulse { 50% { opacity: .3; } }
 
-  .mw-mascot { width: 112px; height: 112px; background: var(--cloud); border: 2px solid var(--ink); border-radius: 32px; box-shadow: var(--edge); }
+  .mw-mascot { width: 120px; height: 120px; }
   .mw-mascot.is-waiting { animation: mw-bob 1.8s ease-in-out infinite; }
-  .mw-mascot.is-happy { background: var(--sun-soft); }
-  .mw-mascot.is-sleepy { filter: saturate(.5); box-shadow: none; }
   @keyframes mw-bob { 50% { transform: translateY(-6px) rotate(-3deg); } }
   .mw-sub { margin: 0; color: var(--ink-soft); font-weight: 700; line-height: 1.6; }
   .mw-status { margin: 0; font-weight: 900; color: var(--blue); }

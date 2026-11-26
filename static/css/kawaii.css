@@ -66,12 +66,8 @@ h1, h2, h3 { font-family: var(--font-display); color: var(--ink); text-wrap: bal
   letter-spacing: -.01em; color: var(--ink) !important; text-decoration: none !important;
 }
 .logo b { color: var(--blue); font-weight: 900; }
-.logo-mark {
-  width: 34px; height: 34px; flex: none; display: grid; place-items: center;
-  background: var(--sun); border: 2px solid var(--ink); border-radius: 12px;
-  font-size: 18px; box-shadow: 0 2px 0 var(--ink);
-  object-fit: cover; padding: 0; overflow: hidden;
-}
+.logo-mark { width: 40px; height: 40px; flex: none; display: block; }
+.side-cta-bird { display: none; }
 .topbar-right { display: flex; align-items: center; gap: 8px; min-width: 0; }
 
 .points-pill {
@@ -275,6 +271,7 @@ table th { color: var(--ink-soft); }
   .side-logo { padding: 2px 6px 14px; }
   .side-logo .word { display: inline; }
   .side-item { grid-template-columns: 32px 1fr; justify-items: start; align-items: center; gap: 10px; padding: 10px 12px; font-size: 15px; }
+  .side-cta-bird { display: block; width: 64px; height: 64px; }
   .side-cta {
     display: grid; justify-items: center; gap: 10px; padding: 14px; text-align: center;
     background: var(--sky); border: 2px solid var(--line); border-radius: 22px;
@@ -329,7 +326,7 @@ table th { color: var(--ink-soft); }
 .auth.wide { max-width: 540px; }
 .auth *, .auth *::before, .auth *::after { box-sizing: border-box; }
 .auth-head { display: grid; grid-template-columns: 72px 1fr; gap: 14px; align-items: center; }
-.auth-head img { width: 72px; height: 72px; background: var(--cloud); border: 2px solid var(--ink); border-radius: 22px; }
+.auth-head img { width: 84px; height: 84px; }
 .auth-bubble {
   position: relative; padding: 10px 14px; background: var(--cloud); color: var(--ink);
   border: 2px solid var(--ink); border-radius: 18px; font-weight: 800; line-height: 1.4;

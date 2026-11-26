@@ -16,7 +16,7 @@
 
   /* Greeting */
   .greet { display: grid; grid-template-columns: 88px 1fr; align-items: center; gap: 12px; }
-  .greet img { width: 88px; height: 88px; border-radius: 26px; border: 2px solid var(--ink); background: var(--sun-soft); animation: hm-bob 3s ease-in-out infinite; transform-origin: 50% 100%; }
+  .greet img { width: 88px; height: 88px; animation: hm-bob 3s ease-in-out infinite; transform-origin: 50% 100%; }
   @keyframes hm-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
   .bubble { position: relative; padding: 10px 14px; background: var(--cloud); border: 2px solid var(--ink); border-radius: 20px; font-weight: 800; }
   .bubble::before { content: ""; position: absolute; left: -10px; top: 50%; width: 16px; height: 16px; background: var(--cloud); border-left: 2px solid var(--ink); border-bottom: 2px solid var(--ink); transform: translateY(-50%) rotate(45deg); }
@@ -35,7 +35,7 @@
   /* Start card */
   .hm-start { display: grid; gap: 10px; }
   .hm-start-top { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; }
-  .hm-start-top img { width: 64px; height: 64px; border-radius: 20px; border: 2px solid var(--ink); }
+  .hm-start-top img { width: 72px; height: 72px; }
   .hm-start p { margin: 0; color: var(--ink-soft); }
   .hm-start .btn { width: 100%; margin-left: 0; }
   .hm-btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
@@ -109,7 +109,7 @@
   {# ── Greeting + progress ── #}
   <section class="card" aria-label="{% trans 'Your learning progress' %}">
     <div class="greet">
-      <img src="{% static 'icons/quicklesson-character-180.png' %}" alt="">
+      <img src="{% static 'icons/mascot-wave.svg' %}" alt="">
       <div class="bubble">
         {% blocktrans with name=user|display_name %}Hello, <b>{{ name }}</b>!{% endblocktrans %}
         <span>{% trans "Select a language and start a 5-minute lesson." %}</span>
@@ -142,7 +142,7 @@
         <span class="eyebrow">⚡ {% trans "5-minute lesson" %}</span>
         <h2 class="h2" id="hm-start-title">{% trans "5-Minute Online Lessons" %}</h2>
       </div>
-      <img src="{% static 'icons/quicklesson-rounded-192.png' %}" alt="">
+      <img src="{% static 'icons/mascot-wow.svg' %}" alt="">
     </div>
     <p>{% trans "A super-light conversation platform for people who want to talk with someone right now." %}</p>
     {% if user.is_authenticated %}
