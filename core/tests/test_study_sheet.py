@@ -24,13 +24,13 @@ class StudySheetTests(TestCase):
         LessonNoteTranslation.objects.create(note=record, language='fr', status='ready',
             fingerprint=source_hash(record), content={'talked_about': {'translation':'Un commentaire traduit'}, 'advice':{'translation':'Les saisons'}})
         response = self.client.get(reverse('study_note_detail', args=[note.pk]))
-        self.assertTemplateUsed(response, 'core/study_sheet.html')
+        self.assertTemplateUsed(response, 'core/study_note_detail.html')
         self.assertContains(response, 'Un commentaire traduit')
-        self.assertContains(response, 'Enregistrer en PDF')
-        self.assertContains(response, 'celebration-penguin.png')
+        self.assertNotContains(response, 'PDF')
+        self.assertNotContains(response, 'window.print')
         self.assertNotContains(response, 'PRIVATE hobbies')
-        self.assertNotContains(response, 'sheet.plan')
         api.assert_not_called()
+        # Old links with ?view=full still open the same page.
         self.assertTemplateUsed(self.client.get(reverse('study_note_detail', args=[note.pk])+'?view=full'), 'core/study_note_detail.html')
 
     def test_owner_only_and_foreign_source_ids_ignored(self):
@@ -58,7 +58,7 @@ class StudySheetTests(TestCase):
     def test_four_explanation_languages_and_escaping(self):
         note = self.saved()
         note.content = dict(SHEET, title='<script>alert(1)</script>')
-        for language, label in [('ja','1枚の復習シート'),('en','One-page study sheet'),('fr','Ma fiche de révision'),('es','Mi ficha de repaso')]:
+        for language, label in [('ja','今回の重要な学習ポイント'),('en','Key learning points'),('fr','Points essentiels à revoir'),('es','Puntos clave de aprendizaje')]:
             note.explanation_language = language; note.save()
             response = self.client.get(reverse('study_note_detail', args=[note.pk]))
             self.assertContains(response, label)

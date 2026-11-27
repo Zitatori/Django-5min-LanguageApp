@@ -138,6 +138,5 @@ def study_note_detail(request, pk):
     if note.format == 'cheatsheet':
         return redirect('cheatsheet_detail', pk=note.pk)
     from core.services.study_sheet import sheet_records
-    template = 'core/study_note_detail.html' if request.GET.get('view') == 'full' else 'core/study_sheet.html'
-    return render(request, template, {'records': sheet_records(note), 'note': note, 'sheet': localized_study_content(note.content, note.explanation_language),
+    return render(request, 'core/study_note_detail.html', {'records': sheet_records(note), 'note': note, 'sheet': localized_study_content(note.content, note.explanation_language),
         'target_name': _(LANGUAGES[note.target_language]), 'explanation_name': _(LANGUAGES[note.explanation_language])})
