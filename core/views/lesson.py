@@ -7,6 +7,7 @@ from django.contrib import messages
 from django.db import transaction
 from django.utils.translation import gettext as _
 from core.services.learner_brief import brief_history
+from core.services.topic_suggestions import fresh_topics
 from core.forms import ConversationNoteForm
 
 from django.contrib.auth.decorators import login_required
@@ -117,6 +118,7 @@ def lesson_room(request, match_id: int):
         "previous_notes": previous_notes,
         "is_first_session": is_first_session,
         "question_note": previous_notes[0] if previous_notes else None,
+        "fresh_topics": [] if is_student else fresh_topics(match.request.language.code, len(previous_notes)),
     }
 
     return render(request, "core/lesson_room.html", context)

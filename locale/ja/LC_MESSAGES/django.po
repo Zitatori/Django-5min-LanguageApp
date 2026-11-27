@@ -1788,6 +1788,9 @@ msgstr "レベル"
 msgid "Entering lesson room…"
 msgstr "レッスンルームに入室しています…"
 
+msgid "Try a new topic today"
+msgstr "今日は新しい話題もためしてみましょう"
+
 #~ msgid "Step 1"
 #~ msgstr "ステップ1"
 

@@ -81,6 +81,12 @@
         {% if previous_notes %}
         <p id="learner-brief-status" role="status">{% trans 'Preparing a summary of past conversations…' %}</p>
         <ul id="learner-brief-facts" class="lr-suggested-questions"></ul>
+        {% if fresh_topics %}
+        <p class="lr-notes-prev-label lr-fresh-label">💡 {% trans "Try a new topic today" %}</p>
+        <ol class="lr-suggested-questions lr-fresh-topics">
+          {% for topic in fresh_topics %}<li>{{ topic }}</li>{% endfor %}
+        </ol>
+        {% endif %}
         <details><summary>{% trans 'Past tutor notes' %}</summary>
         {% for note in previous_notes %}<p><small>{{ note.created_at|date:"DATE_FORMAT" }}</small><br>{{ note.conversation_content }}</p>{% endfor %}
         </details>
@@ -324,6 +330,9 @@
   .lr-first-session-guide span { display: block; margin-top: 6px; }
   .lr-suggested-questions { padding-left: 22px; color: var(--ink); font-size: 15px; font-weight: 700; line-height: 1.6; }
   .lr-suggested-questions li { margin-bottom: 6px; }
+  .lr-fresh-topics { margin: 0 0 12px; padding: 8px 12px 8px 30px; background: var(--sun-soft); border: 2px solid var(--ink); border-radius: 14px; }
+  .lr-fresh-topics li:last-child { margin-bottom: 0; }
+  .lr-fresh-label { color: var(--ink); }
   .lr-notes-panel details summary { cursor: pointer; font-weight: 800; }
   .lr-notes-prev-label { margin: 16px 0 8px; font-size: 13px; font-weight: 900; color: var(--ink-soft); }
   .lr-notes-item { padding: 7px 0; border-bottom: 2px dashed var(--line); }
