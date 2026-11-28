@@ -1942,6 +1942,9 @@ msgstr "Enregistrer la note"
 msgid "Entering lesson room…"
 msgstr "Entrée dans la salle de leçon…"
 
+msgid "Try a new topic today"
+msgstr "Essaie un nouveau sujet aujourd'hui"
+
 #~ msgid "Step 1"
 #~ msgstr "Étape 1"
 

@@ -138,3 +138,12 @@
   .app { display: block !important; }
   .study-page .card { break-inside: avoid; }
 }
+
+/* Tutor notes recorded for the lessons behind a study note */
+.study-tutor-note { display: grid; gap: 8px; }
+.study-tutor-note p { margin: 0; }
+.study-tutor-text { line-height: 1.7; white-space: pre-wrap; overflow-wrap: anywhere; }
+.study-tutor-translation { display: grid; gap: 6px; padding: 10px 12px; background: var(--sun-soft); border-radius: 14px; line-height: 1.7; }
+.study-tutor-note .sheet-translate { display: grid; gap: 6px; justify-items: start; margin: 0; }
+.study-tutor-note .sheet-translate small { color: var(--ink-soft); font-size: 13px; }
+.study-tutor-note .translation-status { margin: 0; font-size: 14px; font-weight: 700; }

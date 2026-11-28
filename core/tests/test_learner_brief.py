@@ -68,3 +68,34 @@ class BriefRoomTests(ConversationNotesTests):
         self.assertContains(response,'Likes hiking')
         self.assertNotContains(response,'Old generated question?')
         api.assert_not_called()
+
+
+class FreshTopicTests(SimpleTestCase):
+    def test_topics_rotate_each_lesson_and_fall_back_to_english(self):
+        from core.services.topic_suggestions import TOPICS, fresh_topics
+        first, second = fresh_topics('ja', 1), fresh_topics('ja', 2)
+        self.assertEqual(len(first), 3)
+        self.assertFalse(set(first) & set(second))
+        self.assertEqual(fresh_topics('ja', 4), fresh_topics('ja', 0))
+        self.assertEqual(fresh_topics('xx', 0), TOPICS['en'][:3])
+
+
+class FreshTopicRoomTests(ConversationNotesTests):
+    def test_tutor_sees_new_topics_and_student_does_not(self):
+        from core.services.topic_suggestions import fresh_topics
+        ConversationNote.objects.create(student=self.match.request.student, tutor=self.tutor, match=self.match,
+            talked_about='Talked about lunch')
+        expected = fresh_topics(self.match.request.language.code, 1)
+        url = reverse('lesson_room', args=[self.match.pk])
+        response = self.client.get(url)
+        self.assertEqual(response.context['fresh_topics'], expected)
+        self.assertContains(response, expected[0])
+        from core.models import PointBalance
+        student_user = self.match.request.student.user
+        balance, _ = PointBalance.objects.get_or_create(user=student_user)
+        balance.student_balance = 2
+        balance.save()
+        self.client.force_login(student_user)
+        response = self.client.get(url)
+        self.assertEqual(response.context['fresh_topics'], [])
+        self.assertNotContains(response, expected[0])

@@ -1920,6 +1920,9 @@ msgstr "Nivel"
 msgid "Entering lesson room…"
 msgstr "Entrando en la sala de la lección…"
 
+msgid "Try a new topic today"
+msgstr "Prueba un tema nuevo hoy"
+
 #~ msgid "Step 1"
 #~ msgstr "Paso 1"
 
