@@ -167,6 +167,24 @@
 <p id="connection-error-text"></p><button class="btn" id="connection-retry" type="button">{% trans 'Retry' %}</button>
 <button class="btn btn-secondary" id="connection-back" type="button">{% if is_student %}{% trans 'Try another tutor' %}{% else %}{% trans 'Back to dashboard' %}{% endif %}</button></div>
 <p id="wrap-up" hidden role="status">{% trans '30 seconds left — time to say goodbye and thank your partner.' %}</p>
+<div id="continue-panel" class="lr-continue" hidden>
+  {% if is_student %}
+  <p class="lr-continue-title">{% trans 'Want to keep talking?' %}</p>
+  <div class="lr-continue-actions">
+    <button type="button" class="btn btn-sunny" id="extend-btn" hidden>⏱ {% trans '+5 min with this tutor' %} <small>1pt</small></button>
+    <button type="button" class="btn" id="next-tutor-btn" hidden>🔁 <span id="next-tutor-label"></span></button>
+  </div>
+  <p class="lr-continue-note" id="continue-note" role="status"></p>
+  {% else %}
+  <div id="extend-ask" hidden>
+    <p class="lr-continue-title">{% trans 'Your student would like 5 more minutes.' %} <small>+1pt</small></p>
+    <div class="lr-continue-actions">
+      <button type="button" class="btn btn-sunny" id="extend-accept">{% trans 'Extend 5 minutes' %}</button>
+      <button type="button" class="btn btn-secondary" id="extend-decline">{% trans 'Not this time' %}</button>
+    </div>
+  </div>
+  {% endif %}
+</div>
 {% if is_student and conversation_phrases %}<details class="call-phrases"><summary>📖 {% trans 'Hint' %}</summary>{% include 'core/_starter_phrases.html' %}</details>{% endif %}
 <style>
   /* ── Lesson room · kawaii design ── */
@@ -347,6 +365,18 @@
   }
   #connection-error p { margin: 0; font-weight: 800; }
   #connection-error .btn + .btn { margin-left: 0; }
+  .lr-continue:not([hidden]) {
+    position: fixed; top: calc(var(--lr-top, 66px) + 122px); left: calc(var(--lr-left) + 24px); right: 24px; z-index: 90;
+    margin: 0 auto; max-width: 520px; padding: 14px 16px; display: grid; gap: 10px; text-align: center;
+    background: var(--cloud); color: var(--ink); border: 2px solid var(--ink); border-radius: var(--r-card); box-shadow: 0 4px 0 var(--ink);
+  }
+  .lr-continue-title { margin: 0; font-weight: 900; }
+  .lr-continue-actions { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+  .lr-continue-actions .btn { margin: 0; }
+  .lr-continue-actions small, .lr-continue-title small { font-weight: 800; opacity: .75; }
+  .lr-continue-note { margin: 0; font-size: 14px; font-weight: 800; color: var(--ink-soft); }
+  .lr-continue-note:empty { display: none; }
+  #extend-ask[hidden] { display: none; }
   #wrap-up:not([hidden]) {
     position: fixed; top: calc(var(--lr-top, 66px) + 70px); left: calc(var(--lr-left) + 24px); right: 24px; z-index: 90;
     margin: 0 auto; max-width: 520px; padding: 8px 16px; text-align: center; font-weight: 900;
@@ -516,12 +546,13 @@ document.addEventListener('submit', function(e) {
     if (connectionFailed || callEnded) return;
     timerStarted = true;
     if (globalRedirectTimer) { clearTimeout(globalRedirectTimer); globalRedirectTimer = null; }
-    const targetTime = endAt ? Date.parse(endAt) : Date.now() + (seconds * 1000);
+    timerTarget = endAt ? Date.parse(endAt) : Date.now() + (seconds * 1000);
     function update() {
-      const remaining = Math.max(0, Math.ceil((targetTime - Date.now()) / 1000));
+      const remaining = Math.max(0, Math.ceil((timerTarget - Date.now()) / 1000));
       display.textContent = format(remaining);
       setTimerState(remaining);
       document.getElementById("wrap-up").hidden = remaining > 30;
+      if (remaining <= 30 && remaining > 0) offerContinue(); else hideContinue();
       if (false) showFinalCountdown(remaining);
       else finalCountdown.style.display = "none";
       if (remaining <= 0) { endLesson("timeup"); return; }
@@ -530,6 +561,82 @@ document.addEventListener('submit', function(e) {
     update();
   }
   window.onTimerStart = startTimer;
+
+  // ── 残り30秒: 延長 / 別の講師へ ──
+  let timerTarget = 0;
+  let continueOffered = false;
+  const continuePanel = document.getElementById("continue-panel");
+  function postForm(url, body) {
+    const fd = new FormData();
+    Object.entries(body || {}).forEach(([k, v]) => fd.append(k, v));
+    return fetch(url, {method:'POST', headers:{'X-CSRFToken':getCsrf()}, credentials:'same-origin', body:fd});
+  }
+  function hideContinue() {
+    continuePanel.hidden = true;
+    continueOffered = false;
+  }
+  {% if is_student %}
+  const extendBtn = document.getElementById("extend-btn");
+  const nextBtn = document.getElementById("next-tutor-btn");
+  const continueNote = document.getElementById("continue-note");
+  async function offerContinue() {
+    if (continueOffered) return;
+    continueOffered = true;
+    extendBtn.disabled = false; nextBtn.disabled = false; continueNote.textContent = "";
+    try {
+      const res = await fetch("{% url 'lesson_continue_options' match.id %}", {credentials:'same-origin'});
+      const opts = await res.json();
+      if (!continueOffered) return;
+      extendBtn.hidden = !opts.can_pay;
+      nextBtn.hidden = !(opts.can_pay && opts.other_tutors > 0);
+      document.getElementById("next-tutor-label").textContent = "{% trans 'Talk with another tutor' as js_next %}{{ js_next|escapejs }}" + " (" + opts.other_tutors + ")";
+      if (!opts.can_pay) continueNote.innerHTML = "{% trans 'You need 1 point to keep going.' as js_need %}{{ js_need|escapejs }} <a href=\"{% url 'purchase_points' %}\" target=\"_blank\" rel=\"noopener\">{% trans 'Get points' as js_get %}{{ js_get|escapejs }}</a>";
+      if (opts.extension_pending) { extendBtn.disabled = true; continueNote.textContent = "{% trans 'Waiting for your tutor to answer…' as js_wait %}{{ js_wait|escapejs }}"; }
+      continuePanel.hidden = false;
+    } catch (e) { continueOffered = false; }
+  }
+  extendBtn.addEventListener("click", async () => {
+    extendBtn.disabled = true;
+    continueNote.textContent = "{{ js_wait|escapejs }}";
+    const res = await postForm("{% url 'lesson_extend' match.id %}", {action:'request'}).catch(() => null);
+    if (!res || !res.ok) { continueNote.textContent = "{% trans 'The lesson could not be extended.' as js_fail %}{{ js_fail|escapejs }}"; }
+  });
+  nextBtn.addEventListener("click", async () => {
+    nextBtn.disabled = true; extendBtn.disabled = true;
+    continueNote.textContent = "{% trans 'Finding your next tutor…' as js_find %}{{ js_find|escapejs }}";
+    const res = await postForm("{% url 'lesson_next_tutor' match.id %}").catch(() => null);
+    const data = res && res.ok ? await res.json() : null;
+    if (!data || !data.url) {
+      continueNote.textContent = "{% trans 'No other tutor is free right now.' as js_none %}{{ js_none|escapejs }}";
+      nextBtn.hidden = true; extendBtn.disabled = false;
+      return;
+    }
+    callEnded = true;
+    window.removeEventListener('pagehide', sendEndLessonBeacon);
+    cleanupCall();
+    window.location.href = data.url;
+  });
+  function onExtendRequest() {}
+  function onExtendDeclined() {
+    continueNote.textContent = "{% trans 'Your tutor cannot extend this time.' as js_dec %}{{ js_dec|escapejs }}";
+    extendBtn.hidden = true;
+  }
+  {% else %}
+  const extendAsk = document.getElementById("extend-ask");
+  function offerContinue() {}
+  function onExtendRequest() {
+    extendAsk.hidden = false;
+    continuePanel.hidden = false;
+  }
+  function onExtendDeclined() {}
+  async function answerExtension(action) {
+    extendAsk.hidden = true;
+    continuePanel.hidden = true;
+    await postForm("{% url 'lesson_extend' match.id %}", {action}).catch(() => null);
+  }
+  document.getElementById("extend-accept").addEventListener("click", () => answerExtension('accept'));
+  document.getElementById("extend-decline").addEventListener("click", () => answerExtension('decline'));
+  {% endif %}
 
   async function endLesson(reason) {
     if (callEnded) return;
@@ -943,6 +1050,10 @@ document.addEventListener('submit', function(e) {
     if (data.sender === userId) return;
 
     if (data.type === "timer_start") { startTimer(data.seconds, data.end_at); return; }
+    if (data.type === "timer_extend") { timerTarget = Date.parse(data.end_at); hideContinue(); return; }
+    if (data.type === "extend_request") { onExtendRequest(); return; }
+    if (data.type === "extend_declined") { onExtendDeclined(); return; }
+    if (data.type === "partner_moved_on") { if (timerStarted) endLesson("partner_moved_on"); return; }
 
     if (data.type === "join") {
       log('WS', `join from ${data.sender}  localMediaReady=${localMediaReady}`);

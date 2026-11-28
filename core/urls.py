@@ -49,6 +49,9 @@ urlpatterns = [
     # レッスンルーム
     path("lesson/room/<int:match_id>/", views.lesson_room, name="lesson_room"),
     path("lesson/room/<int:match_id>/end/", views.lesson_end, name="lesson_end"),
+    path("lesson/room/<int:match_id>/continue-options/", views.lesson_continue_options, name="lesson_continue_options"),
+    path("lesson/room/<int:match_id>/extend/", views.lesson_extend, name="lesson_extend"),
+    path("lesson/room/<int:match_id>/next-tutor/", views.lesson_next_tutor, name="lesson_next_tutor"),
     path("lesson/room/<int:match_id>/rating/", views.lesson_rating, name="lesson_rating"),
     path("lesson/room/<int:match_id>/note/", views.lesson_note, name="lesson_note"),
 

@@ -1923,6 +1923,45 @@ msgstr "Entrando en la sala de la lección…"
 msgid "Try a new topic today"
 msgstr "Prueba un tema nuevo hoy"
 
+msgid "Want to keep talking?"
+msgstr "¿Quieres seguir hablando?"
+
+msgid "+5 min with this tutor"
+msgstr "+5 min con este tutor"
+
+msgid "Your student would like 5 more minutes."
+msgstr "Tu estudiante quiere 5 minutos más."
+
+msgid "Extend 5 minutes"
+msgstr "Ampliar 5 minutos"
+
+msgid "Not this time"
+msgstr "Esta vez no"
+
+msgid "Talk with another tutor"
+msgstr "Hablar con otro tutor"
+
+msgid "You need 1 point to keep going."
+msgstr "Necesitas 1 punto para continuar."
+
+msgid "Get points"
+msgstr "Conseguir puntos"
+
+msgid "Waiting for your tutor to answer…"
+msgstr "Esperando la respuesta del tutor…"
+
+msgid "The lesson could not be extended."
+msgstr "No se pudo ampliar la lección."
+
+msgid "Finding your next tutor…"
+msgstr "Buscando a tu próximo tutor…"
+
+msgid "No other tutor is free right now."
+msgstr "Ahora no hay otro tutor libre."
+
+msgid "Your tutor cannot extend this time."
+msgstr "Tu tutor no puede ampliar esta vez."
+
 #~ msgid "Step 1"
 #~ msgstr "Paso 1"
 

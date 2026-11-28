@@ -51,6 +51,9 @@ class QuickLessonMatch(models.Model):
     student_media_at = models.DateTimeField(null=True, blank=True)
     tutor_media_at = models.DateTimeField(null=True, blank=True)
     points_settled_at = models.DateTimeField(null=True, blank=True)
+    # Each accepted extension adds five minutes and is charged on acceptance.
+    extension_count = models.PositiveSmallIntegerField(default=0)
+    extension_requested_at = models.DateTimeField(null=True, blank=True)
 
     started_at = models.DateTimeField(null=True, blank=True)
     end_at = models.DateTimeField(null=True, blank=True)

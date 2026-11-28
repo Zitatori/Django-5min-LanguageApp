@@ -56,7 +56,7 @@ def settle_points(match_id, now=None):
         (student_id, PointTransaction.TYPE_LESSON_TAKEN, -1, 'student_balance', GoldMembership.objects.filter(user_id=student_id, expires_at__gt=now).exists()),
         (tutor_id, PointTransaction.TYPE_LESSON_TAUGHT, 1, 'teacher_balance', match.tutor.is_hourly_paid),
     ):
-        if skip or PointTransaction.objects.filter(user_id=user_id, transaction_type=kind, reference_id=match.pk).exists():
+        if skip or PointTransaction.objects.filter(user_id=user_id, transaction_type=kind, reference_id=match.pk, note='').exists():
             continue
         balance = balances[user_id]
         if amount < 0 and balance.student_balance < 1:

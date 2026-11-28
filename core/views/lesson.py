@@ -226,3 +226,68 @@ def lesson_note(request, match_id: int):
         "previous_notes": previous_notes,
         "form": form,
     })
+
+
+def _participant_match(request, match_id):
+    match = get_object_or_404(QuickLessonMatch.objects.select_related('request__student', 'request__language', 'tutor'), id=match_id)
+    if request.user.pk == match.request.student.user_id:
+        return match, 'student'
+    if request.user.pk == match.tutor.user_id:
+        return match, 'tutor'
+    return match, None
+
+
+@login_required
+def lesson_continue_options(request, match_id: int):
+    """What the student can do when the lesson is almost over."""
+    from core.services.lesson_continuation import can_pay, other_tutors
+    match, role = _participant_match(request, match_id)
+    if role != 'student':
+        return HttpResponseForbidden()
+    return JsonResponse({
+        'can_pay': can_pay(match),
+        'other_tutors': other_tutors(match).count(),
+        'extension_pending': bool(match.extension_requested_at),
+    })
+
+
+@login_required
+@require_POST
+def lesson_extend(request, match_id: int):
+    """Student asks for five more minutes; the tutor accepts or declines."""
+    from core.services import lesson_continuation as cont
+    match, role = _participant_match(request, match_id)
+    if role is None:
+        return HttpResponseForbidden()
+    action = request.POST.get('action', 'request')
+    if role == 'student' and action == 'request':
+        if not cont.request_extension(match.pk):
+            return JsonResponse({'ok': False}, status=409)
+        cont.broadcast(match.pk, {'type': 'extend_request'})
+        return JsonResponse({'ok': True})
+    if role == 'tutor' and action == 'accept':
+        end_at = cont.accept_extension(match.pk)
+        if end_at is None:
+            return JsonResponse({'ok': False}, status=409)
+        cont.broadcast(match.pk, {'type': 'timer_extend', 'end_at': end_at.isoformat()})
+        return JsonResponse({'ok': True, 'end_at': end_at.isoformat()})
+    if role == 'tutor' and action == 'decline':
+        cont.decline_extension(match.pk)
+        cont.broadcast(match.pk, {'type': 'extend_declined'})
+        return JsonResponse({'ok': True})
+    return JsonResponse({'ok': False}, status=400)
+
+
+@login_required
+@require_POST
+def lesson_next_tutor(request, match_id: int):
+    """End this call and go straight to another free tutor in the same language."""
+    from core.services import lesson_continuation as cont
+    match, role = _participant_match(request, match_id)
+    if role != 'student':
+        return HttpResponseForbidden()
+    new_request = cont.move_to_next_tutor(match.pk)
+    if new_request is None:
+        return JsonResponse({'ok': False}, status=409)
+    cont.broadcast(match.pk, {'type': 'partner_moved_on'})
+    return JsonResponse({'ok': True, 'url': reverse('request_detail', args=[new_request.pk])})

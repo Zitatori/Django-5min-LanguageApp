@@ -1791,6 +1791,45 @@ msgstr "レッスンルームに入室しています…"
 msgid "Try a new topic today"
 msgstr "今日は新しい話題もためしてみましょう"
 
+msgid "Want to keep talking?"
+msgstr "もっと話したいですか？"
+
+msgid "+5 min with this tutor"
+msgstr "この講師と5分延長"
+
+msgid "Your student would like 5 more minutes."
+msgstr "生徒があと5分の延長を希望しています。"
+
+msgid "Extend 5 minutes"
+msgstr "5分延長する"
+
+msgid "Not this time"
+msgstr "今回はしない"
+
+msgid "Talk with another tutor"
+msgstr "別の講師と話す"
+
+msgid "You need 1 point to keep going."
+msgstr "続けるには1ポイント必要です。"
+
+msgid "Get points"
+msgstr "ポイントを購入"
+
+msgid "Waiting for your tutor to answer…"
+msgstr "講師の返事を待っています…"
+
+msgid "The lesson could not be extended."
+msgstr "延長できませんでした。"
+
+msgid "Finding your next tutor…"
+msgstr "次の講師を探しています…"
+
+msgid "No other tutor is free right now."
+msgstr "今は空いている講師がほかにいません。"
+
+msgid "Your tutor cannot extend this time."
+msgstr "今回は講師が延長できません。"
+
 #~ msgid "Step 1"
 #~ msgstr "ステップ1"
 
