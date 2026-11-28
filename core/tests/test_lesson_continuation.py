@@ -120,6 +120,36 @@ class NextTutorTests(ContinuationFixture, TestCase):
         self.assertGreater(self.match.end_at, timezone.now())
         self.assertEqual(QuickLessonRequest.objects.count(), 1)
 
+    def test_next_tutor_is_called_into_the_new_room_with_the_student(self):
+        other = self.other_tutor()
+        self.client.force_login(self.student.user)
+        detail = self.client.post(reverse('lesson_next_tutor', args=[self.match.pk])).json()['url']
+        new_match = QuickLessonMatch.objects.get(tutor=other)
+        room = reverse('lesson_room', args=[new_match.pk])
+        self.assertContains(self.client.get(detail), room)
+        self.assertEqual(self.client.get(room).status_code, 200)
+        self.client.force_login(other.user)
+        self.assertEqual(self.client.get(reverse('tutor_match_status')).json(), {'matched': True, 'room_url': room})
+        self.assertEqual(self.client.get(room).status_code, 200)
+        # The tutor the student left is not called back into the old room.
+        self.client.force_login(self.tutor.user)
+        self.assertFalse(self.client.get(reverse('tutor_match_status')).json()['matched'])
+
+    def test_a_press_in_the_last_second_still_moves_within_the_grace(self):
+        self.other_tutor()
+        ended = timezone.now()-timedelta(seconds=3)
+        QuickLessonMatch.objects.filter(pk=self.match.pk).update(end_at=ended)
+        self.client.force_login(self.student.user)
+        self.assertEqual(self.client.post(reverse('lesson_next_tutor', args=[self.match.pk])).status_code, 200)
+        self.match.refresh_from_db()
+        self.assertEqual(self.match.end_at, ended)
+
+    def test_a_lesson_long_over_cannot_move(self):
+        self.other_tutor()
+        QuickLessonMatch.objects.filter(pk=self.match.pk).update(end_at=timezone.now()-timedelta(seconds=30))
+        self.client.force_login(self.student.user)
+        self.assertEqual(self.client.post(reverse('lesson_next_tutor', args=[self.match.pk])).status_code, 409)
+
     def test_room_shows_continue_buttons_to_student_and_answer_buttons_to_tutor(self):
         self.client.force_login(self.student.user)
         page = self.client.get(reverse('lesson_room', args=[self.match.pk]))

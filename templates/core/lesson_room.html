@@ -552,10 +552,10 @@ document.addEventListener('submit', function(e) {
       display.textContent = format(remaining);
       setTimerState(remaining);
       document.getElementById("wrap-up").hidden = remaining > 30;
-      if (remaining <= 30 && remaining > 0) offerContinue(); else hideContinue();
+      if (remaining <= 30 && remaining > 0) offerContinue(); else if (!movingOn) hideContinue();
       if (false) showFinalCountdown(remaining);
       else finalCountdown.style.display = "none";
-      if (remaining <= 0) { endLesson("timeup"); return; }
+      if (remaining <= 0) { if (!movingOn) endLesson("timeup"); return; }
       setTimeout(update, 1000);
     }
     update();
@@ -565,6 +565,7 @@ document.addEventListener('submit', function(e) {
   // ── 残り30秒: 延長 / 別の講師へ ──
   let timerTarget = 0;
   let continueOffered = false;
+  let movingOn = false;  // a next-tutor request is in flight: the timer must not end the call
   const continuePanel = document.getElementById("continue-panel");
   function postForm(url, body) {
     const fd = new FormData();
@@ -603,10 +604,13 @@ document.addEventListener('submit', function(e) {
   });
   nextBtn.addEventListener("click", async () => {
     nextBtn.disabled = true; extendBtn.disabled = true;
+    movingOn = true;
     continueNote.textContent = "{% trans 'Finding your next tutor…' as js_find %}{{ js_find|escapejs }}";
     const res = await postForm("{% url 'lesson_next_tutor' match.id %}").catch(() => null);
     const data = res && res.ok ? await res.json() : null;
     if (!data || !data.url) {
+      movingOn = false;
+      if (Date.now() >= timerTarget) { endLesson("timeup"); return; }
       continueNote.textContent = "{% trans 'No other tutor is free right now.' as js_none %}{{ js_none|escapejs }}";
       nextBtn.hidden = true; extendBtn.disabled = false;
       return;

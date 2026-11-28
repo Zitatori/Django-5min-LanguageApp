@@ -18,6 +18,8 @@ from core.models import (GoldMembership, PointBalance, PointTransaction, QuickLe
 from core.services.lesson_lifecycle import settle_points
 
 EXTENSION_MINUTES = 5
+# A press in the last second reaches the server after the timer ran out.
+MOVE_GRACE_SECONDS = 10
 
 
 def broadcast(match_id, message):
@@ -114,7 +116,9 @@ def move_to_next_tutor(match_id, now=None):
     with transaction.atomic():
         match = QuickLessonMatch.objects.select_for_update().select_related(
             'request__student', 'request__language').get(pk=match_id)
-        if not _running(match, now) or not can_pay(match, now):
+        in_grace = bool(match.started_at and match.end_at
+                        and match.end_at > now - timedelta(seconds=MOVE_GRACE_SECONDS))
+        if not in_grace or not can_pay(match, now):
             return None
         from core.views.student import _claim_tutor_for_match
         new_request = None
@@ -127,7 +131,7 @@ def move_to_next_tutor(match_id, now=None):
                 break
         if new_request is None:
             return None
-        match.end_at = now
+        match.end_at = min(match.end_at, now)
         match.extension_requested_at = None
         match.save(update_fields=['end_at', 'extension_requested_at'])
     settle_points(match_id, now)
